@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
     @GetMapping("/hello")
     public ResponseEntity<String> helloMTF() {
-        return ResponseEntity.ok("Hello cai dmm ?");
+        return ResponseEntity.ok("He");
     }
 }
