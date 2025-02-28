@@ -28,15 +28,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        // Configure Security:
         http
-                // (A) Disable CSRF for simplicity in a stateless REST context
-                .csrf(csrf -> csrf.disable())
-                // (B) Configure authorization rules
+                .csrf(csrf -> csrf.disable()) // Disable CSRF
                 .authorizeHttpRequests(auth -> auth
-                        // Permit all requests to /register and /verify (our public endpoints)
-                        .requestMatchers("/api/v1/auth/register","api/v1/auth/verify", "api/v1/auth/login", "api/v1/auth/forgot-password", "api/v1/auth/reset-password").permitAll()
-                        // All other endpoints require authentication by default
+                        // Permit Swagger and API documentation access
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/webjars/**"
+                        ).permitAll()
+                        // Permit authentication endpoints
+                        .requestMatchers(
+                                "/api/v1/auth/register",
+                                "/api/v1/auth/verify",
+                                "/api/v1/auth/login",
+                                "/api/v1/auth/forgot-password",
+                                "/api/v1/auth/reset-password"
+                        ).permitAll()
+                        // Require authentication for other endpoints
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
