@@ -5,6 +5,8 @@ import com.project.userservice.payload.response.LoginResponse;
 import com.project.userservice.payload.response.RegisterResponse;
 import com.project.userservice.service.AuthService;
 
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +34,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest httpServletRequest) {
+        // capture the IP address from the request
+        String ipAddress = httpServletRequest.getRemoteAddr();
+
+        return ResponseEntity.ok(authService.login(request, ipAddress));
     }
 
     @PostMapping("/logout")

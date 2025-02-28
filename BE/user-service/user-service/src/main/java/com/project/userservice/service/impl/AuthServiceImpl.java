@@ -1,6 +1,7 @@
 package com.project.userservice.service.impl;
 
 import com.project.userservice.common.BaseResponse;
+import com.project.userservice.model.ActiveSession;
 import com.project.userservice.model.PasswordResetToken;
 import com.project.userservice.model.User;
 import com.project.userservice.model.VerificationToken;
@@ -8,6 +9,7 @@ import com.project.userservice.payload.request.LoginRequest;
 import com.project.userservice.payload.request.RegisterRequest;
 import com.project.userservice.payload.response.LoginResponse;
 import com.project.userservice.payload.response.RegisterResponse;
+import com.project.userservice.repository.ActiveSessionRepository;
 import com.project.userservice.repository.PasswordResetTokenRepository;
 import com.project.userservice.repository.UserRepository;
 import com.project.userservice.repository.VerificationTokenRepository;
@@ -41,6 +43,7 @@ public class AuthServiceImpl implements AuthService {
     private final TokenBlacklistService blacklistService;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final ForgotPasswordRateLimiterService rateLimiterService;
+    private final ActiveSessionRepository activeSessionRepository;
 
     // Example: read from application.properties: "app.verification-token-expiration=24"
     @Value("${app.verification-token-expiration:24}")
@@ -118,15 +121,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public BaseResponse<?> login(LoginRequest request) {
+    public BaseResponse<?> login(LoginRequest request, String ipAddress) {
         // 1) Find user by username OR email
         Optional<User> userOpt = userRepository.findByUsername(request.getUsernameOrEmail());
         if (!userOpt.isPresent()) {
             userOpt = userRepository.findByEmail(request.getUsernameOrEmail());
         }
-//        User user = userOpt.orElseThrow(
-//                () -> new RuntimeException("User not found with: " + request.getUsernameOrEmail())
-//        );
+
         // return with baseRespone form
         if (!userOpt.isPresent()) {
             return new BaseResponse<>("User not found with: " + request.getUsernameOrEmail());
@@ -138,12 +139,34 @@ public class AuthServiceImpl implements AuthService {
             return new BaseResponse<>("Incorrect password.");
         }
 
-        // 3) Generate JWT token
-        // You can store user.getId() in 'sub'
-        String token = jwtProvider.generateToken(user.getId());
+        // 3) Check for an existing active session for this user
+        Optional<ActiveSession> existingSessionOpt = activeSessionRepository.findByUserId(user.getId());
+        if (existingSessionOpt.isPresent()) {
+            ActiveSession existingSession = existingSessionOpt.get();
+            // If the existing session's IP is different from the current one, block login
+            if (!existingSession.getIpAddress().equals(ipAddress)) {
+                logger.info("Concurrent login attempt for user {}: existing IP = {}, new IP = {}",
+                        user.getEmail(), existingSession.getIpAddress(), ipAddress);
+                // Send notification email to the user
+                emailService.sendConcurrentLoginNotification(user.getEmail(), existingSession.getIpAddress(), ipAddress);
+                // Return a response indicating that the account is already in use from a different location
+                return new BaseResponse<>("Your account is already logged in from another location. Please log out there before logging in here.");
+            }
+        }
 
-        // 4) Return the response
-        return new BaseResponse<>(new LoginResponse(token, "Login successful!"));
+        // 4) If no conflicting session, proceed with login
+        String token = jwtProvider.generateToken(user.getId());
+        // Create a new active session record (or update existing)
+        ActiveSession session = new ActiveSession();
+        session.setUserId(user.getId());
+        session.setIpAddress(ipAddress);
+        session.setLoginTime(Instant.now());
+        session.setToken(token);
+        activeSessionRepository.deleteByUserId(user.getId()); // Remove any stale session
+        activeSessionRepository.save(session);
+
+        // 5) Return the JWT and success message
+        return new BaseResponse<>(1, "Login successful", token);
     }
 
     @Override
@@ -152,6 +175,9 @@ public class AuthServiceImpl implements AuthService {
         if (remainingSeconds > 0) {
             blacklistService.blacklistToken(token, remainingSeconds);
         }
+
+        String userId = jwtProvider.getUserIdFromToken(token);
+        activeSessionRepository.deleteByUserId(userId);
         return new BaseResponse<>("Logout successfully.");
     }
 

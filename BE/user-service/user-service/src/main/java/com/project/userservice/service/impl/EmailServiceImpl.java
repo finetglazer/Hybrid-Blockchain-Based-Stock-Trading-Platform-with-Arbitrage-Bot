@@ -16,6 +16,7 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Override
     public void sendVerificationEmail(String toEmail, String token) {
         String subject = "Verify your account";
         String verificationLink = "http://localhost:8081/api/v1/auth/verify?token=" + token;
@@ -31,6 +32,7 @@ public class EmailServiceImpl implements EmailService {
         mailSender.send(message);
     }
 
+    @Override
     public void sendPasswordResetEmail(String toEmail, String token) {
         String subject = "Reset your password";
         String resetLink = "http://localhost:8081/api/v1/auth/reset-password?token=" + token;
@@ -45,6 +47,20 @@ public class EmailServiceImpl implements EmailService {
 
         mailSender.send(message);
 
+    }
+
+    @Override
+    public void sendConcurrentLoginNotification(String toEmail, String oldIp, String newIp) {
+        String subject = "Concurrent Login Detected";
+        String text = String.format("We detected a login from a new IP address (%s) while your account is active from another IP (%s). "
+                + "If this wasn't you, please secure your account immediately.", newIp, oldIp);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject(subject);
+        message.setText(text);
+
+        mailSender.send(message);
     }
 
 }
