@@ -1,6 +1,5 @@
 package com.project.walletservice.common;
 
-import com.project.userservice.common.Const;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

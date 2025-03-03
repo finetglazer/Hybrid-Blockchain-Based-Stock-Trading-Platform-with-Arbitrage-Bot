@@ -28,5 +28,5 @@ public class User {
 
     private String coinbaseAccessToken;
     private String coinbaseRefreshToken;
-    private Instant coinbaseExpiresAt;
+    private Instant coinbaseTokenExpiresAt;
 }
