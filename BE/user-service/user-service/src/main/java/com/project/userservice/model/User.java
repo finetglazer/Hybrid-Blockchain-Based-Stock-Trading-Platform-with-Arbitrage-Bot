@@ -25,4 +25,8 @@ public class User {
     private String passwordHash;
     private Instant createdAt = Instant.now();
     private Instant updatedAt = Instant.now();
+
+    private String coinbaseAccessToken;
+    private String coinbaseRefreshToken;
+    private Instant coinbaseExpiresAt;
 }
