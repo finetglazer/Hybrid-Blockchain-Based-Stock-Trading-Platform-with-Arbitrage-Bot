@@ -11,4 +11,11 @@ public class CreateWalletRequest {
     private String walletName;
     private String network;
     private String signer;
+
+    //eg
+    /*
+    walletName: "My Wallet",
+    network: "BTC",
+    signer: "My Signer"
+     */
 }

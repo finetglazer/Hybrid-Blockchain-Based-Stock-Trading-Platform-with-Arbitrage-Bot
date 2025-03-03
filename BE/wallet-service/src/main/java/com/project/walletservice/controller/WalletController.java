@@ -1,27 +1,35 @@
 package com.project.walletservice.controller;
 
 import com.project.walletservice.payload.request.CreateWalletRequest;
+import com.project.walletservice.payload.response.CreateWalletResponse;
 import com.project.walletservice.service.CoinbaseWalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
 @RestController
+@RequestMapping("/api/v1/wallets")
 @RequiredArgsConstructor
-@RequestMapping("api/v1/wallets")
 public class WalletController {
+
     private final CoinbaseWalletService coinbaseWalletService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createWallet(@RequestBody CreateWalletRequest request,
-            Principal principal
+    public ResponseEntity<CreateWalletResponse> createWallet(
+            @RequestBody CreateWalletRequest request,
+            Principal principal  // Use standard Principal
     ) {
-        String userId = principal.getName();
-        return ResponseEntity.ok(coinbaseWalletService.createWallet(userId, request));
+        // 1) Extract user ID from principal (e.g., principal.getName())
+        // For example, if principal.getName() returns the user ID as a string
+//        String userId = principal.getName();
+
+        String userId = "1";
+        // 2) Call the service
+        CreateWalletResponse response = coinbaseWalletService.createWallet(userId, request);
+
+        // 3) Return the result
+        return ResponseEntity.ok(response);
     }
 }
