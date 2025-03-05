@@ -14,7 +14,7 @@ public class UserServiceClient {
 
     private final RestTemplate restTemplate;
 
-    @Value("${user.service.baseUrl}") // e.g. "http://user-service:8080"
+    @Value("${user.service.baseUrl}")
     private String userServiceBaseUrl;
 
     public UserCoinbaseTokenResponse getValidCoinbaseToken(String userId) {
