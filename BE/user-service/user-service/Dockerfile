@@ -1,9 +1,20 @@
-FROM eclipse-temurin:17-jdk-alpine
-
+# 1) Use a Maven image to build the JAR
+FROM maven:3.8.8-eclipse-temurin-17 AS builder
 WORKDIR /app
 
-COPY target/user-service-0.0.1-SNAPSHOT.jar app.jar
+# 2) Copy the source code and build the project
+COPY . .
+RUN mvn clean package -DskipTests
 
-# (No EXPOSE line here because we don't expose it publicly,
-#  but you can declare EXPOSE 8081 if you like. It's optional.)
-ENTRYPOINT ["java","-jar","app.jar"]
+# 3) Use a minimal Java runtime image
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
+
+# 4) Copy the built JAR from the builder stage
+COPY --from=builder /app/target/user-service-0.0.1-SNAPSHOT.jar app.jar
+
+# 5) Expose the application port (optional)
+EXPOSE 8081
+
+# 6) Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
