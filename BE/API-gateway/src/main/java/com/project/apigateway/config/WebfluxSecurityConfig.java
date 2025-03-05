@@ -23,13 +23,12 @@ public class WebfluxSecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         // Permit some public endpoints
-                        .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/login").permitAll() //mean: this will let url: /auth/login to be accessed without authentication
+                        .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/login", "/users/api/v1/auth/register", "users/api/v1/auth/forgot-password", "users/api/v1/auth/reset-password").permitAll() //mean: this will let url: /auth/login to be accessed without authentication
                         .pathMatchers("/users/api/v1/auth/public/**").permitAll()
                         // Everything else requires authentication
                         .anyExchange().authenticated()
                 )
                 // Here we add our custom JWT filter
-                .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();
     }
 }

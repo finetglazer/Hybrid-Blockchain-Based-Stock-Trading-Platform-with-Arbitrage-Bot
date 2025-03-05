@@ -21,7 +21,7 @@ public class JwtAuthenticationFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         // 1) Optional: Skip JWT check for /auth/login or any other public endpoint
         String path = exchange.getRequest().getURI().getPath();
-        if (path.startsWith("/users/api/v1/auth/login") || path.startsWith("/users/api/v1/public")) {
+        if (path.startsWith("/users/api/v1/auth")) {
             return chain.filter(exchange);
         }
 
