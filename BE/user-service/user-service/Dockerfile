@@ -1,20 +1,17 @@
-# 1) Use a Maven image to build the JAR
-FROM maven:3.8.8-eclipse-temurin-17 AS builder
-WORKDIR /app
-
-# 2) Copy the source code and build the project
-COPY . .
-RUN mvn clean package -DskipTests
-
-# 3) Use a minimal Java runtime image
+# Use a base image
 FROM eclipse-temurin:17-jdk-alpine
+
+# Set working directory
 WORKDIR /app
 
-# 4) Copy the built JAR from the builder stage
-COPY --from=builder /app/target/user-service-0.0.1-SNAPSHOT.jar app.jar
+# Install MongoDB driver manually
+RUN wget -O /usr/share/java/mongo-driver.jar https://repo1.maven.org/maven2/org/mongodb/mongodb-driver/4.6.1/mongodb-driver-4.6.1.jar
 
-# 5) Expose the application port (optional)
+# Copy the application JAR
+COPY target/user-service-0.0.1-SNAPSHOT.jar app.jar
+
+# Expose the port
 EXPOSE 8081
 
-# 6) Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the application
+ENTRYPOINT ["java", "-cp", "/usr/share/java/mongo-driver.jar:app.jar", "org.springframework.boot.loader.JarLauncher"]
