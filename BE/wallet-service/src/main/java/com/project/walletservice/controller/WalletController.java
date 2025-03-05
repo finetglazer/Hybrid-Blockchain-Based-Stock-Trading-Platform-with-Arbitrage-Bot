@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/api/v1/wallets")
+@RequestMapping("wallets/api/v1/coinbase-wallet")
 @RequiredArgsConstructor
 public class WalletController {
 
@@ -23,7 +23,7 @@ public class WalletController {
     ) {
         // 1) Extract user ID from principal (e.g., principal.getName())
         // For example, if principal.getName() returns the user ID as a string
-//        String userId = principal.getName();
+//         userId = principal.getName();
 
         String userId = "1";
         // 2) Call the service
@@ -31,5 +31,10 @@ public class WalletController {
 
         // 3) Return the result
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<?> testWalletAPI() {
+        return ResponseEntity.ok("Reached the end of /wallets/api/v1/coinbase-wallet/test API");
     }
 }

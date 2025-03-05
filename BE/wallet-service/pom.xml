@@ -67,6 +67,7 @@
     </dependencies>
 
     <build>
+        <finalName>wallet-service-0.0.1-SNAPSHOT</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
