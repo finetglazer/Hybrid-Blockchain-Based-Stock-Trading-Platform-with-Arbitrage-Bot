@@ -15,10 +15,10 @@ FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
 # Copy the built JAR from the builder stage
-COPY --from=builder /app/target/user-service-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/target/wallet-service-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port
-EXPOSE 8081
+EXPOSE 8082
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
@@ -34,10 +34,10 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 #WORKDIR /app
 #
 ## Copy the pre-built JAR file from your local machine to the container
-#COPY target/user-service-0.0.1-SNAPSHOT.jar app.jar
+#COPY target/wallet-service-0.0.1-SNAPSHOT.jar app.jar
 #
 ## Expose the port the app will run on
-#EXPOSE 8081
+#EXPOSE 8082
 #
 ## Run the application
 #ENTRYPOINT ["java", "-jar", "app.jar"]

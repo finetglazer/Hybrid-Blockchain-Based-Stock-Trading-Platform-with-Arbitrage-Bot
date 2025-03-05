@@ -24,6 +24,11 @@ public class WebfluxSecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         // Permit some public endpoints
                         .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/login").permitAll() //mean: this will let url: /auth/login to be accessed without authentication
+                        .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/logout").permitAll() //mean: this will let url: /auth/login to be accessed without authentication
+                        .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/forgot-password").permitAll() //mean: this will let url: /auth/login to be accessed without authentication
+                        .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/register").permitAll() //mean: this will let url: /auth/login to be accessed without authentication
+                        .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/login").permitAll() //mean: this will let url: /auth/login to be accessed without authentication
+                        .pathMatchers(HttpMethod.POST, "/wallets/api/v1/coinbase-wallet/test").permitAll() //mean: this will let url: /auth/login to be accessed without authentication
                         .pathMatchers("/users/api/v1/auth/public/**").permitAll()
                         // Everything else requires authentication
                         .anyExchange().authenticated()
