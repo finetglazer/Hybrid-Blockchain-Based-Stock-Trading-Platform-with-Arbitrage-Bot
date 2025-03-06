@@ -1,108 +1,113 @@
 package com.project.walletservice.service.impl;
 
-import com.project.walletservice.payload.request.CreateWalletRequest;
-import com.project.walletservice.payload.response.CreateWalletResponse;
+import com.project.walletservice.common.BaseResponse;
+import com.project.walletservice.common.Const;
+import com.project.walletservice.model.Wallet;
+import com.project.walletservice.payload.request.client.CreateWalletRequest;
+import com.project.walletservice.payload.request.coinbase.CoinbaseApiCreateWalletRequest;
+import com.project.walletservice.payload.response.coinbase.CoinbaseApiCreateWalletResponse;
+import com.project.walletservice.repository.WalletRepository;
 import com.project.walletservice.service.CoinbaseWalletService;
 import com.project.walletservice.service.OAuthService;
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Instant;
+
 @Service
 @RequiredArgsConstructor
 public class CoinbaseWalletServiceImpl implements CoinbaseWalletService {
-
+    Dotenv dotenv = Dotenv.configure().directory("wallet-service").load();
+    
     private final RestTemplate restTemplate;
     private final OAuthService oAuthService;
+    private final WalletRepository walletRepository;
+    private final String oAuthUrl =
+            "https://login.coinbase.com/oauth2/auth?" +
+            "response_type=" + "code" +
+            "client_id=" + dotenv.get("COINBASE_OAUTH_CLIENT_ID") +
+            "redirect_uri=" +  dotenv.get("COINBASE_OAUTH_REDIRECT_URI") +
+            "state=" + dotenv.get("COINBASE_OAUTH_STATE") +
+            "scope=" + dotenv.get("COINBASE_ALL_PERMISSIONS");
 
     @Override
-    public CreateWalletResponse createWallet(String userId, CreateWalletRequest request) {
+    public BaseResponse<?> createWallet(String userId, CreateWalletRequest request) {
 
         // 1) Get a valid Coinbase access token for this user
         String accessToken = oAuthService.getValidAccessToken(userId);
         if (accessToken == null) {
             // user not linked or token can't be refreshed
-            CreateWalletResponse failResponse = new CreateWalletResponse();
-            failResponse.setMessage("User not linked to Coinbase or token invalid.");
-            return failResponse;
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "User not linked to Coinbase or token invalid",
+                oAuthUrl
+            );
         }
 
         // 2) Prepare the request body for Coinbase
-        // e.g. fields: name, network, signer
-        // Let's assume we have a class CreateWalletApiBody that matches Coinbase's expected JSON
-        CreateWalletApiBody requestBody = new CreateWalletApiBody(
-                request.getWalletName(),
-                request.getNetwork(),
-                request.getSigner()
+        CoinbaseApiCreateWalletRequest requestBody = new CoinbaseApiCreateWalletRequest(
+            request.getNetworkId(),
+            request.isUseServerSigner()
         );
 
         // 3) Build headers
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<CreateWalletApiBody> entity = new HttpEntity<>(requestBody, headers);
+        HttpEntity<CoinbaseApiCreateWalletRequest> entity = new HttpEntity<>(requestBody, headers);
 
         // 4) Call the Coinbase "create wallet" endpoint
-        String coinbaseUrl = "https://api.coinbase.com/v2/wallets";
+        String coinbaseUrl = "https://api.cdp.coinbase.com/platform/v1/wallets";
         // Adjust if your endpoint differs per actual Coinbase docs
-        ResponseEntity<CreateWalletApiResponse> response;
+        ResponseEntity<CoinbaseApiCreateWalletResponse> response;
 
         try {
             response = restTemplate.postForEntity(
                     coinbaseUrl,
                     entity,
-                    CreateWalletApiResponse.class
+                    CoinbaseApiCreateWalletResponse.class
             );
         } catch (RestClientException ex) {
             // handle error
-            CreateWalletResponse failResponse = new CreateWalletResponse();
-            failResponse.setMessage("Coinbase API request failed: " + ex.getMessage());
-            return failResponse;
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "Coinbase API request failed:"  + ex.getMessage(),
+                ""
+            );
         }
 
         // 5) Interpret the response
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-            String newWalletId = response.getBody().getWalletId(); // assume getWalletId() is defined
+            CoinbaseApiCreateWalletResponse responseBody = response.getBody();
+            Wallet newWallet = new Wallet(
+                responseBody.getId(),
+                request.getName(),
+                userId,
+                responseBody.getNetwork_id(),
+                responseBody.getDefault_address(),
+                responseBody.getFeature_set(),
+                responseBody.getServer_signer_status(),
+                Instant.now(),
+                Instant.now()
+            );
 
-            CreateWalletResponse successResponse = new CreateWalletResponse();
-            successResponse.setCoinbaseWalletId(newWalletId);
-            successResponse.setMessage("Wallet created successfully!");
-            return successResponse;
+            walletRepository.save(newWallet);           // Save new wallet
+
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.SUCCESS,
+                "Wallet created successfully!",
+                newWallet
+            );
         } else {
-            CreateWalletResponse failResponse = new CreateWalletResponse();
-            failResponse.setMessage("Failed to create wallet. Status: " + response.getStatusCode());
-            return failResponse;
-        }
-    }
-
-    // Example "inner" request/response classes for Coinbase API
-    // In real code, they'd likely be separate files or you might map them dynamically
-    private static class CreateWalletApiBody {
-        private String name;
-        private String network;
-        private String signer;
-
-        public CreateWalletApiBody(String name, String network, String signer) {
-            this.name = name;
-            this.network = network;
-            this.signer = signer;
-        }
-        // getters/setters if needed
-    }
-
-    private static class CreateWalletApiResponse {
-        private String walletId;  // name this to match the actual Coinbase JSON field
-
-        public String getWalletId() {
-            return walletId;
-        }
-        public void setWalletId(String walletId) {
-            this.walletId = walletId;
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "Failed to create wallet. Status: "  + response.getStatusCode(),
+                ""
+            );
         }
     }
 }

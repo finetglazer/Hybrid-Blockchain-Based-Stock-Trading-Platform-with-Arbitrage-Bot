@@ -1,4 +1,4 @@
-package com.project.userservice.payload.response;
+package com.project.userservice.payload.response.internal;
 
 import lombok.Data;
 

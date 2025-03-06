@@ -3,13 +3,14 @@ package com.project.apigateway.security;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
+
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class JwtAuthenticationFilter implements WebFilter {
@@ -19,43 +20,50 @@ public class JwtAuthenticationFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        // 1) Optional: Skip JWT check for /auth/login or any other public endpoint
         String path = exchange.getRequest().getURI().getPath();
         if (
                 path.equals("/users/api/v1/auth/login")
-                || path.equals("/users/api/v1/auth/logout")
-                || path.equals("/users/api/v1/auth/register")
-                || path.equals("/users/api/v1/auth/forgot-password")
-                || path.equals("/wallets/api/v1/coinbase-wallet/test")
-                || path.startsWith("/users/api/v1/public")
+                        || path.equals("/users/api/v1/auth/logout")
+                        || path.equals("/users/api/v1/auth/register")
+                        || path.equals("/users/api/v1/auth/forgot-password")
+                        || path.equals("/wallets/api/v1/coinbase-wallet/test")
+                        || path.startsWith("/users/api/v1/public")
         ) {
             return chain.filter(exchange);
         }
 
-        // 2) Check the Authorization header
         String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
+            return unauthorizedResponse(exchange, "Missing or invalid Authorization header");
         }
 
-        String token = authHeader.substring(7); // remove "Bearer "
+        String token = authHeader.substring(7);
 
-        // 3) Validate JWT
         try {
             Jwts.parser()
-                    .setSigningKey(secretKey.getBytes())
+                    .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
                     .parseClaimsJws(token);
-            // If parsing fails, it throws an exception, so the catch handles invalid tokens
-        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException |
-                 SignatureException | IllegalArgumentException e) {
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
+        } catch (ExpiredJwtException e) {
+            return unauthorizedResponse(exchange, "Token has expired");
+        } catch (UnsupportedJwtException e) {
+            return unauthorizedResponse(exchange, "Unsupported JWT token");
+        } catch (MalformedJwtException e) {
+            return unauthorizedResponse(exchange, "Malformed JWT token");
+        } catch (SignatureException e) {
+            return unauthorizedResponse(exchange, "Invalid JWT signature");
+        } catch (IllegalArgumentException e) {
+            return unauthorizedResponse(exchange, "JWT token is empty or invalid");
         }
 
-        // 4) Token valid → continue to the next filter (downstream service)
         return chain.filter(exchange);
     }
 
-
+    private Mono<Void> unauthorizedResponse(ServerWebExchange exchange, String message) {
+        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+        exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+        byte[] responseBytes = ("{\"error\": \"" + message + "\"}").getBytes(StandardCharsets.UTF_8);
+        return exchange.getResponse().writeWith(Mono.just(exchange.getResponse()
+                .bufferFactory()
+                .wrap(responseBytes)));
+    }
 }
