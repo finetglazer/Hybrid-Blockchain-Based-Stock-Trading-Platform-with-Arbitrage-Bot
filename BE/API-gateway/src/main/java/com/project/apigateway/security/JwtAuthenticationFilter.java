@@ -1,69 +1,66 @@
 package com.project.apigateway.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.Collections;
 
+@Order(-100)  // Ensure it runs early in the chain
 @Component
 public class JwtAuthenticationFilter implements WebFilter {
 
     @Value("${jwt.secret}")
-    private String secretKey;
+    private String jwtSecret;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
-        if (
-                path.equals("/users/api/v1/auth/login")
-                        || path.equals("/users/api/v1/auth/logout")
-                        || path.equals("/users/api/v1/auth/register")
-                        || path.equals("/users/api/v1/auth/forgot-password")
-                        || path.equals("/wallets/api/v1/coinbase-wallet/test")
-                        || path.startsWith("/users/api/v1/public")
-        ) {
+        if (path.equals("/users/api/v1/auth/login")
+                || path.equals("/users/api/v1/auth/register")
+                || path.equals("/users/api/v1/auth/forgot-password")) {
             return chain.filter(exchange);
         }
 
         String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return unauthorizedResponse(exchange, "Missing or invalid Authorization header");
+            exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
+            return exchange.getResponse().setComplete();
         }
 
-        String token = authHeader.substring(7);
+        String token = authHeader.substring(7); // remove "Bearer "
 
         try {
-            Jwts.parser()
-                    .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
-                    .parseClaimsJws(token);
-        } catch (ExpiredJwtException e) {
-            return unauthorizedResponse(exchange, "Token has expired");
-        } catch (UnsupportedJwtException e) {
-            return unauthorizedResponse(exchange, "Unsupported JWT token");
-        } catch (MalformedJwtException e) {
-            return unauthorizedResponse(exchange, "Malformed JWT token");
-        } catch (SignatureException e) {
-            return unauthorizedResponse(exchange, "Invalid JWT signature");
-        } catch (IllegalArgumentException e) {
-            return unauthorizedResponse(exchange, "JWT token is empty or invalid");
-        }
+            Claims claims = parseClaims(token);
+            String userId = claims.getSubject();
 
-        return chain.filter(exchange);
+            Authentication auth = new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
+            return chain.filter(exchange)
+                    .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
+        } catch (JwtException ex) {
+            exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
+            return exchange.getResponse().setComplete();
+        }
     }
 
-    private Mono<Void> unauthorizedResponse(ServerWebExchange exchange, String message) {
-        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-        exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        byte[] responseBytes = ("{\"error\": \"" + message + "\"}").getBytes(StandardCharsets.UTF_8);
-        return exchange.getResponse().writeWith(Mono.just(exchange.getResponse()
-                .bufferFactory()
-                .wrap(responseBytes)));
+    private Claims parseClaims(String token) {
+        Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

@@ -295,7 +295,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Construct the reset link (adjust the host/port as needed)
         //testing
-        String resetLink = "http://localhost:8081/api/v1/auth/reset-password?token=" + resetToken;
+        String resetLink = "http://localhost:8080/users/api/v1/auth/reset-password?token=" + resetToken;
 
         // Send the reset email (here we simulate by logging the link)
         emailService.sendPasswordResetEmail(email, resetToken);
