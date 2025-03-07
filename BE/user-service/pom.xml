@@ -14,6 +14,9 @@
 	<artifactId>user-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
+	<packaging>jar</packaging>
+
+
 	<dependencies>
 		<!-- Spring Boot Web -->
 		<dependency>

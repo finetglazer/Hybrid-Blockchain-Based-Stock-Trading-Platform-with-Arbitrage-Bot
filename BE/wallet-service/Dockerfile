@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Copy pom.xml and install dependencies
 COPY pom.xml .
-RUN mvn dependency:resolve
+#RUN mvn dependency:resolve
 
 # Copy the source code and build the JAR
 COPY . .
