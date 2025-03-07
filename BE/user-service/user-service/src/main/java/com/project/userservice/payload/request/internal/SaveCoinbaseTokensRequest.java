@@ -1,4 +1,4 @@
-package com.project.userservice.payload.request.internalhi;
+package com.project.userservice.payload.request.internal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
