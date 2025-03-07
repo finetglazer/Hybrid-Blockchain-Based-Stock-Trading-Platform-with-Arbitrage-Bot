@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -23,11 +24,23 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Ngăn form gửi đi nếu có lỗi
     if (validate()) {
       console.log("Register user:", formData);
       navigate("/");
+    }
+    try {
+      const response = await axios.post(
+        "/api/users/api/v1/auth/register", // Đã đổi URL dùng proxy
+        formData
+      );
+
+      console.log("Register success:", response.data);
+      navigate("/");
+    } catch (error) {
+      console.error("Register failed:", error);
+      alert("Đăng ký thất bại! Vui lòng kiểm tra lại.");
     }
   };
 
