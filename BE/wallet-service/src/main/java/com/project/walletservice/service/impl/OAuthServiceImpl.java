@@ -21,7 +21,11 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class OAuthServiceImpl implements OAuthService {
-    Dotenv dotenv = Dotenv.configure().directory("wallet-service").load();
+    Dotenv dotenv = Dotenv.configure()
+            .directory(System.getProperty("user.dir"))  // Ensure it loads from the root of wallet-service
+            .filename(".env")  // Ensure correct filename
+            .ignoreIfMissing()  // Prevents crashing if .env is missing
+            .load();
 
     private final UserServiceClient userServiceClient;
     private final RestTemplate restTemplate;
