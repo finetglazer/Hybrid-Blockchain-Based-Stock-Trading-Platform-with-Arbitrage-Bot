@@ -1,11 +1,8 @@
 package com.project.userservice.service;
 
 import com.project.userservice.common.BaseResponse;
-import com.project.userservice.payload.request.LoginRequest;
-import com.project.userservice.payload.request.RegisterRequest;
-import com.project.userservice.payload.response.LoginResponse;
-import com.project.userservice.payload.response.RegisterResponse;
-import org.springframework.stereotype.Service;
+import com.project.userservice.payload.request.client.LoginRequest;
+import com.project.userservice.payload.request.client.RegisterRequest;
 
 
 public interface AuthService {
