@@ -1,14 +1,13 @@
 package com.project.userservice.service.impl;
 
 import com.project.userservice.common.BaseResponse;
+import com.project.userservice.common.Const;
 import com.project.userservice.model.ActiveSession;
 import com.project.userservice.model.PasswordResetToken;
 import com.project.userservice.model.User;
 import com.project.userservice.model.VerificationToken;
-import com.project.userservice.payload.request.LoginRequest;
-import com.project.userservice.payload.request.RegisterRequest;
-import com.project.userservice.payload.response.LoginResponse;
-import com.project.userservice.payload.response.RegisterResponse;
+import com.project.userservice.payload.request.client.LoginRequest;
+import com.project.userservice.payload.request.client.RegisterRequest;
 import com.project.userservice.repository.ActiveSessionRepository;
 import com.project.userservice.repository.PasswordResetTokenRepository;
 import com.project.userservice.repository.UserRepository;
@@ -49,14 +48,25 @@ public class AuthServiceImpl implements AuthService {
     @Value("${app.verification-token-expiration:24}")
     private int tokenExpirationHours;
 
+    @Value("${resetBaseUrl}")
+    private String resetBaseUrl;
+
     @Override
     public BaseResponse<?> register(RegisterRequest request) {
         // 1) Check if username/email is taken
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            return new BaseResponse<>("Username is already in use!"); // 0 is the error code
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "Username is already in use!",
+                ""
+            ); // 0 is the error code
         }
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            return new BaseResponse<>("Email is already in use!"); // 0 is the error code
+            return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.ERROR,
+                    "Email is already in use!",
+                    ""
+            ); // 0 is the error code
         }
 
         // 2) Hash password
@@ -83,7 +93,11 @@ public class AuthServiceImpl implements AuthService {
         emailService.sendVerificationEmail(request.getEmail(), token);
 
         // 7) Return success response
-        return new BaseResponse<>(new RegisterResponse("User registered successfully! Please verify your email.")); // 1 is the success code
+        return new BaseResponse<>(
+            Const.STATUS_RESPONSE.SUCCESS,
+            "User registered successfully! Please verify your email.",
+            ""
+        ); // 1 is the success code
     }
 
 
@@ -92,8 +106,12 @@ public class AuthServiceImpl implements AuthService {
     public BaseResponse<?> verifyUser(String token) {
         // 1) Look up the token
         Optional<VerificationToken> tokenOpt = verificationTokenRepository.findByToken(token);
-        if (!tokenOpt.isPresent()) {
-            return new BaseResponse<>("Invalid or expired token.");
+        if (tokenOpt.isEmpty()) {
+            return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.ERROR,
+                    "Invalid or expired token!",
+                    ""
+            );
         }
 
         VerificationToken verificationToken = tokenOpt.get();
@@ -102,7 +120,11 @@ public class AuthServiceImpl implements AuthService {
         if (Instant.now().isAfter(verificationToken.getExpiresAt())) {
             // Optionally, delete it
             verificationTokenRepository.delete(verificationToken);
-            return new BaseResponse<>("Token has expired.");
+            return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.ERROR,
+                    "Token has expired",
+                    ""
+            );
         }
 
         // 3) Create a User in "users" collection
@@ -117,26 +139,38 @@ public class AuthServiceImpl implements AuthService {
         // 4) Delete (or rely on TTL) the verification token doc
         verificationTokenRepository.delete(verificationToken);
 
-        return new BaseResponse<>(new RegisterResponse("User verified successfully!"));
+        return new BaseResponse<>(
+                Const.STATUS_RESPONSE.SUCCESS,
+                "User verified successfully!",
+                ""
+        );
     }
 
     @Override
     public BaseResponse<?> login(LoginRequest request, String ipAddress) {
         // 1) Find user by username OR email
         Optional<User> userOpt = userRepository.findByUsername(request.getUsernameOrEmail());
-        if (!userOpt.isPresent()) {
+        if (userOpt.isEmpty()) {
             userOpt = userRepository.findByEmail(request.getUsernameOrEmail());
         }
 
-        // return with baseRespone form
-        if (!userOpt.isPresent()) {
-            return new BaseResponse<>("User not found with: " + request.getUsernameOrEmail());
+        // return with baseResponse form
+        if (userOpt.isEmpty()) {
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "User not found with: " + request.getUsernameOrEmail(),
+                ""
+            );
         }
         User user = userOpt.get();
 
         // 2) Compare password
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-            return new BaseResponse<>("Incorrect password.");
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "Incorrect password",
+                ""
+            );
         }
 
         // 3) Check for an existing active session for this user
@@ -150,7 +184,11 @@ public class AuthServiceImpl implements AuthService {
                 // Send notification email to the user
                 emailService.sendConcurrentLoginNotification(user.getEmail(), existingSession.getIpAddress(), ipAddress);
                 // Return a response indicating that the account is already in use from a different location
-                return new BaseResponse<>("Your account is already logged in from another location. Please log out there before logging in here.");
+                return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.ERROR,
+                    "Your account is already logged in from another location. Please log out there before logging in here.",
+                    ""
+                );
             }
         }
 
@@ -166,7 +204,11 @@ public class AuthServiceImpl implements AuthService {
         activeSessionRepository.save(session);
 
         // 5) Return the JWT and success message
-        return new BaseResponse<>(1, "Login successful", token);
+        return new BaseResponse<>(
+            Const.STATUS_RESPONSE.SUCCESS,
+            "Login successful",
+            token
+        );
     }
 
     @Override
@@ -178,7 +220,11 @@ public class AuthServiceImpl implements AuthService {
 
         String userId = jwtProvider.getUserIdFromToken(token);
         activeSessionRepository.deleteByUserId(userId);
-        return new BaseResponse<>("Logout successfully.");
+        return new BaseResponse<>(
+            Const.STATUS_RESPONSE.SUCCESS,
+            "Logout successfully",
+            ""
+        );
     }
 
     @Override
@@ -187,12 +233,20 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(userId)
                 .orElse(null);
         if (user == null) {
-            return new BaseResponse<>("User not found.");
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "User not found",
+                ""
+            );
         }
 
         // 2) Check old password
         if (!passwordEncoder.matches(oldPassword, user.getPasswordHash())) {
-            return new BaseResponse<>("Incorrect old password.");
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "Incorrect old password",
+                ""
+            );
         }
 
         // 3) Hash new password & update
@@ -201,21 +255,33 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         // 4) Return success
-        return new BaseResponse<>(1, null, "Password changed successfully.");
+        return new BaseResponse<>(
+                Const.STATUS_RESPONSE.SUCCESS,
+                "Password changed successfully",
+                ""
+        );
     }
 
     @Override
     public BaseResponse<?> forgotPassword(String email) {
         // Rate-limit check
         if (!rateLimiterService.isAllowed(email)) {
-            return new BaseResponse<>("Too many requests. Please wait before trying again.");
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "Too many requests. Please wait before trying again",
+                ""
+            );
         }
 
         // Check if a user with this email exists
         Optional<User> userOpt = userRepository.findByEmail(email);
-        if (!userOpt.isPresent()) {
+        if (userOpt.isEmpty()) {
             // Send message no email exist
-            return new BaseResponse<>("No user found with this email.");
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "No user found with this email",
+                ""
+            );
         }
 
         // Generate a unique reset token
@@ -232,7 +298,8 @@ public class AuthServiceImpl implements AuthService {
 
         // Construct the reset link (adjust the host/port as needed)
         //testing
-        String resetLink = "http://localhost:8080/users/api/v1/auth/reset-password?token=" + resetToken;
+
+        String resetLink = resetBaseUrl + "/users/api/v1/auth/reset-password?token=" + resetToken;
 
         // Send the reset email (here we simulate by logging the link)
         emailService.sendPasswordResetEmail(email, resetToken);
@@ -242,15 +309,23 @@ public class AuthServiceImpl implements AuthService {
         // Log the audit event
         logger.info("Audit: Password reset requested for email: {}", email);
 
-        return new BaseResponse<>(1, null, "If the email exists, a reset link has been sent.");
+        return new BaseResponse<>(
+            Const.STATUS_RESPONSE.ERROR,
+            "If an email exists, a reset link has been sent",
+            ""
+        );
     }
 
     @Override
     public BaseResponse<?> resetPassword(String token, String newPassword) {
         // 1) Look up the reset token in the DB
         Optional<PasswordResetToken> tokenOpt = passwordResetTokenRepository.findByToken(token);
-        if (!tokenOpt.isPresent()) {
-            return new BaseResponse<>("Invalid or expired reset token.");
+        if (tokenOpt.isEmpty()) {
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "Invalid or expired token",
+                ""
+            );
         }
         PasswordResetToken resetToken = tokenOpt.get();
 
@@ -258,14 +333,22 @@ public class AuthServiceImpl implements AuthService {
         if (resetToken.getExpiresAt().isBefore(Instant.now())) {
             // Delete expired token for cleanup
             passwordResetTokenRepository.delete(resetToken);
-            return new BaseResponse<>("Reset token has expired.");
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "Reset token has expired",
+                ""
+            );
         }
 
         // 3) Retrieve the user by email from the reset token
         String email = resetToken.getEmail();
         Optional<User> userOpt = userRepository.findByEmail(email);
-        if (!userOpt.isPresent()) {
-            return new BaseResponse<>("User not found for email: " + email);
+        if (userOpt.isEmpty()) {
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "User not found with this email " + email,
+                ""
+            );
         }
         User user = userOpt.get();
 
@@ -281,7 +364,11 @@ public class AuthServiceImpl implements AuthService {
         logger.info("Audit: Password reset successfully for email: {}", email);
 
         // 7) Return a success message
-        return new BaseResponse<>(1, null, "Password reset successfully!");
+        return new BaseResponse<>(
+                Const.STATUS_RESPONSE.SUCCESS,
+                "Password reset successfully!",
+                ""
+        );
     }
 
 

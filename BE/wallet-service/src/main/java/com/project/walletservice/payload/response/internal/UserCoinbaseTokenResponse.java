@@ -1,4 +1,4 @@
-package com.project.walletservice.payload.response;
+package com.project.walletservice.payload.response.internal;
 
 import lombok.Data;
 

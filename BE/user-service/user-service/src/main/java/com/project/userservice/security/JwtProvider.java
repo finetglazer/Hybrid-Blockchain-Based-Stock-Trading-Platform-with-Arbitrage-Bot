@@ -12,7 +12,7 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
-    @Value("${jwt.secret:myLongSecretKeyChangeMeToAtLeast32Chars}")
+    @Value("${jwt.secret}")
     private String jwtSecret;
 
     @Value("${jwt.expirationMillis:86400000}") // default 24 hours
