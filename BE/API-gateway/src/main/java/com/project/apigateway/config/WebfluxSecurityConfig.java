@@ -14,15 +14,8 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableWebFluxSecurity
 public class WebfluxSecurityConfig {
 
-//    @Bean
-//    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-//        return new JwtAuthenticationFilter();
-//    }
-
-
     @Bean
-    public SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http,
-                                                       JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) {
 
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
