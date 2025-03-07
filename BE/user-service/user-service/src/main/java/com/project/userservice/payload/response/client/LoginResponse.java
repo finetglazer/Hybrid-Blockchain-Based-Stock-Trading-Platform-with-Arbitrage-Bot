@@ -1,4 +1,4 @@
-package com.project.userservice.payload.response;
+package com.project.userservice.payload.response.client;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

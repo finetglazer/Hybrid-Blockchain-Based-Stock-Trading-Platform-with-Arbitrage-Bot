@@ -1,14 +1,10 @@
 package com.project.userservice.controller;
 
-import com.project.userservice.payload.request.*;
-import com.project.userservice.payload.response.LoginResponse;
-import com.project.userservice.payload.response.RegisterResponse;
+import com.project.userservice.payload.request.client.*;
 import com.project.userservice.service.AuthService;
 
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
