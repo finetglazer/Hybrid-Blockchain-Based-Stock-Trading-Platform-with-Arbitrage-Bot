@@ -5,33 +5,32 @@ import { useNavigate } from "react-router-dom";
 const Register = () => {
   const navigate = useNavigate();
 
-  // State cho form: name, email, password
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
 
-  // Hàm xử lý khi bấm nút "Register"
+  const validate = () => {
+    let newError = {};
+    if (!name.trim()) newError.name = "Name is required";
+    if (!email.includes("@gmail.com")) newError.email = "Email is Invalid";
+    if (password.length < 6) newError.password = "At least 6 characters";
+    setErrors(newError);
+    return Object.keys(newError).length === 0;
+  };
   const handleRegister = async () => {
+    if (!validate()) return;
     try {
-      // Gửi request POST tới API register
       const response = await axios.post(
-        "https://hybrid-blockchain-based-stock-tr-test.up.railway.app/users/api/v1/auth/register",
-        {
-          name,
-          email,
-          password,
-        }
+        "/api/users/api/v1/auth/register", // Đã đổi URL dùng proxy
+        { name, email, password }
       );
 
       console.log("Register success:", response.data);
-      // Nếu cần, bạn có thể lưu token hoặc gì đó vào localStorage
-      // localStorage.setItem("token", response.data.token);
-
-      // Chuyển hướng sang trang login (hoặc trang chủ tuỳ ý)
       navigate("/");
     } catch (error) {
       console.error("Register failed:", error);
-      alert("Đăng ký thất bại! Vui lòng kiểm tra lại thông tin hoặc server.");
+      alert("Đăng ký thất bại! Vui lòng kiểm tra lại.");
     }
   };
 
@@ -44,6 +43,7 @@ const Register = () => {
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
+      {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
 
       <input
         type="email"
@@ -51,16 +51,15 @@ const Register = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-
+      {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
       <input
         type="password"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-
+      {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
       <button onClick={handleRegister}>Register</button>
-
       <p>
         Already have an account?{" "}
         <button onClick={() => navigate("/")}>Login</button>
