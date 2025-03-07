@@ -22,7 +22,7 @@ public class UserServiceClient {
     public UserCoinbaseTokenResponse getValidCoinbaseToken(String userId) {
         // e.g., calling GET /internal/users/{userId}/coinbase/valid-token
         String url = userServiceBaseUrl
-                + "/internal/users/" + userId + "/coinbase/valid-token";
+                + "/users/internal/users/" + userId + "/coinbase/valid-token";
 
         ResponseEntity<UserCoinbaseTokenResponse> response =
                 restTemplate.getForEntity(url, UserCoinbaseTokenResponse.class);
@@ -30,7 +30,7 @@ public class UserServiceClient {
     }
 
     public void saveCoinbaseTokens(String userId, String accessToken, String refreshToken, Long expiresIn) {
-        String url = userServiceBaseUrl + "/internal/users/coinbase/save-tokens";
+        String url = userServiceBaseUrl + "/users/internal/users/coinbase/save-tokens";
         SaveCoinbaseTokensRequest request = new SaveCoinbaseTokensRequest(
             userId,
             accessToken,

@@ -29,10 +29,10 @@ public class CoinbaseWalletServiceImpl implements CoinbaseWalletService {
     private final String oAuthUrl =
             "https://login.coinbase.com/oauth2/auth?" +
             "response_type=" + "code" +
-            "client_id=" + dotenv.get("COINBASE_OAUTH_CLIENT_ID") +
-            "redirect_uri=" +  dotenv.get("COINBASE_OAUTH_REDIRECT_URI") +
-            "state=" + dotenv.get("COINBASE_OAUTH_STATE") +
-            "scope=" + dotenv.get("COINBASE_ALL_PERMISSIONS");
+            "&client_id=" + dotenv.get("COINBASE_OAUTH_CLIENT_ID") +
+            "&redirect_uri=" +  dotenv.get("COINBASE_OAUTH_REDIRECT_URI") +
+            "&state=" + dotenv.get("COINBASE_OAUTH_STATE") +
+            "&scope=" + dotenv.get("COINBASE_ALL_SCOPES");
 
     @Override
     public BaseResponse<?> createWallet(String userId, CreateWalletRequest request) {

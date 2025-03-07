@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/internal/users")
+@RequestMapping("users/internal/users")
 @RequiredArgsConstructor
 public class UserCoinbaseController {
 
