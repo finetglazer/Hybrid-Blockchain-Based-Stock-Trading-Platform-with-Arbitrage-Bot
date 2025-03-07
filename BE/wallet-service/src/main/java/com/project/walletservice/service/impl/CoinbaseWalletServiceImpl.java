@@ -21,8 +21,12 @@ import java.time.Instant;
 @Service
 @RequiredArgsConstructor
 public class CoinbaseWalletServiceImpl implements CoinbaseWalletService {
-    Dotenv dotenv = Dotenv.configure().directory("wallet-service").load();
-    
+    Dotenv dotenv = Dotenv.configure()
+            .directory(System.getProperty("user.dir"))  // Ensure it loads from the root of wallet-service
+            .filename(".env")  // Ensure correct filename
+            .ignoreIfMissing()  // Prevents crashing if .env is missing
+            .load();
+
     private final RestTemplate restTemplate;
     private final OAuthService oAuthService;
     private final WalletRepository walletRepository;
