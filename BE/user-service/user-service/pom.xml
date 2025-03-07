@@ -22,6 +22,9 @@
 		<java.version>17</java.version>
 	</properties>
 
+	<packaging>jar</packaging>
+
+
 	<dependencies>
 		<!-- Spring Boot Web -->
 		<dependency>
@@ -147,11 +150,22 @@
 				</configuration>
 			</plugin>
 
-			<!-- Spring Boot Maven Plugin (for building and running the app) -->
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+<!--			&lt;!&ndash; Spring Boot Maven Plugin (for building and running the app) &ndash;&gt;-->
+<!--			<plugin>-->
+<!--				<groupId>org.springframework.boot</groupId>-->
+<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
+
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<goals>-->
+<!--							<goal>repackage</goal>-->
+<!--						</goals>-->
+<!--						<configuration>-->
+<!--							<skip>true</skip>  &lt;!&ndash; Prevent it from being a fat JAR &ndash;&gt;-->
+<!--						</configuration>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 
