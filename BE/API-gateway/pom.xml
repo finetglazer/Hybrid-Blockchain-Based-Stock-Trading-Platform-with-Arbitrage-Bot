@@ -13,6 +13,10 @@
     <artifactId>API-gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
+    <properties>
+        <start-class>com.project.apigateway.ApiGatewayApplication</start-class>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -71,6 +75,18 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- This is the main class of your Spring Boot application -->
+                    <mainClass>com.project.apigateway.ApiGatewayApplication</mainClass> <!-- Replace with the path to your main application class -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
             </plugin>
         </plugins>
     </build>
