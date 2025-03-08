@@ -21,20 +21,18 @@ import java.time.Instant;
 @Service
 @RequiredArgsConstructor
 public class CoinbaseWalletServiceImpl implements CoinbaseWalletService {
-    Dotenv dotenv = Dotenv.configure()
-            .directory("E:/HTPT/Hybrid Blockchain-Based Stock Trading Platform with Arbitrage Bot/BE/wallet-service")
-            .load();
-    
+    Dotenv commonDotenv = Dotenv.configure().directory("..").load();
+
     private final RestTemplate restTemplate;
     private final OAuthService oAuthService;
     private final WalletRepository walletRepository;
     private final String oAuthUrl =
             "https://login.coinbase.com/oauth2/auth?" +
             "response_type=" + "code" +
-            "&client_id=" + dotenv.get("COINBASE_OAUTH_CLIENT_ID") +
-            "&redirect_uri=" +  dotenv.get("COINBASE_OAUTH_REDIRECT_URI") +
-            "&state=" + dotenv.get("COINBASE_OAUTH_STATE") +
-            "&scope=" + dotenv.get("COINBASE_ALL_SCOPES");
+            "&client_id=" + commonDotenv.get("COINBASE_OAUTH_CLIENT_ID") +
+            "&redirect_uri=" +  commonDotenv.get("COINBASE_OAUTH_REDIRECT_URI") +
+            "&state=" + commonDotenv.get("COINBASE_OAUTH_STATE") +
+            "&scope=" + commonDotenv.get("COINBASE_ALL_SCOPES");
 
     @Override
     public BaseResponse<?> createWallet(String userId, CreateWalletRequest request) {

@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="API-gateway" />
         <module name="wallet-service" />
+        <module name="user-service" />
       </profile>
       <profile name="Annotation profile for wallet-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -18,19 +19,15 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
         </processorPath>
         <module name="project" />
-        <module name="wallet-service" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="user-service" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="API-gateway" options="" />
       <module name="project" options="-parameters" />
-      <module name="user-service" options="-parameters" />
-      <module name="wallet-service" options="-parameters" />
+      <module name="user-service" options="" />
+      <module name="wallet-service" options="" />
     </option>
   </component>
 </project>
