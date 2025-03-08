@@ -1,0 +1,435 @@
+2025-03-07 12:16:31 | INFO  | HV000001: Hibernate Validator 8.0.2.Final
+2025-03-07 12:16:31 | INFO  | Starting ApiGatewayApplicationTests using Java 23.0.2 with PID 10224 (started by hiepg in D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\API-gateway)
+2025-03-07 12:16:31 | DEBUG | Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-07 12:16:31 | INFO  | The following 1 profile is active: "product"
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#routingFilter matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#nettyWriteResponseFilter matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyWebSocketClient matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyRequestUpgradeStrategy matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#adaptCachedBodyGlobalFilter matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeCachedBodyFilter matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#routeToRequestUrlFilter matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardRoutingFilter matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardPathFilter matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#webSocketService matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#websocketRoutingFilter matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightCalculatorWebFilter matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#afterRoutePredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#beforeRoutePredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#betweenRoutePredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cookieRoutePredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#headerRoutePredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#hostRoutePredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#methodRoutePredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#pathRoutePredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#queryRoutePredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#readBodyPredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#remoteAddrRoutePredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#xForwardedRemoteAddrRoutePredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightRoutePredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cloudFoundryRouteServiceRoutePredicateFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeaderGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeadersIfNotPresentGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#mapRequestHeaderGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestParameterGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addResponseHeaderGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyRequestBodyGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#dedupeResponseHeaderGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyResponseBodyGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cacheRequestBodyGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#prefixPathGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#preserveHostHeaderGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#redirectToGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeJsonAttributesResponseBodyGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestHeaderGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestParameterGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeResponseHeaderGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewritePathGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#retryGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setPathGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#secureHeadersGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHeaderGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHostHeaderGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setResponseHeaderGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteResponseHeaderGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteLocationResponseHeaderGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setStatusGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#saveSessionGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#stripPrefixGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderToRequestUriGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestSizeGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderSizeGatewayFilterFactory matched
+2025-03-07 12:16:32 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteRequestParameterGatewayFilterFactory matched
+2025-03-07 12:16:32 | INFO  | BeanFactory id=d89f3f7e-e0a7-3a85-89b1-8e004c180a2d
+2025-03-07 12:16:33 | INFO  | 
+
+Using generated security password: 5ac95518-182c-4a3d-94e2-e87209162221
+
+2025-03-07 12:16:33 | DEBUG | Routes supplied from Gateway Properties: [RouteDefinition{id='user-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/users/**}}], filters=[], uri=https://user-service-test.up.railway.app, order=0, metadata={}, enabled=true}, RouteDefinition{id='wallet-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/wallets/**}}], filters=[], uri=https://wallet-service-test.up.railway.app, order=0, metadata={}, enabled=true}]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [After]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [Before]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [Between]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [Cookie]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [Header]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [Host]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [Method]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [Path]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [Query]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [ReadBody]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [RemoteAddr]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [XForwardedRemoteAddr]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [Weight]
+2025-03-07 12:16:34 | INFO  | Loaded RoutePredicateFactory [CloudFoundryRouteService]
+2025-03-07 12:16:34 | DEBUG | RouteDefinition user-service-route applying {_genkey_0=/users/**} to Path
+2025-03-07 12:16:34 | DEBUG | RouteDefinition matched: user-service-route
+2025-03-07 12:16:34 | DEBUG | RouteDefinition wallet-service-route applying {_genkey_0=/wallets/**} to Path
+2025-03-07 12:16:34 | DEBUG | RouteDefinition matched: wallet-service-route
+2025-03-07 12:16:34 | INFO  | Started ApiGatewayApplicationTests in 4.215 seconds (process running for 6.427)
+2025-03-07 15:43:29 | INFO  | HV000001: Hibernate Validator 8.0.2.Final
+2025-03-07 15:43:30 | INFO  | Starting ApiGatewayApplicationTests using Java 22.0.2 with PID 12804 (started by hiepg in D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\API-gateway)
+2025-03-07 15:43:30 | DEBUG | Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-07 15:43:30 | INFO  | The following 1 profile is active: "product"
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#routingFilter matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#nettyWriteResponseFilter matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyWebSocketClient matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyRequestUpgradeStrategy matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#adaptCachedBodyGlobalFilter matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeCachedBodyFilter matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#routeToRequestUrlFilter matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardRoutingFilter matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardPathFilter matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#webSocketService matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#websocketRoutingFilter matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightCalculatorWebFilter matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#afterRoutePredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#beforeRoutePredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#betweenRoutePredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cookieRoutePredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#headerRoutePredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#hostRoutePredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#methodRoutePredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#pathRoutePredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#queryRoutePredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#readBodyPredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#remoteAddrRoutePredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#xForwardedRemoteAddrRoutePredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightRoutePredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cloudFoundryRouteServiceRoutePredicateFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeadersIfNotPresentGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#mapRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestParameterGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyRequestBodyGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#dedupeResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyResponseBodyGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cacheRequestBodyGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#prefixPathGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#preserveHostHeaderGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#redirectToGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeJsonAttributesResponseBodyGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestParameterGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewritePathGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#retryGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setPathGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#secureHeadersGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHostHeaderGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteLocationResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setStatusGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#saveSessionGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#stripPrefixGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderToRequestUriGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestSizeGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderSizeGatewayFilterFactory matched
+2025-03-07 15:43:34 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteRequestParameterGatewayFilterFactory matched
+2025-03-07 15:43:36 | INFO  | BeanFactory id=d89f3f7e-e0a7-3a85-89b1-8e004c180a2d
+2025-03-07 15:43:37 | INFO  | 
+
+Using generated security password: ca3ee583-8c3c-42b9-a8dc-7867f7b805af
+
+2025-03-07 15:43:39 | DEBUG | Routes supplied from Gateway Properties: [RouteDefinition{id='user-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/users/**}}], filters=[], uri=https://user-service-test.up.railway.app, order=0, metadata={}, enabled=true}, RouteDefinition{id='wallet-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/wallets/**}}], filters=[], uri=https://wallet-service-test.up.railway.app, order=0, metadata={}, enabled=true}]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [After]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [Before]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [Between]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [Cookie]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [Header]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [Host]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [Method]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [Path]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [Query]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [ReadBody]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [RemoteAddr]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [XForwardedRemoteAddr]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [Weight]
+2025-03-07 15:43:40 | INFO  | Loaded RoutePredicateFactory [CloudFoundryRouteService]
+2025-03-07 15:43:42 | DEBUG | RouteDefinition user-service-route applying {_genkey_0=/users/**} to Path
+2025-03-07 15:43:42 | DEBUG | RouteDefinition matched: user-service-route
+2025-03-07 15:43:42 | DEBUG | RouteDefinition wallet-service-route applying {_genkey_0=/wallets/**} to Path
+2025-03-07 15:43:42 | DEBUG | RouteDefinition matched: wallet-service-route
+2025-03-07 15:43:42 | INFO  | Started ApiGatewayApplicationTests in 16.06 seconds (process running for 26.336)
+2025-03-07 15:47:38 | INFO  | HV000001: Hibernate Validator 8.0.2.Final
+2025-03-07 15:47:39 | INFO  | Starting ApiGatewayApplicationTests using Java 22.0.2 with PID 1676 (started by hiepg in D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\API-gateway)
+2025-03-07 15:47:39 | DEBUG | Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-07 15:47:39 | INFO  | The following 1 profile is active: "product"
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#routingFilter matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#nettyWriteResponseFilter matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyWebSocketClient matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyRequestUpgradeStrategy matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#adaptCachedBodyGlobalFilter matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeCachedBodyFilter matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#routeToRequestUrlFilter matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardRoutingFilter matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardPathFilter matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#webSocketService matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#websocketRoutingFilter matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightCalculatorWebFilter matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#afterRoutePredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#beforeRoutePredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#betweenRoutePredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cookieRoutePredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#headerRoutePredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#hostRoutePredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#methodRoutePredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#pathRoutePredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#queryRoutePredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#readBodyPredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#remoteAddrRoutePredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#xForwardedRemoteAddrRoutePredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightRoutePredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cloudFoundryRouteServiceRoutePredicateFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeadersIfNotPresentGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#mapRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestParameterGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyRequestBodyGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#dedupeResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyResponseBodyGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cacheRequestBodyGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#prefixPathGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#preserveHostHeaderGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#redirectToGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeJsonAttributesResponseBodyGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestParameterGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewritePathGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#retryGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setPathGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#secureHeadersGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHostHeaderGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteLocationResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setStatusGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#saveSessionGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#stripPrefixGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderToRequestUriGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestSizeGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderSizeGatewayFilterFactory matched
+2025-03-07 15:47:41 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteRequestParameterGatewayFilterFactory matched
+2025-03-07 15:47:41 | INFO  | BeanFactory id=d89f3f7e-e0a7-3a85-89b1-8e004c180a2d
+2025-03-07 15:47:42 | INFO  | 
+
+Using generated security password: 90f54000-6158-4872-8a42-df5ed7c9c671
+
+2025-03-07 15:47:44 | DEBUG | Routes supplied from Gateway Properties: [RouteDefinition{id='user-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/users/**}}], filters=[], uri=https://user-service-test.up.railway.app, order=0, metadata={}, enabled=true}, RouteDefinition{id='wallet-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/wallets/**}}], filters=[], uri=https://wallet-service-test.up.railway.app, order=0, metadata={}, enabled=true}]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [After]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [Before]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [Between]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [Cookie]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [Header]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [Host]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [Method]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [Path]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [Query]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [ReadBody]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [RemoteAddr]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [XForwardedRemoteAddr]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [Weight]
+2025-03-07 15:47:45 | INFO  | Loaded RoutePredicateFactory [CloudFoundryRouteService]
+2025-03-07 15:47:45 | DEBUG | RouteDefinition user-service-route applying {_genkey_0=/users/**} to Path
+2025-03-07 15:47:45 | DEBUG | RouteDefinition matched: user-service-route
+2025-03-07 15:47:45 | DEBUG | RouteDefinition wallet-service-route applying {_genkey_0=/wallets/**} to Path
+2025-03-07 15:47:45 | DEBUG | RouteDefinition matched: wallet-service-route
+2025-03-07 15:47:45 | INFO  | Started ApiGatewayApplicationTests in 8.522 seconds (process running for 11.652)
+2025-03-07 15:51:21 | INFO  | HV000001: Hibernate Validator 8.0.2.Final
+2025-03-07 15:51:22 | INFO  | Starting ApiGatewayApplicationTests using Java 23.0.2 with PID 15648 (started by hiepg in D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\API-gateway)
+2025-03-07 15:51:22 | DEBUG | Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-07 15:51:22 | INFO  | The following 1 profile is active: "product"
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#routingFilter matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#nettyWriteResponseFilter matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyWebSocketClient matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyRequestUpgradeStrategy matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#adaptCachedBodyGlobalFilter matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeCachedBodyFilter matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#routeToRequestUrlFilter matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardRoutingFilter matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardPathFilter matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#webSocketService matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#websocketRoutingFilter matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightCalculatorWebFilter matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#afterRoutePredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#beforeRoutePredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#betweenRoutePredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cookieRoutePredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#headerRoutePredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#hostRoutePredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#methodRoutePredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#pathRoutePredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#queryRoutePredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#readBodyPredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#remoteAddrRoutePredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#xForwardedRemoteAddrRoutePredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightRoutePredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cloudFoundryRouteServiceRoutePredicateFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeadersIfNotPresentGatewayFilterFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#mapRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestParameterGatewayFilterFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyRequestBodyGatewayFilterFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#dedupeResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyResponseBodyGatewayFilterFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cacheRequestBodyGatewayFilterFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#prefixPathGatewayFilterFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#preserveHostHeaderGatewayFilterFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#redirectToGatewayFilterFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeJsonAttributesResponseBodyGatewayFilterFactory matched
+2025-03-07 15:51:23 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestParameterGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewritePathGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#retryGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setPathGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#secureHeadersGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHostHeaderGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteLocationResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setStatusGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#saveSessionGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#stripPrefixGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderToRequestUriGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestSizeGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderSizeGatewayFilterFactory matched
+2025-03-07 15:51:24 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteRequestParameterGatewayFilterFactory matched
+2025-03-07 15:51:24 | INFO  | BeanFactory id=d89f3f7e-e0a7-3a85-89b1-8e004c180a2d
+2025-03-07 15:51:25 | INFO  | 
+
+Using generated security password: 7ab42730-c9a7-44f7-9a34-60dcebcd0e25
+
+2025-03-07 15:51:27 | DEBUG | Routes supplied from Gateway Properties: [RouteDefinition{id='user-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/users/**}}], filters=[], uri=https://user-service-test.up.railway.app, order=0, metadata={}, enabled=true}, RouteDefinition{id='wallet-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/wallets/**}}], filters=[], uri=https://wallet-service-test.up.railway.app, order=0, metadata={}, enabled=true}]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [After]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [Before]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [Between]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [Cookie]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [Header]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [Host]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [Method]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [Path]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [Query]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [ReadBody]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [RemoteAddr]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [XForwardedRemoteAddr]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [Weight]
+2025-03-07 15:51:27 | INFO  | Loaded RoutePredicateFactory [CloudFoundryRouteService]
+2025-03-07 15:51:28 | DEBUG | RouteDefinition user-service-route applying {_genkey_0=/users/**} to Path
+2025-03-07 15:51:28 | DEBUG | RouteDefinition matched: user-service-route
+2025-03-07 15:51:28 | DEBUG | RouteDefinition wallet-service-route applying {_genkey_0=/wallets/**} to Path
+2025-03-07 15:51:28 | DEBUG | RouteDefinition matched: wallet-service-route
+2025-03-07 15:51:28 | INFO  | Started ApiGatewayApplicationTests in 7.813 seconds (process running for 11.811)
+2025-03-07 15:56:33 | INFO  | HV000001: Hibernate Validator 8.0.2.Final
+2025-03-07 15:56:33 | INFO  | Starting ApiGatewayApplicationTests using Java 23.0.2 with PID 18264 (started by hiepg in D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\API-gateway)
+2025-03-07 15:56:33 | DEBUG | Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-07 15:56:33 | INFO  | The following 1 profile is active: "product"
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#routingFilter matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#nettyWriteResponseFilter matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyWebSocketClient matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyRequestUpgradeStrategy matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#adaptCachedBodyGlobalFilter matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeCachedBodyFilter matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#routeToRequestUrlFilter matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardRoutingFilter matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardPathFilter matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#webSocketService matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#websocketRoutingFilter matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightCalculatorWebFilter matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#afterRoutePredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#beforeRoutePredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#betweenRoutePredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cookieRoutePredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#headerRoutePredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#hostRoutePredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#methodRoutePredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#pathRoutePredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#queryRoutePredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#readBodyPredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#remoteAddrRoutePredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#xForwardedRemoteAddrRoutePredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightRoutePredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cloudFoundryRouteServiceRoutePredicateFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeadersIfNotPresentGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#mapRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestParameterGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyRequestBodyGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#dedupeResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyResponseBodyGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cacheRequestBodyGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#prefixPathGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#preserveHostHeaderGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#redirectToGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeJsonAttributesResponseBodyGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestParameterGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewritePathGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#retryGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setPathGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#secureHeadersGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHeaderGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHostHeaderGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteLocationResponseHeaderGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setStatusGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#saveSessionGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#stripPrefixGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderToRequestUriGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestSizeGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderSizeGatewayFilterFactory matched
+2025-03-07 15:56:35 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteRequestParameterGatewayFilterFactory matched
+2025-03-07 15:56:37 | INFO  | BeanFactory id=d89f3f7e-e0a7-3a85-89b1-8e004c180a2d
+2025-03-07 15:56:38 | INFO  | 
+
+Using generated security password: d604bc11-97aa-48af-a1e8-395fb84f0209
+
+2025-03-07 15:56:41 | DEBUG | Routes supplied from Gateway Properties: [RouteDefinition{id='user-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/users/**}}], filters=[], uri=https://user-service-test.up.railway.app, order=0, metadata={}, enabled=true}, RouteDefinition{id='wallet-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/wallets/**}}], filters=[], uri=https://wallet-service-test.up.railway.app, order=0, metadata={}, enabled=true}]
+2025-03-07 15:56:41 | INFO  | Loaded RoutePredicateFactory [After]
+2025-03-07 15:56:41 | INFO  | Loaded RoutePredicateFactory [Before]
+2025-03-07 15:56:41 | INFO  | Loaded RoutePredicateFactory [Between]
+2025-03-07 15:56:42 | INFO  | Loaded RoutePredicateFactory [Cookie]
+2025-03-07 15:56:42 | INFO  | Loaded RoutePredicateFactory [Header]
+2025-03-07 15:56:42 | INFO  | Loaded RoutePredicateFactory [Host]
+2025-03-07 15:56:42 | INFO  | Loaded RoutePredicateFactory [Method]
+2025-03-07 15:56:42 | INFO  | Loaded RoutePredicateFactory [Path]
+2025-03-07 15:56:42 | INFO  | Loaded RoutePredicateFactory [Query]
+2025-03-07 15:56:42 | INFO  | Loaded RoutePredicateFactory [ReadBody]
+2025-03-07 15:56:42 | INFO  | Loaded RoutePredicateFactory [RemoteAddr]
+2025-03-07 15:56:42 | INFO  | Loaded RoutePredicateFactory [XForwardedRemoteAddr]
+2025-03-07 15:56:42 | INFO  | Loaded RoutePredicateFactory [Weight]
+2025-03-07 15:56:42 | INFO  | Loaded RoutePredicateFactory [CloudFoundryRouteService]
+2025-03-07 15:56:43 | DEBUG | RouteDefinition user-service-route applying {_genkey_0=/users/**} to Path
+2025-03-07 15:56:43 | DEBUG | RouteDefinition matched: user-service-route
+2025-03-07 15:56:43 | DEBUG | RouteDefinition wallet-service-route applying {_genkey_0=/wallets/**} to Path
+2025-03-07 15:56:43 | DEBUG | RouteDefinition matched: wallet-service-route
+2025-03-07 15:56:43 | INFO  | Started ApiGatewayApplicationTests in 12.279 seconds (process running for 16.817)
