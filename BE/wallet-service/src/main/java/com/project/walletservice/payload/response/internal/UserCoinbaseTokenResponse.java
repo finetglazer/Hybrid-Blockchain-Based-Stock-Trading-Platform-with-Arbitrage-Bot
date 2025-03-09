@@ -1,8 +1,12 @@
 package com.project.walletservice.payload.response.internal;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserCoinbaseTokenResponse {
     private boolean linked;
     private String accessToken;

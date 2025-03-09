@@ -4,9 +4,11 @@ import com.project.walletservice.model.DefaultAddress;
 import com.project.walletservice.model.FeatureSet;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class CoinbaseApiCreateWalletResponse {
     private String id;  // wallet_id which is server-assigned ID for the wallet
     private String network_id;
