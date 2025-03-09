@@ -23,7 +23,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class CoinbaseTokenServiceImpl implements CoinbaseTokenService {
-    Dotenv commonDotenv = Dotenv.configure().directory("..").load();
+    Dotenv dotenv = Dotenv.configure().load();
 
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
@@ -118,8 +118,8 @@ public class CoinbaseTokenServiceImpl implements CoinbaseTokenService {
             Map<String, String> body = new HashMap<>();
             body.put("grant_type", "refresh_token");
             body.put("refresh_token", user.getCoinbaseRefreshToken());
-            body.put("client_id", commonDotenv.get("COINBASE_OAUTH_CLIENT_ID"));
-            body.put("client_secret", commonDotenv.get("COINBASE_OAUTH_CLIENT_SECRET"));
+            body.put("client_id", dotenv.get("COINBASE_OAUTH_CLIENT_ID"));
+            body.put("client_secret", dotenv.get("COINBASE_OAUTH_CLIENT_SECRET"));
 
             // Convert map to the application/x-www-form-urlencoded format
             String formData = buildFormData(body);

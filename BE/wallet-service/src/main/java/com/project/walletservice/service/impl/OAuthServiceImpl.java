@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class OAuthServiceImpl implements OAuthService {
-    Dotenv commonDotenv = Dotenv.configure().directory("..").load();
+    Dotenv dotenv = Dotenv.configure().load();
 
     private final UserServiceClient userServiceClient;
     private final RestTemplate restTemplate;
@@ -49,9 +49,9 @@ public class OAuthServiceImpl implements OAuthService {
         CoinbaseApiExchangeCodeRequest requestBody = new CoinbaseApiExchangeCodeRequest(
                 "authorization_code",
                 authCode,
-                commonDotenv.get("COINBASE_OAUTH_CLIENT_ID"),
-                commonDotenv.get("COINBASE_OAUTH_CLIENT_SECRET"),
-                commonDotenv.get("COINBASE_OAUTH_REDIRECT_URI")
+                dotenv.get("COINBASE_OAUTH_CLIENT_ID"),
+                dotenv.get("COINBASE_OAUTH_CLIENT_SECRET"),
+                dotenv.get("COINBASE_OAUTH_REDIRECT_URI")
         );
 
         // Create request header
