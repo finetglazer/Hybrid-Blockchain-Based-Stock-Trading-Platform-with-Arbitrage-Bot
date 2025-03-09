@@ -1,8 +1,10 @@
 HELP.md
-target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+# Unignore target folder
+!user-service/target/
 
 ### STS ###
 .apt_generated

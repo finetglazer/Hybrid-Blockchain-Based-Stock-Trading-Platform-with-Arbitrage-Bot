@@ -1,21 +1,14 @@
-# 1️⃣ Use OpenJDK 17 as the base image
-FROM openjdk:17
+# Use a smaller JRE image to run the application
+FROM openjdk:11-jre-slim
 
-# 2️⃣ Set the working directory inside the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# 3️⃣ Copy the pom.xml and src folder to the container (to build the project)
-COPY pom.xml .
-COPY src ./src
+# Copy the JAR file built manually from the host machine into the container
+COPY ./target/API-gateway-0.0.1-SNAPSHOT.jar /app/api-gateway.jar
 
-# 4️⃣ Run Maven to build the project (this will generate the JAR file in the target directory)
-RUN mvn clean package -DskipTests
-
-# 5️⃣ Copy the built JAR file into the container (from the target directory)
-COPY target/API-gateway-0.0.1-SNAPSHOT.jar app.jar
-
-# 6️⃣ Expose the application port (8080)
+# Expose the port the app will run on
 EXPOSE 8080
 
-# 7️⃣ Run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the application
+CMD ["java", "-jar", "api-gateway.jar"]
