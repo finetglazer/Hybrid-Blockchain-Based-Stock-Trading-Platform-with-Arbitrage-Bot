@@ -1,4 +1,6 @@
 Manifest-Version: 1.0
-Created-By: Maven JAR Plugin 3.4.1
-Build-Jdk-Spec: 22
+Created-By: Apache Maven 3.9.9
+Built-By: hiepg
+Build-Jdk: 22.0.2
+Main-Class: com.project.userservice.UserServiceApplication
 
