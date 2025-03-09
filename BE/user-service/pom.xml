@@ -135,6 +135,10 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.4.3</version> <!-- Ensure this version matches your Spring Boot version -->
+				<configuration>
+					<mainClass>com.project.userservice.UserServiceApplication</mainClass> <!-- Replace with your main class -->
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
