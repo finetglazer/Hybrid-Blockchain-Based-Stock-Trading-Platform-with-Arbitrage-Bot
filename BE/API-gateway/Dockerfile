@@ -1,5 +1,5 @@
 # Use a smaller JRE image to run the application
-FROM openjdk:11-jre-slim
+FROM openjdk:17
 
 # Set the working directory inside the container
 WORKDIR /app
