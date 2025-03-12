@@ -16,6 +16,10 @@
 
 	<packaging>jar</packaging>
 
+	<properties>
+		<start-class>com.project.userservice.UserServiceApplication</start-class>
+	</properties>
+
 
 	<dependencies>
 		<!-- Spring Boot Web -->
@@ -125,16 +129,20 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!-- This is the main class of your Spring Boot application -->
+					<mainClass>com.project.userservice.UserServiceApplication</mainClass> <!-- Replace with the path to your main application class -->
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+
 			</plugin>
 		</plugins>
 	</build>

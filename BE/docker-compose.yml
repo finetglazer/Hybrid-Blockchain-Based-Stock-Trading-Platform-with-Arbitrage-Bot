@@ -28,7 +28,7 @@ services:
   ######################
   user-service:
     build:
-      context: ./user-service/user-service
+      context: ./user-service
       dockerfile: Dockerfile
     container_name: user-service
     expose:
