@@ -23,7 +23,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class CoinbaseTokenServiceImpl implements CoinbaseTokenService {
-    Dotenv dotenv = Dotenv.configure().directory("E:/HTPT/Hybrid Blockchain-Based Stock Trading Platform with Arbitrage Bot/BE/user-service").load();
+    Dotenv dotenv = Dotenv.configure().load();
 
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;

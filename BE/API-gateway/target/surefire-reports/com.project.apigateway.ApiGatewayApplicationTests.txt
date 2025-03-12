@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.project.apigateway.ApiGatewayApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 21.58 s -- in com.project.apigateway.ApiGatewayApplicationTests

@@ -1,0 +1,3 @@
+com\project\apigateway\config\WebfluxSecurityConfig.class
+com\project\apigateway\ApiGatewayApplication.class
+com\project\apigateway\security\JwtAuthenticationFilter.class

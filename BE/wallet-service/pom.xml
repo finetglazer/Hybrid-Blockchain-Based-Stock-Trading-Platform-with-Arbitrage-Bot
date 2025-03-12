@@ -13,14 +13,8 @@
     <artifactId>wallet-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <packaging>jar</packaging>
-
-    <properties>
-        <start-class>com.project.walletservice.WalletServiceApplication</start-class>
-    </properties>
-
     <dependencies>
-        <!-- Spring Boot Dependencies -->
+        <!-- Spring Boot Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -37,6 +31,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -53,17 +48,19 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- Other Dependencies -->
+        <!-- https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java -->
         <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>dotenv-java</artifactId>
             <version>3.0.0</version>
         </dependency>
+
         <dependency>
             <groupId>com.project</groupId>
             <artifactId>user-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -76,11 +73,12 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.project.walletservice.WalletServiceApplication</mainClass>  <!-- Replace with your main class -->
+                    <mainClass>com.project.walletservice.WalletServiceApplication</mainClass> <!-- Replace with your main class -->
                 </configuration>
                 <executions>
                     <execution>

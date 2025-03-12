@@ -4,11 +4,11 @@ FROM openjdk:17
 # 2️⃣ Set the working directory inside the container
 WORKDIR /app
 
-# 3️⃣ Copy the built JAR file into the container
+# 5️⃣ Copy the built JAR file into the container (from the target directory)
 COPY target/user-service-0.0.1-SNAPSHOT.jar app.jar
 
-# 4️⃣ Expose the application port (8081)
+# 6️⃣ Expose the application port (8080)
 EXPOSE 8081
 
-# 5️⃣ Run the Spring Boot application
+# 7️⃣ Run the Spring Boot application
 ENTRYPOINT ["java", "-jar", "app.jar"]

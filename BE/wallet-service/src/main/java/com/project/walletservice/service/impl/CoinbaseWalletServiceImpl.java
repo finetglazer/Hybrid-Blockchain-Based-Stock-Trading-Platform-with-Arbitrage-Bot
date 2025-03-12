@@ -21,9 +21,7 @@ import java.time.Instant;
 @Service
 @RequiredArgsConstructor
 public class CoinbaseWalletServiceImpl implements CoinbaseWalletService {
-    Dotenv dotenv = Dotenv.configure()
-            .directory("E:\\HTPT\\Hybrid Blockchain-Based Stock Trading Platform with Arbitrage Bot\\BE\\wallet-service\\.env")
-            .load();
+    Dotenv dotenv = Dotenv.configure().load();
 
     private final RestTemplate restTemplate;
     private final OAuthService oAuthService;

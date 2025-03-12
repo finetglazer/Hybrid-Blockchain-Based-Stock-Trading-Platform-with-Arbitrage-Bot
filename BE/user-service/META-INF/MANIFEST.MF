@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven 3.9.9
+Built-By: hiepg
+Built-By: 22.0.2
+Main-Class: com.project.userservice.UserServiceApplication

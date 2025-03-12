@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class OAuthServiceImpl implements OAuthService {
-    Dotenv dotenv = Dotenv.configure().directory("E:\\HTPT\\Hybrid Blockchain-Based Stock Trading Platform with Arbitrage Bot\\BE\\wallet-service\\.env").load();
+    Dotenv dotenv = Dotenv.configure().load();
 
     private final UserServiceClient userServiceClient;
     private final RestTemplate restTemplate;
