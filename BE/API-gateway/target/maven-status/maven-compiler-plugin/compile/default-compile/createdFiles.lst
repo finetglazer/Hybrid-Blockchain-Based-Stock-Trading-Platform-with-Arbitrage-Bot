@@ -1,3 +1,5 @@
 com\project\apigateway\config\WebfluxSecurityConfig.class
+com\project\apigateway\filter\CachingFilter$1.class
+com\project\apigateway\filter\CachingFilter.class
 com\project\apigateway\ApiGatewayApplication.class
 com\project\apigateway\security\JwtAuthenticationFilter.class
