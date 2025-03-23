@@ -15,7 +15,7 @@ const NavbarSide = () => {
           <button onClick={() => navigate("/wallet")}>WALLET</button>
         </ol>
         <ol className="nav-item">
-          <button onClick={() => navigate("information")}>INFORMATION</button>
+          <button onClick={() => navigate("/support")}>SUPPORT</button>
         </ol>
       </ul>
     </div>

@@ -25,8 +25,10 @@ const Login = () => {
 
       // Chuyển hướng sau khi đăng nhập thành công
       if (response.data.status === 1) {
+        localStorage.setItem("username", usernameOrEmail);
+        console.log(usernameOrEmail);
         alert(response.data.msg);
-        navigate("/home"); // Hiển thị thông báo lỗi từ server
+        navigate("/home");
         return; // Dừng hàm, không điều hướng
       }
     } catch (err) {
