@@ -34,6 +34,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### Ignore file ###
-#firebase
-firebase-service-account.json
+# Ignore Firebase service account JSON files
+**/firebase/firebase-service-account.json
+**/firebase-service-account.json
