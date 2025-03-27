@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Define daily rolling file appender -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Current log file -->
+        <file>logs/gateway.log</file>
+
+        <!-- Daily log rotation -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Rotated file naming pattern -->
+            <fileNamePattern>logs/gateway-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- Keep logs for the last 30 days -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <!-- Log pattern (timestamp, level, message) -->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} | %-5level | %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Console appender (Optional: useful during development) -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root logger configuration -->
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="CONSOLE"/> <!-- Remove this line if console logging is not required -->
+    </root>
+
+    <!-- Optional: Specific logger for your Gateway filters -->
+    <logger name="com.project.apigateway" level="DEBUG"/>
+
+</configuration>
