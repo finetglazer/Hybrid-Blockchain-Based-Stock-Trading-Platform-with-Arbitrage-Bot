@@ -23,7 +23,7 @@ public class WebfluxSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeExchange(exchanges -> exchanges
                         // Allow OPTIONS requests for all endpoints
-                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/login").permitAll()
                         .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/forgot-password").permitAll()
                         .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/register").permitAll()
