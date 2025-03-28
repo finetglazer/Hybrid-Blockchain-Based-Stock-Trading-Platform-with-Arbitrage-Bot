@@ -134,13 +134,13 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
 
         // 3. Verify code with Firebase
         try {
-            boolean verified = smsService.verifyPhoneAuthCredential(request.getCode());
+            boolean verified = smsService.verifyPhoneAuthCredential(request.getFirebaseIdToken());
             if (!verified) {
                 verification.setStatus(SecurityVerification.VerificationStatus.FAILED);
                 securityVerificationRepository.save(verification);
                 return new BaseResponse<>(
                         Const.STATUS_RESPONSE.ERROR,
-                        "Invalid verification code",
+                        "Invalid verification token",
                         ""
                 );
             }

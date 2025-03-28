@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -40,6 +42,7 @@ public class User {
     private UserStatus status = UserStatus.ACTIVE; // Default value
 
     // Change to Set<String> instead of Set<TradingPermission>
+    // Change from a Set<String> to a single String
     @Field("tradingPermissions")
     private Set<String> permissions;
 
@@ -56,11 +59,6 @@ public class User {
         ADVANCED_TRADING,
         PREMIUM_TRADING
     }
-
-    // Helper method to set a trading permission using the enum for type safety
-//    public void setTradingPermission(TradingPermission permission) {
-//        this.tradingPermissions = permission.name();
-//    }
 
     public boolean hasTradingPermission(String permission) {
         return this.permissions.contains(permission);
