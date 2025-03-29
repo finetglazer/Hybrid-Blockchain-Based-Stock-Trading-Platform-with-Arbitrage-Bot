@@ -1,8 +1,11 @@
 package com.accountservice.controller;
 
+import com.accountservice.common.BaseResponse;
 import com.accountservice.payload.request.client.CreateTradingAccountRequest;
+import com.accountservice.payload.request.client.GetBalanceHistoryRequest;
 import com.accountservice.payload.request.client.GetUserAccountsRequest;
 import com.accountservice.payload.request.client.UpdateTradingAccountRequest;
+import com.accountservice.payload.response.internal.HasTradingAccountAndPaymentMethodResponse;
 import com.accountservice.service.TradingAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,21 +47,26 @@ public class TradingAccountController {
             @RequestParam(name = "nickname", required = false) String nickname,
             @RequestParam(name = "status", required = false) String status
     ) {
-        return ResponseEntity.ok(
+        return ResponseEntity.ok(tradingAccountService.updateTradingAccount(
             new UpdateTradingAccountRequest(accountId, nickname, status)
-        );
+        ));
     }
 
-    @GetMapping("/{accountId}/balance-history")
-    public ResponseEntity<?> getBalanceHistory(
-        @PathVariable String accountId,
-        @RequestParam(name = "startDate", required = false) String startDate,
-        @RequestParam(name = "endDate", required = false) String endDate,
-        @RequestParam(name = "page", required = false) Integer page,
-        @RequestParam(name = "size", required = false) Integer size
-    ) {
-        return ResponseEntity.ok(
+//    @GetMapping("/{accountId}/balance-history")
+//    public ResponseEntity<?> getBalanceHistory(
+//        @PathVariable String accountId,
+//        @RequestParam(name = "startDate", required = false) String startDate,
+//        @RequestParam(name = "endDate", required = false) String endDate,
+//        @RequestParam(name = "page", required = false) Integer page,
+//        @RequestParam(name = "size", required = false) Integer size
+//    ) {
+//        return ResponseEntity.ok(tradingAccountService.getBalanceHistory(
+//            new GetBalanceHistoryRequest(accountId, startDate, endDate, page, size)
+//        ));
+//    }
 
-        );
+    @PostMapping("/internal/{userId}/has-account-and-payment-method")
+    public ResponseEntity<HasTradingAccountAndPaymentMethodResponse> hasAccountAndPaymentMethod(@PathVariable String userId) {
+        return ResponseEntity.ok(tradingAccountService.hasAccountAndPaymentMethod(userId));
     }
 }

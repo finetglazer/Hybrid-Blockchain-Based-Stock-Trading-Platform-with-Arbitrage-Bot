@@ -4,14 +4,17 @@ import com.accountservice.common.BaseResponse;
 import com.accountservice.common.Const;
 import com.accountservice.common.PagingResponse;
 import com.accountservice.model.Balance;
+import com.accountservice.model.PaymentMethod;
 import com.accountservice.model.TradingAccount;
-import com.accountservice.payload.request.client.CreateTradingAccountRequest;
-import com.accountservice.payload.request.client.GetUserAccountsRequest;
-import com.accountservice.payload.request.client.UpdateTradingAccountRequest;
+import com.accountservice.model.Transaction;
+import com.accountservice.payload.request.client.*;
 import com.accountservice.payload.response.client.*;
+import com.accountservice.payload.response.internal.HasTradingAccountAndPaymentMethodResponse;
 import com.accountservice.repository.BalanceRepository;
+import com.accountservice.repository.PaymentMethodRepository;
 import com.accountservice.repository.TradingAccountRepository;
 import com.accountservice.service.TradingAccountService;
+import com.accountservice.service.TransactionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -35,6 +37,9 @@ import java.util.stream.Collectors;
 public class TradingAccountServiceImpl implements TradingAccountService {
     private final TradingAccountRepository tradingAccountRepository;
     private final BalanceRepository balanceRepository;
+    private final PaymentMethodRepository paymentMethodRepository;
+
+    private final TransactionService transactionService;
 
     @Override
     public BaseResponse<?> createTradingAccount(String userId, CreateTradingAccountRequest createTradingAccountRequest) {
@@ -96,6 +101,8 @@ public class TradingAccountServiceImpl implements TradingAccountService {
             );
         }
 
+        Transaction lastTransaction = transactionService.getLastTransaction(accountId);
+
         return new BaseResponse<>(
             Const.STATUS_RESPONSE.SUCCESS,
             "Account details retrieved successfully",
@@ -112,7 +119,9 @@ public class TradingAccountServiceImpl implements TradingAccountService {
                     balance.getReserved(),
                     balance.getTotal()
                 ),
-                Instant.now()   // Temporarily set last transaction at
+                lastTransaction == null
+                    ? null
+                    : lastTransaction.getCompletedAt()
             )
         );
     }
@@ -124,7 +133,7 @@ public class TradingAccountServiceImpl implements TradingAccountService {
         Integer page = getUserAccountsRequest.getPage();
         Integer size = getUserAccountsRequest.getSize();
 
-        if (page == null) { page = 1; }
+        if (page == null) { page = 0; }
         if (size == null) { size = 20; }
 
         Pageable pageable = PageRequest.of(page, size);
@@ -202,6 +211,52 @@ public class TradingAccountServiceImpl implements TradingAccountService {
                 status,
                 tradingAccount.getUpdatedAt()
             )
+        );
+    }
+
+//    @Override
+//    public BaseResponse<?> getBalanceHistory(GetBalanceHistoryRequest getBalanceHistoryRequest) {
+//        String accountId = getBalanceHistoryRequest.getAccountId();
+//        String startDate = getBalanceHistoryRequest.getStartDate();
+//        String endDate = getBalanceHistoryRequest.getEndDate();
+//        Integer page = getBalanceHistoryRequest.getPage();
+//        Integer size = getBalanceHistoryRequest.getSize();
+//
+//        BaseResponse<List<Transaction>> getTransactionsResponse = transactionService.getTransactions(
+//            new GetTransactionsRequest(
+//                accountId,
+//                startDate,
+//                endDate,
+//                List.of(Transaction.TransactionType.DEPOSIT.name(), Transaction.TransactionType.WITHDRAWAL.name()),
+//                List.of(),
+//                page,
+//                size
+//            )
+//        );
+//        List<Transaction> transactions = getTransactionsResponse.getData();
+//        if (transactions.isEmpty()) {
+//            return new BaseResponse<>(
+//                Const.STATUS_RESPONSE.ERROR,
+//                "Transactions not found",
+//                    ""
+//            );
+//        }
+//
+//        for (int i = 0; i < transactions.size(); ++i) {
+//            Transaction transaction = transactions.get(i);
+//            String completedDate = transaction.getCompletedAt().toString().split("T")[0];
+//
+//        }
+//    }
+
+    @Override
+    public HasTradingAccountAndPaymentMethodResponse hasAccountAndPaymentMethod(String userId) {
+        TradingAccount tradingAccount = tradingAccountRepository.findTradingAccountByUserId(userId).orElse(null);
+        PaymentMethod paymentMethod = paymentMethodRepository.findPaymentMethodByUserId(userId).orElse(null);
+
+        return new HasTradingAccountAndPaymentMethodResponse(
+        tradingAccount != null,
+        paymentMethod != null
         );
     }
 

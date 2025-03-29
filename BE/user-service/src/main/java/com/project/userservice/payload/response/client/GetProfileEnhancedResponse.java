@@ -21,7 +21,7 @@ public class GetProfileEnhancedResponse {
     private Instant createdAt;
     private Instant lastLoginAt;
     private Boolean twoFactorEnabled;
-    private SecurityVerification.VerificationType twoFactorType;
+    private List<String> twoFactorTypes;
     private List<String> tradingPermissions;
     private Boolean hasTradingAccount;
     private Boolean hasPaymentMethods;

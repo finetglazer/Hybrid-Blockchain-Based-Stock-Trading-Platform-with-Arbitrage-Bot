@@ -20,8 +20,8 @@ public class SecurityVerification {
     private String userId;
 
     @Field("verificationType")
-    private VerificationType type;
-    private VerificationStatus status;
+    private String type;
+    private String status;
 
     private Instant createdAt = Instant.now();
     private Instant expiresAt;

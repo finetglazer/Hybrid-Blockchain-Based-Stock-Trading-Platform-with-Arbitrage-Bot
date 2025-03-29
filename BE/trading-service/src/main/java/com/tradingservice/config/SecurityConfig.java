@@ -1,4 +1,4 @@
-package com.project.userservice.configuration;
+package com.tradingservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

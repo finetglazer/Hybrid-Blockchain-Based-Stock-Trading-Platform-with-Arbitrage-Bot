@@ -1,16 +1,16 @@
 package com.project.userservice.service.impl;
 
+import com.project.userservice.client.AccountServiceClient;
 import com.project.userservice.common.BaseResponse;
 import com.project.userservice.common.Const;
-import com.project.userservice.model.PaymentMethod;
 import com.project.userservice.model.SecurityVerification;
 import com.project.userservice.model.User;
 import com.project.userservice.payload.request.internal.UpdateTradingPermissionsRequest;
 import com.project.userservice.payload.request.internal.ValidateTradingPermissionRequest;
 import com.project.userservice.payload.response.client.GetProfileEnhancedResponse;
 import com.project.userservice.payload.response.client.GetTradingPermissionsResponse;
+import com.project.userservice.payload.response.internal.HasTradingAccountAndPaymentMethodResponse;
 import com.project.userservice.payload.response.internal.ValidateTradingPermissionResponse;
-import com.project.userservice.repository.PaymentMethodRepository;
 import com.project.userservice.repository.SecurityVerificationRepository;
 import com.project.userservice.repository.UserRepository;
 import com.project.userservice.service.TwoFactorAuthService;
@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -30,10 +32,10 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final SecurityVerificationRepository securityVerificationRepository;
-    private final PaymentMethodRepository paymentMethodRepository;
-    private final TradingAccountRepository tradingAccountRepository;
 
     private final TwoFactorAuthService twoFactorAuthService;
+
+    private final AccountServiceClient accountServiceClient;
 
     @Override
     public BaseResponse<?> getTradingPermissions(String userId) {
@@ -68,17 +70,9 @@ public class UserServiceImpl implements UserService {
             );
         }
 
-        SecurityVerification securityVerification = securityVerificationRepository.findByUserId(userId).orElse(null);
-        if (securityVerification == null) {
-            return new BaseResponse<>(
-                Const.STATUS_RESPONSE.ERROR,
-                "Security verification not found for userId: " + userId,
-                ""
-            );
-        }
+        List<SecurityVerification> securityVerifications = securityVerificationRepository.findSecurityVerificationsByUserId(userId);
         
-        TradingAccount tradingAccount = tradingAccountRepository.findByUserId(userId).orElse(null);
-        PaymentMethod paymentMethod = paymentMethodRepository.findByUserId(userId).orElse(null);
+        BaseResponse<HasTradingAccountAndPaymentMethodResponse> response = accountServiceClient.hasTradingAccountAndPaymentMethod(userId);
 
         return new BaseResponse<>(
             Const.STATUS_RESPONSE.SUCCESS,
@@ -92,10 +86,10 @@ public class UserServiceImpl implements UserService {
                 user.getCreatedAt(),
                 user.getLastLoginAt(),
                 user.getTwoFactorEnabled(),
-                securityVerification.getType(),
+                securityVerifications.stream().map(SecurityVerification::getType).collect(Collectors.toSet()).stream().toList(),
                 user.getPermissions().stream().toList(),
-                tradingAccount != null,
-                paymentMethod != null
+                response.getData().isHasTradingAccount(),
+                response.getData().isHasPaymentMethods()
             )
         );
     }
