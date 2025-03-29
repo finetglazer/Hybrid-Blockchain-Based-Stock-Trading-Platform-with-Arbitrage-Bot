@@ -251,12 +251,12 @@ public class TradingAccountServiceImpl implements TradingAccountService {
 
     @Override
     public HasTradingAccountAndPaymentMethodResponse hasAccountAndPaymentMethod(String userId) {
-        TradingAccount tradingAccount = tradingAccountRepository.findTradingAccountByUserId(userId).orElse(null);
-        PaymentMethod paymentMethod = paymentMethodRepository.findPaymentMethodByUserId(userId).orElse(null);
-
+        List<TradingAccount> tradingAccounts = tradingAccountRepository.findTradingAccountsByUserId(userId);
+        List<PaymentMethod> paymentMethods = paymentMethodRepository.findPaymentMethodsByUserId(userId);
+        
         return new HasTradingAccountAndPaymentMethodResponse(
-        tradingAccount != null,
-        paymentMethod != null
+            !tradingAccounts.isEmpty(),
+            !paymentMethods.isEmpty()
         );
     }
 
