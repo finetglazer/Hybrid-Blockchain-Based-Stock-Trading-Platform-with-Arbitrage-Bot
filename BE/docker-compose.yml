@@ -17,6 +17,8 @@ services:
       - "8080:8080"
     depends_on:
       - user-service
+      - trading-service
+      - account-service
     environment:
       SPRING_DATA_MONGODB_URI: "mongodb://admin:hw445Rl1pEAXqhti@cluster-1-shard-00-00.rylgk.mongodb.net:27017,cluster-1-shard-00-01.rylgk.mongodb.net:27017,cluster-1-shard-00-02.rylgk.mongodb.net:27017/user-database?replicaSet=atlas-vamz5w-shard-0&authSource=admin&retryWrites=true&w=majority&ssl=false"
 #    dns:
@@ -42,13 +44,41 @@ services:
   ######################
   #  Wallet-Service    #
   ######################
-  wallet-service:
+#  wallet-service:
+#    build:
+#      context: ./wallet-service
+#      dockerfile: Dockerfile
+#    container_name: wallet-service
+#    expose:
+#      - "8082"
+  #    dns:
+  #      - 8.8.8.8
+  #      - 1.1.1.1
+
+  ######################
+  #  Account-Service   #
+  ######################
+  account-service:
     build:
-      context: ./wallet-service
+      context: ./account-service
       dockerfile: Dockerfile
-    container_name: wallet-service
+    container_name: account-service
     expose:
-      - "8082"
+      - "8083"
+  #    dns:
+  #      - 8.8.8.8
+  #      - 1.1.1.1
+
+  ######################
+  #  Trading-Service   #
+  ######################
+  trading-service:
+    build:
+      context: ./trading-service
+      dockerfile: Dockerfile
+    container_name: trading-service
+    expose:
+      - "8084"
 #    dns:
 #      - 8.8.8.8
 #      - 1.1.1.1
