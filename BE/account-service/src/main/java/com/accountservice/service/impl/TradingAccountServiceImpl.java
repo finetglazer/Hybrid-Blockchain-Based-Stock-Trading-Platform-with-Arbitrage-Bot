@@ -63,7 +63,7 @@ public class TradingAccountServiceImpl implements TradingAccountService {
         newBalance.setAvailable(0.00F);
         newBalance.setReserved(0.00F);
         newBalance.setTotal(0.00F);
-        newBalance.setCurrency("VND");
+        newBalance.setCurrency(createTradingAccountRequest.getCurrency());
 
         Balance savedBalance = balanceRepository.save(newBalance);
 
