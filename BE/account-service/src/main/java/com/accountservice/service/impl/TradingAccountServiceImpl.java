@@ -3,13 +3,11 @@ package com.accountservice.service.impl;
 import com.accountservice.common.BaseResponse;
 import com.accountservice.common.Const;
 import com.accountservice.common.PagingResponse;
-import com.accountservice.model.Balance;
-import com.accountservice.model.PaymentMethod;
-import com.accountservice.model.TradingAccount;
-import com.accountservice.model.Transaction;
+import com.accountservice.model.*;
 import com.accountservice.payload.request.client.*;
 import com.accountservice.payload.response.client.*;
 import com.accountservice.payload.response.internal.HasTradingAccountAndPaymentMethodResponse;
+import com.accountservice.repository.BalanceHistoryRepository;
 import com.accountservice.repository.BalanceRepository;
 import com.accountservice.repository.PaymentMethodRepository;
 import com.accountservice.repository.TradingAccountRepository;
@@ -20,11 +18,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +41,9 @@ public class TradingAccountServiceImpl implements TradingAccountService {
     private final TradingAccountRepository tradingAccountRepository;
     private final BalanceRepository balanceRepository;
     private final PaymentMethodRepository paymentMethodRepository;
+    private final BalanceHistoryRepository balanceHistoryRepository;
+
+    private final MongoTemplate mongoTemplate;
 
     private final TransactionService transactionService;
 
@@ -60,6 +66,14 @@ public class TradingAccountServiceImpl implements TradingAccountService {
         newBalance.setCurrency("VND");
 
         Balance savedBalance = balanceRepository.save(newBalance);
+
+        BalanceHistory newBalanceHistory = new BalanceHistory();
+        newBalanceHistory.setDate(LocalDate.now());
+        newBalanceHistory.setAccountId(savedTradingAccount.getId());
+        newBalanceHistory.setUserId(userId);
+        newBalanceHistory.setOpeningBalance(0f);
+
+        balanceHistoryRepository.save(newBalanceHistory);
 
         return new BaseResponse<>(
             Const.STATUS_RESPONSE.SUCCESS,
@@ -214,40 +228,38 @@ public class TradingAccountServiceImpl implements TradingAccountService {
         );
     }
 
-//    @Override
-//    public BaseResponse<?> getBalanceHistory(GetBalanceHistoryRequest getBalanceHistoryRequest) {
-//        String accountId = getBalanceHistoryRequest.getAccountId();
-//        String startDate = getBalanceHistoryRequest.getStartDate();
-//        String endDate = getBalanceHistoryRequest.getEndDate();
-//        Integer page = getBalanceHistoryRequest.getPage();
-//        Integer size = getBalanceHistoryRequest.getSize();
-//
-//        BaseResponse<List<Transaction>> getTransactionsResponse = transactionService.getTransactions(
-//            new GetTransactionsRequest(
-//                accountId,
-//                startDate,
-//                endDate,
-//                List.of(Transaction.TransactionType.DEPOSIT.name(), Transaction.TransactionType.WITHDRAWAL.name()),
-//                List.of(),
-//                page,
-//                size
-//            )
-//        );
-//        List<Transaction> transactions = getTransactionsResponse.getData();
-//        if (transactions.isEmpty()) {
-//            return new BaseResponse<>(
-//                Const.STATUS_RESPONSE.ERROR,
-//                "Transactions not found",
-//                    ""
-//            );
-//        }
-//
-//        for (int i = 0; i < transactions.size(); ++i) {
-//            Transaction transaction = transactions.get(i);
-//            String completedDate = transaction.getCompletedAt().toString().split("T")[0];
-//
-//        }
-//    }
+    @Override
+    public BaseResponse<?> getBalanceHistory(GetBalanceHistoryRequest getBalanceHistoryRequest) {
+        String accountId = getBalanceHistoryRequest.getAccountId();
+        String startDate = getBalanceHistoryRequest.getStartDate();
+        String endDate = getBalanceHistoryRequest.getEndDate();
+        Integer page = getBalanceHistoryRequest.getPage();
+        Integer size = getBalanceHistoryRequest.getSize();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate queryStartDate = LocalDate.parse(startDate, formatter);
+        LocalDate queryEndDate = LocalDate.parse(endDate, formatter);
+        Criteria criteria = Criteria.where("date").gte(queryStartDate).lte(queryEndDate)
+                                    .and("accountId").is(accountId);
+
+        List<BalanceHistory> balanceHistoryList = mongoTemplate.find(new Query(criteria).with(PageRequest.of(page, size)), BalanceHistory.class);
+        long totalItems = mongoTemplate.count(new Query(criteria), BalanceHistory.class);
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        return new BaseResponse<>(
+            Const.STATUS_RESPONSE.SUCCESS,
+            "Retrieved balance history successfully",
+            new GetBalanceHistoryResponse(
+                balanceHistoryList,
+                new PagingResponse(
+                    page,
+                    size,
+                    totalItems,
+                    totalPages
+                )
+            )
+        );
+    }
 
     @Override
     public HasTradingAccountAndPaymentMethodResponse hasAccountAndPaymentMethod(String userId) {

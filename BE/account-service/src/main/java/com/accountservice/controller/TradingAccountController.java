@@ -52,18 +52,18 @@ public class TradingAccountController {
         ));
     }
 
-//    @GetMapping("/{accountId}/balance-history")
-//    public ResponseEntity<?> getBalanceHistory(
-//        @PathVariable String accountId,
-//        @RequestParam(name = "startDate", required = false) String startDate,
-//        @RequestParam(name = "endDate", required = false) String endDate,
-//        @RequestParam(name = "page", required = false) Integer page,
-//        @RequestParam(name = "size", required = false) Integer size
-//    ) {
-//        return ResponseEntity.ok(tradingAccountService.getBalanceHistory(
-//            new GetBalanceHistoryRequest(accountId, startDate, endDate, page, size)
-//        ));
-//    }
+    @GetMapping("/{accountId}/balance-history")
+    public ResponseEntity<?> getBalanceHistory(
+        @PathVariable String accountId,
+        @RequestParam(name = "startDate", required = false) String startDate,
+        @RequestParam(name = "endDate", required = false) String endDate,
+        @RequestParam(name = "page", required = false) Integer page,
+        @RequestParam(name = "size", required = false) Integer size
+    ) {
+        return ResponseEntity.ok(tradingAccountService.getBalanceHistory(
+            new GetBalanceHistoryRequest(accountId, startDate, endDate, page, size)
+        ));
+    }
 
     @PostMapping("/internal/{userId}/has-account-and-payment-method")
     public ResponseEntity<HasTradingAccountAndPaymentMethodResponse> hasAccountAndPaymentMethod(@PathVariable String userId) {
