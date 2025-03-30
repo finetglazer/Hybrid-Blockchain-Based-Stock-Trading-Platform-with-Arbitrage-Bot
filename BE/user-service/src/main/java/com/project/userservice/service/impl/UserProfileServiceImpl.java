@@ -71,8 +71,8 @@ public class UserProfileServiceImpl implements UserProfileService {
             // 4. Create verification record
             SecurityVerification verification = new SecurityVerification();
             verification.setUserId(userId);
-            verification.setType(SecurityVerification.VerificationType.SMS_CODE);
-            verification.setStatus(SecurityVerification.VerificationStatus.PENDING);
+            verification.setType(SecurityVerification.VerificationType.SMS_CODE.name());
+            verification.setStatus(SecurityVerification.VerificationStatus.PENDING.name());
             verification.setCreatedAt(Instant.now());
             verification.setExpiresAt(Instant.now().plus(10, ChronoUnit.MINUTES));
             verification.setSessionInfo(sessionInfo);
@@ -110,7 +110,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         // 1. Find verification record
         Optional<SecurityVerification> verificationOpt = securityVerificationRepository.findByIdAndStatus(
                 request.getVerificationId(),
-                SecurityVerification.VerificationStatus.PENDING
+                SecurityVerification.VerificationStatus.PENDING.name()
         );
 
         if (verificationOpt.isEmpty()) {
@@ -134,7 +134,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
         // 3. Check if verification is expired
         if (verification.getExpiresAt().isBefore(Instant.now())) {
-            verification.setStatus(SecurityVerification.VerificationStatus.EXPIRED);
+            verification.setStatus(SecurityVerification.VerificationStatus.EXPIRED.name());
             securityVerificationRepository.save(verification);
 
             return new BaseResponse<>(
@@ -148,7 +148,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         try {
             boolean verified = smsService.verifyPhoneAuthCredential(request.getFirebaseIdToken());
             if (!verified) {
-                verification.setStatus(SecurityVerification.VerificationStatus.FAILED);
+                verification.setStatus(SecurityVerification.VerificationStatus.FAILED.name());
                 securityVerificationRepository.save(verification);
 
                 return new BaseResponse<>(
@@ -159,7 +159,7 @@ public class UserProfileServiceImpl implements UserProfileService {
             }
 
             // 5. Update verification status
-            verification.setStatus(SecurityVerification.VerificationStatus.COMPLETED);
+            verification.setStatus(SecurityVerification.VerificationStatus.COMPLETED.name());
             verification.setVerifiedAt(Instant.now());
             securityVerificationRepository.save(verification);
 

@@ -115,7 +115,7 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
         SecurityVerification verification = verificationOpt.get();
 
         // 2. Check if verification is still valid
-        if (verification.getStatus() != SecurityVerification.VerificationStatus.PENDING.name()) {
+        if (!verification.getStatus().equals(SecurityVerification.VerificationStatus.PENDING.name())) {
             return new BaseResponse<>(
                     Const.STATUS_RESPONSE.ERROR,
                     "Verification is no longer pending",
@@ -364,8 +364,8 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
             // 3. Create verification record
             SecurityVerification verification = new SecurityVerification();
             verification.setUserId(userId);
-            verification.setType(SecurityVerification.VerificationType.valueOf(user.getTwoFactorType()));
-            verification.setStatus(SecurityVerification.VerificationStatus.PENDING);
+            verification.setType(SecurityVerification.VerificationType.valueOf(user.getTwoFactorType()).name());
+            verification.setStatus(SecurityVerification.VerificationStatus.PENDING.name());
             verification.setCreatedAt(Instant.now());
             verification.setExpiresAt(Instant.now().plus(10, ChronoUnit.MINUTES));
 
@@ -457,7 +457,7 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
                         securityVerificationRepository.findById(request.getRecoveryKeyVerificationId());
 
                 if (recoveryVerification.isPresent() &&
-                        recoveryVerification.get().getStatus() == SecurityVerification.VerificationStatus.COMPLETED &&
+                        recoveryVerification.get().getStatus().equals(SecurityVerification.VerificationStatus.COMPLETED.name()) &&
                         recoveryVerification.get().getUserId().equals(userId)) {
                     verified = true;
                 }
@@ -478,7 +478,7 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
                 SecurityVerification verification = verificationOpt.get();
 
                 // 2. Check if verification is still valid
-                if (verification.getStatus() != SecurityVerification.VerificationStatus.PENDING) {
+                if (!verification.getStatus().equals( SecurityVerification.VerificationStatus.PENDING.name())) {
                     return new BaseResponse<>(
                             Const.STATUS_RESPONSE.ERROR,
                             "Verification is no longer pending",
@@ -487,7 +487,7 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
                 }
 
                 if (verification.getExpiresAt().isBefore(Instant.now())) {
-                    verification.setStatus(SecurityVerification.VerificationStatus.EXPIRED);
+                    verification.setStatus(SecurityVerification.VerificationStatus.EXPIRED.name());
                     securityVerificationRepository.save(verification);
                     return new BaseResponse<>(
                             Const.STATUS_RESPONSE.ERROR,
@@ -500,11 +500,11 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
                 verified = smsService.verifyPhoneAuthCredential(request.getFirebaseIdToken());
                 if (verified) {
                     // Update verification status
-                    verification.setStatus(SecurityVerification.VerificationStatus.COMPLETED);
+                    verification.setStatus(SecurityVerification.VerificationStatus.COMPLETED.name());
                     verification.setVerifiedAt(Instant.now());
                     securityVerificationRepository.save(verification);
                 } else {
-                    verification.setStatus(SecurityVerification.VerificationStatus.FAILED);
+                    verification.setStatus(SecurityVerification.VerificationStatus.FAILED.name());
                     securityVerificationRepository.save(verification);
                     return new BaseResponse<>(
                             Const.STATUS_RESPONSE.ERROR,

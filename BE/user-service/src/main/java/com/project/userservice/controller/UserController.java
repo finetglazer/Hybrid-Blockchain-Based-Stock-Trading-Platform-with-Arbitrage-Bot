@@ -33,8 +33,9 @@ public class UserController {
     public ResponseEntity<?> updatePhoneNumber(
             Principal principal,
             @RequestBody PhoneNumberUpdateRequest request) {
-        return ResponseEntity.ok(userProfileService.initiatePhoneNumberUpdate(  principal.getName(), request));
+        return ResponseEntity.ok(userProfileService.initiatePhoneNumberUpdate(principal.getName(), request));
     }
+
     @GetMapping("/me/profile/enhanced")
     public ResponseEntity<?> getEnhancedProfile(Principal principal) {
         return ResponseEntity.ok(userService.getEnhancedProfile(principal.getName()));
