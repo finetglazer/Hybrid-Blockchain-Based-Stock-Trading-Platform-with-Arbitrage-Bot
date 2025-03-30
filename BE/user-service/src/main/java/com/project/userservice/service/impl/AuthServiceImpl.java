@@ -163,6 +163,8 @@ public class AuthServiceImpl implements AuthService {
             );
         }
         User user = userOpt.get();
+        user.setLastLoginAt(Instant.now());
+        userRepository.save(user);
 
         // 2) Compare password
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {

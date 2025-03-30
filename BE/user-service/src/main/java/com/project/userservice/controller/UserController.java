@@ -1,5 +1,8 @@
 package com.project.userservice.controller;
 
+import com.project.userservice.payload.request.client.PhoneNumberUpdateRequest;
+import com.project.userservice.payload.request.client.PhoneNumberVerifyRequest;
+import com.project.userservice.service.UserProfileService;
 import com.project.userservice.model.SecurityVerification;
 import com.project.userservice.payload.request.client.Enable2FARequest;
 import com.project.userservice.payload.request.client.UpdatePhoneNumberRequest;
@@ -20,9 +23,17 @@ public class UserController {
     private final UserService userService;
     private final TwoFactorAuthService twoFactorAuthService;
 
+    private final UserProfileService userProfileService;
     @GetMapping("/me/trading-permissions")
     public ResponseEntity<?> getTradingPermissions(Principal principal) {
         return ResponseEntity.ok(userService.getTradingPermissions(principal.getName()));
+    }
+
+    @PutMapping("/me/phone-number")
+    public ResponseEntity<?> updatePhoneNumber(
+            Principal principal,
+            @RequestBody PhoneNumberUpdateRequest request) {
+        return ResponseEntity.ok(userProfileService.initiatePhoneNumberUpdate(principal.getName(), request));
     }
 
     @GetMapping("/me/profile/enhanced")
@@ -30,17 +41,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getEnhancedProfile(principal.getName()));
     }
 
-    @PutMapping("/me/phone-number/update")
-    public ResponseEntity<?> updatePhoneNumber(Principal principal, @RequestBody UpdatePhoneNumberRequest updatePhoneNumberRequest) {
-        return ResponseEntity.ok(
-            twoFactorAuthService.enable2FA(
-                principal.getName(),
-                new Enable2FARequest(
-                    SecurityVerification.VerificationType.SMS_CODE.name(),
-                    updatePhoneNumberRequest.getPhoneNumber()
-                )
-            )
-        );
+    @PostMapping("/me/phone-number/verify")
+    public ResponseEntity<?> verifyPhoneNumberUpdate(
+            Principal principal,
+            @RequestBody PhoneNumberVerifyRequest request) {
+        return ResponseEntity.ok(userProfileService.verifyPhoneNumberUpdate(principal.getName(), request));
     }
 
 //    @PostMapping("/me/phone-number/verify")

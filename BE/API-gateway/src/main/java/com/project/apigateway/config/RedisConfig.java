@@ -1,13 +1,19 @@
 package com.project.apigateway.config;
 
 import io.lettuce.core.ClientOptions;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.SocketOptions;
 import io.lettuce.core.TimeoutOptions;
+import io.lettuce.core.resource.ClientResources;
+import io.lettuce.core.resource.DefaultClientResources;
+import io.lettuce.core.resource.DnsResolver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
@@ -19,7 +25,10 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableAutoConfiguration(exclude = {RedisAutoConfiguration.class})
@@ -55,32 +64,47 @@ public class RedisConfig {
     @Value("${redis.pool.max-wait:1000}")
     private long maxWait;
 
+    @Value("${redis.ssl.enabled:false}")
+    private boolean sslEnabled;
+
+    @Bean(destroyMethod = "shutdown")
+    public ClientResources clientResources() {
+        return DefaultClientResources.builder()
+                .ioThreadPoolSize(4) // Adjust based on your needs
+                .computationThreadPoolSize(4) // Adjust based on your needs
+                .dnsResolver(new CustomDnsResolver()) // Use IPv4 only resolver
+                .build();
+    }
+
+    // Custom DNS resolver that prefers IPv4 addresses
+    private static class CustomDnsResolver implements DnsResolver {
+        @Override
+        public InetAddress[] resolve(String host) throws UnknownHostException {
+            InetAddress[] addresses = InetAddress.getAllByName(host);
+            // Filter for IPv4 addresses only if needed
+            return addresses;
+        }
+    }
+
     @Bean
-    public LettuceConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-        configuration.setHostName(redisHost);
-        configuration.setPort(redisPort);
-        configuration.setUsername(redisUsername);
-        configuration.setPassword(redisPassword);
-
-        // Connection Pool Configuration
-        GenericObjectPoolConfig<?> poolConfig = new GenericObjectPoolConfig<>();
-        poolConfig.setMaxTotal(maxActive);
-        poolConfig.setMaxIdle(maxIdle);
-        poolConfig.setMinIdle(minIdle);
-        poolConfig.setMaxWait(Duration.ofMillis(maxWait));
-
-        // Test connections when idle to prevent stale connections
-        poolConfig.setTestWhileIdle(true);
-        poolConfig.setTimeBetweenEvictionRuns(Duration.ofSeconds(30));
-        poolConfig.setNumTestsPerEvictionRun(3);
-        poolConfig.setMinEvictableIdleTime(Duration.ofSeconds(60));
-
-        // Configure Lettuce client
-        SocketOptions socketOptions = SocketOptions.builder()
-                .connectTimeout(Duration.ofMillis(socketTimeout))
+    @Primary
+    public LettuceConnectionFactory redisConnectionFactory(ClientResources clientResources) {
+        // Direct URI-based configuration, closer to your working test
+        RedisURI redisURI = RedisURI.builder()
+                .withHost(redisHost)
+                .withPort(redisPort)
+                .withAuthentication(redisUsername, redisPassword)
+                .withTimeout(Duration.ofMillis(connectionTimeout))
+                .withSsl(sslEnabled)
                 .build();
 
+        // Socket options
+        SocketOptions socketOptions = SocketOptions.builder()
+                .connectTimeout(Duration.ofMillis(socketTimeout))
+                .keepAlive(true)
+                .build();
+
+        // Client options
         ClientOptions clientOptions = ClientOptions.builder()
                 .socketOptions(socketOptions)
                 .timeoutOptions(TimeoutOptions.enabled(Duration.ofMillis(socketTimeout)))
@@ -88,23 +112,30 @@ public class RedisConfig {
                 .disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS)
                 .build();
 
-        LettuceClientConfiguration clientConfig = LettucePoolingClientConfiguration.builder()
-                .commandTimeout(Duration.ofMillis(connectionTimeout))
-                .poolConfig(poolConfig)
+        // For testing, let's start with simpler configuration, no pooling
+        LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+                .clientResources(clientResources)
                 .clientOptions(clientOptions)
+                .commandTimeout(Duration.ofMillis(connectionTimeout))
                 .build();
 
-        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(configuration, clientConfig);
+        // Standard configuration
+        RedisStandaloneConfiguration serverConfig = new RedisStandaloneConfiguration();
+        serverConfig.setHostName(redisHost);
+        serverConfig.setPort(redisPort);
+        serverConfig.setUsername(redisUsername);
+        serverConfig.setPassword(redisPassword);
+
+        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(serverConfig, clientConfig);
         lettuceConnectionFactory.setValidateConnection(true);
-        lettuceConnectionFactory.setShareNativeConnection(false); // Disable connection sharing for better isolation
 
         return lettuceConnectionFactory;
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
+    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory());
+        template.setConnectionFactory(connectionFactory);
 
         // Use StringRedisSerializer for both keys and values
         template.setKeySerializer(new StringRedisSerializer());
@@ -128,5 +159,32 @@ public class RedisConfig {
                 .build();
 
         return new ReactiveStringRedisTemplate(factory, serializationContext);
+    }
+
+    // Add a connection test helper
+    @Bean
+    public RedisConnectionTester redisConnectionTester(LettuceConnectionFactory connectionFactory) {
+        return new RedisConnectionTester(connectionFactory);
+    }
+
+    // Helper class to test connections at startup
+    public static class RedisConnectionTester {
+        private final LettuceConnectionFactory connectionFactory;
+
+        public RedisConnectionTester(LettuceConnectionFactory connectionFactory) {
+            this.connectionFactory = connectionFactory;
+            testConnection();
+        }
+
+        private void testConnection() {
+            try {
+                System.out.println("Testing Redis connection...");
+                String result = connectionFactory.getConnection().ping();
+                System.out.println("Redis connection test result: " + result);
+            } catch (Exception e) {
+                System.err.println("Redis connection test failed: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
     }
 }

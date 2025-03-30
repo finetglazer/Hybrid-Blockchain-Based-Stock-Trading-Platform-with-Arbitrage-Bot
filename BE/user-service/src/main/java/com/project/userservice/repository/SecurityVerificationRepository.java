@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface SecurityVerificationRepository extends MongoRepository<SecurityVerification, String> {
     List<SecurityVerification> findSecurityVerificationsByUserId(String userId);
+
+    Optional<SecurityVerification> findByIdAndStatus(String id, String status);
 }

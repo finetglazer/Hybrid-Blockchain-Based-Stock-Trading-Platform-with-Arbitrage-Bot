@@ -31,7 +31,8 @@ public class CacheInvalidationService {
         }
 
         logger.debug("Invalidating {} cache keys: {}", keys.length, Arrays.toString(keys));
-        return redisTemplate.delete(String.valueOf(Arrays.asList(keys)))
+        // Fixed: Properly create a Flux from the keys array
+        return redisTemplate.delete(Flux.fromArray(keys))
                 .doOnSuccess(count -> logger.debug("Successfully invalidated {} cache keys", count))
                 .doOnError(e -> logger.error("Error invalidating cache keys: {}", e.getMessage()));
     }
@@ -52,7 +53,7 @@ public class CacheInvalidationService {
                     }
 
                     logger.debug("Found {} keys matching pattern: {}", keys.size(), pattern);
-                    // FIXED: Convert List<String> to correct format for delete operation
+                    // Fixed: Properly create a Flux from the keys list
                     return redisTemplate.delete(Flux.fromIterable(keys));
                 })
                 .doOnSuccess(count -> logger.debug("Successfully invalidated {} cache keys", count))
@@ -97,7 +98,7 @@ public class CacheInvalidationService {
                     if (keys.isEmpty()) {
                         return Mono.just(0L);
                     }
-                    // FIXED: Convert List<String> to correct format for delete operation
+                    // Fixed: Properly create a Flux from the keys list
                     return redisTemplate.delete(Flux.fromIterable(keys));
                 })
                 .doOnSuccess(count -> logger.debug("Successfully invalidated all {} cache entries", count))
