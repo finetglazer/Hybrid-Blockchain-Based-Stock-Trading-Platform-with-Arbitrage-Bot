@@ -5,6 +5,7 @@ import com.project.userservice.common.Const;
 import com.project.userservice.model.RecoveryKey;
 import com.project.userservice.model.SecurityVerification;
 import com.project.userservice.model.User;
+import com.project.userservice.payload.request.client.Disable2FARequest;
 import com.project.userservice.payload.request.client.Enable2FARequest;
 import com.project.userservice.payload.request.client.RecoveryKeyVerifyRequest;
 import com.project.userservice.payload.request.client.Verify2FARequest;
@@ -335,4 +336,217 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
 
         return key.toString();
     }
+
+    @Override
+    public BaseResponse<?> get2FAInfo(String userId) {
+        // 1. Find user
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.ERROR,
+                    "User not found",
+                    ""
+            );
+        }
+
+        User user = userOpt.get();
+
+        // 2. Check if 2FA is enabled
+        if (Boolean.FALSE.equals(user.getTwoFactorEnabled())) {
+            return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.ERROR,
+                    "Two-factor authentication is not enabled for this user",
+                    ""
+            );
+        }
+
+        try {
+            // 3. Create verification record
+            SecurityVerification verification = new SecurityVerification();
+            verification.setUserId(userId);
+            verification.setType(SecurityVerification.VerificationType.valueOf(user.getTwoFactorType()));
+            verification.setStatus(SecurityVerification.VerificationStatus.PENDING);
+            verification.setCreatedAt(Instant.now());
+            verification.setExpiresAt(Instant.now().plus(10, ChronoUnit.MINUTES));
+
+            // Generate a session token
+            String sessionInfo = java.util.UUID.randomUUID().toString();
+            verification.setSessionInfo(sessionInfo);
+
+            SecurityVerification savedVerification = securityVerificationRepository.save(verification);
+
+            // 4. Prepare the phone number (both full and masked versions)
+            String phoneNumber = user.getPhoneNumber();
+            String maskedPhoneNumber = maskPhoneNumber(phoneNumber);
+
+            // 5. Return verification ID, both phone versions, and expiration
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("verificationId", savedVerification.getId());
+            responseData.put("phoneNumber", phoneNumber);  // Full phone number for Firebase
+            responseData.put("maskedPhoneNumber", maskedPhoneNumber);  // Masked for display
+            responseData.put("expiresAt", savedVerification.getExpiresAt());
+
+            return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.SUCCESS,
+                    "2FA information retrieved successfully",
+                    responseData
+            );
+
+        } catch (Exception e) {
+            logger.error("Error getting 2FA info: ", e);
+            return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.ERROR,
+                    "Failed to retrieve 2FA information: " + e.getMessage(),
+                    ""
+            );
+        }
+    }
+
+    // Helper method to mask phone number for privacy
+    private String maskPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.length() < 8) {
+            return phoneNumber;
+        }
+
+        // Keep the first 3 digits and last 4 digits visible
+        int visiblePrefix = 3;
+        int visibleSuffix = 4;
+
+        StringBuilder masked = new StringBuilder();
+        masked.append(phoneNumber.substring(0, visiblePrefix));
+
+        for (int i = visiblePrefix; i < phoneNumber.length() - visibleSuffix; i++) {
+            masked.append("*");
+        }
+
+        masked.append(phoneNumber.substring(phoneNumber.length() - visibleSuffix));
+
+        return masked.toString();
+    }
+
+    @Override
+    public BaseResponse<?> disable2FA(String userId, Disable2FARequest request) {
+        // 1. Find user
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.ERROR,
+                    "User not found",
+                    ""
+            );
+        }
+
+        User user = userOpt.get();
+
+        // 2. Check if 2FA is enabled
+        if (Boolean.FALSE.equals(user.getTwoFactorEnabled())) {
+            return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.ERROR,
+                    "Two-factor authentication is not enabled for this user",
+                    ""
+            );
+        }
+
+        try {
+            boolean verified = false;
+
+            // Handle different verification methods
+            if ("RECOVERY_KEY".equals(request.getVerificationMethod())) {
+                // Verify with recovery key verification ID
+                Optional<SecurityVerification> recoveryVerification =
+                        securityVerificationRepository.findById(request.getRecoveryKeyVerificationId());
+
+                if (recoveryVerification.isPresent() &&
+                        recoveryVerification.get().getStatus() == SecurityVerification.VerificationStatus.COMPLETED &&
+                        recoveryVerification.get().getUserId().equals(userId)) {
+                    verified = true;
+                }
+            } else {
+                // Default: Verify with Firebase token
+                // 1. Find verification record
+                Optional<SecurityVerification> verificationOpt =
+                        securityVerificationRepository.findById(request.getVerificationId());
+
+                if (verificationOpt.isEmpty()) {
+                    return new BaseResponse<>(
+                            Const.STATUS_RESPONSE.ERROR,
+                            "Verification not found",
+                            ""
+                    );
+                }
+
+                SecurityVerification verification = verificationOpt.get();
+
+                // 2. Check if verification is still valid
+                if (verification.getStatus() != SecurityVerification.VerificationStatus.PENDING) {
+                    return new BaseResponse<>(
+                            Const.STATUS_RESPONSE.ERROR,
+                            "Verification is no longer pending",
+                            ""
+                    );
+                }
+
+                if (verification.getExpiresAt().isBefore(Instant.now())) {
+                    verification.setStatus(SecurityVerification.VerificationStatus.EXPIRED);
+                    securityVerificationRepository.save(verification);
+                    return new BaseResponse<>(
+                            Const.STATUS_RESPONSE.ERROR,
+                            "Verification has expired",
+                            ""
+                    );
+                }
+
+                // 3. Verify with Firebase
+                verified = smsService.verifyPhoneAuthCredential(request.getFirebaseIdToken());
+                if (verified) {
+                    // Update verification status
+                    verification.setStatus(SecurityVerification.VerificationStatus.COMPLETED);
+                    verification.setVerifiedAt(Instant.now());
+                    securityVerificationRepository.save(verification);
+                } else {
+                    verification.setStatus(SecurityVerification.VerificationStatus.FAILED);
+                    securityVerificationRepository.save(verification);
+                    return new BaseResponse<>(
+                            Const.STATUS_RESPONSE.ERROR,
+                            "Invalid verification token",
+                            ""
+                    );
+                }
+            }
+
+            if (verified) {
+                // Disable 2FA for the user
+                user.setTwoFactorEnabled(false);
+                user.setTwoFactorType(null);
+                user.setUpdatedAt(Instant.now());
+                userRepository.save(user);
+
+                // Return success
+                Map<String, Object> responseData = new HashMap<>();
+                responseData.put("userId", user.getId());
+                responseData.put("twoFactorEnabled", false);
+                responseData.put("updatedAt", user.getUpdatedAt());
+
+                return new BaseResponse<>(
+                        Const.STATUS_RESPONSE.SUCCESS,
+                        "Two-factor authentication disabled successfully",
+                        responseData
+                );
+            } else {
+                return new BaseResponse<>(
+                        Const.STATUS_RESPONSE.ERROR,
+                        "Verification failed",
+                        ""
+                );
+            }
+        } catch (Exception e) {
+            logger.error("Error disabling 2FA: ", e);
+            return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.ERROR,
+                    "Failed to disable 2FA: " + e.getMessage(),
+                    ""
+            );
+        }
+    }
+
 }
