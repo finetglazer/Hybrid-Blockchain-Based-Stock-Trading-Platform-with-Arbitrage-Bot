@@ -24,7 +24,7 @@ COPY src ./API-gateway/src/
 RUN mvn clean package -pl API-gateway -am -DskipTests
 
 # ---------------- Stage 2: Create the final runtime image ----------------
-FROM eclipse-temurin:17-jre-alpine # Or :17-jre if alpine causes issues
+FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
