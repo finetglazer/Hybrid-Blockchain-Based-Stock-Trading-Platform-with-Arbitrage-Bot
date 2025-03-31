@@ -1,14 +1,32 @@
-# 1️⃣ Use OpenJDK 17 as the base image
-FROM openjdk:17
+# Dockerfile located at BE/api-gateawy/Dockerfile
+# --- IMPORTANT: Run 'docker build -t /api-gateawy:latest .' from the BE/ directory ---
 
-# 2️⃣ Set the working directory inside the container
+# ---------------- Stage 1: Build the application ----------------
+FROM maven:3.9-eclipse-temurin-17 AS builder
+
+# Set the working directory for the build stage
+WORKDIR /build
+
+# Copy the PARENT POM first (from BE/pom.xml relative to build context)
+# Destination is /build/pom.xml inside the container
+COPY pom.xml .
+
+COPY trading-service/pom.xml ./trading-service/
+
+# --- Change working directory to the module we are building ---
+WORKDIR /build/trading-service
+RUN mvn dependency:go-offline -B
+
+COPY trading-service/src ./src
+
+RUN mvn clean package -DskipTests
+
+# ---------------- Stage 2: Create the final runtime image ----------------
+FROM eclipse-temurin:17-jre-alpine
+
 WORKDIR /app
 
-# 5️⃣ Copy the built JAR file into the container (from the target directory)
-COPY target/trading-service-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY --from=builder /build/trading-service/target/trading-service-0.0.1-SNAPSHOT.jar /app/app.jar
 
-# 6️⃣ Expose the application port (8084)
-EXPOSE 8084
-
-# 7️⃣ Run the Spring Boot application
+EXPOSE 8083
 ENTRYPOINT ["java", "-jar", "app.jar"]
