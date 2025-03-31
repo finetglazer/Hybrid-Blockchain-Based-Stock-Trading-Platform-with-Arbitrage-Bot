@@ -27,5 +27,5 @@ WORKDIR /app
 
 COPY --from=builder /build/target/trading-service-0.0.1-SNAPSHOT.jar /app/app.jar
 
-EXPOSE 8080 # Or your desired port
+EXPOSE 8084
 ENTRYPOINT ["java", "-jar", "app.jar"]
