@@ -37,7 +37,7 @@ COPY account-service/src ./src
 RUN mvn clean package -DskipTests
 
 # ---------------- Stage 2: Create the final runtime image ----------------
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
