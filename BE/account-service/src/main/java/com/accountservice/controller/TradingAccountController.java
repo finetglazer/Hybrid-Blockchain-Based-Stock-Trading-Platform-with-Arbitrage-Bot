@@ -1,6 +1,5 @@
 package com.accountservice.controller;
 
-import com.accountservice.common.BaseResponse;
 import com.accountservice.payload.request.client.CreateTradingAccountRequest;
 import com.accountservice.payload.request.client.GetBalanceHistoryRequest;
 import com.accountservice.payload.request.client.GetUserAccountsRequest;

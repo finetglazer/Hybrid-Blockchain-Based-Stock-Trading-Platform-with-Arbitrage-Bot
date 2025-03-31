@@ -96,20 +96,16 @@
             <artifactId>jjwt-jackson</artifactId>
             <version>0.11.5</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.batch</groupId>-->
-<!--            <artifactId>spring-batch-core</artifactId>-->
-<!--            <version>5.0.0</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-batch</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.jobrunr</groupId>-->
-<!--            <artifactId>jobrunr-spring-boot-starter</artifactId>-->
-<!--            <version>5.3.3</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.batch</groupId>
+            <artifactId>spring-batch-core</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jobrunr</groupId>
+            <artifactId>jobrunr-spring-boot-3-starter</artifactId>
+            <version>7.4.1</version>
+        </dependency>
     </dependencies>
 
     <build>
