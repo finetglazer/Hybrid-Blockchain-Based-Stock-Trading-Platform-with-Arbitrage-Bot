@@ -1,0 +1,170 @@
+2025-03-31 21:13:29 | INFO  | HV000001: Hibernate Validator 8.0.2.Final
+2025-03-31 21:13:29 | INFO  | Starting ApiGatewayApplicationTests using Java 22.0.2 with PID 17208 (started by hiepg in D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\API-gateway)
+2025-03-31 21:13:29 | DEBUG | Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-03-31 21:13:29 | INFO  | The following 1 profile is active: "product"
+2025-03-31 21:13:36 | TRACE | Condition GatewayAutoConfiguration.OnVerboseDisabledCondition on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$GatewayActuatorConfiguration#gatewayLegacyControllerEndpoint did not match due to NoneNestedConditions 1 matched 0 did not; NestedCondition on GatewayAutoConfiguration.OnVerboseDisabledCondition.VerboseDisabled @ConditionalOnProperty (spring.cloud.gateway.actuator.verbose.enabled) matched
+2025-03-31 21:13:36 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#routingFilter matched
+2025-03-31 21:13:36 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#nettyWriteResponseFilter matched
+2025-03-31 21:13:36 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyWebSocketClient matched
+2025-03-31 21:13:36 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyRequestUpgradeStrategy matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#adaptCachedBodyGlobalFilter matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeCachedBodyFilter matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#routeToRequestUrlFilter matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardRoutingFilter matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardPathFilter matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#webSocketService matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#websocketRoutingFilter matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightCalculatorWebFilter matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#afterRoutePredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#beforeRoutePredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#betweenRoutePredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cookieRoutePredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#headerRoutePredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#hostRoutePredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#methodRoutePredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#pathRoutePredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#queryRoutePredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#readBodyPredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#remoteAddrRoutePredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#xForwardedRemoteAddrRoutePredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightRoutePredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cloudFoundryRouteServiceRoutePredicateFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeaderGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeadersIfNotPresentGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#mapRequestHeaderGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestParameterGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addResponseHeaderGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyRequestBodyGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#dedupeResponseHeaderGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyResponseBodyGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cacheRequestBodyGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#prefixPathGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#preserveHostHeaderGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#redirectToGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeJsonAttributesResponseBodyGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestHeaderGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestParameterGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeResponseHeaderGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#principalNameKeyResolver matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestRateLimiterGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewritePathGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#retryGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setPathGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#secureHeadersGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHeaderGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHostHeaderGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setResponseHeaderGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteResponseHeaderGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteLocationResponseHeaderGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setStatusGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#saveSessionGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#stripPrefixGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderToRequestUriGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestSizeGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderSizeGatewayFilterFactory matched
+2025-03-31 21:13:37 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteRequestParameterGatewayFilterFactory matched
+2025-03-31 21:13:38 | INFO  | Multiple Spring Data modules found, entering strict repository configuration mode
+2025-03-31 21:13:38 | INFO  | Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-03-31 21:13:38 | INFO  | Finished Spring Data repository scanning in 54 ms. Found 0 Redis repository interfaces.
+2025-03-31 21:13:40 | INFO  | BeanFactory id=bf23ade3-c651-3d7f-99b1-ffab457392b4
+2025-03-31 21:13:41 | DEBUG | Starting with netty's non-blocking DNS resolver library
+2025-03-31 21:13:42 | DEBUG | Starting without optional kqueue library
+2025-03-31 21:13:42 | DEBUG | Starting without optional io_uring library
+2025-03-31 21:13:43 | DEBUG | Starting without optional epoll library
+2025-03-31 21:13:43 | DEBUG | -Dio.netty.eventLoopThreads: 4
+2025-03-31 21:13:43 | DEBUG | Creating executor io.netty.util.concurrent.DefaultEventExecutorGroup
+2025-03-31 21:13:43 | DEBUG | Starting with JFR support
+2025-03-31 21:13:47 | DEBUG | Trying to get a Redis connection for: redis://default:********************************@redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com:14694?timeout=3s
+2025-03-31 21:13:48 | DEBUG | Allocating executor io.netty.channel.nio.NioEventLoopGroup
+2025-03-31 21:13:48 | DEBUG | Creating executor io.netty.channel.nio.NioEventLoopGroup
+2025-03-31 21:13:48 | DEBUG | Adding reference to io.netty.channel.nio.NioEventLoopGroup@407f2029, existing ref count 0
+2025-03-31 21:13:49 | DEBUG | Resolved SocketAddress redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694 using redis://default:********************************@redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com:14694?timeout=3s
+2025-03-31 21:13:49 | DEBUG | Connecting to Redis at redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-03-31 21:13:50 | DEBUG | [channel=0x0c596ac6, [id: 0x02a17a01] (inactive), epid=0x1, chid=0x1] channelRegistered()
+2025-03-31 21:13:50 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] write(ctx, AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+2025-03-31 21:13:50 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-03-31 21:13:50 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Received: 705 bytes, 1 commands in the stack
+2025-03-31 21:13:50 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Stack contains: 1 commands
+2025-03-31 21:13:50 | DEBUG | Decode done, empty stack: true
+2025-03-31 21:13:50 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Completing command LatencyMeteredCommand [type=HELLO, output=GenericMapOutput [output={server=redis, version=7.4.2, proto=3, id=25, mode=cluster, role=master, modules=name, ReJSON=ver, 20808=path, /enterprise-managed=args, name=searchlight, ver=21013, path=/enterprise-managed, args=FORK_GC_CLEAN_THRESHOLD, timeseries=ver, 11205=path, 100=MAXAGGREGATERESULTS, 10000=MT_MODE, MT_MODE_ONLY_ON_OPERATIONS=WORKER_THREADS}, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-03-31 21:13:50 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] write(ctx, [AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]], promise)
+2025-03-31 21:13:50 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-03-31 21:13:50 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Received: 10 bytes, 2 commands in the stack
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Stack contains: 2 commands
+2025-03-31 21:13:51 | DEBUG | Decode done, empty stack: true
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Stack contains: 1 commands
+2025-03-31 21:13:51 | DEBUG | Decode done, empty stack: true
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] channelActive()
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] activateEndpointAndExecuteBufferedCommands 0 command(s) buffered
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] activating endpoint
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] flushCommands()
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] flushCommands() Flushing 0 commands
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelActive()
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] channelActive() done
+2025-03-31 21:13:51 | DEBUG | Connecting to Redis at redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694: Success
+2025-03-31 21:13:51 | DEBUG | dispatching command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] write() writeAndFlush command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] write(ctx, AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] write() done
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Received: 7 bytes, 1 commands in the stack
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Stack contains: 1 commands
+2025-03-31 21:13:51 | DEBUG | Decode done, empty stack: true
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Completing command LatencyMeteredCommand [type=PING, output=StatusOutput [output=PONG, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-03-31 21:13:51 | DEBUG | dispatching command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] write() writeAndFlush command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] write(ctx, AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] write() done
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Received: 7 bytes, 1 commands in the stack
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Stack contains: 1 commands
+2025-03-31 21:13:51 | DEBUG | Decode done, empty stack: true
+2025-03-31 21:13:51 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Completing command LatencyMeteredCommand [type=PING, output=StatusOutput [output=PONG, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-03-31 21:13:52 | INFO  | 
+
+Using generated security password: 3e9ae283-7f3b-44e1-88ca-6e93bb6d4154
+
+2025-03-31 21:13:56 | DEBUG | Routes supplied from Gateway Properties: [RouteDefinition{id='user-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/users/**}}], filters=[], uri=https://user-service-test.up.railway.app, order=0, metadata={}, enabled=true}, RouteDefinition{id='wallet-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/wallets/**}}], filters=[], uri=https://wallet-service-test.up.railway.app, order=0, metadata={}, enabled=true}, RouteDefinition{id='account-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/accounts/**}}], filters=[], uri=https://account-service-test.up.railway.app, order=0, metadata={}, enabled=true}, RouteDefinition{id='trading-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/trading/**}}], filters=[], uri=https://trading-service-test.up.railway.app, order=0, metadata={}, enabled=true}]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [After]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [Before]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [Between]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [Cookie]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [Header]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [Host]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [Method]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [Path]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [Query]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [ReadBody]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [RemoteAddr]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [XForwardedRemoteAddr]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [Weight]
+2025-03-31 21:14:00 | INFO  | Loaded RoutePredicateFactory [CloudFoundryRouteService]
+2025-03-31 21:14:01 | INFO  | Exposing 1 endpoint beneath base path '/actuator'
+2025-03-31 21:14:03 | DEBUG | Starting RedisMessageListenerContainer...
+2025-03-31 21:14:03 | DEBUG | Postpone listening for Redis messages until actual listeners are added
+2025-03-31 21:14:03 | DEBUG | RouteDefinition user-service-route applying {_genkey_0=/users/**} to Path
+2025-03-31 21:14:03 | DEBUG | RouteDefinition matched: user-service-route
+2025-03-31 21:14:03 | DEBUG | RouteDefinition wallet-service-route applying {_genkey_0=/wallets/**} to Path
+2025-03-31 21:14:03 | DEBUG | RouteDefinition matched: wallet-service-route
+2025-03-31 21:14:03 | DEBUG | RouteDefinition account-service-route applying {_genkey_0=/accounts/**} to Path
+2025-03-31 21:14:03 | DEBUG | RouteDefinition matched: account-service-route
+2025-03-31 21:14:03 | DEBUG | RouteDefinition trading-service-route applying {_genkey_0=/trading/**} to Path
+2025-03-31 21:14:03 | DEBUG | RouteDefinition matched: trading-service-route
+2025-03-31 21:14:04 | DEBUG | New routes count: 4
+2025-03-31 21:14:04 | INFO  | Started ApiGatewayApplicationTests in 37.561 seconds (process running for 45.338)
+2025-03-31 21:14:10 | DEBUG | Stopped RedisMessageListenerContainer
+2025-03-31 21:14:10 | DEBUG | closeAsync()
+2025-03-31 21:14:10 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] closeAsync()
+2025-03-31 21:14:10 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] channelInactive()
+2025-03-31 21:14:10 | DEBUG | Initiate shutdown (0, 100, MILLISECONDS)
+2025-03-31 21:14:10 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] deactivating endpoint handler
+2025-03-31 21:14:10 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] channelInactive() done
+2025-03-31 21:14:10 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelInactive()
+2025-03-31 21:14:10 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] Reconnect scheduling disabled
+2025-03-31 21:14:10 | DEBUG | [channel=0x0c596ac6, /192.168.102.3:51807 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] channelUnregistered()
+2025-03-31 21:14:10 | DEBUG | Release executor io.netty.channel.nio.NioEventLoopGroup@407f2029
+2025-03-31 21:14:11 | DEBUG | Initiate shutdown (0, 2, SECONDS)
+2025-03-31 21:14:11 | DEBUG | Initiate shutdown (0, 2, SECONDS)

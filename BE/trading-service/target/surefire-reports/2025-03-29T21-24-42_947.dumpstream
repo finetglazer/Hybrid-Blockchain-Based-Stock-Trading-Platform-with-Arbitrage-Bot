@@ -1,0 +1,5 @@
+# Created at 2025-03-29T21:24:43.498
+Boot Manifest-JAR contains absolute paths in classpath 'D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\trading-service\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
