@@ -28,5 +28,5 @@ WORKDIR /app
 
 COPY --from=builder /build/trading-service/target/trading-service-0.0.1-SNAPSHOT.jar /app/app.jar
 
-EXPOSE 8083
+EXPOSE 8084
 ENTRYPOINT ["java", "-jar", "app.jar"]
