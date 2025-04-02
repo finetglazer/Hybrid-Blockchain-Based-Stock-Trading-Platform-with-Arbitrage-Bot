@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaymentMethodDetailsRequest {
-    private String accountNumber;
-    private String routingNumber;
+public class UpdatePaymentMethodMetadataRequest {
     private String accountHolderName;
-    private String bankName;
 }

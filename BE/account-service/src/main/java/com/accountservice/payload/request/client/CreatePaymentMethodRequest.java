@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class CreatePaymentMethodRequest {
     private String type;
     private String nickname;
-    private boolean isDefault;
+    private boolean setAsDefault;
     private PaymentMethodDetailsRequest details;
 }
