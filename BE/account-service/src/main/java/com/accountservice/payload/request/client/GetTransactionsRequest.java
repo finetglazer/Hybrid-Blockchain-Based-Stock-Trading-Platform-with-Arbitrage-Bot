@@ -10,11 +10,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetTransactionsRequest {
-    private String accountId;
+    private String userId;
+    private List<String> accountIds;
     private String startDate;
     private String endDate;
     private List<String> types;
     private List<String> statuses;
+    private List<String> paymentMethodIds;
     private Integer page;
     private Integer size;
 }

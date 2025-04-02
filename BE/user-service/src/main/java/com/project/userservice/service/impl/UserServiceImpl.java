@@ -9,14 +9,17 @@ import com.project.userservice.payload.request.internal.UpdateTradingPermissions
 import com.project.userservice.payload.request.internal.ValidateTradingPermissionRequest;
 import com.project.userservice.payload.response.client.GetProfileEnhancedResponse;
 import com.project.userservice.payload.response.client.GetTradingPermissionsResponse;
+import com.project.userservice.payload.response.client.GetVerificationStatusResponse;
 import com.project.userservice.payload.response.internal.HasTradingAccountAndPaymentMethodResponse;
 import com.project.userservice.payload.response.internal.ValidateTradingPermissionResponse;
 import com.project.userservice.repository.SecurityVerificationRepository;
 import com.project.userservice.repository.UserRepository;
-import com.project.userservice.service.TwoFactorAuthService;
 import com.project.userservice.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +36,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final SecurityVerificationRepository securityVerificationRepository;
 
-    private final TwoFactorAuthService twoFactorAuthService;
+    private final MongoTemplate mongoTemplate;
 
     private final AccountServiceClient accountServiceClient;
 
@@ -158,6 +161,27 @@ public class UserServiceImpl implements UserService {
                 user.getPermissions().stream().toList(),
                 validateTradingPermissionRequest.getRequiredPermission()
             )
+        );
+    }
+
+    @Override
+    public BaseResponse<?> getVerificationStatus(String userId) {
+        User user = userRepository.findUserById(userId).orElse(null);
+
+        // If user found, it means email verified, if not, email is not verified
+        // Check whether phone number is verified or not
+        SecurityVerification securityVerification = mongoTemplate.findOne(new Query(Criteria.where("userId").is(userId)
+                .and("type").is(SecurityVerification.VerificationType.SMS_CODE.name())), SecurityVerification.class);
+
+        GetVerificationStatusResponse getVerificationStatusResponse = new GetVerificationStatusResponse();
+        getVerificationStatusResponse.setUserId(userId);
+        getVerificationStatusResponse.setUserStatus(user == null ? "NOT_FOUND" : user.getStatus().name());
+        getVerificationStatusResponse.setEmailVerified(user != null);
+        getVerificationStatusResponse.setPhoneVerified(securityVerification != null);
+        return new BaseResponse<>(
+            Const.STATUS_RESPONSE.SUCCESS,
+            "Retrieved user verification status successfully",
+            getVerificationStatusResponse
         );
     }
 }

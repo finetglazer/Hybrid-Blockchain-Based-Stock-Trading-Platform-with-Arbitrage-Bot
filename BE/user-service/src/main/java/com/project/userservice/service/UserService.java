@@ -10,4 +10,5 @@ public interface UserService {
 //    BaseResponse<?> verifyPhoneNumber(String userId, Verify2FARequest verify2FARequest);
     BaseResponse<?> updateTradingPermissions(String userId, UpdateTradingPermissionsRequest updateTradingPermissionsRequest);
     BaseResponse<?> validateTradingPermission(String userId, ValidateTradingPermissionRequest validateTradingPermissionRequest);
+    BaseResponse<?> getVerificationStatus(String userId);
 }
