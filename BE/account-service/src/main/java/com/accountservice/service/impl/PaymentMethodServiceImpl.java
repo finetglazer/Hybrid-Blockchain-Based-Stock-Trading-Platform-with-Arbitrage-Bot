@@ -184,9 +184,12 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
             );
         }
 
-        Instant lastUsedAt = transactionService.getTransactions(
+        List<Transaction> transactions = transactionService.getTransactions(
                 new GetTransactionsRequest(paymentMethod.getUserId(), null, null, null, null, null, List.of(paymentMethod.getId()), null, null)
-        ).getData().get(0).getCreatedAt();
+        ).getData();
+
+        Instant lastUsedAt = transactions.isEmpty() ? null : transactions.get(0).getCreatedAt();
+
         GetPaymentMethodDetailsResponse getPaymentMethodDetailsResponse = new GetPaymentMethodDetailsResponse();
         getPaymentMethodDetailsResponse.setId(paymentMethod.getId());
         getPaymentMethodDetailsResponse.setNickname(paymentMethod.getNickname());
