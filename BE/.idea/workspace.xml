@@ -5,27 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/ApiGatewayApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/ApiGatewayApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/account-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/AccountServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/AccountServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/PaymentMethodServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/PaymentMethodServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/account-service/src/main/resources/application-docker.properties" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/main/resources/application-docker.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/account-service/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/main/resources/application-local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/account-service/src/main/resources/application-product.properties" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/main/resources/application-product.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/gateway.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/gateway.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trading-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/trading-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trading-service/src/main/java/com/tradingservice/TradingServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/trading-service/src/main/java/com/tradingservice/TradingServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trading-service/src/main/resources/application-docker.properties" beforeDir="false" afterPath="$PROJECT_DIR$/trading-service/src/main/resources/application-docker.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trading-service/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/trading-service/src/main/resources/application-local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trading-service/src/main/resources/application-product.properties" beforeDir="false" afterPath="$PROJECT_DIR$/trading-service/src/main/resources/application-product.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/UserServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/UserServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application-docker.properties" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application-docker.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application-local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application-product.properties" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application-product.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,54 +55,54 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Docker.API-gateway/Dockerfile.executor": "Run",
-    "Docker.user-service/Dockerfile.executor": "Run",
-    "Docker.wallet-service/Dockerfile.executor": "Run",
-    "Maven.API-gateway [clean].executor": "Run",
-    "Maven.API-gateway [package].executor": "Run",
-    "Maven.microservices-parent [clean].executor": "Run",
-    "Maven.microservices-parent [install].executor": "Run",
-    "Maven.microservices-parent [package].executor": "Run",
-    "Maven.user-service [clean].executor": "Run",
-    "Maven.user-service [compile].executor": "Run",
-    "Maven.user-service [install].executor": "Run",
-    "Maven.user-service [package].executor": "Run",
-    "Maven.user-service [validate].executor": "Run",
-    "Maven.wallet-service [clean].executor": "Run",
-    "Maven.wallet-service [package].executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.AccountServiceApplication.executor": "Debug",
-    "Spring Boot.ApiGatewayApplication.executor": "Debug",
-    "Spring Boot.UserServiceApplication.executor": "Debug",
-    "Spring Boot.WalletServiceApplication.executor": "Run",
-    "git-widget-placeholder": "hiep",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Code/Big Apps/Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot/BE/user-service/src/main/resources",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.configurations.included.in.services": "true",
-    "settings.build.tools.auto.reload": "ALL",
-    "settings.editor.selected.configurable": "settings.sync",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Docker.API-gateway/Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.user-service/Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.wallet-service/Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.API-gateway [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.API-gateway [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.microservices-parent [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.microservices-parent [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.microservices-parent [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.user-service [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.user-service [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.user-service [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.user-service [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.user-service [validate].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.wallet-service [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.wallet-service [package].executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.AccountServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.ApiGatewayApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.UserServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.WalletServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;hiep&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Code/Big Apps/Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot/FE&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;settings.build.tools.auto.reload&quot;: &quot;ALL&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "redis",
-      "mongo"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;redis&quot;,
+      &quot;mongo&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
@@ -270,15 +250,15 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Node.js.console.js" />
+      <item itemvalue="Spring Boot.AccountServiceApplication" />
+      <item itemvalue="Spring Boot.ApiGatewayApplication" />
+      <item itemvalue="Spring Boot.TradingServiceApplication" />
+      <item itemvalue="Spring Boot.UserServiceApplication" />
+      <item itemvalue="Spring Boot.WalletServiceApplication" />
       <item itemvalue="Docker.API-gateway/Dockerfile" />
       <item itemvalue="Docker.user-service/Dockerfile" />
       <item itemvalue="Docker.wallet-service/Dockerfile" />
-      <item itemvalue="Node.js.console.js" />
-      <item itemvalue="Spring Boot.AccountServiceApplication" />
-      <item itemvalue="Spring Boot.TradingServiceApplication" />
-      <item itemvalue="Spring Boot.ApiGatewayApplication" />
-      <item itemvalue="Spring Boot.UserServiceApplication" />
-      <item itemvalue="Spring Boot.WalletServiceApplication" />
     </list>
     <recent_temporary>
       <list>
@@ -321,7 +301,8 @@
       <workItem from="1743157357939" duration="75282000" />
       <workItem from="1743348321981" duration="33829000" />
       <workItem from="1743772950441" duration="2798000" />
-      <workItem from="1743834997011" duration="4042000" />
+      <workItem from="1743834997011" duration="6052000" />
+      <workItem from="1743863309389" duration="17000" />
     </task>
     <servers />
   </component>
