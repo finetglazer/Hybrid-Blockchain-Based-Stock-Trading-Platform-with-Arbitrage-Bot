@@ -1,0 +1,9 @@
+# Frontend files to ignore
+FE/node_modules/
+FE/package-lock.json
+FE/package.json
+# Backend files to ignore
+BE/user-service/src/main/resources/firebase/firebase-service-account.json
+# Other common files to ignore
+*.log
+.DS_Store

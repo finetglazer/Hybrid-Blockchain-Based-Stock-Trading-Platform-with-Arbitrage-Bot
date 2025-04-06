@@ -14,6 +14,9 @@ import NavbarSide from "./pages/NavbarSide/NavbarSide";
 import HeaderNavbar from "./pages/HeaderNavbar/HeaderNavbar";
 import Support from "./pages/Support";
 import Setting from "./pages/SettingPage/Setting";
+import TwoFactorAuth from "./pages/TwoFactorAuth/TwoFactorAuth.jsx";
+import UpdatePhoneNumber from "./pages/UpdatePhoneNumber/UpdatePhoneNumber.jsx";
+import Disable2FA from "./pages/Disable2FA/Disable2FA.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -33,6 +36,10 @@ const Layout = () => {
         <Route path="/wallet" element={<Wallet />} />
         <Route path="/support" element={<Support />} />
         <Route path="/setting" element={<Setting />} />
+        <Route path="/forget-password" element={<ForgetPassword />} />
+        <Route path="/two-factor-auth" element={<TwoFactorAuth />} /> {/* Add this route */}
+        <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />
+        <Route path="/profile/disable2FA" element={<Disable2FA />} />
       </Routes>
     </>
   );
