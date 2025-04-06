@@ -14,7 +14,6 @@ const App = () => {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
-        <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/two-factor-auth" element={<TwoFactorAuth orAuth />} /> {/* Add this route */}
         <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />
         <Route path="/profile/disable2FA" element={<Disable2FA />} />
