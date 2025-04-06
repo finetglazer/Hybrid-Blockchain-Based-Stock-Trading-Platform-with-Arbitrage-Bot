@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -250,15 +248,15 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Docker.API-gateway/Dockerfile" />
+      <item itemvalue="Docker.user-service/Dockerfile" />
+      <item itemvalue="Docker.wallet-service/Dockerfile" />
       <item itemvalue="Node.js.console.js" />
       <item itemvalue="Spring Boot.AccountServiceApplication" />
       <item itemvalue="Spring Boot.ApiGatewayApplication" />
       <item itemvalue="Spring Boot.TradingServiceApplication" />
       <item itemvalue="Spring Boot.UserServiceApplication" />
       <item itemvalue="Spring Boot.WalletServiceApplication" />
-      <item itemvalue="Docker.API-gateway/Dockerfile" />
-      <item itemvalue="Docker.user-service/Dockerfile" />
-      <item itemvalue="Docker.wallet-service/Dockerfile" />
     </list>
     <recent_temporary>
       <list>
@@ -303,6 +301,7 @@
       <workItem from="1743772950441" duration="2798000" />
       <workItem from="1743834997011" duration="6052000" />
       <workItem from="1743863309389" duration="17000" />
+      <workItem from="1743865046907" duration="426000" />
     </task>
     <servers />
   </component>
