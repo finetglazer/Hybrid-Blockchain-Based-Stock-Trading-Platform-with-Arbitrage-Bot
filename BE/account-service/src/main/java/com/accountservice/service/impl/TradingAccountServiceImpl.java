@@ -13,6 +13,7 @@ import com.accountservice.repository.PaymentMethodRepository;
 import com.accountservice.repository.TradingAccountRepository;
 import com.accountservice.service.TradingAccountService;
 import com.accountservice.service.TransactionService;
+import com.accountservice.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -68,10 +69,15 @@ public class TradingAccountServiceImpl implements TradingAccountService {
         Balance savedBalance = balanceRepository.save(newBalance);
 
         BalanceHistory newBalanceHistory = new BalanceHistory();
-        newBalanceHistory.setDate(LocalDate.now());
+        newBalanceHistory.setDate(DateUtils.getDate(0));
         newBalanceHistory.setAccountId(savedTradingAccount.getId());
         newBalanceHistory.setUserId(userId);
-        newBalanceHistory.setOpeningBalance(0f);
+        newBalanceHistory.setOpeningBalance(0.0f);
+        newBalanceHistory.setClosingBalance(0.0f);
+        newBalanceHistory.setDeposits(0.0f);
+        newBalanceHistory.setWithdrawals(0.0f);
+        newBalanceHistory.setTradesNet(0.0f);
+        newBalanceHistory.setFees(0.0f);
 
         balanceHistoryRepository.save(newBalanceHistory);
 

@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +16,7 @@ public class BalanceHistory {
     @Id
     private String id;
 
-    private LocalDate date;
+    private Date date;
     private String accountId;
     private String userId;
     private Float openingBalance;

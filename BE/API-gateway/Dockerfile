@@ -1,14 +1,32 @@
-# Use a smaller JRE image to run the application
-FROM openjdk:17
+# Dockerfile located at BE/API-gateway/Dockerfile
+# --- Build context MUST BE the parent directory: BE/ ---
 
-# Set the working directory inside the container
+# ---------------- Stage 1: Build the application ----------------
+# Use a single builder stage
+FROM maven:3.9-eclipse-temurin-17 AS builder
+
+# Set the working directory for the build
+WORKDIR /build
+
+# Copy the entire project structure (parent POM and all modules)
+# The source '.' refers to the build context (BE/)
+COPY . .
+
+# Run Maven to build ONLY the API-gateway module and its dependencies (-am includes the parent)
+# Maven runs from /build (where the parent pom.xml is)
+# -pl specifies the target module relative to the parent pom
+RUN mvn -pl API-gateway -am clean package -DskipTests
+
+# ---------------- Stage 2: Create the final runtime image ----------------
+FROM eclipse-temurin:17-jre-alpine
+
 WORKDIR /app
 
-# Copy the JAR file built manually from the host machine into the container
-COPY ./target/API-gateway-0.0.1-SNAPSHOT.jar /app/api-gateway.jar
+# Copy the specific JAR from the TARGET module's target directory
+# Path is relative to the WORKDIR in the builder stage (/build)
+COPY --from=builder /build/API-gateway/target/API-gateway-0.0.1-SNAPSHOT.jar /app/app.jar
 
-# Expose the port the app will run on
 EXPOSE 8080
 
-# Run the application
-CMD ["java", "-jar", "api-gateway.jar"]
+# --- Final ENTRYPOINT ---
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

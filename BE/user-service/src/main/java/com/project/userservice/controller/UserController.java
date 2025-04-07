@@ -62,4 +62,9 @@ public class UserController {
     public ResponseEntity<?> validateTradingPermission(@PathVariable String userId, @RequestBody ValidateTradingPermissionRequest validateTradingPermissionRequest) {
         return ResponseEntity.ok(userService.validateTradingPermission(userId, validateTradingPermissionRequest));
     }
+
+    @GetMapping("/internal/users/{userId}/verification-status")
+    public ResponseEntity<?> getVerificationStatus(@PathVariable String userId, @RequestParam String requestingService) {
+        return ResponseEntity.ok(userService.getVerificationStatus(userId));
+    }
 }

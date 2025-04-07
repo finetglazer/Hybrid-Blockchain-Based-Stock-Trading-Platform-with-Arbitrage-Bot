@@ -42,20 +42,6 @@ services:
 #      - 1.1.1.1
 
   ######################
-  #  Wallet-Service    #
-  ######################
-#  wallet-service:
-#    build:
-#      context: ./wallet-service
-#      dockerfile: Dockerfile
-#    container_name: wallet-service
-#    expose:
-#      - "8082"
-  #    dns:
-  #      - 8.8.8.8
-  #      - 1.1.1.1
-
-  ######################
   #  Account-Service   #
   ######################
   account-service:
