@@ -7,14 +7,14 @@ const Login = () => {
   const navigate = useNavigate();
 
   // State cho email & password
-  const [email, setEmail] = useState("");
+  const [usernameOrEmail, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   // Hàm xử lý đăng nhập
   const handleLogin = async () => {
     try {
       const response = await axios.post("/api/users/api/v1/auth/login", {
-        email,
+        usernameOrEmail,
         password,
       });
 
@@ -24,7 +24,13 @@ const Login = () => {
       localStorage.setItem("token", response.data.token);
 
       // Chuyển hướng sau khi đăng nhập thành công
-      navigate("/");
+      if (response.data.status === 1) {
+        localStorage.setItem("username", usernameOrEmail);
+        console.log(usernameOrEmail);
+        alert(response.data.msg);
+        navigate("/home");
+        return; // Dừng hàm, không điều hướng
+      }
     } catch (err) {
       if (err.response) {
         // Lỗi từ phía server có response (server phản hồi)
@@ -52,7 +58,7 @@ const Login = () => {
       <input
         type="text"
         placeholder="Email"
-        value={email}
+        value={usernameOrEmail}
         onChange={(e) => setEmail(e.target.value)}
       />
       <input

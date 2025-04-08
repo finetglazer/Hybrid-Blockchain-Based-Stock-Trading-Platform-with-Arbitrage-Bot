@@ -1,0 +1,63 @@
+.sidebar {
+  position: fixed; /* Cố định vị trí */
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 100vh; /* Full màn hình */
+  background: rgba(28, 27, 26, 0.999);  /* Nền trong suốt */
+  padding: 20px;
+  backdrop-filter: blur(10px); /* Hiệu ứng kính mờ */
+  /* border-right: 2px solid rgba(255, 255, 255, 0.4); */
+   /* Viền sáng ở cạnh phải */
+
+  /* Đổ bóng 3D */
+  
+  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2),
+    inset -2px 0 5px rgba(255, 255, 255, 0.2);
+}
+
+h3 {
+  text-align: left; /* Căn trái */
+  font-size: 35px;
+  color: #2adb5cc5;
+  /* color: #13e55d; */
+}
+
+.nav {
+  list-style-type: none;
+  padding: 0;
+}
+
+.nav-item {
+  margin-bottom: 10px;
+  text-align: left;
+  padding-left: 0px;
+  margin-left: 20px;
+}
+
+.nav-item button {
+  width: 100%;
+  text-align: left; /* Căn trái chữ trong button */
+  background: none; /* Bỏ nền */
+  border: none; /* Bỏ viền */
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.nav-item button:hover {
+  background-color: #1dab45c5; /* Hiệu ứng hover */
+}
+
+.sidebar-icon {
+  margin-right: 10px;
+  width: 16px;
+}
+
+.symbol{
+  margin-left: 50px;
+  width: 50px;
+  margin-bottom: 20px;
+}
+
