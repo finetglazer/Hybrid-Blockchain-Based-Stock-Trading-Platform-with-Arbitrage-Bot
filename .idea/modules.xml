@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Hybrid Blockchain-Based Stock Trading Platform with Arbitrage Bot.iml" filepath="$PROJECT_DIR$/.idea/Hybrid Blockchain-Based Stock Trading Platform with Arbitrage Bot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BE/wallet-service/project.iml" filepath="$PROJECT_DIR$/BE/wallet-service/project.iml" />
     </modules>
   </component>
 </project>

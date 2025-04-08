@@ -1,4 +1,13 @@
 package com.stocktrading.kafka.model.enums;
 
-public class SagaStatus {
+/**
+ * Enum defining all possible saga status values
+ */
+public enum SagaStatus {
+    STARTED,
+    IN_PROGRESS,
+    COMPLETED,
+    FAILED,
+    COMPENSATING,
+    COMPENSATION_COMPLETED
 }
