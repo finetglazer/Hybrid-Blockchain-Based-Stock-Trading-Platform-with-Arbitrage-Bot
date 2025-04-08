@@ -1,0 +1,103 @@
+.payment-method-management-container {
+    width: 100vw;
+    height: 100vh;
+}
+
+.payment-method-management-container:hover {
+    box-shadow: none;
+    transform: translateY(0);
+}
+
+.payment-method-management-container .title {
+    text-align: left;
+    margin: 20px 0 0 0;
+    .name {
+        font-weight: bold;
+        font-size: 2rem;
+    }
+    .description {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+}
+
+.payment-method-management-container .body .category-name {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 50px 0 0 0;
+    text-align: left;
+}
+
+.pm-category-container .category-wrapper {
+    padding-top: 20px;
+    padding-right: 60px;
+    margin: 20px 0 10px 0;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+}
+
+.pm-category-container .summary {
+    display: flex;
+    .expand-icon {
+        width: 15px;
+        height: 15px;
+        margin-top: 10px;
+    }
+    .item-icon {
+        width: 50px;
+        height: 50px;
+        margin: -5px 0 0 20px;
+    }
+    .item-info {
+        margin: -19px 0 0 20px;
+        text-align: left;
+        width: 140%;
+        .item-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .item-id {
+            font-size: 0.85rem;
+            margin-top: -5px;
+        }
+    }
+    .item-status {
+        display: flex;
+        width: 20%;
+        img {
+            width: 25px;
+            height: 25px;
+            margin-top: 10px;
+        }
+        .status {
+            font-size: 1.1rem;
+            margin: 13px 0 0 7px;
+        }
+    }
+}
+
+.pm-category-container .summary:hover {
+    cursor: pointer;
+}
+
+.pm-category-container .details {
+    display: flex;
+}
+
+.pm-category-container .details .info, .pm-category-container .details .crud-btns {
+    width: 50%;
+}
+
+.details .properties {
+    width:
+}
+
+.details .property {
+    display: flex;
+    .label {
+        width: 50%;
+    }
+    .description {
+        width: 50%;
+    }
+}
