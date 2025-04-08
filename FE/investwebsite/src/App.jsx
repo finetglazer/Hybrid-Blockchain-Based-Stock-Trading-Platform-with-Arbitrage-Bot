@@ -6,14 +6,15 @@ import {
   useLocation,
 } from "react-router-dom";
 import ForgetPassword from "./pages/ForgetPassword";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Home from "./pages/Home";
-import Wallet from "./pages/Wallet";
-import NavbarSide from "./pages/NavbarSide/NavbarSide";
 import HeaderNavbar from "./pages/HeaderNavbar/HeaderNavbar";
-import Support from "./pages/Support";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import NavbarSide from "./pages/NavbarSide/NavbarSide";
+import Register from "./pages/Register";
+import ResetPassword from "./pages/ResetPassword";
 import Setting from "./pages/SettingPage/Setting";
+import Support from "./pages/Support";
+import Wallet from "./pages/Wallet";
 
 const Layout = () => {
   const location = useLocation();
@@ -29,6 +30,7 @@ const Layout = () => {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/home" element={<Home />} />
         <Route path="/wallet" element={<Wallet />} />
         <Route path="/support" element={<Support />} />
