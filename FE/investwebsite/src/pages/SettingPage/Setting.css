@@ -1,0 +1,115 @@
+body {
+    overflow: hidden;
+}
+
+.setting-container {
+    position: relative;
+    width: 84.5vw;
+    min-height: 75vh;
+    align-items: center;
+    overflow-y: scroll;
+    margin: 130px 0 0 188px;
+    &::-webkit-scrollbar {
+        display: none; /* Hides the scrollbar */
+    }
+}
+
+.setting-container:hover {      /* Escape from .container transformation effects */
+    transform: translateY(0);
+}
+
+.title {
+    margin: -50px auto 0;
+}
+
+.title .name {
+    font-size: 2.5rem;
+}
+
+.setting-body {
+    border: 2px solid rgba(173, 144, 83, 0.5);
+    border-radius: 10px;
+    margin-top: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.setting-body .title {
+    text-align: left;
+    margin: 20px 0 40px 0;
+    font-size: 1.8rem;
+}
+
+.setting-body .security-category-container {
+    display: flex;
+    align-items: center;
+    padding: 5px 0 15px;
+    border-bottom: 1px solid rgba(162, 155, 155, 0.4);
+    margin-bottom: 15px;
+}
+
+.setting-body .security-category-container:hover {
+    cursor: pointer;
+}
+
+.security-category-container .icon {
+    width: 10%;
+}
+
+.security-category-container img {
+    width: 40px;
+    height: 40px;
+}
+
+.security-category-container img:nth-of-type(1) {
+    width: 20px;
+    height: 20px;
+}
+
+.security-category-container:nth-of-type(1) .icon img {
+    width: 30px;
+    height: 30px;
+}
+
+.security-category-container:nth-of-type(2) .icon img {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+}
+
+.security-category-container:nth-of-type(3) .icon img {
+    width: 25px;
+    height: 25px;
+    margin-left: 5px;
+}
+
+.security-category-container:nth-of-type(4) .icon img {
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
+}
+
+.security-category-container span {
+    font-size: 1.3rem;
+}
+
+.security-category-container span {
+    width: 100%;
+    text-align: left;
+}
+
+.security-category-container span:nth-of-type(1) {
+    margin-left: 20px;
+}
+
+.verify-2fa-container {
+    position: absolute;
+    top: 100px;
+    left: 400px;
+    align-items: center;
+    border: 2px solid rgba(225, 160, 31, 0.5);
+    border-radius: 10px;
+    width: 40%;
+    padding: 10px 20px;
+}
+
