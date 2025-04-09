@@ -1,0 +1,1176 @@
+[33mcommit 0338a791e41d985b9d149ecb9b6c87ce93f409c4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mhung[m[33m)[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Mon Mar 24 19:27:36 2025 +0700
+
+    feat: initiate firebase
+    
+    Remove sensitive credentials and update gitignore
+
+[33mcommit 5069fccf4e10134d0608a9ba488d8df42d2fbbb5[m[33m ([m[1;31morigin/hung[m[33m)[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Fri Mar 21 17:05:57 2025 +0700
+
+    fix: cache connection
+
+[33mcommit 7a74a0ba11d319a6f8dbb5d8cb0e2e5cb3699f53[m[33m ([m[1;31morigin/main[m[33m)[m
+Merge: 14233de ee961c1
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 21 10:48:44 2025 +0700
+
+    Merge pull request #63 from finetglazer/hiep
+    
+    fix: rebuild docker images
+
+[33mcommit ee961c13c3bb711f6ca4c95f942e22c74a1a73eb[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 21 10:47:51 2025 +0700
+
+    fix: rebuild docker images
+
+[33mcommit 14233de625f6b820c1001383927fcf4f57b6c070[m
+Merge: fdfedd7 1b5b426
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 21 10:44:44 2025 +0700
+
+    Merge pull request #62 from finetglazer/hiep
+    
+    feat: rebuild docker images
+
+[33mcommit 1b5b426da22e35d84bcf31cf0c8e7afd238067ae[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 21 10:43:13 2025 +0700
+
+    feat: rebuild docker images
+
+[33mcommit fdfedd73de5c9e20966bd0c2e6815b14630f3ae4[m
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 21 10:36:37 2025 +0700
+
+    Update README.md
+
+[33mcommit b03b056247604c6c3c19ae79e25a5a420f4e2cab[m
+Merge: b6d17a6 c6e6d07
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 21 10:27:29 2025 +0700
+
+    Merge pull request #61 from finetglazer/hiep
+    
+    fix: rebuild docker images
+
+[33mcommit c6e6d07dcf74cd6ac0e79b7995938840e49ba087[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 21 10:26:48 2025 +0700
+
+    fix: rebuild docker images
+
+[33mcommit b6d17a6e0adafd45a6162a6dea98927622493257[m
+Merge: 768695c 8972790
+Author: I hate iu <101011776+finetglazer@users.noreply.github.com>
+Date:   Fri Mar 21 10:05:02 2025 +0700
+
+    Merge pull request #60 from finetglazer/hung
+    
+    feat: add email
+
+[33mcommit 89727902dd4ffdbbb728266b2688d10af9b0cada[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Fri Mar 21 10:02:47 2025 +0700
+
+    feat: add email
+
+[33mcommit 768695cfdc4d37be2cedb07acbe47064d13d61a0[m
+Merge: ee9c2e3 2cc591c
+Author: I hate iu <101011776+finetglazer@users.noreply.github.com>
+Date:   Fri Mar 14 16:25:06 2025 +0700
+
+    Merge pull request #59 from finetglazer/hung
+    
+    Hung
+
+[33mcommit 2cc591cd1879a4c420489d91351b38cafa32697f[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Fri Mar 14 16:23:46 2025 +0700
+
+    feat: add something
+
+[33mcommit 42fe1d1354e1eca83c9cf1f8a7190e4af159ed3f[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Fri Mar 14 16:23:14 2025 +0700
+
+    feat
+
+[33mcommit 7f37d2729c1d73519e93836c9841f37a3a78c189[m
+Merge: 511310e ee9c2e3
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Wed Mar 12 12:37:17 2025 +0700
+
+    feat
+
+[33mcommit 511310eb680bd90bfadd904653b52912bc766988[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Wed Mar 12 12:31:48 2025 +0700
+
+    feat: fix api
+
+[33mcommit ee9c2e3a45e4f5f935305f587a9d75ca40f7b4bf[m
+Merge: 50e4133 db35c6b
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 22:13:19 2025 +0700
+
+    Merge pull request #58 from finetglazer/hiep
+    
+    fix: remove dns in docker-compose
+
+[33mcommit db35c6b0f1be335c73d126cdbe2b1f492cd000f6[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 22:12:19 2025 +0700
+
+    fix: add @NoArgsConstructor to files
+
+[33mcommit 50e4133ba409fe0739c3c597f5683ed22b4d10b4[m
+Merge: ee33086 45e5787
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 22:03:52 2025 +0700
+
+    Merge pull request #57 from finetglazer/hiep
+    
+    fix: remove dns in docker-compose
+
+[33mcommit 45e57874faeb91d12f3a0073962f75f4c770cfc8[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 22:02:40 2025 +0700
+
+    fix: add @NoArgsConstructor to files
+
+[33mcommit ee33086bf60f24c08fc9a372a2cc0af934ad934e[m
+Merge: 611463c ee8b32d
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 21:40:27 2025 +0700
+
+    Merge pull request #56 from finetglazer/hiep
+    
+    fix: remove dns in docker-compose
+
+[33mcommit ee8b32dd775c2ec55da2c1bcaa36e8cb06eff22e[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 21:39:22 2025 +0700
+
+    fix: remove dns in docker-compose
+
+[33mcommit 611463cca540de66adccbd1858137b9b80200d3a[m
+Merge: e2b5cb9 2acdc52
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 20:37:54 2025 +0700
+
+    Merge pull request #55 from finetglazer/hiep
+    
+    fix: re-package services
+
+[33mcommit 2acdc527d883928459111cf58426d8ad6bac3339[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 20:37:18 2025 +0700
+
+    fix: re-package services
+
+[33mcommit e2b5cb9fdab0dc6edc08206f127a83ae39ab9cc4[m
+Merge: a5f0372 eac9d9b
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 20:29:16 2025 +0700
+
+    Merge pull request #54 from finetglazer/hiep
+    
+    fix: Temporarily comment API gateway filters
+
+[33mcommit eac9d9b9038eee1ff78aba8e3e0f0bad4833cd0c[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 20:26:15 2025 +0700
+
+    fix: Temporarily comment API gateway filters
+
+[33mcommit a5f0372924b4ba85886c5feff744b7309df49cdf[m
+Merge: 488fc93 5867956
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 17:36:48 2025 +0700
+
+    Merge pull request #53 from finetglazer/hiep
+    
+    fix: change wallet-service profile to product
+
+[33mcommit 586795602b7946be05178958dcc95dd0a5789767[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 17:35:32 2025 +0700
+
+    fix: change wallet-service profile to product
+
+[33mcommit 488fc935cd7fdf2f4b13efee5a31f1ae19662c1f[m
+Merge: 603c3ec 97a5aef
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 17:23:07 2025 +0700
+
+    Merge pull request #52 from finetglazer/hiep
+    
+    fix: Unignore target folders
+
+[33mcommit 97a5aef45ece95c13f7805522d4a99f5a82c7bab[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 17:22:14 2025 +0700
+
+    fix: re-package wallet-service
+
+[33mcommit f82398dee70085537b276edebc9b7d20f39eec30[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 17:19:49 2025 +0700
+
+    fix: pom file of wallet-service
+
+[33mcommit 603c3ecb4ced71e35fb7b599f066768538481258[m
+Merge: e604c75 8944bd9
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 17:15:38 2025 +0700
+
+    Merge pull request #51 from finetglazer/hiep
+    
+    fix: Unignore target folders
+
+[33mcommit 8944bd96b1da8de5350dfcd44a9393cf48b83482[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 17:14:45 2025 +0700
+
+    fix: .env files position
+
+[33mcommit e604c7576c2442c8cc5babbffcc8a698bb18122d[m
+Merge: 851cc24 4f1dcce
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 16:47:42 2025 +0700
+
+    Merge pull request #50 from finetglazer/hiep
+    
+    fix: Unignore target folders
+
+[33mcommit 4f1dcce1f8125d85828aff11ff2d0ac22569b814[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 16:46:57 2025 +0700
+
+    fix: update
+
+[33mcommit 851cc2425dd81d4c167953e1698283a258f4267c[m
+Merge: 4e6ffe0 c0bf378
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 16:43:21 2025 +0700
+
+    Merge pull request #49 from finetglazer/hiep
+    
+    fix: Unignore target folders
+
+[33mcommit c0bf3785675e32905c1b85d8263107b2836dfb90[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 16:42:55 2025 +0700
+
+    fix: update
+
+[33mcommit 4e6ffe0ba7d33f90b2c155abac3ae8e5c87c0f61[m
+Merge: d99e811 ffc16a6
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 10:07:22 2025 +0700
+
+    Merge pull request #48 from finetglazer/hiep
+    
+    fix: Unignore target folders
+
+[33mcommit ffc16a687d83994f72fea1ea829fa40400f8b8cb[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 10:05:50 2025 +0700
+
+    fix: META-INF
+
+[33mcommit 8b502398b9b42610e79f18d4781f55e0a7b435ca[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 10:05:31 2025 +0700
+
+    fix: META-INF
+
+[33mcommit d99e8111cc7160673c3d62e40fcc5090120afb4a[m
+Merge: 56e5390 8ca3281
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 09:42:07 2025 +0700
+
+    Merge pull request #47 from finetglazer/hiep
+    
+    fix: Unignore target folders
+
+[33mcommit 8ca328132875498d1e4141dec08282d2fe2467c4[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 09:41:24 2025 +0700
+
+    feat: Add META-INF folder
+
+[33mcommit 56e5390940f9b300f7fe842837c92e0a7ecfe245[m
+Merge: 34467f1 25c0fbf
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 09:36:39 2025 +0700
+
+    Merge pull request #46 from finetglazer/hiep
+    
+    fix: Unignore target folders
+
+[33mcommit 25c0fbf89e171b5003b35ccad26de457a9e0fd29[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 09:36:02 2025 +0700
+
+    fix: re-package
+
+[33mcommit 34467f1767b32db19a53070af7de168ff8ad0a48[m
+Merge: 7b32274 7edf0fd
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 09:31:15 2025 +0700
+
+    Merge pull request #45 from finetglazer/hiep
+    
+    fix: Unignore target folders
+
+[33mcommit 7edf0fd64e109def3c89428fc291f6593d22b94c[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 09:30:46 2025 +0700
+
+    fix: pom files
+
+[33mcommit 7b32274cf192bb811390cdba6a534801f9e5f1af[m
+Merge: a6ce25e 0cfd02c
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 09:23:29 2025 +0700
+
+    Merge pull request #44 from finetglazer/hiep
+    
+    fix: Unignore target folders
+
+[33mcommit 0cfd02c6db0c4a6ed48b4edd44117fd3078bc1b6[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 09:22:54 2025 +0700
+
+    fix: change back to Java 17
+
+[33mcommit a6ce25efb19dc8c447edc34cec0511ea5662ff45[m
+Merge: e18b892 60d2d7f
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 09:08:27 2025 +0700
+
+    Merge pull request #43 from finetglazer/hiep
+    
+    fix: Unignore target folders
+
+[33mcommit 60d2d7fce4d2340bf6a5bad853c563c260297bb9[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 09:07:41 2025 +0700
+
+    fix: Changed Java to 11
+
+[33mcommit e18b8925152b63f16912b770ab5b3a5fe29b6ebb[m
+Merge: 1e0bed6 d8451ec
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 08:59:23 2025 +0700
+
+    Merge pull request #42 from finetglazer/hiep
+    
+    fix: Unignore target folders
+
+[33mcommit d8451eca22fff0fd37c1b3bca86e6a4dd6e8346d[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 08:58:47 2025 +0700
+
+    feat: Add system.properties files
+
+[33mcommit 1e0bed656cf7440351f71895c869ec732e331aa7[m
+Merge: 1e7756a bd7fd89
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 08:54:22 2025 +0700
+
+    Merge pull request #41 from finetglazer/hiep
+    
+    fix: Unignore target folders
+
+[33mcommit bd7fd8994295dc814133b0c8ac5c6ae29297b494[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 08:53:31 2025 +0700
+
+    fix: included target folders
+
+[33mcommit 1e7756a9f08cc7a7f436893ad714b76fb359eb78[m
+Merge: 30740a3 c0a378a
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 08:44:09 2025 +0700
+
+    Merge pull request #40 from finetglazer/hiep
+    
+    fix: Unignore target folders
+
+[33mcommit c0a378ac7384ba7a7a47605026d5a4b1cf7a5f14[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 08:43:39 2025 +0700
+
+    fix: Unignore target folders
+
+[33mcommit 30740a3d02c4f5114a2a1b63a98d92283a289928[m
+Merge: 5ae3b2d 86e59ee
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 08:37:38 2025 +0700
+
+    Merge pull request #39 from finetglazer/hiep
+    
+    fix: remove mvn build in dockerfiles
+
+[33mcommit 86e59eeb8dae0d2b53b263be2db8da4bec419391[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 08:36:54 2025 +0700
+
+    fix: remove mvn build in dockerfiles
+
+[33mcommit 5ae3b2da790357f083a5c86e0bcebe578733ce17[m
+Merge: 79be805 e2a547d
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 01:03:40 2025 +0700
+
+    Merge pull request #38 from finetglazer/hiep
+    
+    fix: dockerfiles
+
+[33mcommit e2a547d10dfd86b91721e0d5aa1ac2045cc4e17a[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 01:02:59 2025 +0700
+
+    fix: dockerfiles
+
+[33mcommit 79be80506504eaf4d8e8fc42fb4e0ec11acd30a6[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sun Mar 9 00:55:07 2025 +0700
+
+    fix: Dotenv misconfigured
+
+[33mcommit 481ebd1b851481e6e31b52ecdf43b738cfaf5af6[m
+Merge: 34d9f0d 22cf28e
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sat Mar 8 22:41:04 2025 +0700
+
+    Merge pull request #37 from finetglazer/hiep
+    
+    Hiep
+
+[33mcommit 22cf28ecf9a4a0545d82ce19c433603b07b0e11c[m
+Merge: ef2b5f1 34d9f0d
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sat Mar 8 22:38:37 2025 +0700
+
+    fix: update
+
+[33mcommit ef2b5f1a8d1310eca7ec3257ee9fad68f04f2711[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sat Mar 8 22:37:45 2025 +0700
+
+    fix: fix docker-compose
+
+[33mcommit 34d9f0d6dec5b7175b68c767cac76dc384d842ab[m
+Merge: c1baaf3 f8db424
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sat Mar 8 22:35:58 2025 +0700
+
+    Merge pull request #36 from finetglazer/hiep
+    
+    fix: update
+
+[33mcommit f8db42413f637f2b92bf60387b3d86c311840877[m
+Merge: 2747b99 c1baaf3
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Sat Mar 8 22:34:28 2025 +0700
+
+    Merge branch 'main' into hiep
+
+[33mcommit 2747b99fe8b7351e2e1e31df5628d38e053c808a[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sat Mar 8 22:31:21 2025 +0700
+
+    fix: update
+
+[33mcommit c1baaf3f81c08a181b7d276bc9e5e312d23394f7[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sat Mar 8 22:22:13 2025 +0700
+
+    fix: update
+
+[33mcommit 1610e04a94507da4f9d076b673b5e39b998545de[m
+Merge: 8a8434c 566a8f0
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sat Mar 8 22:21:07 2025 +0700
+
+    fix: accept gateway.log theirs
+
+[33mcommit 8a8434cb687e796d29192fb9215e968e5a6e3d2d[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Sat Mar 8 22:20:01 2025 +0700
+
+    feat: revert to previous commit
+
+[33mcommit 566a8f01adc56092d8551e02a38626c40f08fd36[m
+Merge: f89ca90 854d56f
+Author: I hate iu <101011776+finetglazer@users.noreply.github.com>
+Date:   Sat Mar 8 19:07:01 2025 +0700
+
+    Merge pull request #35 from finetglazer/hung
+    
+    feat:
+
+[33mcommit 854d56f9f128925d4e7c84a02b5d39952595dc60[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Sat Mar 8 19:05:34 2025 +0700
+
+    feat:
+
+[33mcommit f89ca90273c190cf3d37605e5a2f564d40dc3efe[m[33m ([m[1;32mmain[m[33m)[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Sat Mar 8 17:10:02 2025 +0700
+
+    feat: fix docker files
+
+[33mcommit 033fdee5897ed1d7207f2bdf7882e27fe23b2d41[m
+Merge: b71bba3 a80455b
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Sat Mar 8 02:11:39 2025 +0700
+
+    feat: pull first
+
+[33mcommit b71bba3aeb4ff3c83a2a1176f7cb7a0d43e99fb1[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Sat Mar 8 02:06:52 2025 +0700
+
+    feat: add parent pom
+
+[33mcommit a80455be675ffbcaeb8b238582d4199d17541fb6[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 7 17:03:37 2025 +0700
+
+    fix: update pom of user-service
+
+[33mcommit 47d3059ca053d16b9210040041348e1e6dabd962[m
+Merge: 289ca9e 5246419
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 7 16:50:07 2025 +0700
+
+    Merge pull request #33 from finetglazer/hiep
+    
+    update
+
+[33mcommit 5246419619a97cab851164747a9af143bb32a45c[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 7 16:49:14 2025 +0700
+
+    update
+
+[33mcommit 289ca9e28b8ad3b96c07b78e38164682eb0b7c1f[m
+Merge: ed1f252 2ad6bc6
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 7 16:43:54 2025 +0700
+
+    Merge pull request #32 from finetglazer/hiep
+    
+    fix: update dockerfiles
+
+[33mcommit 2ad6bc618314223f6970a69ee4c75308b60cef93[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 7 16:43:10 2025 +0700
+
+    fix: update dockerfiles
+
+[33mcommit ed1f2527a2e720ea3cefce433937a3829630278e[m
+Merge: 74e3842 9d6a215
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 7 16:36:59 2025 +0700
+
+    Merge pull request #31 from finetglazer/hiep
+    
+    fix: dependency of wallet-service, but cannot build docker image of w…
+
+[33mcommit 9d6a215b82c8edc64653785bca18e0cbd3beea64[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 7 16:36:18 2025 +0700
+
+    fix: dependency of wallet-service, but cannot build docker image of wallet-service
+
+[33mcommit 74e384211fda53744a4f4c148c7fd6ebd69643d8[m
+Merge: 0a5294e b5a5a90
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 7 12:14:59 2025 +0700
+
+    Merge pull request #30 from finetglazer/hiep
+    
+    fix: Create wallet API
+
+[33mcommit b5a5a90f80c5f81648d8facd2ceed1bc2d5ac0a0[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 7 12:14:25 2025 +0700
+
+    fix: Create wallet API
+
+[33mcommit 0a5294e0bb41767104142f58027ef19a1ffdc3ae[m
+Merge: 2baf7e4 b327519
+Author: My Nguyễn <165662657+nghmyyy@users.noreply.github.com>
+Date:   Fri Mar 7 11:31:59 2025 +0700
+
+    Merge pull request #29 from finetglazer/my
+    
+    My
+
+[33mcommit b3275198a83f993e6550c4866c0eec9f321b4da9[m
+Merge: a25fd5f 2baf7e4
+Author: My Nguyễn <165662657+nghmyyy@users.noreply.github.com>
+Date:   Fri Mar 7 11:31:49 2025 +0700
+
+    Merge branch 'main' into my
+
+[33mcommit a25fd5f78cc094d55e88ee1156407dcdfe9cf309[m
+Merge: 6615897 78cbff0
+Author: nghmyyy <hamynguyen0401@gmail.com>
+Date:   Fri Mar 7 11:29:15 2025 +0700
+
+    fetch api - chua verify
+
+[33mcommit 2baf7e497ae170baf3859ea76df2ba649db4acb5[m
+Merge: e0224f2 0ce7407
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Fri Mar 7 11:09:32 2025 +0700
+
+    feat: pull main
+
+[33mcommit 78cbff08b4b5879aa63acfaf11d7cce831f695e7[m
+Author: nghmyyy <hamynguyen0401@gmail.com>
+Date:   Fri Mar 7 11:06:34 2025 +0700
+
+    fetch api - chưa register được vì chưa thể vertify
+
+[33mcommit e0224f26051dc8bd02f5f76435c6d20050956141[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Fri Mar 7 11:06:27 2025 +0700
+
+    feat: log
+
+[33mcommit 0ce7407f66676bbd2907ce527e16d18541270178[m
+Merge: 8880f97 6eeced5
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 7 11:02:19 2025 +0700
+
+    Merge pull request #28 from finetglazer/hiep
+    
+    Hiep
+
+[33mcommit 2ffa90bb7efbac638253e4aa862437934fa98bed[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Fri Mar 7 11:02:10 2025 +0700
+
+    feat: adding logging into gateway
+
+[33mcommit 6eeced5682492fc8d09104ebeb516b7d2d0a474e[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Fri Mar 7 11:01:38 2025 +0700
+
+    fix: reset link
+
+[33mcommit 3e314ac5e2a1f73ce24e9c5140b123c334654391[m
+Merge: 675af2c 8880f97
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Thu Mar 6 21:05:42 2025 +0700
+
+    fix: resolved conflicts, add OAuth code
+
+[33mcommit 675af2caa14f920146fc18c6405a885ecfceb5aa[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Thu Mar 6 20:56:39 2025 +0700
+
+    fix: JWT filter but recognized that this code was old, and the new one is not pulled
+
+[33mcommit 8880f977dbd6c4375f32d4a84df5b354522e3e89[m
+Merge: 0c3d8e0 1ad90a7
+Author: I hate iu <101011776+finetglazer@users.noreply.github.com>
+Date:   Thu Mar 6 20:51:11 2025 +0700
+
+    Merge pull request #27 from finetglazer/hung
+    
+    Just fix authentication of the gateway
+
+[33mcommit 1ad90a7d9bd4ac89aa8ffb4bd0f264a74df8cec2[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Thu Mar 6 20:48:31 2025 +0700
+
+    fix: jwt at gateway
+
+[33mcommit 839b872a8c1e86f2248ae30be9590e6064f2ae0a[m
+Author: nguyenhongquan <qun.nguyn17012003@gmail.com>
+Date:   Wed Mar 5 23:58:59 2025 +0700
+
+    fetch api
+
+[33mcommit ba0841ef03bd554ae26fcd8efb2404bb7deaf422[m
+Merge: 6c90d8d 0c3d8e0
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Wed Mar 5 17:06:50 2025 +0700
+
+    feat: upgrade temporarily security
+
+[33mcommit 6c90d8d436b48be3c28962fac718767a4df9ed13[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Wed Mar 5 17:04:53 2025 +0700
+
+    feast: fix security gateway
+
+[33mcommit 0c3d8e02956b71ed9d0157c5ab821d84e08d656e[m
+Merge: e742cfe 5990903
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 15:39:19 2025 +0700
+
+    Merge pull request #26 from finetglazer/hiep
+    
+    fix: dockerfile of api gateway
+
+[33mcommit 5990903edfa2ca9ff89c30ef0f1d0953ea250fce[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 15:38:01 2025 +0700
+
+    fix: dockerfile of api gateway
+
+[33mcommit e742cfeb2d9e2e9e5005c55343d84d6311b62759[m
+Merge: 99b1c0a 63f2716
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 15:27:45 2025 +0700
+
+    Merge pull request #25 from finetglazer/hiep
+    
+    feat: Add wallet service dockerfile
+
+[33mcommit 63f2716cfdf1aa31d02fc98823e7d7d97b0e8052[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 15:26:46 2025 +0700
+
+    feat: Add wallet service dockerfile
+
+[33mcommit 99b1c0abc48338397c76b90dffd5a1634d714a3d[m
+Merge: a6c3dc4 fe9133d
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 11:26:11 2025 +0700
+
+    Merge pull request #24 from finetglazer/hiep
+    
+    fix: update dockerfile of user service
+
+[33mcommit fe9133de8d710370caf14df5ccd873daa5f38457[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 11:25:45 2025 +0700
+
+    fix: update user service dockerfile
+
+[33mcommit a6c3dc45df487f36d6517a4034dd9c5322e1077a[m
+Merge: bda1951 d75e3a9
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 11:18:10 2025 +0700
+
+    Merge pull request #23 from finetglazer/hiep
+    
+    fix: update dockerfile of user service
+
+[33mcommit d75e3a9f7d2a3e9599cc0ca7bfa0f9badf6dbcba[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 11:17:38 2025 +0700
+
+    fix: update dockerfile of user service
+
+[33mcommit bda1951f68350215c8cce153c5767656b5e77f3d[m
+Author: nghmyyy <hamynguyen0401@gmail.com>
+Date:   Wed Mar 5 11:00:44 2025 +0700
+
+    update register
+
+[33mcommit a0227579c9c523fdb7e3b0628877a1d98a4edb9b[m
+Merge: 499be44 73931ca
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 11:15:26 2025 +0700
+
+    Merge pull request #22 from finetglazer/hiep
+    
+    fix: MongoDB connection
+
+[33mcommit 73931ca7b38a5102c2b88dba6220c1c52a615282[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 11:14:42 2025 +0700
+
+    fix: MongoDB connection
+
+[33mcommit 6615897c6588070ad7d34e6558464cbcb5fc272d[m
+Author: nghmyyy <hamynguyen0401@gmail.com>
+Date:   Wed Mar 5 11:00:44 2025 +0700
+
+    update register
+
+[33mcommit 499be443f7ba2a9fc919879ca2c9d4bb29c52b78[m
+Merge: 6e4ddcd b6b462c
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 10:59:35 2025 +0700
+
+    Merge pull request #21 from finetglazer/hiep
+    
+    feat: update dockerfile of user service
+
+[33mcommit b6b462c5a70927eb3bf8e9eb1c3d94cd2757988c[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 10:58:39 2025 +0700
+
+    feat: update dockerfile of user service
+
+[33mcommit 6e4ddcd32f28808c9b80b8c8668e6785b1b3d0ae[m
+Merge: efb5c02 ab5933a
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 10:44:08 2025 +0700
+
+    Merge pull request #20 from finetglazer/hiep
+    
+    feat: Add product application
+
+[33mcommit ab5933ac4702c8921cf2cf600b2cad81db5db872[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 10:43:40 2025 +0700
+
+    feat: Add product application
+
+[33mcommit efb5c02c5974e9766c083e65c988111dbe272c86[m
+Merge: 2ebbef1 c3ca524
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 10:41:32 2025 +0700
+
+    Merge pull request #19 from finetglazer/hiep
+    
+    feat: update API gateway application.properties
+
+[33mcommit c3ca5246b5be7973b72de58308165865c51e6eeb[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 10:39:24 2025 +0700
+
+    feat: update API gateway application.properties
+
+[33mcommit 2ebbef155105e40fd386bb40f2edc9dde087c708[m
+Merge: 9d40346 4dfb49e
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 10:22:25 2025 +0700
+
+    Merge pull request #18 from finetglazer/hiep
+    
+    feat: update dockerfile of user-service
+
+[33mcommit 4dfb49e8a2c61e5d9873b5a1db6519da42687550[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 10:21:56 2025 +0700
+
+    feat: update dockerfile of user-service
+
+[33mcommit 9d403463d16868c0147496d3ebb19ac9b92874ac[m
+Merge: a661555 fabc41e
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 10:17:50 2025 +0700
+
+    Merge pull request #17 from finetglazer/hiep
+    
+    feat: update dockerfile of api gateway
+
+[33mcommit fabc41e5f4986082017cadefc407005d56e8d010[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 10:16:41 2025 +0700
+
+    feat: update dockerfile of api gateway
+
+[33mcommit a661555f009caf236d0e87962f855f699e4b5917[m
+Merge: 010df7a 713261b
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 10:12:11 2025 +0700
+
+    Merge pull request #16 from finetglazer/hiep
+    
+    feat: update dockerfile of API gateway
+
+[33mcommit 713261bdd7bc52f3af0350d38a29ee797361dadd[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 10:11:39 2025 +0700
+
+    feat: update dockerfile of API gateway
+
+[33mcommit 010df7a1306c1ce136cb05c5cc89bfb8b5358f18[m
+Merge: 2d335a1 85bdc25
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 00:58:44 2025 +0700
+
+    Merge pull request #13 from finetglazer/quan
+    
+    login update lan 1
+
+[33mcommit 2d335a124d1fd85ce10078b08343985541976e4a[m
+Merge: 0ae7fb2 e4a7993
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 00:58:08 2025 +0700
+
+    Merge pull request #15 from finetglazer/hiep
+    
+    fix: Successfully test API Gateway in Docker
+
+[33mcommit e4a7993870b49ca7f6a9ae6c585dbcb4cdfcd570[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Wed Mar 5 00:54:09 2025 +0700
+
+    fix: Successfully test API Gateway in Docker
+
+[33mcommit 0ae7fb2c73305204b66b4f8e50770ca6c24e324a[m
+Merge: 3e47001 872f823
+Author: I hate iu <101011776+finetglazer@users.noreply.github.com>
+Date:   Tue Mar 4 18:24:58 2025 +0700
+
+    Merge pull request #14 from finetglazer/hung
+    
+    feat: Initiate gateway
+
+[33mcommit 872f823da808f32734c9fe0346bb62f6a51a6df1[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Tue Mar 4 18:23:58 2025 +0700
+
+    feat: Initiate gateway
+
+[33mcommit 3e470018f879b4e1bd981516f555f214655e753d[m
+Merge: 7c3fb7b fed9eed
+Author: I hate iu <101011776+finetglazer@users.noreply.github.com>
+Date:   Tue Mar 4 18:18:47 2025 +0700
+
+    Merge pull request #12 from finetglazer/my
+    
+    My
+
+[33mcommit fed9eed0b71e468efca81054ae27b6969e1bfee2[m
+Author: nghmyyy <hamynguyen0401@gmail.com>
+Date:   Tue Mar 4 09:34:21 2025 +0700
+
+    Resolve conflict in Register.jsx
+
+[33mcommit 7c3fb7b6f78bd9a83d2bdef34f3f523d3fe0be97[m
+Merge: 54212ff 14b5409
+Author: I hate iu <101011776+finetglazer@users.noreply.github.com>
+Date:   Mon Mar 3 17:34:16 2025 +0700
+
+    Merge pull request #11 from finetglazer/hung
+    
+    feat: add create wallet partly
+
+[33mcommit 14b5409006d5b283e979ab847f824a3ab07669e8[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Mon Mar 3 17:31:03 2025 +0700
+
+    feat: add creat wallet partly
+
+[33mcommit e76a3f2a4a8fb2898c0fabdba0404bc78e19b985[m
+Merge: 44cf7ea 54212ff
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Mon Mar 3 15:56:19 2025 +0700
+
+    feat: merge
+    :wq
+    Merge branch 'main' of https://github.com/finetglazer/Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot into hung
+            :wq
+            # the commit.
+
+[33mcommit 54212ffbe7db04aa9f0597d6dc04848ec6b52f25[m
+Merge: c0cf1a9 a99fa99
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Mon Mar 3 15:55:35 2025 +0700
+
+    Merge pull request #10 from finetglazer/hiep
+    
+    feat: Init Wallet service
+
+[33mcommit a99fa99c4153c86dac8f1718781a1739a724cbf4[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Mon Mar 3 15:54:12 2025 +0700
+
+    feat: Init Wallet service
+
+[33mcommit 85bdc258cfc45015d298c922f72dd316747330b9[m
+Author: nguyenhongquan <qun.nguyn17012003@gmail.com>
+Date:   Sat Mar 1 21:29:59 2025 +0700
+
+    login update lan 1
+
+[33mcommit 0a458c03bd6e187b6e2c155b7defc34d47365514[m
+Author: nghmyyy <hamynguyen0401@gmail.com>
+Date:   Sat Mar 1 01:00:41 2025 +0700
+
+    update register page
+
+[33mcommit c0cf1a997e1df5932e4ae5f3ec6e389474632741[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Fri Feb 28 22:15:57 2025 +0700
+
+    Removed investwebsite folder completely
+
+[33mcommit 44cf7ea76e1478e9542c5e07584381555311f783[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Fri Feb 28 22:07:19 2025 +0700
+
+    Removed investwebsite folder completely
+
+[33mcommit cd1be819b3695340648735c438c9beac5ae3e128[m
+Merge: cde82b8 35ebefd
+Author: I hate iu <101011776+finetglazer@users.noreply.github.com>
+Date:   Fri Feb 28 21:52:18 2025 +0700
+
+    Merge pull request #9 from finetglazer/quan
+    
+    Quan
+
+[33mcommit cde82b88ca35732f9184ff7e4ed22da7f45d63d0[m
+Merge: 44785f9 5837658
+Author: I hate iu <101011776+finetglazer@users.noreply.github.com>
+Date:   Fri Feb 28 21:44:48 2025 +0700
+
+    Merge pull request #8 from finetglazer/hung
+    
+    feat: update IP checking login function
+
+[33mcommit 5837658c8ff678a1a0ddd33f41b5932b0cdab33d[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Fri Feb 28 21:42:33 2025 +0700
+
+    feat: update IP checking login function
+
+[33mcommit 35ebefd3320fb7c0964dde146cf65b6cafa19c79[m
+Merge: cbaf25a 44785f9
+Author: nguyenhongquan <qun.nguyn17012003@gmail.com>
+Date:   Fri Feb 28 10:10:25 2025 +0700
+
+    :wq
+    !wq
+    Merge branch 'quan' of https://github.com/finetglazer/Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot into quan
+
+[33mcommit cbaf25a5a357114fb9f3b7f42cc02031ad7832c1[m
+Author: nguyenhongquan <qun.nguyn17012003@gmail.com>
+Date:   Fri Feb 28 10:07:43 2025 +0700
+
+    login fe
+
+[33mcommit 44785f93ad0b048a8c6d3d834d985becc27d43b4[m
+Merge: b84962a f6915af
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Thu Feb 27 15:04:39 2025 +0700
+
+    feat: solve something
+
+[33mcommit b84962a1c5d97486f6753f9743f2756629b2129d[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Thu Feb 27 14:59:08 2025 +0700
+
+    feat: add api: register, login, logout, password change, password forget
+
+[33mcommit f6915afcbca234781c106942922fb55d5597e4de[m
+Merge: 0caa1d3 ca963b3
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Thu Feb 27 11:36:13 2025 +0700
+
+    Merge pull request #6 from finetglazer/hiep
+    
+    feat: Add .env, add cors enable in SecurityConfig.java
+
+[33mcommit ca963b31bd821cdea50384bb4b3a3e4e50ae0d57[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Thu Feb 27 11:35:09 2025 +0700
+
+    feat: Add .env, add cors enable in SecurityConfig.java
+
+[33mcommit 0caa1d37e40e8187cc1dae130e4fa41dcf84f2b6[m
+Merge: b3792e9 b73ba2b
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Tue Feb 25 09:31:47 2025 +0700
+
+    Merge pull request #5 from O-oLogN/main
+    
+    feat: "/api/hello" - Tao add API de test ?
+
+[33mcommit b73ba2beffdb94d0435c4b371867d4d86afb70ec[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Tue Feb 25 09:30:16 2025 +0700
+
+    feat: "/api/hello" - Tao add API de test ?
+
+[33mcommit b3792e9ef3590176eba60da914b12f6cc93de79b[m
+Merge: 89bdb19 f88fb4d
+Author: Nguyễn Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Tue Feb 25 09:12:30 2025 +0700
+
+    Tao chuyen java 21 ve 17 ?
+    
+    Bo may test ?
+
+[33mcommit f88fb4d572b66737a1b232570b9439db919a9cda[m
+Merge: 91827be 89bdb19
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Tue Feb 25 09:10:04 2025 +0700
+
+    feat: Update Java version for compatibility -> 21
+
+[33mcommit 91827bed9f4b6408aeadab30c336937a9cc17e0c[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Tue Feb 25 09:09:29 2025 +0700
+
+    feat: Update Java version for compatibility -> 17
+
+[33mcommit 89bdb193a802e8d8827f807aaf41946501af05e8[m
+Merge: 4ca2e4c 88f6366
+Author: Nguyễn Vĩnh Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Tue Feb 25 09:00:00 2025 +0700
+
+    Merge pull request #2 from finetglazer/hung
+    
+    feat: dday len demo
+
+[33mcommit 4ca2e4c4dd57812b2d07d6e68c2cc60cc9a9a8a2[m
+Merge: 422ce34 f304f93
+Author: Nguyễn Vĩnh Hiệp <vinhhiepbn2003.work@gmail.com>
+Date:   Tue Feb 25 08:56:34 2025 +0700
+
+    Merge pull request #3 from O-oLogN/main
+    
+    feat: Update Java version for compatibility -> 21
+
+[33mcommit f304f93c1c12b9ca8ec521535a5a53748ed944bf[m
+Author: OLogN <vinhhiepbn2003.work@gmail.com>
+Date:   Tue Feb 25 08:52:08 2025 +0700
+
+    feat: Update Java version for compatibility -> 21
+
+[33mcommit 88f636661f131af70457d9a3444539118601cad7[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Fri Feb 21 20:45:03 2025 +0700
+
+    feat: dday len demo
+
+[33mcommit 422ce34d0891f0ed92c1e754f6b7fcc4fd5a917d[m
+Merge: bbf6d37 f954678
+Author: I hate iu <101011776+finetglazer@users.noreply.github.com>
+Date:   Wed Feb 19 19:32:01 2025 +0700
+
+    Merge pull request #1 from finetglazer/hung
+    
+    feat: create a FE folder
+
+[33mcommit f9546783852fbe8f2a199ce1018ff06b56118b1c[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Wed Feb 19 19:05:48 2025 +0700
+
+    feat: create a FE folder
+
+[33mcommit bbf6d37520feb4a2cd759a18393a3bde590c8c45[m
+Author: I hate iu <tranhung10122003@gmail.com>
+Date:   Wed Feb 19 15:17:39 2025 +0700
+
+    feat: initiation BE
+
+[33mcommit 25e5c6f5cce94f0df35431e14a2f096108d1df24[m
+Author: I hate iu <101011776+finetglazer@users.noreply.github.com>
+Date:   Wed Feb 19 11:47:59 2025 +0700
+
+    Initial commit

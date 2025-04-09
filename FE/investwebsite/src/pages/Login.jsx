@@ -13,7 +13,7 @@ const Login = () => {
   // Hàm xử lý đăng nhập
   const handleLogin = async () => {
     try {
-      const response = await axios.post("/api/users/api/v1/auth/login", {
+      const response = await axios.post("/users/api/v1/auth/login", {
         usernameOrEmail,
         password,
       });
@@ -23,7 +23,6 @@ const Login = () => {
       if (token) {
         localStorage.setItem("token", token);
       }
-
       // Chuyển hướng sau khi đăng nhập thành công
       if (response.data.status === 1) {
         localStorage.setItem("username", usernameOrEmail);

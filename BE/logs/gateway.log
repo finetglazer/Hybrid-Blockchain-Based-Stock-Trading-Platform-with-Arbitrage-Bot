@@ -1,0 +1,438 @@
+2025-04-08 09:31:17 | INFO  | HV000001: Hibernate Validator 8.0.2.Final
+2025-04-08 09:31:17 | INFO  | Starting ApiGatewayApplication using Java 23.0.2 with PID 18892 (D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\API-gateway\target\classes started by hiepg in D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE)
+2025-04-08 09:31:17 | DEBUG | Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-04-08 09:31:17 | INFO  | The following 1 profile is active: "local"
+2025-04-08 09:31:19 | TRACE | Condition GatewayAutoConfiguration.OnVerboseDisabledCondition on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$GatewayActuatorConfiguration#gatewayLegacyControllerEndpoint did not match due to NoneNestedConditions 1 matched 0 did not; NestedCondition on GatewayAutoConfiguration.OnVerboseDisabledCondition.VerboseDisabled @ConditionalOnProperty (spring.cloud.gateway.actuator.verbose.enabled) matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#routingFilter matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#nettyWriteResponseFilter matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyWebSocketClient matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration$NettyConfiguration#reactorNettyRequestUpgradeStrategy matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#adaptCachedBodyGlobalFilter matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeCachedBodyFilter matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#routeToRequestUrlFilter matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardRoutingFilter matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#forwardPathFilter matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#webSocketService matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledGlobalFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#websocketRoutingFilter matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightCalculatorWebFilter matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#afterRoutePredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#beforeRoutePredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#betweenRoutePredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cookieRoutePredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#headerRoutePredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#hostRoutePredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#methodRoutePredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#pathRoutePredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#queryRoutePredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#readBodyPredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#remoteAddrRoutePredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#xForwardedRemoteAddrRoutePredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#weightRoutePredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledPredicate on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cloudFoundryRouteServiceRoutePredicateFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeaderGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestHeadersIfNotPresentGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#mapRequestHeaderGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addRequestParameterGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#addResponseHeaderGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyRequestBodyGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#dedupeResponseHeaderGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#modifyResponseBodyGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#cacheRequestBodyGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#prefixPathGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#preserveHostHeaderGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#redirectToGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeJsonAttributesResponseBodyGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestHeaderGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeRequestParameterGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#removeResponseHeaderGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#principalNameKeyResolver matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestRateLimiterGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewritePathGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#retryGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setPathGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#secureHeadersGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHeaderGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setRequestHostHeaderGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setResponseHeaderGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteResponseHeaderGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteLocationResponseHeaderGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#setStatusGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#saveSessionGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#stripPrefixGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderToRequestUriGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestSizeGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#requestHeaderSizeGatewayFilterFactory matched
+2025-04-08 09:31:19 | TRACE | Condition OnEnabledFilter on org.springframework.cloud.gateway.config.GatewayAutoConfiguration#rewriteRequestParameterGatewayFilterFactory matched
+2025-04-08 09:31:21 | INFO  | Multiple Spring Data modules found, entering strict repository configuration mode
+2025-04-08 09:31:21 | INFO  | Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-04-08 09:31:21 | INFO  | Finished Spring Data repository scanning in 45 ms. Found 0 Redis repository interfaces.
+2025-04-08 09:31:22 | INFO  | BeanFactory id=65a8124d-7f3c-325c-9d2a-019d5b45ab5a
+2025-04-08 09:31:23 | DEBUG | Starting with netty's non-blocking DNS resolver library
+2025-04-08 09:31:23 | DEBUG | Starting without optional kqueue library
+2025-04-08 09:31:23 | DEBUG | Starting without optional io_uring library
+2025-04-08 09:31:23 | DEBUG | Starting without optional epoll library
+2025-04-08 09:31:23 | DEBUG | -Dio.netty.eventLoopThreads: 4
+2025-04-08 09:31:23 | DEBUG | Creating executor io.netty.util.concurrent.DefaultEventExecutorGroup
+2025-04-08 09:31:23 | DEBUG | Starting with JFR support
+2025-04-08 09:31:24 | DEBUG | Trying to get a Redis connection for: redis://default:********************************@redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com:14694?timeout=3s
+2025-04-08 09:31:24 | DEBUG | Allocating executor io.netty.channel.nio.NioEventLoopGroup
+2025-04-08 09:31:24 | DEBUG | Creating executor io.netty.channel.nio.NioEventLoopGroup
+2025-04-08 09:31:24 | DEBUG | Adding reference to io.netty.channel.nio.NioEventLoopGroup@22a63740, existing ref count 0
+2025-04-08 09:31:24 | DEBUG | Resolved SocketAddress redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694 using redis://default:********************************@redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com:14694?timeout=3s
+2025-04-08 09:31:24 | DEBUG | Connecting to Redis at redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 09:31:24 | DEBUG | [channel=0xaf9f6411, [id: 0x952c263c] (inactive), epid=0x1, chid=0x1] channelRegistered()
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] write(ctx, AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Received: 705 bytes, 1 commands in the stack
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Stack contains: 1 commands
+2025-04-08 09:31:25 | DEBUG | Decode done, empty stack: true
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Completing command LatencyMeteredCommand [type=HELLO, output=GenericMapOutput [output={server=redis, version=7.4.2, proto=3, id=25, mode=cluster, role=master, modules=name, ReJSON=ver, 20808=path, /enterprise-managed=args, name=searchlight, ver=21013, path=/enterprise-managed, args=FORK_GC_CLEAN_THRESHOLD, timeseries=ver, 11205=path, 100=MAXAGGREGATERESULTS, 10000=MT_MODE, MT_MODE_ONLY_ON_OPERATIONS=WORKER_THREADS}, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] write(ctx, [AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]], promise)
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Received: 10 bytes, 2 commands in the stack
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Stack contains: 2 commands
+2025-04-08 09:31:25 | DEBUG | Decode done, empty stack: true
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Stack contains: 1 commands
+2025-04-08 09:31:25 | DEBUG | Decode done, empty stack: true
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] channelActive()
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] activateEndpointAndExecuteBufferedCommands 0 command(s) buffered
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] activating endpoint
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] flushCommands()
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] flushCommands() Flushing 0 commands
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelActive()
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] channelActive() done
+2025-04-08 09:31:25 | DEBUG | Connecting to Redis at redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694: Success
+2025-04-08 09:31:25 | DEBUG | dispatching command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] write() writeAndFlush command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] write(ctx, AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] write() done
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Received: 7 bytes, 1 commands in the stack
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Stack contains: 1 commands
+2025-04-08 09:31:25 | DEBUG | Decode done, empty stack: true
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Completing command LatencyMeteredCommand [type=PING, output=StatusOutput [output=PONG, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 09:31:25 | DEBUG | dispatching command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] write() writeAndFlush command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] write() done
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] write(ctx, AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+2025-04-08 09:31:25 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:26 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Received: 7 bytes, 1 commands in the stack
+2025-04-08 09:31:26 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Stack contains: 1 commands
+2025-04-08 09:31:26 | DEBUG | Decode done, empty stack: true
+2025-04-08 09:31:26 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Completing command LatencyMeteredCommand [type=PING, output=StatusOutput [output=PONG, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 09:31:26 | INFO  | 
+
+Using generated security password: 90fea63a-834d-4853-9ca3-4255b600704a
+
+2025-04-08 09:31:27 | DEBUG | Routes supplied from Gateway Properties: [RouteDefinition{id='user-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/users/**}}], filters=[], uri=http://localhost:8081, order=0, metadata={}, enabled=true}, RouteDefinition{id='account-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/accounts/**}}], filters=[], uri=http://localhost:8083, order=0, metadata={}, enabled=true}, RouteDefinition{id='trading-service-route', predicates=[PredicateDefinition{name='Path', args={_genkey_0=/trading/**}}], filters=[], uri=http://localhost:8084, order=0, metadata={}, enabled=true}]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [After]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [Before]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [Between]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [Cookie]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [Header]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [Host]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [Method]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [Path]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [Query]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [ReadBody]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [RemoteAddr]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [XForwardedRemoteAddr]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [Weight]
+2025-04-08 09:31:27 | INFO  | Loaded RoutePredicateFactory [CloudFoundryRouteService]
+2025-04-08 09:31:27 | INFO  | Exposing 2 endpoints beneath base path '/actuator'
+2025-04-08 09:31:28 | INFO  | Netty started on port 8080 (http)
+2025-04-08 09:31:28 | DEBUG | Starting RedisMessageListenerContainer...
+2025-04-08 09:31:28 | DEBUG | Postpone listening for Redis messages until actual listeners are added
+2025-04-08 09:31:28 | DEBUG | RouteDefinition user-service-route applying {_genkey_0=/users/**} to Path
+2025-04-08 09:31:28 | DEBUG | RouteDefinition matched: user-service-route
+2025-04-08 09:31:28 | DEBUG | RouteDefinition account-service-route applying {_genkey_0=/accounts/**} to Path
+2025-04-08 09:31:28 | DEBUG | RouteDefinition matched: account-service-route
+2025-04-08 09:31:28 | DEBUG | RouteDefinition trading-service-route applying {_genkey_0=/trading/**} to Path
+2025-04-08 09:31:28 | DEBUG | RouteDefinition matched: trading-service-route
+2025-04-08 09:31:28 | DEBUG | New routes count: 3
+2025-04-08 09:31:28 | INFO  | Started ApiGatewayApplication in 12.915 seconds (process running for 16.026)
+2025-04-08 09:31:29 | DEBUG | Trying to get a Redis connection for: redis://default:********************************@redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com:14694?timeout=3s
+2025-04-08 09:31:29 | DEBUG | Resolved SocketAddress redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694 using redis://default:********************************@redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com:14694?timeout=3s
+2025-04-08 09:31:29 | DEBUG | Connecting to Redis at redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 09:31:29 | DEBUG | [channel=0x01e543fd, [id: 0x6e05c3a8] (inactive), epid=0x2, chid=0x2] channelRegistered()
+2025-04-08 09:31:29 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] write(ctx, AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+2025-04-08 09:31:29 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Received: 705 bytes, 1 commands in the stack
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Stack contains: 1 commands
+2025-04-08 09:31:30 | DEBUG | Decode done, empty stack: true
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Completing command LatencyMeteredCommand [type=HELLO, output=GenericMapOutput [output={server=redis, version=7.4.2, proto=3, id=25, mode=cluster, role=master, modules=name, ReJSON=ver, 20808=path, /enterprise-managed=args, name=searchlight, ver=21013, path=/enterprise-managed, args=FORK_GC_CLEAN_THRESHOLD, timeseries=ver, 11205=path, 100=MAXAGGREGATERESULTS, 10000=MT_MODE, MT_MODE_ONLY_ON_OPERATIONS=WORKER_THREADS}, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] write(ctx, [AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]], promise)
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Received: 10 bytes, 2 commands in the stack
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Stack contains: 2 commands
+2025-04-08 09:31:30 | DEBUG | Decode done, empty stack: true
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Stack contains: 1 commands
+2025-04-08 09:31:30 | DEBUG | Decode done, empty stack: true
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] channelActive()
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] activateEndpointAndExecuteBufferedCommands 0 command(s) buffered
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] activating endpoint
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] flushCommands()
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] flushCommands() Flushing 0 commands
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelActive()
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] channelActive() done
+2025-04-08 09:31:30 | DEBUG | Connecting to Redis at redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694: Success
+2025-04-08 09:31:30 | DEBUG | dispatching command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] write() writeAndFlush command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] write() done
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] write(ctx, AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Received: 7 bytes, 1 commands in the stack
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Stack contains: 1 commands
+2025-04-08 09:31:30 | DEBUG | Decode done, empty stack: true
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Completing command LatencyMeteredCommand [type=PING, output=StatusOutput [output=PONG, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 09:31:30 | DEBUG | dispatching command SubscriptionCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] write() writeAndFlush command SubscriptionCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] write(ctx, SubscriptionCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] write() done
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command SubscriptionCommand [type=PING, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Received: 7 bytes, 1 commands in the stack
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Stack contains: 1 commands
+2025-04-08 09:31:30 | DEBUG | Decode done, empty stack: true
+2025-04-08 09:31:30 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Completing command LatencyMeteredCommand [type=PING, output=StatusOutput [output=PONG, error='null'], commandType=io.lettuce.core.RedisPublisher$SubscriptionCommand]
+2025-04-08 09:31:30 | DEBUG | Redis health check: PONG
+2025-04-08 11:36:12 | INFO  | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] Unexpected exception during request: java.net.SocketException: Connection reset
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:403)
+	at java.base/sun.nio.ch.SocketChannelImpl.implRead(SocketChannelImpl.java:435)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:493)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:255)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:356)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-04-08 11:36:12 | INFO  | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] Unexpected exception during request: java.net.SocketException: Connection reset
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:403)
+	at java.base/sun.nio.ch.SocketChannelImpl.implRead(SocketChannelImpl.java:435)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:493)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:255)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:356)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-04-08 11:36:12 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] channelInactive()
+2025-04-08 11:36:12 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] channelInactive()
+2025-04-08 11:36:12 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] deactivating endpoint handler
+2025-04-08 11:36:12 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] deactivating endpoint handler
+2025-04-08 11:36:12 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] notifyQueuedCommands adding 0 command(s) to buffer
+2025-04-08 11:36:12 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] notifyQueuedCommands adding 0 command(s) to buffer
+2025-04-08 11:36:12 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] channelInactive() done
+2025-04-08 11:36:12 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] channelInactive() done
+2025-04-08 11:36:12 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelInactive()
+2025-04-08 11:36:12 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelInactive()
+2025-04-08 11:36:12 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] scheduleReconnect()
+2025-04-08 11:36:12 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] scheduleReconnect()
+2025-04-08 11:36:12 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] Reconnect attempt 1, delay 1ms
+2025-04-08 11:36:12 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] Reconnect attempt 1, delay 1ms
+2025-04-08 11:36:12 | DEBUG | [channel=0xaf9f6411, /10.24.6.95:52156 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x1] channelUnregistered()
+2025-04-08 11:36:12 | DEBUG | [channel=0x01e543fd, /10.24.6.95:52164 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x2] channelUnregistered()
+2025-04-08 11:36:13 | INFO  | Reconnecting, last destination was redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 11:36:13 | INFO  | Reconnecting, last destination was redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 11:36:13 | DEBUG | Resolved SocketAddress redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694 using redis://default:********************************@redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com:14694?timeout=3s
+2025-04-08 11:36:13 | DEBUG | Resolved SocketAddress redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694 using redis://default:********************************@redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com:14694?timeout=3s
+2025-04-08 11:36:13 | DEBUG | Reconnecting to Redis at redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 11:36:13 | DEBUG | Reconnecting to Redis at redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 11:36:13 | DEBUG | [channel=0xed0fa59a, [id: 0x331ae0fd] (inactive), epid=0x1, chid=0x3] channelRegistered()
+2025-04-08 11:36:13 | DEBUG | [channel=0xdba614a3, [id: 0x5b6c0e49] (inactive), epid=0x2, chid=0x4] channelRegistered()
+2025-04-08 11:36:13 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] write(ctx, AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+2025-04-08 11:36:13 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] write(ctx, AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+2025-04-08 11:36:13 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 11:36:13 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] Received: 705 bytes, 1 commands in the stack
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] Stack contains: 1 commands
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] Received: 705 bytes, 1 commands in the stack
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] Stack contains: 1 commands
+2025-04-08 11:36:15 | DEBUG | Decode done, empty stack: true
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] Completing command LatencyMeteredCommand [type=HELLO, output=GenericMapOutput [output={server=redis, version=7.4.2, proto=3, id=25, mode=cluster, role=master, modules=name, ReJSON=ver, 20808=path, /enterprise-managed=args, name=searchlight, ver=21013, path=/enterprise-managed, args=FORK_GC_CLEAN_THRESHOLD, timeseries=ver, 11205=path, 100=MAXAGGREGATERESULTS, 10000=MT_MODE, MT_MODE_ONLY_ON_OPERATIONS=WORKER_THREADS}, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] write(ctx, [AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]], promise)
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 11:36:15 | DEBUG | Decode done, empty stack: true
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] Completing command LatencyMeteredCommand [type=HELLO, output=GenericMapOutput [output={server=redis, version=7.4.2, proto=3, id=25, mode=cluster, role=master, modules=name, ReJSON=ver, 20808=path, /enterprise-managed=args, name=searchlight, ver=21013, path=/enterprise-managed, args=FORK_GC_CLEAN_THRESHOLD, timeseries=ver, 11205=path, 100=MAXAGGREGATERESULTS, 10000=MT_MODE, MT_MODE_ONLY_ON_OPERATIONS=WORKER_THREADS}, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] write(ctx, [AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]], promise)
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] Received: 10 bytes, 2 commands in the stack
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] Stack contains: 2 commands
+2025-04-08 11:36:15 | DEBUG | Decode done, empty stack: true
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] Stack contains: 1 commands
+2025-04-08 11:36:15 | DEBUG | Decode done, empty stack: true
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] channelActive()
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] activateEndpointAndExecuteBufferedCommands 0 command(s) buffered
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] activating endpoint
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] flushCommands()
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] flushCommands() Flushing 0 commands
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelActive()
+2025-04-08 11:36:15 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] channelActive() done
+2025-04-08 11:36:15 | INFO  | Reconnected to redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, Channel channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] Received: 10 bytes, 2 commands in the stack
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] Stack contains: 2 commands
+2025-04-08 11:36:15 | DEBUG | Decode done, empty stack: true
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] Stack contains: 1 commands
+2025-04-08 11:36:15 | DEBUG | Decode done, empty stack: true
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] channelActive()
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] activateEndpointAndExecuteBufferedCommands 0 command(s) buffered
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] activating endpoint
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] flushCommands()
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] flushCommands() Flushing 0 commands
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelActive()
+2025-04-08 11:36:15 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] channelActive() done
+2025-04-08 11:36:15 | INFO  | Reconnected to redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, Channel channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 15:05:50 | INFO  | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] Unexpected exception during request: java.net.SocketException: Connection reset
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:403)
+	at java.base/sun.nio.ch.SocketChannelImpl.implRead(SocketChannelImpl.java:435)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:493)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:255)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:356)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-04-08 15:05:50 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] channelInactive()
+2025-04-08 15:05:50 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] deactivating endpoint handler
+2025-04-08 15:05:50 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] notifyQueuedCommands adding 0 command(s) to buffer
+2025-04-08 15:05:50 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] channelInactive() done
+2025-04-08 15:05:50 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelInactive()
+2025-04-08 15:05:50 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] scheduleReconnect()
+2025-04-08 15:05:50 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] Reconnect attempt 1, delay 1ms
+2025-04-08 15:05:50 | DEBUG | [channel=0xed0fa59a, /192.168.102.3:55011 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x3] channelUnregistered()
+2025-04-08 15:05:50 | INFO  | Reconnecting, last destination was redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 15:05:50 | INFO  | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] Unexpected exception during request: java.net.SocketException: Connection reset
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:403)
+	at java.base/sun.nio.ch.SocketChannelImpl.implRead(SocketChannelImpl.java:435)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:493)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:255)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:356)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-04-08 15:05:50 | DEBUG | Resolved SocketAddress redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694 using redis://default:********************************@redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com:14694?timeout=3s
+2025-04-08 15:05:50 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] channelInactive()
+2025-04-08 15:05:50 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] deactivating endpoint handler
+2025-04-08 15:05:50 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] notifyQueuedCommands adding 0 command(s) to buffer
+2025-04-08 15:05:50 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] channelInactive() done
+2025-04-08 15:05:50 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelInactive()
+2025-04-08 15:05:50 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] scheduleReconnect()
+2025-04-08 15:05:50 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] Reconnect attempt 1, delay 1ms
+2025-04-08 15:05:50 | DEBUG | [channel=0xdba614a3, /192.168.102.3:55013 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x4] channelUnregistered()
+2025-04-08 15:05:50 | DEBUG | Reconnecting to Redis at redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 15:05:50 | DEBUG | [channel=0x225274ce, [id: 0x9934dd1a] (inactive), epid=0x1, chid=0x5] channelRegistered()
+2025-04-08 15:05:50 | INFO  | Reconnecting, last destination was redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 15:05:50 | DEBUG | Resolved SocketAddress redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694 using redis://default:********************************@redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com:14694?timeout=3s
+2025-04-08 15:05:50 | DEBUG | [channel=0x4123e8e1, [id: 0x49d51bec] (inactive), epid=0x2, chid=0x6] channelRegistered()
+2025-04-08 15:05:50 | DEBUG | Reconnecting to Redis at redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 15:05:50 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] write(ctx, AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+2025-04-08 15:05:50 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 15:05:50 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] write(ctx, AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+2025-04-08 15:05:50 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=HELLO, output=GenericMapOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] Received: 705 bytes, 1 commands in the stack
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] Stack contains: 1 commands
+2025-04-08 15:05:51 | DEBUG | Decode done, empty stack: true
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] Completing command LatencyMeteredCommand [type=HELLO, output=GenericMapOutput [output={server=redis, version=7.4.2, proto=3, id=25, mode=cluster, role=master, modules=name, ReJSON=ver, 20808=path, /enterprise-managed=args, name=searchlight, ver=21013, path=/enterprise-managed, args=FORK_GC_CLEAN_THRESHOLD, timeseries=ver, 11205=path, 100=MAXAGGREGATERESULTS, 10000=MT_MODE, MT_MODE_ONLY_ON_OPERATIONS=WORKER_THREADS}, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] write(ctx, [AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]], promise)
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] Received: 705 bytes, 1 commands in the stack
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] Stack contains: 1 commands
+2025-04-08 15:05:51 | DEBUG | Decode done, empty stack: true
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] Completing command LatencyMeteredCommand [type=HELLO, output=GenericMapOutput [output={server=redis, version=7.4.2, proto=3, id=25, mode=cluster, role=master, modules=name, ReJSON=ver, 20808=path, /enterprise-managed=args, name=searchlight, ver=21013, path=/enterprise-managed, args=FORK_GC_CLEAN_THRESHOLD, timeseries=ver, 11205=path, 100=MAXAGGREGATERESULTS, 10000=MT_MODE, MT_MODE_ONLY_ON_OPERATIONS=WORKER_THREADS}, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] write(ctx, [AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]], promise)
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] writing command AsyncCommand [type=CLIENT, output=StatusOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] Received: 10 bytes, 2 commands in the stack
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] Stack contains: 2 commands
+2025-04-08 15:05:51 | DEBUG | Decode done, empty stack: true
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] Stack contains: 1 commands
+2025-04-08 15:05:51 | DEBUG | Decode done, empty stack: true
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] channelActive()
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] activateEndpointAndExecuteBufferedCommands 0 command(s) buffered
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] activating endpoint
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] flushCommands()
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] flushCommands() Flushing 0 commands
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelActive()
+2025-04-08 15:05:51 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] channelActive() done
+2025-04-08 15:05:51 | INFO  | Reconnected to redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, Channel channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] Received: 10 bytes, 2 commands in the stack
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] Stack contains: 2 commands
+2025-04-08 15:05:51 | DEBUG | Decode done, empty stack: true
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] Stack contains: 1 commands
+2025-04-08 15:05:51 | DEBUG | Decode done, empty stack: true
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] Completing command LatencyMeteredCommand [type=CLIENT, output=StatusOutput [output=OK, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] channelActive()
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] activateEndpointAndExecuteBufferedCommands 0 command(s) buffered
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] activating endpoint
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] flushCommands()
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] flushCommands() Flushing 0 commands
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelActive()
+2025-04-08 15:05:51 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] channelActive() done
+2025-04-08 15:05:51 | INFO  | Reconnected to redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, Channel channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694
+2025-04-08 15:22:05 | DEBUG | Stopped RedisMessageListenerContainer
+2025-04-08 15:22:05 | INFO  | Commencing graceful shutdown. Waiting for active requests to complete
+2025-04-08 15:22:05 | INFO  | Graceful shutdown complete
+2025-04-08 15:22:05 | DEBUG | closeAsync()
+2025-04-08 15:22:05 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] closeAsync()
+2025-04-08 15:22:05 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] channelInactive()
+2025-04-08 15:22:05 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1] deactivating endpoint handler
+2025-04-08 15:22:05 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] channelInactive() done
+2025-04-08 15:22:05 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelInactive()
+2025-04-08 15:22:05 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] Reconnect scheduling disabled
+2025-04-08 15:22:05 | DEBUG | [channel=0x225274ce, /192.168.102.3:50565 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x1, chid=0x5] channelUnregistered()
+2025-04-08 15:22:05 | DEBUG | closeAsync()
+2025-04-08 15:22:05 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] closeAsync()
+2025-04-08 15:22:05 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] channelInactive()
+2025-04-08 15:22:05 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2] deactivating endpoint handler
+2025-04-08 15:22:05 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] channelInactive() done
+2025-04-08 15:22:05 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] channelInactive()
+2025-04-08 15:22:05 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, last known addr=redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694] Reconnect scheduling disabled
+2025-04-08 15:22:05 | DEBUG | [channel=0x4123e8e1, /192.168.102.3:50566 -> redis-14694.c258.us-east-1-4.ec2.redns.redis-cloud.com/50.17.110.170:14694, epid=0x2, chid=0x6] channelUnregistered()
+2025-04-08 15:22:05 | DEBUG | Initiate shutdown (0, 100, MILLISECONDS)
+2025-04-08 15:22:05 | DEBUG | Release executor io.netty.channel.nio.NioEventLoopGroup@22a63740
+2025-04-08 15:22:07 | DEBUG | Initiate shutdown (0, 2, SECONDS)
+2025-04-08 15:22:07 | DEBUG | Initiate shutdown (0, 2, SECONDS)

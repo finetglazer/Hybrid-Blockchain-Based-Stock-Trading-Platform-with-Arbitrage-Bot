@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d004b34a-a56e-44f2-b726-3aa3ee4fe2fb" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../API-gateway/src/main/java/com/project/apigateway/filter/CachingFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../API-gateway/src/main/java/com/project/apigateway/filter/CachingFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../API-gateway/src/main/resources/application-docker.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../API-gateway/src/main/resources/application-docker.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../API-gateway/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../API-gateway/src/main/resources/application-local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../API-gateway/src/main/resources/application-product.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../API-gateway/src/main/resources/application-product.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../API-gateway/target/classes/application-docker.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../API-gateway/target/classes/application-docker.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../API-gateway/target/classes/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../API-gateway/target/classes/application-local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../API-gateway/target/classes/application-product.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../API-gateway/target/classes/application-product.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../logs/gateway.log" beforeDir="false" afterPath="$PROJECT_DIR$/../logs/gateway.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/project/userservice/dbcommand/console.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/project/userservice/dbcommand/console.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/project/userservice/model/SecurityVerification.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/project/userservice/model/SecurityVerification.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/project/userservice/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/project/userservice/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/project/userservice/repository/SecurityVerificationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/project/userservice/repository/SecurityVerificationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/project/userservice/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/project/userservice/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/UserServiceApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/UserServiceApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/common/BaseResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/common/BaseResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/configuration/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/configuration/SecurityConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/controller/AuthController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/model/ActiveSession.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/model/ActiveSession.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/model/PasswordResetToken.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/model/PasswordResetToken.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/model/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/model/VerificationToken.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/model/VerificationToken.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/request/client/ChangePasswordRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/request/client/ChangePasswordRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/request/client/ForgotPasswordRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/request/client/ForgotPasswordRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/request/client/LoginRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/request/client/LoginRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/request/client/RegisterRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/request/client/RegisterRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/request/client/ResetPasswordRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/request/client/ResetPasswordRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/request/internal/SaveCoinbaseTokensRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/request/internal/SaveCoinbaseTokensRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/response/client/LoginResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/response/client/LoginResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/response/client/RegisterResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/response/client/RegisterResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/response/coinbase/CoinbaseApiRefreshResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/response/coinbase/CoinbaseApiRefreshResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/response/internal/UserCoinbaseTokenResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/payload/response/internal/UserCoinbaseTokenResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/repository/ActiveSessionRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/repository/ActiveSessionRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/repository/PasswordResetTokenRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/repository/PasswordResetTokenRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/repository/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/repository/VerificationTokenRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/repository/VerificationTokenRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/security/ForgotPasswordRateLimiterService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/security/ForgotPasswordRateLimiterService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/security/JwtProvider.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/security/JwtProvider.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/security/TokenBlacklistService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/security/TokenBlacklistService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/service/AuthService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/service/AuthService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/service/EmailService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/service/EmailService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/service/impl/AuthServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/service/impl/AuthServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/service/impl/EmailServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/project/userservice/service/impl/EmailServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/surefire-reports/TEST-com.project.userservice.UserServiceApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/surefire-reports/TEST-com.project.userservice.UserServiceApplicationTests.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/surefire-reports/com.project.userservice.UserServiceApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/surefire-reports/com.project.userservice.UserServiceApplicationTests.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user-service/target/user-service-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/user-service-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wallet-service/src/main/resources/application-product.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../wallet-service/src/main/resources/application-product.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wallet-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../wallet-service/src/main/resources/application.properties" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "O-oLogN"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/finetglazer/Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot.git",
+    "accountId": "251a40a4-35e6-4ff9-9bfa-b8b08f4a1b2b"
+  }
+}]]></component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="2uvbZFVW6i4nqtkqC0KZSGOVqGp" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "hiep",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="TradingServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="trading-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.tradingservice.TradingServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.39" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.39" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d004b34a-a56e-44f2-b726-3aa3ee4fe2fb" name="Changes" comment="" />
+      <created>1743132053625</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1743132053625</updated>
+      <workItem from="1743132055394" duration="150000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

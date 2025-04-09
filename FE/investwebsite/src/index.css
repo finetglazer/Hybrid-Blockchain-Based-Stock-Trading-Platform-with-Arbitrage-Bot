@@ -3,6 +3,7 @@ body {
   place-items: center;
   height: 10px;
   margin-top: 150px;
+  align-self: center;
   background: radial-gradient(circle at center, #222 10%, #000 90%);
   background-image: url("https://i.pinimg.com/originals/e4/47/c5/e447c5bdd414dce7b88d3bd7536c9f47.gif"); /* Ảnh nền galaxy */
   background-size: cover;
@@ -12,22 +13,21 @@ body {
 }
 
 .container {
-  width: 320px;
-  margin: auto;
-  margin-top: 160px;
+  width: 25vw;
+  margin: 30px auto auto;
   text-align: center;
   padding: 25px;
-  border: 1px solid rgba(255, 215, 0, 0.5); /* Viền vàng nhạt mờ */
+  border: 1px solid #177c34c5; /* Viền vàng nhạt mờ */
   border-radius: 12px;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
-  background: rgba(255, 215, 0, 0.2); /* Vàng nhạt có độ trong suốt */
+  box-shadow: 0 0 20px #18e652cd;
+  background: #45584bc5; /* Vàng nhạt có độ trong suốt */
   backdrop-filter: blur(10px);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .container:hover {
   transform: translateY(-5px);
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+  box-shadow: 0 0 30px #10d448c5;
 }
 
 input {
@@ -35,7 +35,7 @@ input {
   width: 95%;
   margin: 12px auto;
   padding: 10px;
-  border: 1px solid #ffd700;
+  border: 1px solid #26d457c5;
   border-radius: 6px;
   font-size: 14px;
   background: rgba(255, 255, 255, 0.2);
@@ -44,8 +44,8 @@ input {
 }
 
 input:focus {
-  border-color: #ffcc00;
-  box-shadow: 0 0 8px rgba(255, 204, 0, 0.6);
+  border-color: #1dab45c5;
+  box-shadow: 0 4px 6px rgba(42, 192, 85, 0.77);
   outline: none;
 }
 
@@ -54,7 +54,7 @@ button {
   padding: 10px 18px;
   border: none;
   border-radius: 6px;
-  background: linear-gradient(45deg, #e5c95b, #dcbc0c);
+  background: linear-gradient(45deg, #1dab45c5, #1dab45c5);
   color: #fff;
   font-size: 14px;
   cursor: pointer;
@@ -62,11 +62,165 @@ button {
 }
 
 button:hover {
-  background: linear-gradient(45deg, #ffb300, #ffcc00);
+  background: linear-gradient(45deg, #065c1f, #065c1f);
   transform: scale(1.05);
 }
 
 button:active {
-  background: linear-gradient(45deg, #e6a000, #ffb300);
+  background: linear-gradient(45deg, #1dab45c5, #1dab45c5);
   transform: scale(0.95);
+}
+
+.sidebar {
+  position: fixed; /* Cố định vị trí */
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 100vh; /* Full màn hình */
+  background: rgba(255, 217, 0, 0.3); /* Nền trong suốt */
+  padding: 20px;
+  backdrop-filter: blur(10px); /* Hiệu ứng kính mờ */
+  border-right: 2px solid rgba(255, 255, 255, 0.4); /* Viền sáng ở cạnh phải */
+
+  /* Đổ bóng 3D */
+  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2),
+    inset -2px 0 5px rgba(255, 255, 255, 0.2);
+}
+
+h3 {
+  text-align: left; /* Căn trái */
+  font-size: 35px;
+}
+
+.nav {
+  list-style-type: none;
+  padding: 0;
+}
+
+.nav-item {
+  margin-bottom: 10px;
+  text-align: left;
+  padding-left: 0px;
+}
+
+.nav-item button {
+  width: 100%;
+  text-align: left; /* Căn trái chữ trong button */
+  background: none; /* Bỏ nền */
+  border: none; /* Bỏ viền */
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.nav-item button:hover {
+  background-color: rgba(255, 215, 0, 0.6); /* Hiệu ứng hover */
+}
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 190px;
+  width: calc(100% - 190px);
+  height: 120px;
+  background: rgba(255, 217, 0, 0.749); /* Màu nền mờ */
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  backdrop-filter: blur(10px); /* Hiệu ứng làm mờ nền */
+  border-bottom: 2px solid rgba(255, 255, 255, 0.4); /* Viền mờ phía dưới */
+
+  /* Đổ bóng 3D */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15),
+    inset 0 2px 5px rgba(255, 255, 255, 0.3);
+}
+
+.info {
+  position: absolute;
+  right: 70px; /* Cách lề phải */
+  top: 50%;
+  transform: translateY(-50%); /* Căn giữa theo chiều dọc */
+  display: flex;
+  align-items: center;
+  background: rgba(255, 217, 0, 0.95); /* Màu nền */
+  border-radius: 50px;
+  padding-left: 10px;
+  height: 50px;
+
+  /* Hiệu ứng nổi (Neumorphism) */
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2),
+    -4px -4px 10px rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease-in-out;
+}
+
+.info img {
+  width: 20px; /* Đặt kích thước */
+  height: 20px;
+  padding: 10px;
+  cursor: pointer; /* Biến thành tay khi hover */
+  transition: transform 0.2s ease-in-out; /* Hiệu ứng */
+}
+
+.info img:hover {
+  transform: scale(1.1); /* Phóng to nhẹ khi hover */
+}
+
+.avatar {
+  background-color: purple;
+  border-radius: 50%; /* Để hình tròn */
+  width: 35px; /* Đặt kích thước cố định */
+  height: 35px; /* Phải bằng width */
+  display: flex; /* Để căn giữa nội dung nếu có */
+  align-items: center;
+  justify-content: center;
+  color: white; /* Nếu có chữ bên trong */
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.user {
+  margin: 10px;
+  font-size: 20px;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  background: rgba(255, 217, 0, 0.95);
+  list-style: none;
+  padding: 10px 0;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  width: 120px;
+}
+
+.dropdown-menu li {
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.dropdown-menu li:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.spinner {
+  width: 50px; /* Size of the spinner */
+  height: 50px;
+  border: 5px solid #f3f3f3; /* Light grey border */
+  border-top: 5px solid #3498db; /* Blue color for the spinning part */
+  border-radius: 50%; /* Makes it a circle */
+  animation: spin 1s linear infinite; /* Apply the animation */
+}
+
+/* Define the animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  } /* Start rotation */
+  100% {
+    transform: rotate(360deg);
+  } /* Complete rotation */
 }

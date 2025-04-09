@@ -7,6 +7,9 @@
         <option value="$PROJECT_DIR$/BE/user-service/user-service/pom.xml" />
         <option value="$PROJECT_DIR$/BE/wallet-service/pom.xml" />
         <option value="$PROJECT_DIR$/BE/API-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/BE/user-service/pom.xml" />
+        <option value="$PROJECT_DIR$/BE/pom.xml" />
+        <option value="$PROJECT_DIR$/BE/kafka-management-service/pom.xml" />
       </list>
     </option>
   </component>
