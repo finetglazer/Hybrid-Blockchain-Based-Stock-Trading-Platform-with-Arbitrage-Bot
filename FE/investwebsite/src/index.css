@@ -1,8 +1,8 @@
 body {
   display: grid;
   place-items: center;
-  height: 100vh;
-  /*margin-top: 150px;*/
+  height: 10px;
+  margin-top: 150px;
   align-self: center;
   /*background: radial-gradient(circle at center, #222 10%, #000 90%);*/
   background-image: url("https://i.pinimg.com/originals/e4/47/c5/e447c5bdd414dce7b88d3bd7536c9f47.gif"); /* Ảnh nền galaxy */
@@ -13,20 +13,21 @@ body {
 }
 
 .container {
-  width: 320px;
+  width: 25vw;
+  margin: 30px auto auto;
   text-align: center;
   padding: 25px;
-  border: 1px solid rgba(255, 215, 0, 0.5); /* Viền vàng nhạt mờ */
+  border: 1px solid #177c34c5; /* Viền vàng nhạt mờ */
   border-radius: 12px;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
-  background: rgba(255, 215, 0, 0.2); /* Vàng nhạt có độ trong suốt */
+  box-shadow: 0 0 20px #18e652cd;
+  background: #45584bc5; /* Vàng nhạt có độ trong suốt */
   backdrop-filter: blur(10px);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .container:hover {
   transform: translateY(-5px);
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+  box-shadow: 0 0 30px #10d448c5;
 }
 
 input {
@@ -34,7 +35,7 @@ input {
   width: 95%;
   margin: 12px auto;
   padding: 10px;
-  border: 1px solid #ffd700;
+  border: 1px solid #26d457c5;
   border-radius: 6px;
   font-size: 14px;
   background: rgba(255, 255, 255, 0.2);
@@ -43,8 +44,8 @@ input {
 }
 
 input:focus {
-  border-color: #ffcc00;
-  box-shadow: 0 0 8px rgba(255, 204, 0, 0.6);
+  border-color: #1dab45c5;
+  box-shadow: 0 4px 6px rgba(42, 192, 85, 0.77);
   outline: none;
 }
 
@@ -53,7 +54,7 @@ button {
   padding: 10px 18px;
   border: none;
   border-radius: 6px;
-  background: linear-gradient(45deg, #e5c95b, #dcbc0c);
+  background: linear-gradient(45deg, #1dab45c5, #1dab45c5);
   color: #fff;
   font-size: 14px;
   cursor: pointer;
@@ -61,12 +62,12 @@ button {
 }
 
 button:hover {
-  background: linear-gradient(45deg, #ffb300, #ffcc00);
+  background: linear-gradient(45deg, #065c1f, #065c1f);
   transform: scale(1.05);
 }
 
 button:active {
-  background: linear-gradient(45deg, #e6a000, #ffb300);
+  background: linear-gradient(45deg, #1dab45c5, #1dab45c5);
   transform: scale(0.95);
 }
 
@@ -205,10 +206,6 @@ h3 {
 .dropdown-menu li:hover {
   background: rgba(0, 0, 0, 0.1);
 }
-
-/*.hidden {*/
-/*    visibility: hidden;*/
-/*}*/
 
 .spinner {
   width: 50px;           /* Size of the spinner */
