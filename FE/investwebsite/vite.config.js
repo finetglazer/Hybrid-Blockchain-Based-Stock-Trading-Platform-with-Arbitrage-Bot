@@ -9,17 +9,17 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/api": {
-        target: "http://localhost:8080",
+        target: "https://good-musical-joey.ngrok-free.app",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
       '/users': {
-        target: 'http://localhost:8080',
+        target: 'https://good-musical-joey.ngrok-free.app',
         changeOrigin: true,
         secure: false
       },
       '/accounts': {
-        target: 'http://localhost:8080',
+        target: 'https://good-musical-joey.ngrok-free.app',
         changeOrigin: true,
         secure: false
       }
