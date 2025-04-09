@@ -142,7 +142,7 @@ const TwoFactorAuth = () => {
                 throw new Error("Not authenticated. Please log in again.");
             }
 
-            const response = await axios.post("http://localhost:8081/users/api/v1/auth/2fa/enable", {
+            const response = await axios.post("/users/api/v1/auth/2fa/enable", {
                 type: "SMS_CODE",
                 phoneNumber: formattedPhone
             }, {

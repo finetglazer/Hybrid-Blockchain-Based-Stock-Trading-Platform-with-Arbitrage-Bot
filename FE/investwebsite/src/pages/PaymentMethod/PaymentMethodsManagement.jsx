@@ -75,7 +75,7 @@ const PaymentMethodsManagement = () => {
         const fetchPaymentMethods = async () => {
             const token = localStorage.getItem("token");
             try {
-                const response = await axios.get("http://localhost:8080/accounts/payment-methods/api/v1/me/get", {
+                const response = await axios.get("/accounts/payment-methods/api/v1/me/get", {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json",
