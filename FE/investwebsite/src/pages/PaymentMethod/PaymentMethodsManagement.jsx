@@ -110,7 +110,7 @@ const PaymentMethodsManagement = () => {
                     setDigitalWallets(fetchedDigitalWallets);
                 }
                 else {
-                    setError(response.data.data);
+                    setError(response.data);
                 }
             }
             catch (e) {
