@@ -3,7 +3,6 @@ body {
   place-items: center;
   height: 10px;
   margin-top: 150px;
-  align-self: center;
   background: radial-gradient(circle at center, #222 10%, #000 90%);
   background-image: url("https://i.pinimg.com/originals/e4/47/c5/e447c5bdd414dce7b88d3bd7536c9f47.gif"); /* Ảnh nền galaxy */
   background-size: cover;

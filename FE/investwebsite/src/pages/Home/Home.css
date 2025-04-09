@@ -1,0 +1,12 @@
+.create-trading-account {
+  display: flex;
+  flex-direction: column; /* nằm ngang */
+  justify-content: flex-end; /* đẩy sát lề phải */
+  align-items: center; /* canh giữa theo chiều dọc */
+  gap: 0.5rem; /* khoảng cách giữa chữ và nút */
+  margin: 1rem;
+}
+
+.account-question {
+  margin: 0;
+}

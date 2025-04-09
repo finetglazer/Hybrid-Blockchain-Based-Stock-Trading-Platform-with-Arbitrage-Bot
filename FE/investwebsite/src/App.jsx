@@ -8,7 +8,7 @@ import {
 import ForgetPassword from "./pages/ForgetPassword";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 import Wallet from "./pages/Wallet";
 import NavbarSide from "./pages/NavbarSide/NavbarSide";
 import HeaderNavbar from "./pages/HeaderNavbar/HeaderNavbar";
