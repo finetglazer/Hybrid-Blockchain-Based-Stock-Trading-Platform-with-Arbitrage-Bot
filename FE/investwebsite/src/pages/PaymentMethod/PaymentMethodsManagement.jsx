@@ -87,55 +87,50 @@ const PaymentMethodsManagement = () => {
   useEffect(() => {
     console.log("render");
 
-    const fetchPaymentMethods = async () => {
-      const token = localStorage.getItem("token");
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/accounts/payment-methods/api/v1/me/get",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        setLoading(false);
-        if (response.data && response.data.status === 1) {
-          const paymentMethods = response.data.data.items;
-          let fetchedBankAccounts = [];
-          let fetchedCreditCards = [];
-          let fetchedDebitCards = [];
-          let fetchedDigitalWallets = [];
-          paymentMethods.forEach((paymentMethod) => {
-            switch (paymentMethod.type) {
-              case "BANK_ACCOUNT":
-                fetchedBankAccounts.push(
-                  Object.assign(paymentMethod, {
-                    imageSrc: "../../../src/assets/atm-card.png",
-                  })
-                );
-                break;
-              case "CREDIT_CARD":
-                fetchedCreditCards.push(
-                  Object.assign(paymentMethod, {
-                    imageSrc: "../../../src/assets/credit-card.png",
-                  })
-                );
-                break;
-              case "DEBIT_CARD":
-                fetchedDebitCards.push(
-                  Object.assign(paymentMethod, {
-                    imageSrc: "../../../src/assets/debit-card.png",
-                  })
-                );
-                break;
-              case "DIGITAL_WALLET":
-                fetchedDigitalWallets.push(
-                  Object.assign(paymentMethod, {
-                    imageSrc: "../../../src/assets/digital-wallet.png",
-                  })
-                );
-                break;
+        const fetchPaymentMethods = async () => {
+            const token = localStorage.getItem("token");
+            try {
+                const response = await axios.get("http://localhost:8080/accounts/payment-methods/api/v1/me/get", {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    }
+                });
+                setLoading(false);
+                if (response.data && response.data.status === 1) {
+                    const paymentMethods = response.data.data.items;
+                    let fetchedBankAccounts = [];
+                    let fetchedCreditCards = [];
+                    let fetchedDebitCards = [];
+                    let fetchedDigitalWallets = [];
+                    paymentMethods.forEach((paymentMethod) => {
+                        switch (paymentMethod.type) {
+                            case "BANK_ACCOUNT":
+                                fetchedBankAccounts.push(Object.assign(paymentMethod, {imageSrc: "../../../src/assets/atm-card.png"}));
+                                break;
+                            case "CREDIT_CARD":
+                                fetchedCreditCards.push(Object.assign(paymentMethod, {imageSrc: "../../../src/assets/credit-card.png"}));
+                                break;
+                            case "DEBIT_CARD":
+                                fetchedDebitCards.push(Object.assign(paymentMethod, {imageSrc: "../../../src/assets/debit-card.png"}));
+                                break;
+                            case "DIGITAL_WALLET":
+                                fetchedDigitalWallets.push(Object.assign(paymentMethod, {imageSrc: "../../../src/assets/digital-wallet.png"}));
+                                break;
+                        }
+                    });
+                    setBankAccounts(fetchedBankAccounts);
+                    setCreditCards(fetchedCreditCards);
+                    setDebitCards(fetchedDebitCards);
+                    setDigitalWallets(fetchedDigitalWallets);
+                }
+                else {
+                    setError(response.data);
+                }
+            }
+            catch (e) {
+                setLoading(false);
+                setError(e);
             }
           });
           setBankAccounts(fetchedBankAccounts);
