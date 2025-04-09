@@ -1,0 +1,13 @@
+com\project\userservice\payload\response\client\RegisterResponse.class
+com\project\userservice\payload\response\client\LoginResponse.class
+com\project\userservice\controller\UserCoinbaseController.class
+com\project\userservice\payload\request\internal\SaveCoinbaseTokensRequest.class
+com\project\userservice\payload\request\client\RegisterRequest.class
+com\project\userservice\service\CoinbaseTokenService.class
+com\project\userservice\payload\request\client\ResetPasswordRequest.class
+com\project\userservice\payload\request\client\ForgotPasswordRequest.class
+com\project\userservice\payload\request\client\ChangePasswordRequest.class
+com\project\userservice\payload\request\client\LoginRequest.class
+com\project\userservice\service\impl\CoinbaseTokenServiceImpl.class
+com\project\userservice\payload\response\coinbase\CoinbaseApiRefreshResponse.class
+com\project\userservice\payload\response\internal\UserCoinbaseTokenResponse.class

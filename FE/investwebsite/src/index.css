@@ -4,7 +4,7 @@ body {
   height: 10px;
   margin-top: 150px;
   align-self: center;
-  /*background: radial-gradient(circle at center, #222 10%, #000 90%);*/
+  background: radial-gradient(circle at center, #222 10%, #000 90%);
   background-image: url("https://i.pinimg.com/originals/e4/47/c5/e447c5bdd414dce7b88d3bd7536c9f47.gif"); /* Ảnh nền galaxy */
   background-size: cover;
   background-attachment: fixed;
@@ -71,7 +71,6 @@ button:active {
   transform: scale(0.95);
 }
 
-
 .sidebar {
   position: fixed; /* Cố định vị trí */
   top: 0;
@@ -85,7 +84,7 @@ button:active {
 
   /* Đổ bóng 3D */
   box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2),
-  inset -2px 0 5px rgba(255, 255, 255, 0.2);
+    inset -2px 0 5px rgba(255, 255, 255, 0.2);
 }
 
 h3 {
@@ -133,7 +132,7 @@ h3 {
 
   /* Đổ bóng 3D */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15),
-  inset 0 2px 5px rgba(255, 255, 255, 0.3);
+    inset 0 2px 5px rgba(255, 255, 255, 0.3);
 }
 
 .info {
@@ -150,7 +149,7 @@ h3 {
 
   /* Hiệu ứng nổi (Neumorphism) */
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2),
-  -4px -4px 10px rgba(255, 255, 255, 0.6);
+    -4px -4px 10px rgba(255, 255, 255, 0.6);
   transition: all 0.3s ease-in-out;
 }
 
@@ -208,16 +207,20 @@ h3 {
 }
 
 .spinner {
-  width: 50px;           /* Size of the spinner */
+  width: 50px; /* Size of the spinner */
   height: 50px;
   border: 5px solid #f3f3f3; /* Light grey border */
   border-top: 5px solid #3498db; /* Blue color for the spinning part */
-  border-radius: 50%;    /* Makes it a circle */
+  border-radius: 50%; /* Makes it a circle */
   animation: spin 1s linear infinite; /* Apply the animation */
 }
 
 /* Define the animation */
 @keyframes spin {
-  0% { transform: rotate(0deg); } /* Start rotation */
-  100% { transform: rotate(360deg); } /* Complete rotation */
+  0% {
+    transform: rotate(0deg);
+  } /* Start rotation */
+  100% {
+    transform: rotate(360deg);
+  } /* Complete rotation */
 }
