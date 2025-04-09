@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="" />
+    <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/config/WebfluxSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/config/WebfluxSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/gateway.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/gateway.log" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -125,7 +128,7 @@
       <recent name="com.accountservice.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.AccountServiceApplication">
+  <component name="RunManager" selected="Spring Boot.ApiGatewayApplication">
     <configuration name="console.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/consoles/db/386254c4-74ac-45e4-8c77-834a59e1ad94/console.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
@@ -159,6 +162,13 @@
           <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
         </ENTRIES>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="KafkaManagementServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="kafka-management-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.stocktrading.kafka.KafkaManagementServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -252,6 +262,7 @@
       <item itemvalue="Docker.user-service/Dockerfile" />
       <item itemvalue="Docker.wallet-service/Dockerfile" />
       <item itemvalue="Node.js.console.js" />
+      <item itemvalue="Spring Boot.KafkaManagementServiceApplication" />
       <item itemvalue="Spring Boot.AccountServiceApplication" />
       <item itemvalue="Spring Boot.ApiGatewayApplication" />
       <item itemvalue="Spring Boot.TradingServiceApplication" />
@@ -302,6 +313,7 @@
       <workItem from="1743834997011" duration="6052000" />
       <workItem from="1743863309389" duration="17000" />
       <workItem from="1743865046907" duration="426000" />
+      <workItem from="1743994401932" duration="28875000" />
     </task>
     <servers />
   </component>
@@ -320,6 +332,15 @@
     </option>
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/controller/TwoFactorAuthController.java</url>
+          <line>22</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <inline-watch fileUrl="file://$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/TradingAccountServiceImpl.java" line="150">
         <watch expression="userId" language="JAVA" />
