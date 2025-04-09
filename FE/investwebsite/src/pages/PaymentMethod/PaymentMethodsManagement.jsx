@@ -1,8 +1,8 @@
-import "./PaymentMethodsManagement.css";
 import { Alert, Breadcrumb } from "antd";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-import axios from "axios";
+import "./PaymentMethodsManagement.css";
 
 const PaymentMethodsManagement = () => {
   // {
@@ -132,19 +132,8 @@ const PaymentMethodsManagement = () => {
                 setLoading(false);
                 setError(e);
             }
-          });
-          setBankAccounts(fetchedBankAccounts);
-          setCreditCards(fetchedCreditCards);
-          setDebitCards(fetchedDebitCards);
-          setDigitalWallets(fetchedDigitalWallets);
-        } else {
-          setError(response.data.data);
-        }
-      } catch (e) {
-        setLoading(false);
-        setError(e);
-      }
-    };
+          };
+    
 
     fetchPaymentMethods().then(() => {});
   }, []);
