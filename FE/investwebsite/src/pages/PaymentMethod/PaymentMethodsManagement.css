@@ -1,6 +1,11 @@
 .payment-method-management-container {
     width: 100vw;
     height: 100vh;
+    .breadcrumb {
+        color: white;
+    }
+    overflow: auto;
+    padding-bottom: 20px;
 }
 
 .payment-method-management-container:hover {
@@ -28,11 +33,13 @@
     text-align: left;
 }
 
+.pm-category-container {
+    margin-bottom: 100px;
+}
+
 .pm-category-container .category-wrapper {
-    padding-top: 20px;
-    padding-right: 60px;
+    padding: 20px 60px 20px 0;
     margin: 20px 0 10px 0;
-    border-top: 1px solid white;
     border-bottom: 1px solid white;
 }
 
@@ -42,6 +49,9 @@
         width: 15px;
         height: 15px;
         margin-top: 10px;
+    }
+    .expand {       /* This class would be conditionally added using JS */
+        transform: rotate(90deg);
     }
     .item-icon {
         width: 50px;
@@ -70,8 +80,9 @@
             margin-top: 10px;
         }
         .status {
-            font-size: 1.1rem;
-            margin: 13px 0 0 7px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 15px 0 0 7px;
         }
     }
 }
@@ -80,24 +91,111 @@
     cursor: pointer;
 }
 
-.pm-category-container .details {
+.pm-category-container .item-details {
     display: flex;
+    margin-top: 20px;
 }
 
-.pm-category-container .details .info, .pm-category-container .details .crud-btns {
+.pm-category-container .item-details .details-info, .pm-category-container .item-details .crud-btns {
     width: 50%;
 }
 
-.details .properties {
-    width:
+.item-details .details-info {
+    text-align: left;
+    padding: 0 10px 0 35px;
+    border-right: 1px white solid;
 }
 
-.details .property {
+.details-info .properties {
+    font-size: 0.9rem;
+    p, span {
+        color: rgba(255, 255, 255, 0.8);
+    }
+}
+
+.item-details .property {
     display: flex;
+    margin-top: -10px;
     .label {
-        width: 50%;
+        width: 30%;
     }
     .description {
         width: 50%;
+        text-align: left;
+    }
+}
+
+.item-details .properties .metadata {
+    display: block;
+    button {
+        width: 43%;
+        height: 40px;
+        background: none;
+    }
+    img {
+        width: 10px;
+        height: 10px;
+    }
+    .metadata-property-wrapper {
+        margin-left: 50px;
+    }
+}
+
+.item-details .properties .metadata .title {
+    .metadata-expand {      /* This class would be conditionally added using JS */
+        transform: rotate(90deg);
+    }
+}
+
+.item-details .properties .metadata .title:hover {
+    cursor: pointer;
+}
+
+.crud-btns {
+    padding-left: 50px;
+    margin-top: 20px;
+    .btn-wrapper {
+        display: flex;
+        .description {
+            width: 50%;
+            text-align: left;
+        }
+        button {
+            width: 20%;
+            margin-left: 50px;
+        }
+    }
+}
+
+.btn-wrapper {
+    .activate-btn {
+        background: green none;
+    }
+    .deactivate-btn {
+        background: rebeccapurple none;
+    }
+    .update-btn {
+        background: #3498db none;
+    }
+    .delete-btn {
+        background: red none;
+    }
+    .warning-text {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: orangered;
+    }
+}
+
+.loading-wrapper {
+    display: flex;
+    margin-top: 50px;
+    p {
+        font-size: 1.2rem;
+    }
+    .spinner {
+        width: 20px;
+        height: 20px;
+        margin: 14px 0 0 10px;
     }
 }

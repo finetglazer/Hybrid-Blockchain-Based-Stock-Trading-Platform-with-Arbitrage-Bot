@@ -1,88 +1,142 @@
-/*.topbar {*/
-/*  position: fixed;*/
-/*  top: 0;*/
-/*  left: 190px;*/
-/*  width: calc(100% - 190px);*/
-/*  height: 120px;*/
-/*  background: rgba(255, 217, 0, 0.749); !* Màu nền mờ *!*/
-/*  display: flex;*/
-/*  align-items: center;*/
-/*  padding: 0 20px;*/
-/*  backdrop-filter: blur(10px); !* Hiệu ứng làm mờ nền *!*/
-/*  border-bottom: 2px solid rgba(255, 255, 255, 0.4); !* Viền mờ phía dưới *!*/
+.topbar {
+    position: fixed;
+    top: 20px;
+    left: 210px;
+    width: 1170px;
+    height: 50px;
+    background: rgba(28, 27, 26, 0.999); /* Màu nền mờ */
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    backdrop-filter: blur(10px); /* Hiệu ứng làm mờ nền */
+    /* border: 2px solid rgba(255, 255, 255, 0.4);  */
+    /* Viền mờ phía dưới */
+    border-radius: 10px;
+    /* Đổ bóng 3D */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15),
+    inset 0 2px 5px rgba(255, 255, 255, 0.3);
+}
 
-/*  !* Đổ bóng 3D *!*/
-/*  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15),*/
-/*    inset 0 2px 5px rgba(255, 255, 255, 0.3);*/
-/*}*/
+.info {
+    position: absolute;
+    right: 30px; /* Cách lề phải */
+    top: 50%;
+    transform: translateY(-50%); /* Căn giữa theo chiều dọc */
+    display: flex;
+    align-items: center;
+    /* Màu nền */
+    border-radius: 50px;
+    padding-left: 10px;
+    height: 50px;
 
-/*.info {*/
-/*  position: absolute;*/
-/*  right: 70px; !* Cách lề phải *!*/
-/*  top: 50%;*/
-/*  transform: translateY(-50%); !* Căn giữa theo chiều dọc *!*/
-/*  display: flex;*/
-/*  align-items: center;*/
-/*  background: rgba(255, 217, 0, 0.95); !* Màu nền *!*/
-/*  border-radius: 50px;*/
-/*  padding-left: 10px;*/
-/*  height: 50px;*/
+    /* Hiệu ứng nổi (Neumorphism) */
+    /* box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2),
+      -4px -4px 10px rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease-in-out; */
+}
 
-/*  !* Hiệu ứng nổi (Neumorphism) *!*/
-/*  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2),*/
-/*    -4px -4px 10px rgba(255, 255, 255, 0.6);*/
-/*  transition: all 0.3s ease-in-out;*/
-/*}*/
+.info img {
+    width: 20px; /* Đặt kích thước */
+    height: 20px;
+    padding: 10px;
+    cursor: pointer; /* Biến thành tay khi hover */
+    transition: transform 0.2s ease-in-out; /* Hiệu ứng */
+}
 
-/*.info img {*/
-/*  width: 20px; !* Đặt kích thước *!*/
-/*  height: 20px;*/
-/*  padding: 10px;*/
-/*  cursor: pointer; !* Biến thành tay khi hover *!*/
-/*  transition: transform 0.2s ease-in-out; !* Hiệu ứng *!*/
-/*}*/
+.info img:hover {
+    transform: scale(1.1); /* Phóng to nhẹ khi hover */
+}
 
-/*.info img:hover {*/
-/*  transform: scale(1.1); !* Phóng to nhẹ khi hover *!*/
-/*}*/
+.avatar {
+    background-color: #1dab45c5;
+    border-radius: 50%; /* Để hình tròn */
+    width: 35px; /* Đặt kích thước cố định */
+    height: 35px; /* Phải bằng width */
+    display: flex; /* Để căn giữa nội dung nếu có */
+    align-items: center;
+    justify-content: center;
+    color: white; /* Nếu có chữ bên trong */
+    font-weight: bold;
+    font-size: 20px;
+}
 
-/*.avatar {*/
-/*  background-color: purple;*/
-/*  border-radius: 50%; !* Để hình tròn *!*/
-/*  width: 35px; !* Đặt kích thước cố định *!*/
-/*  height: 35px; !* Phải bằng width *!*/
-/*  display: flex; !* Để căn giữa nội dung nếu có *!*/
-/*  align-items: center;*/
-/*  justify-content: center;*/
-/*  color: white; !* Nếu có chữ bên trong *!*/
-/*  font-weight: bold;*/
-/*  font-size: 20px;*/
-/*}*/
+.user {
+    margin: 10px;
+    font-size: 20px;
+}
+.dropdown-menu {
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    background: rgba(255, 217, 0, 0.95);
+    list-style: none;
+    padding: 10px 0;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    width: 120px;
+}
 
-/*.user {*/
-/*  margin: 10px;*/
-/*  font-size: 20px;*/
-/*}*/
-/*.dropdown-menu {*/
-/*  position: absolute;*/
-/*  top: 40px;*/
-/*  right: 10px;*/
-/*  background: rgba(255, 217, 0, 0.95);*/
-/*  list-style: none;*/
-/*  padding: 10px 0;*/
-/*  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);*/
-/*  border-radius: 5px;*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*  width: 120px;*/
-/*}*/
+.dropdown-menu li {
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
 
-/*.dropdown-menu li {*/
-/*  padding: 10px;*/
-/*  cursor: pointer;*/
-/*  transition: background 0.2s ease-in-out;*/
-/*}*/
+.dropdown-menu li:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
 
-/*.dropdown-menu li:hover {*/
-/*  background: rgba(0, 0, 0, 0.1);*/
-/*}*/
+.dropdown-button {
+    margin-left: 20px;
+}
+
+/* Định dạng cho biểu tượng chuông */
+.notification-icon {
+    position: relative;
+    cursor: pointer;
+    margin-left: 20px;
+
+}
+
+/* Định dạng cho cửa sổ lịch sử giao dịch */
+.transaction-history {
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.transaction-history h3 {
+    margin-top: 0;
+    color: black;
+}
+
+.transaction-history ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.transaction-history li {
+    margin-bottom: 10px;
+}
+
+.transaction-history button {
+    margin-top: 10px;
+    background-color: #4caf50;
+    color: whitesmoke;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.transaction-history button:hover {
+    background-color: #45a049;
+}

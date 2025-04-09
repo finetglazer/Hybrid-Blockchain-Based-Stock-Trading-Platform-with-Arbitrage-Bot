@@ -59,6 +59,7 @@ public class PaymentMethod {
 
     public enum PaymentMethodType {
         BANK_ACCOUNT,
+        CREDIT_CARD,
         DEBIT_CARD,
         DIGITAL_WALLET
     }
