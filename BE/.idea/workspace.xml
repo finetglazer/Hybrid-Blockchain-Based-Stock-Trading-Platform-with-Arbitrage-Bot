@@ -5,7 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/51eb0fed-776c-4607-93c8-39d068129895.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/51eb0fed-776c-4607-93c8-39d068129895.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/AccountServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/AccountServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/gateway.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/gateway.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/UserServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/UserServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/App.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Disable2FA/Disable2FA.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Disable2FA/Disable2FA.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Disable2FA/Disable2FA.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Disable2FA/Disable2FA.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/HeaderNavbar/HeaderNavbar.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/HeaderNavbar/HeaderNavbar.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/NavbarSide/NavbarSide.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/NavbarSide/NavbarSide.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/Setting.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/Setting.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/Setting.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/Setting.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TwoFactorAuth/TwoFactorAuth.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TwoFactorAuth/TwoFactorAuth.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TwoFactorAuth/TwoFactorAuth.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TwoFactorAuth/TwoFactorAuth.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/UpdatePhoneNumber/UpdatePhoneNumber.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/UpdatePhoneNumber/UpdatePhoneNumber.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +146,7 @@
       <recent name="com.accountservice.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.AccountServiceApplication">
+  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
     <configuration name="console.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/consoles/db/386254c4-74ac-45e4-8c77-834a59e1ad94/console.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
@@ -250,15 +269,15 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Docker.API-gateway/Dockerfile" />
+      <item itemvalue="Docker.user-service/Dockerfile" />
+      <item itemvalue="Docker.wallet-service/Dockerfile" />
       <item itemvalue="Node.js.console.js" />
       <item itemvalue="Spring Boot.AccountServiceApplication" />
       <item itemvalue="Spring Boot.ApiGatewayApplication" />
       <item itemvalue="Spring Boot.TradingServiceApplication" />
       <item itemvalue="Spring Boot.UserServiceApplication" />
       <item itemvalue="Spring Boot.WalletServiceApplication" />
-      <item itemvalue="Docker.API-gateway/Dockerfile" />
-      <item itemvalue="Docker.user-service/Dockerfile" />
-      <item itemvalue="Docker.wallet-service/Dockerfile" />
     </list>
     <recent_temporary>
       <list>
@@ -303,6 +322,8 @@
       <workItem from="1743772950441" duration="2798000" />
       <workItem from="1743834997011" duration="6052000" />
       <workItem from="1743863309389" duration="17000" />
+      <workItem from="1743865046907" duration="426000" />
+      <workItem from="1743994401932" duration="18874000" />
     </task>
     <servers />
   </component>

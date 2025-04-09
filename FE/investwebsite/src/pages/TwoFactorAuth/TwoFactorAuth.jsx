@@ -4,7 +4,8 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase/firebaseConfig";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./TwoFactorAuth.css"; // Import the CSS file
+import "./TwoFactorAuth.css";
+import {useAppContext} from "../../AppContextProvider.jsx"; // Import the CSS file
 
 const TwoFactorAuth = () => {
     const navigate = useNavigate();
@@ -17,6 +18,8 @@ const TwoFactorAuth = () => {
     const [loading, setLoading] = useState(false);
     const [countdown, setCountdown] = useState(0);
     const [recaptchaReady, setRecaptchaReady] = useState(false);
+
+    const {callbackUrl, setCallbackUrl} = useAppContext();
 
     // Initialize recaptcha when component mounts
     useEffect(() => {
@@ -245,6 +248,11 @@ const TwoFactorAuth = () => {
             if (response.data && response.data.status === 1) {
                 setRecoveryKeys(response.data.data.recoveryKeys || []);
                 setStep("success");
+
+                if (callbackUrl) {  // Navigate to page called back after 2FA process
+                    setCallbackUrl("")
+                    navigate(callbackUrl)
+                }
 
                 // Clean up Firebase user created during verification
                 try {

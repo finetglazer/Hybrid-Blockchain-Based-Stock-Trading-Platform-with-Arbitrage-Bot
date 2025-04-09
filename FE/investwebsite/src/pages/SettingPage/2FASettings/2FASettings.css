@@ -1,0 +1,109 @@
+.two-fa-settings-container:hover {
+    transform: translateY(0);
+}
+
+.two-fa-settings-container > .title {
+    display: flex;
+    align-items: center;
+    margin: -20px 0 65px -30px;
+    font-size: 1.3rem;
+}
+
+.two-fa-settings-container > .title p, .two-fa-settings-container > .title img {
+    transition: all 0.3s ease;
+}
+
+.two-fa-settings-container > .title p:hover, .two-fa-settings-container > .title img {
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+.two-fa-settings-container .title button {
+    width: 50px;
+    margin: 9px 0 0 0;
+    background: none;
+}
+
+.two-fa-settings-container .title img {
+    height: 100%;
+    width: 100%;
+}
+
+.two-fa-settings-container .body {
+    width: 100%;
+    align-items: center;
+}
+
+.two-fa-settings-container .first-section .title {
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+.two-fa-settings-container .first-section button {
+    margin-top: 25px;
+}
+
+.two-fa-settings-container .first-section .spinner {
+    align-items: center;
+    margin: 10px auto 0;
+}
+
+.two-fa-settings-container .second-section {
+    margin-top: 80px;
+}
+
+.two-fa-settings-container .second-section .title p:nth-of-type(1) {
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+.two-fa-settings-container .second-section .options-wrapper {
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 20px 10px 10px;
+}
+
+.two-fa-settings-container .second-section .two-fa-option {
+    display: flex;
+    cursor: pointer;
+}
+
+.two-fa-settings-container .options-wrapper .two-fa-option {
+    .option-icon {
+        width: 25px;
+        height: 25px;
+        margin: 10px 0 10px 10px;
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .name, .description-wrapper {
+        font-size: 1rem;
+        text-align: left;
+        margin: 15px 0 0 20px;
+        width: 40%;
+    }
+
+    .description-wrapper {
+        display: flex;
+        img {
+            height: 20px;
+            width: 20px;
+            margin: -2px 0 0 20px;
+        }
+    }
+}
+
+.two-fa-settings-container .options-wrapper .two-fa-option:nth-of-type(3) {
+    .option-icon {
+        width: 25px;
+    }
+}
+
+.two-fa-option-spinner {
+    width: 13px;
+    height: 13px;
+    margin: -5px 0 0 20px;
+}
