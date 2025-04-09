@@ -1,4 +1,4 @@
-package com.stocktrading.kafka.controller.dto;
+package com.stocktrading.kafka.dto;
 
 import com.stocktrading.kafka.model.SagaEvent;
 import lombok.AllArgsConstructor;
@@ -36,26 +36,5 @@ public class DepositSagaDto {
     private int maxRetries;
 }
 
----
 
-package com.stocktrading.kafka.controller.dto;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import java.math.BigDecimal;
-
----
-
-package com.stocktrading.kafka.controller.dto;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
 

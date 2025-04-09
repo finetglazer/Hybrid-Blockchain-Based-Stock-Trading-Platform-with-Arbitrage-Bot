@@ -13,6 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SagaListResponse {
-    private List<com.stocktrading.kafka.controller.dto.DepositSagaDto> sagas;
+    private List<com.stocktrading.kafka.dto.DepositSagaDto> sagas;
     private int count;
 }

@@ -1,6 +1,7 @@
 package com.stocktrading.kafka.controller;
 
-import com.stocktrading.kafka.controller.dto.DepositSagaDto;
+
+import com.stocktrading.kafka.dto.DepositSagaDto;
 import com.stocktrading.kafka.dto.DepositSagaRequest;
 import com.stocktrading.kafka.dto.SagaListResponse;
 import com.stocktrading.kafka.model.DepositSagaState;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/sagas")
+@RequestMapping("sagas/api/v1")
 @RequiredArgsConstructor
 public class SagaController {
     
