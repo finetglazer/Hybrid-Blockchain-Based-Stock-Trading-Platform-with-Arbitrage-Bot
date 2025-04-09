@@ -24,9 +24,7 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-
   const handleSubmit = async (e) => {
-
     e.preventDefault(); // Ngăn form gửi đi nếu có lỗi
     if (validate()) {
       console.log("Register user:", formData);

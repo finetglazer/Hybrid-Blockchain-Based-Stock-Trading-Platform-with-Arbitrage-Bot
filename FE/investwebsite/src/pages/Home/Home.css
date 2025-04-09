@@ -1,0 +1,147 @@
+/* Bố cục chính */
+.main-background {
+  position: fixed;
+  top: 100px;
+  left: 210px;
+  width: 1165px;
+  height: calc(100% - 100px);
+  background: rgba(28, 27, 26, 0.999);
+  padding: 20px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 5px 0;
+}
+.main-content-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 20px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+/* Wallet Section */
+.wallets-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.wallets-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wallets-list {
+  display: flex;
+  gap: 20px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.wallet-card {
+  background: black;
+  padding: 20px;
+  border-radius: 15px;
+  width: 250px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.wallet-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.wallet-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #0000ff;
+}
+
+.wallet-name {
+  margin-left: 10px;
+  font-weight: bold;
+  color: white;
+}
+
+.wallet-balance {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.wallet-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.wallet-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background-color: #1ca443c5;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Trade Section */
+.trade-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.trade-options {
+  display: flex;
+  gap: 20px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.trade-item {
+  text-align: center;
+}
+
+.trade-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #7b61ff;
+  color: white;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+.trade-label {
+  margin-top: 10px;
+  font-weight: 600;
+  color: white;
+}
+
+/* Tạo tài khoản */
+.create-trading-account {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.account-question {
+  color: white;
+  font-weight: 500;
+}
+
+.btn-add-account {
+  background-color: #7b61ff !important;
+  color: white !important;
+  font-size: 20px !important;
+  border-radius: 50% !important;
+  min-width: 50px !important;
+  height: 50px !important;
+}

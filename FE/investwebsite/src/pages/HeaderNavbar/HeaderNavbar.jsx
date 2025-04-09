@@ -29,19 +29,48 @@ const HeaderNavbar = () => {
   };
   const handleLogout = async () => {
     try {
-      await fetch("/api/users/api/v1/auth/logout", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.warn("No token found, redirecting to login...");
+        navigate("/");
+        return;
+      }
+
+      const response = await fetch(
+        "http://localhost:5173/api/users/api/v1/auth/logout",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        console.warn(`Logout failed with status: ${response.status}`);
+        if (response.status === 401) {
+          console.warn("Unauthorized (401) - Token có thể đã hết hạn.");
+        }
+        return;
+      }
+
+      // Kiểm tra response có JSON không trước khi parse
+      const text = await response.text();
+      if (text) {
+        console.log("Server response:", JSON.parse(text));
+      }
+
       localStorage.removeItem("token");
       localStorage.removeItem("username");
       setUsername("");
       setMenuOpen(false);
       navigate("/");
     } catch (error) {
-      console.error("Logout failed", error);
+      console.error("Logout error:", error);
     }
   };
+
   return (
     <div className="topbar">
       <h2 className="pageTitle">{pageNames[location.pathname]}</h2>
@@ -64,6 +93,11 @@ const HeaderNavbar = () => {
 
               <li
                 onClick={() => {
+                  console.log(
+                    "Token trước khi logout:",
+                    localStorage.getItem("token")
+                  );
+
                   handleLogout();
                 }}
                 style={{ color: "red", fontWeight: "bold" }}
