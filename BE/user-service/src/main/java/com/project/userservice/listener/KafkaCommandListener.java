@@ -24,13 +24,8 @@ public class KafkaCommandListener {
             topics = "${kafka.topics.user-commands:user.commands.verify}",
             containerFactory = "kafkaListenerContainerFactory"
     )
-    public void consumeUserCommands(@Payload String commandJson, Acknowledgment ack) {
+    public void consumeUserCommands(@Payload CommandMessage command, Acknowledgment ack) {
         try {
-            log.debug("Received command JSON: {}", commandJson);
-
-            // Convert the JSON string to CommandMessage
-            CommandMessage command = objectMapper.readValue(commandJson, CommandMessage.class);
-
             log.info("Processing command type: {} for saga: {}", command.getType(), command.getSagaId());
 
             // Handle command based on type
@@ -46,13 +41,8 @@ public class KafkaCommandListener {
 
         } catch (Exception e) {
             log.error("Error processing command: {}", e.getMessage(), e);
-            // For serialization errors, acknowledge to avoid poison pill scenarios
             // For business logic errors, don't acknowledge
-            if (e instanceof com.fasterxml.jackson.core.JsonProcessingException) {
-                ack.acknowledge();
-            } else {
-                throw new RuntimeException("Command processing failed", e);
-            }
+            throw new RuntimeException("Command processing failed", e);
         }
     }
 }
