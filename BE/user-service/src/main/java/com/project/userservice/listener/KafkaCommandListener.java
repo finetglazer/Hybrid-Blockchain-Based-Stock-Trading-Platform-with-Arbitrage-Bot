@@ -1,8 +1,9 @@
 package com.project.userservice.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.userservice.model.kafka.CommandMessage;
+import com.project.kafkamessagemodels.model.CommandMessage;
 import com.project.userservice.service.kafka.KafkaCommandHandlerService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,6 +20,7 @@ public class KafkaCommandListener {
     private final ObjectMapper objectMapper;
 
     @KafkaListener(
+            id = "userCommandsListener",
             topics = "${kafka.topics.user-commands:user.commands.verify}",
             containerFactory = "kafkaListenerContainerFactory"
     )
@@ -26,8 +28,7 @@ public class KafkaCommandListener {
         try {
             log.debug("Received command JSON: {}", commandJson);
 
-            // Convert the JSON string to CommandMessage using ObjectMapper
-            // The objectMapper is already configured to handle unknown properties
+            // Convert the JSON string to CommandMessage from kafka-management-service
             CommandMessage command = objectMapper.readValue(commandJson, CommandMessage.class);
 
             log.info("Processing command type: {} for saga: {}", command.getType(), command.getSagaId());
@@ -45,8 +46,7 @@ public class KafkaCommandListener {
 
         } catch (Exception e) {
             log.error("Error processing command: {}", e.getMessage(), e);
-            // We'll acknowledge anyway to prevent infinite retries
-            // In a production environment, you might want a more sophisticated error handling strategy
+            // Acknowledge to move past bad messages
             ack.acknowledge();
         }
     }

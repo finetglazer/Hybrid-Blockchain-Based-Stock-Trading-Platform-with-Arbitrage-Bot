@@ -1,5 +1,7 @@
 package com.stocktrading.kafka.model.enums;
 
+import com.project.kafkamessagemodels.model.enums.CommandType;
+
 /**
  * Enum defining all steps in the deposit saga
  */

@@ -15,6 +15,7 @@
         <module>account-service</module>
         <module>trading-service</module>
         <module>kafka-management-service</module>
+        <module>kafka-message-models</module>
     </modules>
 
     <dependencyManagement>

@@ -1,9 +1,10 @@
 package com.project.userservice.service.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.kafkamessagemodels.model.CommandMessage;
+import com.project.kafkamessagemodels.model.EventMessage;
 import com.project.userservice.common.BaseResponse;
-import com.project.userservice.model.kafka.CommandMessage;
-import com.project.userservice.model.kafka.EventMessage;
+
 import com.project.userservice.payload.response.client.GetVerificationStatusResponse;
 import com.project.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class KafkaCommandHandlerService {
 
     private final UserService userService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final ObjectMapper objectMapper; // Add this if not already present
+    private final ObjectMapper objectMapper;
 
     /**
      * Handle USER_VERIFY_IDENTITY command by reusing existing UserService verification logic
@@ -42,30 +43,7 @@ public class KafkaCommandHandlerService {
                 "ACTIVE".equals(verificationStatus.getUserStatus()) &&
                 verificationStatus.isEmailVerified();
 
-        // Create the event object
-        EventMessage event = createVerificationResponseEvent(command, isVerified, verificationStatus);
-
-        try {
-
-            // Instead of this:
-            // String eventJson = objectMapper.writeValueAsString(event);
-            // kafkaTemplate.send("user.events.verify", command.getSagaId(), eventJson);
-
-            // Do this:
-            kafkaTemplate.send("user.events.verify", command.getSagaId(), event);
-
-            log.info("Sent USER_IDENTITY_VERIFIED response for saga: {}, verified: {}",
-                    command.getSagaId(), isVerified);
-        } catch (Exception e) {
-            log.error("Error serializing or sending event: {}", e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Create a verification response event
-     */
-    private EventMessage createVerificationResponseEvent(CommandMessage command, boolean verified,
-                                                         GetVerificationStatusResponse verificationStatus) {
+        // Create event using the imported EventMessage from kafka-management-service
         EventMessage event = new EventMessage();
         event.setMessageId(UUID.randomUUID().toString());
         event.setSagaId(command.getSagaId());
@@ -73,9 +51,9 @@ public class KafkaCommandHandlerService {
         event.setType("USER_IDENTITY_VERIFIED");
         event.setTimestamp(Instant.now());
         event.setSourceService("USER_SERVICE");
-        event.setSuccess(verified);
+        event.setSuccess(isVerified);
 
-        if (verified) {
+        if (isVerified) {
             event.setPayloadValue("userId", verificationStatus.getUserId());
             event.setPayloadValue("verified", true);
             event.setPayloadValue("verificationLevel", "BASIC");
@@ -89,24 +67,12 @@ public class KafkaCommandHandlerService {
             event.setPayloadValue("verified", false);
         }
 
-        return event;
-    }
-
-    /**
-     * Convert EventMessage to Map for Kafka
-     */
-    private Map<String, Object> convertEventToMap(EventMessage event) {
-        Map<String, Object> eventMap = new HashMap<>();
-        eventMap.put("messageId", event.getMessageId());
-        eventMap.put("sagaId", event.getSagaId());
-        eventMap.put("stepId", event.getStepId());
-        eventMap.put("type", event.getType());
-        eventMap.put("timestamp", event.getTimestamp());
-        eventMap.put("sourceService", event.getSourceService());
-        eventMap.put("success", event.getSuccess());
-        eventMap.put("errorCode", event.getErrorCode());
-        eventMap.put("errorMessage", event.getErrorMessage());
-        eventMap.put("payload", event.getPayload());
-        return eventMap;
+        try {
+            kafkaTemplate.send("user.events.verify", command.getSagaId(), event);
+            log.info("Sent USER_IDENTITY_VERIFIED response for saga: {}, verified: {}",
+                    command.getSagaId(), isVerified);
+        } catch (Exception e) {
+            log.error("Error sending event: {}", e.getMessage(), e);
+        }
     }
 }

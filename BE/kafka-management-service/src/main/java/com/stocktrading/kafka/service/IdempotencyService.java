@@ -1,6 +1,7 @@
 package com.stocktrading.kafka.service;
 
-import com.stocktrading.kafka.model.BaseMessage;
+
+import com.project.kafkamessagemodels.model.BaseMessage;
 import com.stocktrading.kafka.model.ProcessedMessage;
 import com.stocktrading.kafka.repository.ProcessedMessageRepository;
 import lombok.RequiredArgsConstructor;

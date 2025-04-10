@@ -1,6 +1,8 @@
 package com.stocktrading.kafka.model;
 
-import com.stocktrading.kafka.model.enums.CommandType;
+
+import com.project.kafkamessagemodels.model.CommandMessage;
+import com.project.kafkamessagemodels.model.enums.CommandType;
 import com.stocktrading.kafka.model.enums.DepositSagaStep;
 import com.stocktrading.kafka.model.enums.SagaStatus;
 import lombok.AllArgsConstructor;

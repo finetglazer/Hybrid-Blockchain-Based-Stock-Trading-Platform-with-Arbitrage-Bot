@@ -1,11 +1,15 @@
 package com.stocktrading.kafka.service;
 
-import com.stocktrading.kafka.model.CommandMessage;
+
+import com.project.kafkamessagemodels.model.CommandMessage;
+import com.project.kafkamessagemodels.model.EventMessage;
+import com.project.kafkamessagemodels.model.enums.CommandType;
+import com.project.kafkamessagemodels.model.enums.EventType;
 import com.stocktrading.kafka.model.DepositSagaState;
-import com.stocktrading.kafka.model.EventMessage;
-import com.stocktrading.kafka.model.enums.CommandType;
+
+
 import com.stocktrading.kafka.model.enums.DepositSagaStep;
-import com.stocktrading.kafka.model.enums.EventType;
+
 import com.stocktrading.kafka.model.enums.SagaStatus;
 import com.stocktrading.kafka.repository.DepositSagaRepository;
 import lombok.RequiredArgsConstructor;

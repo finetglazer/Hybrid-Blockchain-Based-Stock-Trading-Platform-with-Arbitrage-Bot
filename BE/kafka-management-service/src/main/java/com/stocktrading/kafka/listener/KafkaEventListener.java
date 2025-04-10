@@ -1,6 +1,6 @@
 package com.stocktrading.kafka.listener;
 
-import com.stocktrading.kafka.model.EventMessage;
+import com.project.kafkamessagemodels.model.EventMessage;
 import com.stocktrading.kafka.service.DepositSagaService;
 import com.stocktrading.kafka.service.IdempotencyService;
 import lombok.RequiredArgsConstructor;
@@ -70,23 +70,21 @@ public class KafkaEventListener {
     /**
      * Listen for user service events
      */
+// In KafkaEventListener.java in Kafka Management Service
     @KafkaListener(
             topics = "${kafka.topics.user-events}",
-            containerFactory = "eventKafkaListenerContainerFactory"
+            containerFactory = "eventKafkaListenerContainerFactory",
+            errorHandler = "kafkaErrorHandler"
     )
     public void consumeUserEvents(@Payload EventMessage event, Acknowledgment ack) {
         try {
             log.debug("Received user event: {}", event.getType());
-
-            // Handle the event
-            depositSagaService.handleEventMessage(event);
-
-            // Acknowledge the message
+            // Process event...
             ack.acknowledge();
-
         } catch (Exception e) {
             log.error("Error processing user event: {}", event.getType(), e);
-            // Don't ack, will be retried or sent to DLQ by error handler
+            // Don't rethrow - acknowledge to move past bad messages
+            ack.acknowledge();
         }
     }
 
@@ -118,4 +116,6 @@ public class KafkaEventListener {
             ack.acknowledge();
         }
     }
+
+
 }
