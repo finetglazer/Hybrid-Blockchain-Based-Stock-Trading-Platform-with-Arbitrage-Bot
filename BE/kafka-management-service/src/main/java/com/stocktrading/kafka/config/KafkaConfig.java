@@ -1,6 +1,5 @@
 package com.stocktrading.kafka.config;
 
-
 import com.project.kafkamessagemodels.model.CommandMessage;
 import com.project.kafkamessagemodels.model.EventMessage;
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -110,6 +109,8 @@ public class KafkaConfig {
         configProps.put(ProducerConfig.ACKS_CONFIG, "all");
         configProps.put(ProducerConfig.RETRIES_CONFIG, 3);
         configProps.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
+        // Add type information to headers - CRITICAL FIX
+        configProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, true);
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
@@ -127,10 +128,15 @@ public class KafkaConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName());
+        // CRITICAL FIX: Set trusted packages with correct pattern
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.stocktrading.kafka.model.EventMessage");
+        // CRITICAL FIX: Use correct package for model class
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.project.kafkamessagemodels.model.EventMessage");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        // CRITICAL FIX: Add type info for deserialization
+        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, true);
+        props.put(JsonDeserializer.REMOVE_TYPE_INFO_HEADERS, false);
 
         return new DefaultKafkaConsumerFactory<>(props);
     }
@@ -160,11 +166,33 @@ public class KafkaConfig {
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        // CRITICAL FIX: Add type info headers
+        configProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, true);
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
     @Bean
     public KafkaTemplate<String, EventMessage> eventKafkaTemplate() {
         return new KafkaTemplate<>(eventProducerFactory());
+    }
+
+    // ADDED: Error handler bean
+    @Bean
+    public DefaultErrorHandler kafkaErrorHandler() {
+        DefaultErrorHandler handler = new DefaultErrorHandler(
+                (record, exception) -> {
+                    System.err.println("Error processing record: " + exception.getMessage());
+                    exception.printStackTrace();
+                },
+                new ExponentialBackOff(1000, 2) // Retry with exponential backoff
+        );
+
+        // Add non-retryable exceptions
+        handler.addNotRetryableExceptions(
+                org.apache.kafka.common.errors.SerializationException.class,
+                org.springframework.kafka.support.serializer.DeserializationException.class
+        );
+
+        return handler;
     }
 }

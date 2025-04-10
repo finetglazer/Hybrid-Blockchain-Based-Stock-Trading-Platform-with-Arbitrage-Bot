@@ -1,4 +1,6 @@
-package com.project.userservice.configuration;
+package com.stocktrading.kafka.config;
+
+import org.springframework.context.annotation.Bean;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

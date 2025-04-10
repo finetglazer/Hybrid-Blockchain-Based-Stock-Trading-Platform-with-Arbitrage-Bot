@@ -28,12 +28,12 @@ public class KafkaCommandListener {
         try {
             log.debug("Received command JSON: {}", commandJson);
 
-            // Convert the JSON string to CommandMessage from kafka-management-service
+            // Convert the JSON string to CommandMessage
             CommandMessage command = objectMapper.readValue(commandJson, CommandMessage.class);
 
             log.info("Processing command type: {} for saga: {}", command.getType(), command.getSagaId());
 
-            // Route to appropriate handler based on command type
+            // Handle command based on type
             if ("USER_VERIFY_IDENTITY".equals(command.getType())) {
                 commandHandlerService.handleVerifyIdentityCommand(command);
                 log.info("Successfully processed USER_VERIFY_IDENTITY command");
@@ -46,8 +46,13 @@ public class KafkaCommandListener {
 
         } catch (Exception e) {
             log.error("Error processing command: {}", e.getMessage(), e);
-            // Acknowledge to move past bad messages
-            ack.acknowledge();
+            // For serialization errors, acknowledge to avoid poison pill scenarios
+            // For business logic errors, don't acknowledge
+            if (e instanceof com.fasterxml.jackson.core.JsonProcessingException) {
+                ack.acknowledge();
+            } else {
+                throw new RuntimeException("Command processing failed", e);
+            }
         }
     }
 }

@@ -73,21 +73,24 @@ public class KafkaEventListener {
 // In KafkaEventListener.java in Kafka Management Service
     @KafkaListener(
             topics = "${kafka.topics.user-events}",
-            containerFactory = "eventKafkaListenerContainerFactory",
-            errorHandler = "kafkaErrorHandler"
+            containerFactory = "eventKafkaListenerContainerFactory"
     )
     public void consumeUserEvents(@Payload EventMessage event, Acknowledgment ack) {
         try {
             log.debug("Received user event: {}", event.getType());
+
             // Process event...
+            depositSagaService.handleEventMessage(event);
+
+            // Acknowledge successful processing
             ack.acknowledge();
+
         } catch (Exception e) {
             log.error("Error processing user event: {}", event.getType(), e);
-            // Don't rethrow - acknowledge to move past bad messages
-            ack.acknowledge();
+            // Don't ack, will be retried or sent to DLQ by error handler
+            throw e; // Let the error handler manage it
         }
     }
-
     // Find this method in the KafkaEventListener.java file of the Kafka Management Service
 // and replace it with the version below:
 

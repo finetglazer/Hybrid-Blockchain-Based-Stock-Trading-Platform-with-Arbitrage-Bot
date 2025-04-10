@@ -1,7 +1,6 @@
 package com.project.userservice.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.project.kafkamessagemodels.model.CommandMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +22,7 @@ import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.HashMap;
 import java.util.Map;
+
 @EnableKafka
 @Configuration
 @Slf4j
@@ -45,10 +45,15 @@ public class KafkaConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName());
+        // CRITICAL FIX: Use proper trusted packages configuration
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.stocktrading.kafka.model.CommandMessage");
+        // CRITICAL FIX: Use correct package path for model
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.project.kafkamessagemodels.model.CommandMessage");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        // CRITICAL FIX: Add type info for deserialization
+        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, true);
+        props.put(JsonDeserializer.REMOVE_TYPE_INFO_HEADERS, false);
 
         return new DefaultKafkaConsumerFactory<>(props);
     }
@@ -98,7 +103,7 @@ public class KafkaConfig {
         configProps.put(ProducerConfig.RETRIES_CONFIG, 3);
         configProps.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
 
-        // Critical: Add type information to headers
+        // CRITICAL FIX: Add type information to headers
         configProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, true);
 
         return new DefaultKafkaProducerFactory<>(configProps);
