@@ -1,5 +1,6 @@
 package com.project.userservice.service.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.userservice.common.BaseResponse;
 import com.project.userservice.model.kafka.CommandMessage;
 import com.project.userservice.model.kafka.EventMessage;
@@ -21,7 +22,8 @@ import java.util.UUID;
 public class KafkaCommandHandlerService {
 
     private final UserService userService;
-    private final KafkaTemplate<String, Map<String, Object>> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final ObjectMapper objectMapper; // Add this if not already present
 
     /**
      * Handle USER_VERIFY_IDENTITY command by reusing existing UserService verification logic
@@ -40,16 +42,23 @@ public class KafkaCommandHandlerService {
                 "ACTIVE".equals(verificationStatus.getUserStatus()) &&
                 verificationStatus.isEmailVerified();
 
+        // Create the event object
         EventMessage event = createVerificationResponseEvent(command, isVerified, verificationStatus);
 
-        // Convert to Map for sending
-        Map<String, Object> eventMap = convertEventToMap(event);
+        try {
 
-        // Send the response event
-        kafkaTemplate.send("user.events.verify", command.getSagaId(), eventMap);
+            // Instead of this:
+            // String eventJson = objectMapper.writeValueAsString(event);
+            // kafkaTemplate.send("user.events.verify", command.getSagaId(), eventJson);
 
-        log.info("Sent USER_IDENTITY_VERIFIED response for saga: {}, verified: {}",
-                command.getSagaId(), isVerified);
+            // Do this:
+            kafkaTemplate.send("user.events.verify", command.getSagaId(), event);
+
+            log.info("Sent USER_IDENTITY_VERIFIED response for saga: {}, verified: {}",
+                    command.getSagaId(), isVerified);
+        } catch (Exception e) {
+            log.error("Error serializing or sending event: {}", e.getMessage(), e);
+        }
     }
 
     /**

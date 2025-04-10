@@ -10,8 +10,6 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -28,23 +26,18 @@ public class KafkaCommandListener {
         try {
             log.debug("Received command JSON: {}", commandJson);
 
-            // Parse JSON to Map
-            Map<String, Object> commandMap = objectMapper.readValue(commandJson,
-                    new com.fasterxml.jackson.core.type.TypeReference<Map<String, Object>>() {});
+            // Convert the JSON string to CommandMessage using ObjectMapper
+            // The objectMapper is already configured to handle unknown properties
+            CommandMessage command = objectMapper.readValue(commandJson, CommandMessage.class);
 
-            String commandType = (String) commandMap.get("type");
-            String sagaId = (String) commandMap.get("sagaId");
-            log.info("Processing command type: {} for saga: {}", commandType, sagaId);
-
-            // Convert the map to a CommandMessage
-            CommandMessage command = objectMapper.convertValue(commandMap, CommandMessage.class);
+            log.info("Processing command type: {} for saga: {}", command.getType(), command.getSagaId());
 
             // Route to appropriate handler based on command type
-            if ("USER_VERIFY_IDENTITY".equals(commandType)) {
+            if ("USER_VERIFY_IDENTITY".equals(command.getType())) {
                 commandHandlerService.handleVerifyIdentityCommand(command);
                 log.info("Successfully processed USER_VERIFY_IDENTITY command");
             } else {
-                log.warn("Unknown command type: {}", commandType);
+                log.warn("Unknown command type: {}", command.getType());
             }
 
             // Acknowledge the message
@@ -52,8 +45,8 @@ public class KafkaCommandListener {
 
         } catch (Exception e) {
             log.error("Error processing command: {}", e.getMessage(), e);
-            // We should properly handle errors - either retry or send to DLQ
-            // For now, acknowledging to prevent infinite retries
+            // We'll acknowledge anyway to prevent infinite retries
+            // In a production environment, you might want a more sophisticated error handling strategy
             ack.acknowledge();
         }
     }
