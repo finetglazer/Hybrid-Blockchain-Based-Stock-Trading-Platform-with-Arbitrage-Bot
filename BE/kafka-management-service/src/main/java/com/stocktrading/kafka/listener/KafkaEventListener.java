@@ -71,6 +71,8 @@ public class KafkaEventListener {
      * Listen for user service events
      */
 // In KafkaEventListener.java in Kafka Management Service
+// In KafkaEventListener.java
+
     @KafkaListener(
             topics = "${kafka.topics.user-events}",
             containerFactory = "eventKafkaListenerContainerFactory"
@@ -79,21 +81,30 @@ public class KafkaEventListener {
         try {
             log.debug("Received user event: {}", event.getType());
 
-            // Process event...
+            // --- ADD THIS LINE ---
+            // Call the service to handle the event and advance the saga
             depositSagaService.handleEventMessage(event);
+            // --------------------
 
-            // Acknowledge successful processing
+            // Acknowledge only after successful processing by the service
             ack.acknowledge();
+            log.debug("Successfully processed and acknowledged user event: {}", event.getType());
 
         } catch (Exception e) {
-            log.error("Error processing user event: {}", event.getType(), e);
-            // Don't ack, will be retried or sent to DLQ by error handler
-            throw e; // Let the error handler manage it
+            log.error("Error processing user event: {} for saga: {}", event.getType(), event.getSagaId(), e);
+            // Let the container's error handler deal with this exception (retries/DLQ).
+            // Do NOT acknowledge here.
+            // Re-throwing is one way to ensure the container's error handler takes over.
+            throw new RuntimeException("Error processing user event " + event.getType() + " for saga " + event.getSagaId(), e);
         }
     }
+
     // Find this method in the KafkaEventListener.java file of the Kafka Management Service
 // and replace it with the version below:
 
+    /**
+     * Listen for DLQ messages for monitoring
+     */
     /**
      * Listen for DLQ messages for monitoring
      */
@@ -101,21 +112,30 @@ public class KafkaEventListener {
             topics = "${kafka.topics.dlq}",
             containerFactory = "eventKafkaListenerContainerFactory"
     )
-    public void consumeDlqMessages(@Payload String messageJson, Acknowledgment ack) {
+    // Change the payload type from String to Object
+    public void consumeDlqMessages(@Payload Object messagePayload, Acknowledgment ack) { // <-- Change String to Object
         try {
-            log.warn("Received message in DLQ: {}", messageJson);
+            // Log the received object (its toString() representation)
+            log.warn("Received raw message object in DLQ: {}", messagePayload);
 
-            // We could parse the message here if needed
-            // ObjectMapper objectMapper = new ObjectMapper();
-            // Map<String, Object> messageMap = objectMapper.readValue(messageJson,
-            //    new TypeReference<Map<String, Object>>() {});
+            // Optional: If you need the JSON string representation, you can use ObjectMapper
+            // try {
+            //     ObjectMapper objectMapper = new ObjectMapper();
+            //     // Configure object mapper if necessary (e.g., JavaTimeModule)
+            //     objectMapper.registerModule(new JavaTimeModule());
+            //     objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            //     String messageJson = objectMapper.writeValueAsString(messagePayload);
+            //     log.warn("Received message in DLQ (converted to JSON): {}", messageJson);
+            // } catch (Exception jsonEx) {
+            //     log.error("Could not convert DLQ message payload to JSON string", jsonEx);
+            // }
 
-            // Just acknowledge the message - we're mostly logging for monitoring
+            // Acknowledge the message - we're mostly logging for monitoring
             ack.acknowledge();
             log.info("Acknowledged DLQ message");
         } catch (Exception e) {
             log.error("Error processing DLQ message: {}", e.getMessage(), e);
-            // Still acknowledge to prevent infinite loop
+            // Still acknowledge to prevent infinite loop in DLQ processing
             ack.acknowledge();
         }
     }
