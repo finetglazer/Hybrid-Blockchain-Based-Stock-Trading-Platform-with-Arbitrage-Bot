@@ -38,7 +38,16 @@ public enum CommandType {
     /**
      * Get the target service for a command type
      */
+    /**
+     * Get the target service for a command type
+     */
     public String getTargetService() {
+        // Special case for payment method validation which belongs to account service
+        if (this == PAYMENT_METHOD_VALIDATE) {
+            return "ACCOUNT_SERVICE";
+        }
+
+        // Otherwise use the prefix rule
         if (this.name().startsWith("USER_")) {
             return "USER_SERVICE";
         } else if (this.name().startsWith("PAYMENT_")) {
