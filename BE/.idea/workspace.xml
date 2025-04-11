@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/config/WebfluxSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/config/WebfluxSecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/gateway.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/gateway.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/HeaderNavbar/HeaderNavbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/HeaderNavbar/HeaderNavbar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/PaymentMethod/PaymentMethodsManagement.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/PaymentMethod/PaymentMethodsManagement.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -313,7 +318,7 @@
       <workItem from="1743834997011" duration="6052000" />
       <workItem from="1743863309389" duration="17000" />
       <workItem from="1743865046907" duration="426000" />
-      <workItem from="1743994401932" duration="28875000" />
+      <workItem from="1743994401932" duration="41833000" />
     </task>
     <servers />
   </component>
@@ -332,15 +337,6 @@
     </option>
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/controller/TwoFactorAuthController.java</url>
-          <line>22</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <inline-watch fileUrl="file://$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/TradingAccountServiceImpl.java" line="150">
         <watch expression="userId" language="JAVA" />
