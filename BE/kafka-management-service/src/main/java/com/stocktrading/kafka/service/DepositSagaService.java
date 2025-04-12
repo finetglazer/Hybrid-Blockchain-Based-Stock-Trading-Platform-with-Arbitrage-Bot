@@ -157,7 +157,20 @@ public class DepositSagaService {
         if (Boolean.TRUE.equals(event.getSuccess())) {
             processSuccessEvent(saga, event);
         } else {
-            processFailureEvent(saga, event);
+            try {
+                processFailureEvent(saga, event);
+            } catch (Exception e) {
+                log.error("Error processing failure event: {}", e.getMessage(), e);
+
+                // Ensure we still record the event as processed even if there's an error
+                Map<String, Object> result = new HashMap<>();
+                result.put("error", true);
+                result.put("errorMessage", e.getMessage());
+                idempotencyService.recordProcessing(event, result);
+
+                // Rethrow to let the caller handle it
+                throw e;
+            }
         }
         
         // Record the event as processed
@@ -192,27 +205,47 @@ public class DepositSagaService {
      * Process a failure event
      */
     private void processFailureEvent(DepositSagaState saga, EventMessage event) {
-        log.warn("Processing failure event [{}] for saga [{}]: {}", 
-            event.getType(), saga.getSagaId(), event.getErrorMessage());
-        
+        log.warn("Processing failure event [{}] for saga [{}]: {}",
+                event.getType(), saga.getSagaId(), event.getErrorMessage());
+
         // Update saga with failure reason
         String failureReason = event.getErrorMessage();
         if (failureReason == null) {
             failureReason = "Failed in step: " + saga.getCurrentStep().name();
         }
-        
+
         saga.handleFailure(failureReason, saga.getCurrentStep().name());
-        
-        // Start compensation if needed
-        saga.startCompensation();
-        
-        // Save the updated saga
-        depositSagaRepository.save(saga);
-        
-        // Start the compensation process
-        processNextStep(saga);
+
+        // Check if we need compensation
+        if (!isValidationStep(saga.getCurrentStep())) {
+            // Start compensation if it's a resource-modifying step
+            saga.startCompensation();
+
+            // Save the updated saga
+            depositSagaRepository.save(saga);
+
+            // Start the compensation process
+            processNextStep(saga);
+        } else {
+            // For validation steps, just terminate without compensation
+            saga.setEndTime(Instant.now());
+            saga.addEvent("SAGA_TERMINATED", "Saga terminated due to validation failure");
+            log.info("Saga terminated due to validation failure at step: {}", saga.getCurrentStep().name());
+
+            // Save the terminated saga
+            depositSagaRepository.save(saga);
+        }
     }
-    
+
+    /**
+     * Check if the current step is a validation step (no compensation needed)
+     */
+    private boolean isValidationStep(DepositSagaStep step) {
+        return step == DepositSagaStep.VERIFY_USER_IDENTITY ||
+                step == DepositSagaStep.VALIDATE_ACCOUNT ||
+                step == DepositSagaStep.VALIDATE_PAYMENT_METHOD ||
+                step == DepositSagaStep.CREATE_PENDING_TRANSACTION;
+    }
     /**
      * Update the saga state with data from the event
      */
@@ -245,6 +278,7 @@ public class DepositSagaService {
         }
     }
     
+
     /**
      * Check if this event is a response to the current saga step
      */
@@ -252,29 +286,44 @@ public class DepositSagaService {
         if (saga.getCurrentStep() == null) {
             return false;
         }
-        
+
         // For compensation steps, we need special handling
         if (saga.getCurrentStep().isCompensationStep()) {
             return isEventForCompensationStep(saga, event);
         }
-        
+
         try {
             EventType eventType = EventType.valueOf(event.getType());
             CommandType expectedCommandType = saga.getCurrentStep().getCommandType();
-            
+
             // Get the command type associated with this event type
             CommandType eventCommandType = eventType.getAssociatedCommandType();
-            
-            return eventCommandType == expectedCommandType && 
-                   event.getStepId() != null && 
-                   event.getStepId().equals(saga.getCurrentStep().getStepNumber());
-                   
+
+            // This is the key check - does this event correspond to the current step's command?
+            boolean matchingCommandType = eventCommandType == expectedCommandType;
+
+            // Check if the step ID matches (if provided)
+            boolean matchingStepId = event.getStepId() == null ||
+                    event.getStepId().equals(saga.getCurrentStep().getStepNumber());
+
+            // Log details in case of mismatch for debugging
+            if (!matchingCommandType) {
+                log.debug("Event command type mismatch: event={}, expected={}",
+                        eventCommandType, expectedCommandType);
+            }
+
+            if (!matchingStepId) {
+                log.debug("Event step ID mismatch: event={}, current={}",
+                        event.getStepId(), saga.getCurrentStep().getStepNumber());
+            }
+
+            return matchingCommandType && matchingStepId;
+
         } catch (Exception e) {
-            log.error("Error checking if event matches current step", e);
+            log.error("Error checking if event matches current step: {}", e.getMessage(), e);
             return false;
         }
     }
-    
     /**
      * Check if this event is a response to the current compensation step
      */
