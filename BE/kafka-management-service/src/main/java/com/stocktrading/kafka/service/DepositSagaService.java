@@ -119,45 +119,58 @@ public class DepositSagaService {
     /**
      * Handle an event message response
      */
+    /**
+     * Handle an event message response
+     */
     public void handleEventMessage(EventMessage event) {
         String sagaId = event.getSagaId();
-        
+
         log.debug("Handling event [{}] for saga: {}", event.getType(), sagaId);
-        
+
         // Find the saga
         Optional<DepositSagaState> optionalSaga = depositSagaRepository.findById(sagaId);
         if (optionalSaga.isEmpty()) {
             log.warn("Received event for unknown saga: {}", sagaId);
             return;
         }
-        
+
         DepositSagaState saga = optionalSaga.get();
-        
+
+        // Log saga state for debugging
+        log.debug("Current saga state: id={}, status={}, currentStep={}, isCompensationStep={}",
+                saga.getSagaId(), saga.getStatus(),
+                saga.getCurrentStep(), saga.getCurrentStep().isCompensationStep());
+
         // Record processing to ensure idempotency
         if (idempotencyService.isProcessed(event)) {
             log.info("Event [{}] for saga [{}] has already been processed", event.getType(), sagaId);
             return;
         }
-        
+
         // Check if this is a response to the current step
-        if (!isEventForCurrentStep(saga, event)) {
-            log.warn("Received event [{}] for saga [{}] but current step is [{}]", 
-                event.getType(), sagaId, saga.getCurrentStep());
-            
+        boolean matchesCurrentStep = isEventForCurrentStep(saga, event);
+        log.debug("Event matches current step: {}", matchesCurrentStep);
+
+        if (!matchesCurrentStep) {
+            log.warn("Received event [{}] for saga [{}] but doesn't match current step [{}]",
+                    event.getType(), sagaId, saga.getCurrentStep());
+
             // Record the event processing anyway
             Map<String, Object> result = new HashMap<>();
             result.put("ignored", true);
             result.put("reason", "Event does not match current step");
             idempotencyService.recordProcessing(event, result);
-            
+
             return;
         }
-        
+
         // Process the event based on success/failure
         if (Boolean.TRUE.equals(event.getSuccess())) {
+            log.debug("Processing success event for step: {}", saga.getCurrentStep());
             processSuccessEvent(saga, event);
         } else {
             try {
+                log.debug("Processing failure event for step: {}", saga.getCurrentStep());
                 processFailureEvent(saga, event);
             } catch (Exception e) {
                 log.error("Error processing failure event: {}", e.getMessage(), e);
@@ -172,12 +185,16 @@ public class DepositSagaService {
                 throw e;
             }
         }
-        
+
         // Record the event as processed
         Map<String, Object> result = new HashMap<>();
         result.put("newStatus", saga.getStatus().name());
-        result.put("newStep", saga.getCurrentStep().name());
+        result.put("newStep", saga.getCurrentStep() != null ? saga.getCurrentStep().name() : "null");
         idempotencyService.recordProcessing(event, result);
+
+        // Log final state after processing
+        log.debug("After event processing, saga state: id={}, status={}, currentStep={}",
+                saga.getSagaId(), saga.getStatus(), saga.getCurrentStep());
     }
     
     /**
@@ -218,6 +235,8 @@ public class DepositSagaService {
         // Get the current compensation step
         DepositSagaStep currentStep = saga.getCurrentStep();
 
+        log.debug("Handling successful completion of compensation step: {}", currentStep);
+
         // Add to completed steps
         if (saga.getCompletedSteps() == null) {
             saga.setCompletedSteps(new ArrayList<>());
@@ -226,6 +245,7 @@ public class DepositSagaService {
 
         // Get the next compensation step
         DepositSagaStep nextStep = currentStep.getNextCompensationStep();
+        log.debug("Next compensation step: {}", nextStep);
 
         if (nextStep == DepositSagaStep.COMPLETE_SAGA) {
             // All compensation steps completed
@@ -373,13 +393,23 @@ public class DepositSagaService {
             EventType eventType = EventType.valueOf(event.getType());
             CommandType expectedCommandType = saga.getCurrentStep().getCommandType();
 
-            // For compensation steps, we need to check the command type directly
-            return eventType.getAssociatedCommandType() == expectedCommandType &&
-                   event.getStepId() != null &&
-                   event.getStepId().equals(saga.getCurrentStep().getStepNumber());
+            // Log detailed matching information for debugging
+            log.debug("Compensation event matching: eventType={}, eventCommandType={}, expectedCommandType={}, stepId={}, currentStepNumber={}",
+                    eventType, eventType.getAssociatedCommandType(), expectedCommandType,
+                    event.getStepId(), saga.getCurrentStep().getStepNumber());
 
+            // For compensation steps, use more flexible matching criteria
+            // 1. The event type should match the expected command type
+            boolean commandTypeMatches = eventType.getAssociatedCommandType() == expectedCommandType;
+
+            // 2. If stepId is provided, it should match, but don't require it
+            boolean stepIdMatches = event.getStepId() == null ||
+                    event.getStepId().equals(saga.getCurrentStep().getStepNumber());
+
+            // Return true if basic command type matching passes
+            return commandTypeMatches && stepIdMatches;
         } catch (Exception e) {
-            log.error("Error checking if event matches compensation step", e);
+            log.error("Error checking if event matches compensation step: {}", e.getMessage(), e);
             return false;
         }
     }

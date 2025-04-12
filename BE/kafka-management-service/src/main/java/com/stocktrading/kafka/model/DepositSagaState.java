@@ -157,6 +157,7 @@ public class DepositSagaState {
      */
     public void completeCompensation() {
         status = SagaStatus.COMPENSATION_COMPLETED;
+        currentStep = DepositSagaStep.COMPLETE_SAGA; // Explicitly set current step to COMPLETE_SAGA
         endTime = Instant.now();
         addEvent("COMPENSATION_COMPLETED", "Compensation process completed");
         lastUpdatedTime = Instant.now();

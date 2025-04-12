@@ -200,6 +200,6 @@ public class PaymentProcessorService {
      * Should we simulate a failure? (10% chance)
      */
     private boolean shouldSimulateFailure() {
-        return random.nextInt(100) < 90;
+        return random.nextInt(100) < 10;
     }
 }
