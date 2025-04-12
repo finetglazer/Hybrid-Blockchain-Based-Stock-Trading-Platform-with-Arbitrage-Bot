@@ -89,7 +89,7 @@ public class JobRunrServiceImpl {
         BalanceHistory yesterdayBalanceHistory = balanceHistoryRepository.findBalanceHistoryByAccountIdAndDate(accountId, yesterday);
         assert yesterdayBalanceHistory != null;
 
-        BigDecimal closingBalance = BigDecimal.valueOf(yesterdayBalanceHistory.getOpeningBalance());
+        BigDecimal closingBalance = yesterdayBalanceHistory.getOpeningBalance();
         BigDecimal deposits = BigDecimal.ZERO;
         BigDecimal withdrawals = BigDecimal.ZERO;
         BigDecimal fees = BigDecimal.ZERO;
@@ -122,11 +122,11 @@ public class JobRunrServiceImpl {
             }
         }
 
-        yesterdayBalanceHistory.setClosingBalance(closingBalance.floatValue());
-        yesterdayBalanceHistory.setDeposits(deposits.floatValue());
-        yesterdayBalanceHistory.setWithdrawals(withdrawals.floatValue());
-        yesterdayBalanceHistory.setFees(fees.floatValue());
-        yesterdayBalanceHistory.setTradesNet(closingBalance.floatValue() - yesterdayBalanceHistory.getOpeningBalance());
+        yesterdayBalanceHistory.setClosingBalance(closingBalance);
+        yesterdayBalanceHistory.setDeposits(deposits);
+        yesterdayBalanceHistory.setWithdrawals(withdrawals);
+        yesterdayBalanceHistory.setFees(fees);
+        yesterdayBalanceHistory.setTradesNet(closingBalance.subtract(yesterdayBalanceHistory.getOpeningBalance()));
 
         balanceHistoryRepository.save(yesterdayBalanceHistory);
 
@@ -134,12 +134,12 @@ public class JobRunrServiceImpl {
         nextDayBalanceHistory.setDate(DateUtils.getDate(0));
         nextDayBalanceHistory.setAccountId(accountId);
         nextDayBalanceHistory.setUserId(userId);
-        nextDayBalanceHistory.setOpeningBalance(closingBalance.floatValue());
-        nextDayBalanceHistory.setClosingBalance(0.0f);
-        nextDayBalanceHistory.setDeposits(0.0f);
-        nextDayBalanceHistory.setWithdrawals(0.0f);
-        nextDayBalanceHistory.setTradesNet(0.0f);
-        nextDayBalanceHistory.setFees(0.0f);
+        nextDayBalanceHistory.setOpeningBalance(closingBalance);
+        nextDayBalanceHistory.setClosingBalance(BigDecimal.ZERO);
+        nextDayBalanceHistory.setDeposits(BigDecimal.ZERO);
+        nextDayBalanceHistory.setWithdrawals(BigDecimal.ZERO);
+        nextDayBalanceHistory.setTradesNet(BigDecimal.ZERO);
+        nextDayBalanceHistory.setFees(BigDecimal.ZERO);
 
         balanceHistoryRepository.save(nextDayBalanceHistory);
     }

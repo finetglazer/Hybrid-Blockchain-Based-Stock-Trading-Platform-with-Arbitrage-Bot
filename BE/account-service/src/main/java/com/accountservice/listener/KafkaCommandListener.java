@@ -36,7 +36,13 @@ public class KafkaCommandListener {
                 case "ACCOUNT_CREATE_PENDING_TRANSACTION":
                     commandHandlerService.handleCreatePendingTransaction(command);
                     break;
-                // Add other command types as needed
+                // Inside KafkaCommandListener class - consumeAccountCommands method
+                case "ACCOUNT_UPDATE_TRANSACTION_STATUS":
+                    commandHandlerService.handleUpdateTransactionStatus(command);
+                    break;
+                case "ACCOUNT_UPDATE_BALANCE":
+                    commandHandlerService.handleUpdateBalance(command);
+                    break;
                 default:
                     log.warn("Unknown command type: {}", command.getType());
                     break;

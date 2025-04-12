@@ -1,8 +1,10 @@
 package com.accountservice.service.kafka;
 
+import com.accountservice.model.Balance;
 import com.accountservice.model.PaymentMethod;
 import com.accountservice.model.TradingAccount;
 import com.accountservice.model.Transaction;
+import com.accountservice.repository.BalanceRepository;
 import com.accountservice.repository.PaymentMethodRepository;
 import com.accountservice.repository.TradingAccountRepository;
 import com.accountservice.repository.TransactionRepository;
@@ -25,15 +27,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class KafkaCommandHandlerService {
 
-
     private final PaymentMethodService paymentMethodService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final ObjectMapper objectMapper;
     private final PaymentMethodRepository paymentMethodRepository;
-
     private final TradingAccountRepository tradingAccountRepository;
     private final TransactionRepository transactionRepository;
-
+    private final BalanceRepository balanceRepository;
 
     /**
      * Handle ACCOUNT_VALIDATE command
@@ -82,7 +82,6 @@ public class KafkaCommandHandlerService {
             event.setSuccess(true);
             event.setPayloadValue("accountId", accountId);
             event.setPayloadValue("accountStatus", account.getStatus());
-//            event.setPayloadValue("accountType", account.getType());
 
         } catch (Exception e) {
             log.error("Error validating account", e);
@@ -179,6 +178,24 @@ public class KafkaCommandHandlerService {
             log.info("Sent PAYMENT_METHOD_VALID response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
+        }
+    }
+
+    /**
+     * Helper method to handle validation failures
+     */
+    private void handleValidationFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("PAYMENT_METHOD_INVALID");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        try {
+            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            log.info("Sent PAYMENT_METHOD_INVALID response for saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
         }
     }
 
@@ -283,22 +300,204 @@ public class KafkaCommandHandlerService {
     }
 
     /**
-     * Helper method to handle validation failures
+     * Handle ACCOUNT_UPDATE_TRANSACTION_STATUS command
      */
-    private void handleValidationFailure(EventMessage event, String errorCode, String errorMessage) {
-        event.setType("PAYMENT_METHOD_INVALID");
+    public void handleUpdateTransactionStatus(CommandMessage command) {
+        log.info("Handling ACCOUNT_UPDATE_TRANSACTION_STATUS command for saga: {}", command.getSagaId());
+
+        String transactionId = command.getPayloadValue("transactionId");
+        String status = command.getPayloadValue("status");
+        String paymentReference = command.getPayloadValue("paymentReference");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find transaction
+            Optional<Transaction> transactionOpt = transactionRepository.findById(transactionId);
+            if (transactionOpt.isEmpty()) {
+                handleTransactionUpdateFailure(event, "TRANSACTION_NOT_FOUND",
+                        "Transaction not found: " + transactionId);
+                return;
+            }
+
+            Transaction transaction = transactionOpt.get();
+
+            // Update transaction
+            transaction.setStatus(status);
+            transaction.setCompletedAt(Instant.now());
+            transaction.setUpdatedAt(Instant.now());
+            transaction.setExternalReferenceId(paymentReference);
+
+            log.debug("Updating transaction status to: {}", status);
+            Transaction updatedTransaction = transactionRepository.save(transaction);
+
+            // Set success response
+            event.setType("TRANSACTION_STATUS_UPDATED");
+            event.setSuccess(true);
+            event.setPayloadValue("transactionId", updatedTransaction.getId());
+            event.setPayloadValue("status", updatedTransaction.getStatus());
+            event.setPayloadValue("accountId", updatedTransaction.getAccountId());
+            event.setPayloadValue("completedAt", updatedTransaction.getCompletedAt().toString());
+
+        } catch (Exception e) {
+            log.error("Error updating transaction status", e);
+            handleTransactionUpdateFailure(event, "TRANSACTION_UPDATE_ERROR",
+                    "Error updating transaction status: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            log.info("Sent TRANSACTION_STATUS_UPDATED response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
+    /**
+     * Helper method to handle transaction update failures
+     */
+    private void handleTransactionUpdateFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("TRANSACTION_UPDATE_FAILED");
         event.setSuccess(false);
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);
 
         try {
             kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
-            log.info("Sent PAYMENT_METHOD_INVALID response for saga: {} - {}",
+            log.info("Sent TRANSACTION_UPDATE_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
             log.error("Error sending failure event", e);
         }
     }
 
+    /**
+     * Handle ACCOUNT_UPDATE_BALANCE command
+     */
+    public void handleUpdateBalance(CommandMessage command) {
+        log.info("Handling ACCOUNT_UPDATE_BALANCE command for saga: {}", command.getSagaId());
 
+        String accountId = command.getPayloadValue("accountId");
+        // Safe conversion from any numeric type to BigDecimal
+        Object amountObj = command.getPayloadValue("amount");
+        BigDecimal amount;
+        if (amountObj instanceof BigDecimal) {
+            amount = (BigDecimal) amountObj;
+        } else if (amountObj instanceof Number) {
+            amount = BigDecimal.valueOf(((Number) amountObj).doubleValue());
+        } else if (amountObj instanceof String) {
+            amount = new BigDecimal((String) amountObj);
+        } else {
+            throw new IllegalArgumentException("Amount is not a valid number: " + amountObj);
+        }
+        String transactionId = command.getPayloadValue("transactionId");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find account
+            Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
+            if (accountOpt.isEmpty()) {
+                handleBalanceUpdateFailure(event, "ACCOUNT_NOT_FOUND",
+                        "Account not found: " + accountId);
+                return;
+            }
+
+            TradingAccount account = accountOpt.get();
+
+            // Find or create balance
+            Balance balance = getOrCreateBalance(account);
+
+            // Update balance
+            BigDecimal newAvailable = balance.getAvailable().add(amount);
+            BigDecimal newTotal = balance.getTotal().add(amount);
+
+            balance.setAvailable(newAvailable);
+            balance.setTotal(newTotal);
+            balance.setUpdatedAt(Instant.now());
+
+            log.debug("Updating balance: available={}, total={}", newAvailable, newTotal);
+
+            // Save the updated balance
+            balanceRepository.save(balance);
+
+            // Set success response
+            event.setType("BALANCE_UPDATED");
+            event.setSuccess(true);
+            event.setPayloadValue("accountId", accountId);
+            event.setPayloadValue("transactionId", transactionId);
+            event.setPayloadValue("newAvailableBalance", newAvailable);
+            event.setPayloadValue("newTotalBalance", newTotal);
+            event.setPayloadValue("updateType", "DEPOSIT");
+            event.setPayloadValue("updatedAt", balance.getUpdatedAt().toString());
+
+        } catch (Exception e) {
+            log.error("Error updating balance", e);
+            handleBalanceUpdateFailure(event, "BALANCE_UPDATE_ERROR",
+                    "Error updating balance: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            log.info("Sent BALANCE_UPDATED response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
+    /**
+     * Helper method to handle balance update failures
+     */
+    private void handleBalanceUpdateFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("BALANCE_UPDATE_FAILED");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        try {
+            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            log.info("Sent BALANCE_UPDATE_FAILED response for saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Helper method to get or create a balance for an account
+     */
+    private Balance getOrCreateBalance(TradingAccount account) {
+        // First try to find existing balance
+        Balance balance = balanceRepository.findByAccountId(account.getId());
+
+        // If no balance exists, create a new one
+        if (balance == null) {
+            balance = new Balance();
+            balance.setId(UUID.randomUUID().toString());
+            balance.setAccountId(account.getId());
+            balance.setCurrency("USD"); // Default currency
+            balance.setAvailable(BigDecimal.ZERO);
+            balance.setReserved(BigDecimal.ZERO);
+            balance.setTotal(BigDecimal.ZERO);
+            balance.setUpdatedAt(Instant.now());
+        }
+
+        return balance;
+    }
 }
