@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/BE/API-gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/BE/kafka-management-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/BE/kafka-message-models/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/BE/mock-payment-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/BE/user-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/BE/user-service/user-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/BE/wallet-service/src/main/java" charset="UTF-8" />
