@@ -11,6 +11,8 @@ public enum EventType {
     USER_IDENTITY_VERIFIED("User identity verified"),
 
     // Account Service Events
+    ACCOUNT_VALIDATED("Account validated"), // Add this new event
+    ACCOUNT_VALIDATION_FAILED("Account validation failed"), // Add this new event
     PAYMENT_METHOD_VALID("Payment method validated"),
     TRANSACTION_CREATED("Transaction created"),
     TRANSACTION_STATUS_UPDATED("Transaction status updated"),
@@ -44,6 +46,9 @@ public enum EventType {
         switch (this) {
             case USER_IDENTITY_VERIFIED:
                 return CommandType.USER_VERIFY_IDENTITY;
+            case ACCOUNT_VALIDATED:
+            case ACCOUNT_VALIDATION_FAILED:
+                return CommandType.ACCOUNT_VALIDATE;
             case PAYMENT_METHOD_VALID:
                 return CommandType.PAYMENT_METHOD_VALIDATE;
             case TRANSACTION_CREATED:

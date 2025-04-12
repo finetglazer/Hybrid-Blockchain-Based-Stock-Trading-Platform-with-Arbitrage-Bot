@@ -8,13 +8,14 @@ import com.project.kafkamessagemodels.model.enums.CommandType;
 public enum DepositSagaStep {
     // Normal flow steps
     VERIFY_USER_IDENTITY(1, "Verify user identity", CommandType.USER_VERIFY_IDENTITY),
-    VALIDATE_PAYMENT_METHOD(2, "Validate payment method", CommandType.PAYMENT_METHOD_VALIDATE),
-    CREATE_PENDING_TRANSACTION(3, "Create pending transaction", CommandType.ACCOUNT_CREATE_PENDING_TRANSACTION),
-    PROCESS_PAYMENT(4, "Process payment", CommandType.PAYMENT_PROCESS_DEPOSIT),
-    UPDATE_TRANSACTION_STATUS(5, "Update transaction status", CommandType.ACCOUNT_UPDATE_TRANSACTION_STATUS),
-    UPDATE_BALANCE(6, "Update balance", CommandType.ACCOUNT_UPDATE_BALANCE),
-    COMPLETE_SAGA(7, "Complete saga", null),
-    
+    VALIDATE_ACCOUNT(2, "Validate account status", CommandType.ACCOUNT_VALIDATE), // Add this new step
+    VALIDATE_PAYMENT_METHOD(3, "Validate payment method", CommandType.PAYMENT_METHOD_VALIDATE), // Updated step number
+    CREATE_PENDING_TRANSACTION(4, "Create pending transaction", CommandType.ACCOUNT_CREATE_PENDING_TRANSACTION), // Updated step number
+    PROCESS_PAYMENT(5, "Process payment", CommandType.PAYMENT_PROCESS_DEPOSIT), // Updated step number
+    UPDATE_TRANSACTION_STATUS(6, "Update transaction status", CommandType.ACCOUNT_UPDATE_TRANSACTION_STATUS), // Updated step number
+    UPDATE_BALANCE(7, "Update balance", CommandType.ACCOUNT_UPDATE_BALANCE), // Updated step number
+    COMPLETE_SAGA(8, "Complete saga", null), // Updated step number
+
     // Compensation steps
     REVERSE_BALANCE_UPDATE(101, "Reverse balance update", CommandType.ACCOUNT_REVERSE_BALANCE_UPDATE),
     REVERSE_PAYMENT(102, "Reverse payment", CommandType.PAYMENT_REVERSE_DEPOSIT),
@@ -48,7 +49,9 @@ public enum DepositSagaStep {
     public DepositSagaStep getNextStep() {
         switch (this) {
             case VERIFY_USER_IDENTITY:
-                return VALIDATE_PAYMENT_METHOD;
+                return VALIDATE_ACCOUNT; // Updated to go to account validation
+            case VALIDATE_ACCOUNT:
+                return VALIDATE_PAYMENT_METHOD; // New step goes to payment method validation
             case VALIDATE_PAYMENT_METHOD:
                 return CREATE_PENDING_TRANSACTION;
             case CREATE_PENDING_TRANSACTION:

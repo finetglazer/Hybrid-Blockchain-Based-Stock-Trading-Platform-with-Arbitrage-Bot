@@ -27,8 +27,14 @@ public class KafkaCommandListener {
 
             // Route to appropriate handler based on command type
             switch (command.getType()) {
+                case "ACCOUNT_VALIDATE": // Add this new case
+                    commandHandlerService.handleAccountValidation(command);
+                    break;
                 case "PAYMENT_METHOD_VALIDATE":
                     commandHandlerService.handleValidatePaymentMethod(command);
+                    break;
+                case "ACCOUNT_CREATE_PENDING_TRANSACTION":
+                    commandHandlerService.handleCreatePendingTransaction(command);
                     break;
                 // Add other command types as needed
                 default:

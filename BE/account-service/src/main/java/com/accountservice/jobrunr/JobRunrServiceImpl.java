@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.*;
 import java.util.Date;
 import java.util.List;
@@ -88,44 +89,44 @@ public class JobRunrServiceImpl {
         BalanceHistory yesterdayBalanceHistory = balanceHistoryRepository.findBalanceHistoryByAccountIdAndDate(accountId, yesterday);
         assert yesterdayBalanceHistory != null;
 
-        float closingBalance = yesterdayBalanceHistory.getOpeningBalance();
-        float deposits = 0;
-        float withdrawals = 0;
-        float fees = 0;
+        BigDecimal closingBalance = BigDecimal.valueOf(yesterdayBalanceHistory.getOpeningBalance());
+        BigDecimal deposits = BigDecimal.ZERO;
+        BigDecimal withdrawals = BigDecimal.ZERO;
+        BigDecimal fees = BigDecimal.ZERO;
 
         for (Transaction transaction : transactions) {
             String type = transaction.getType();
             if (type.equals(Transaction.TransactionType.DEPOSIT.name())) {
-                deposits += transaction.getAmount();
-                closingBalance += transaction.getAmount();
+                deposits = deposits.add(transaction.getAmount());
+                closingBalance = closingBalance.add(transaction.getAmount());
             }
             else if (type.equals(Transaction.TransactionType.WITHDRAWAL.name())) {
-                withdrawals += transaction.getAmount();
-                closingBalance -= transaction.getAmount();
+                withdrawals = withdrawals.add(transaction.getAmount());
+                closingBalance = closingBalance.subtract(transaction.getAmount());
             }
             else if (type.equals(Transaction.TransactionType.FEE.name())) {
-                fees += transaction.getAmount();
-                closingBalance -= transaction.getAmount();
+                fees = fees.add(transaction.getAmount());
+                closingBalance = closingBalance.subtract(transaction.getAmount());
             }
             else if (type.equals(Transaction.TransactionType.INTEREST.name())) {
-                closingBalance += transaction.getAmount();
+                closingBalance = closingBalance.add(transaction.getAmount());
             }
             else if (type.equals(Transaction.TransactionType.TRANSFER.name())) {
-                closingBalance -= transaction.getAmount();  // Receive or send ?
+                closingBalance = closingBalance.subtract(transaction.getAmount());  // Receive or send ?
             }
             else if (type.equals(Transaction.TransactionType.REFUND.name())) {
-                closingBalance += transaction.getAmount();
+                closingBalance = closingBalance.add(transaction.getAmount());
             }
             else {
-                closingBalance -= transaction.getAmount();
+                closingBalance = closingBalance.subtract(transaction.getAmount());
             }
         }
 
-        yesterdayBalanceHistory.setClosingBalance(closingBalance);
-        yesterdayBalanceHistory.setDeposits(deposits);
-        yesterdayBalanceHistory.setWithdrawals(withdrawals);
-        yesterdayBalanceHistory.setFees(fees);
-        yesterdayBalanceHistory.setTradesNet(closingBalance - yesterdayBalanceHistory.getOpeningBalance());
+        yesterdayBalanceHistory.setClosingBalance(closingBalance.floatValue());
+        yesterdayBalanceHistory.setDeposits(deposits.floatValue());
+        yesterdayBalanceHistory.setWithdrawals(withdrawals.floatValue());
+        yesterdayBalanceHistory.setFees(fees.floatValue());
+        yesterdayBalanceHistory.setTradesNet(closingBalance.floatValue() - yesterdayBalanceHistory.getOpeningBalance());
 
         balanceHistoryRepository.save(yesterdayBalanceHistory);
 
@@ -133,7 +134,7 @@ public class JobRunrServiceImpl {
         nextDayBalanceHistory.setDate(DateUtils.getDate(0));
         nextDayBalanceHistory.setAccountId(accountId);
         nextDayBalanceHistory.setUserId(userId);
-        nextDayBalanceHistory.setOpeningBalance(closingBalance);
+        nextDayBalanceHistory.setOpeningBalance(closingBalance.floatValue());
         nextDayBalanceHistory.setClosingBalance(0.0f);
         nextDayBalanceHistory.setDeposits(0.0f);
         nextDayBalanceHistory.setWithdrawals(0.0f);

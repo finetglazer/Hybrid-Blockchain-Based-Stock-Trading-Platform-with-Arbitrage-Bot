@@ -8,6 +8,7 @@ public enum CommandType {
     USER_VERIFY_IDENTITY("Verify user identity"),
 
     // Account Service Commands
+    ACCOUNT_VALIDATE("Validate account status"), // Add this new command
     PAYMENT_METHOD_VALIDATE("Validate payment method"),
     ACCOUNT_CREATE_PENDING_TRANSACTION("Create pending transaction"),
     ACCOUNT_UPDATE_TRANSACTION_STATUS("Update transaction status"),

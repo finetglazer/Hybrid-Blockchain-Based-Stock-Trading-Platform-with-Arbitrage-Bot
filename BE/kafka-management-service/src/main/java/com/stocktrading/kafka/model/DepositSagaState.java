@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
@@ -29,7 +30,11 @@ import java.util.Map;
 @AllArgsConstructor
 @Document(collection = "deposit_sagas")
 public class DepositSagaState {
-    @Id
+    @Id  // This should map to MongoDB's _id field
+    private String id; // Rename from sagaId to id
+
+    // Add a separate field if you want to maintain sagaId semantics
+    @Indexed(unique = true)
     private String sagaId;
     
     // Business data
@@ -65,8 +70,11 @@ public class DepositSagaState {
     public static DepositSagaState initiate(String sagaId, String userId, String accountId, 
                                         BigDecimal amount, String currency, 
                                         String paymentMethodId, int maxRetries) {
+
+
         return DepositSagaState.builder()
-                .sagaId(sagaId)
+                .id(sagaId)       // Set the MongoDB _id field
+                .sagaId(sagaId)   // Set the business sagaId field
                 .userId(userId)
                 .accountId(accountId)
                 .amount(amount)
@@ -231,6 +239,11 @@ public class DepositSagaState {
             case USER_VERIFY_IDENTITY:
                 command.setPayloadValue("userId", userId);
                 command.setPayloadValue("verificationType", "BASIC");
+                break;
+
+            case ACCOUNT_VALIDATE: // Add this new case
+                command.setPayloadValue("accountId", accountId);
+                command.setPayloadValue("userId", userId);
                 break;
                 
             case PAYMENT_METHOD_VALIDATE:
