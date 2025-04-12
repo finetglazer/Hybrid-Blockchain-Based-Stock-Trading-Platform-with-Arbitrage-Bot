@@ -66,6 +66,40 @@ public enum DepositSagaStep {
                 return null;
         }
     }
+
+    /**
+     * Get next step in compensation flow
+     * This ensures compensation actions happen in reverse order
+     */
+    public DepositSagaStep getNextCompensationStep() {
+        switch (this) {
+            case REVERSE_BALANCE_UPDATE:
+                return REVERSE_PAYMENT;
+            case REVERSE_PAYMENT:
+                return MARK_TRANSACTION_FAILED;
+            case MARK_TRANSACTION_FAILED:
+                return COMPLETE_SAGA; // End of compensation
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Determine the first compensation step based on completed steps
+     */
+    public static DepositSagaStep determineFirstCompensationStep(boolean balanceUpdated,
+                                                                 boolean transactionUpdated,
+                                                                 boolean paymentProcessed) {
+        if (balanceUpdated) {
+            return REVERSE_BALANCE_UPDATE;
+        } else if (transactionUpdated) {
+            return REVERSE_PAYMENT;
+        } else if (paymentProcessed) {
+            return REVERSE_PAYMENT;
+        } else {
+            return MARK_TRANSACTION_FAILED;
+        }
+    }
     
     /**
      * Get step by step number

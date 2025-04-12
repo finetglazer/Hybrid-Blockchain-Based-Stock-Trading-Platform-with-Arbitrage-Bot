@@ -28,7 +28,11 @@ public enum EventType {
 
     // Compensation Event Responses
     PAYMENT_REVERSAL_COMPLETED("Payment reversal completed"),
-    BALANCE_REVERSAL_COMPLETED("Balance reversal completed");
+    PAYMENT_REVERSAL_FAILED("Payment reversal failed"),
+    BALANCE_REVERSAL_COMPLETED("Balance reversal completed"),
+    BALANCE_REVERSAL_FAILED("Balance reversal failed"),
+    TRANSACTION_MARKED_FAILED("Transaction marked as failed"),
+    TRANSACTION_MARK_FAILED_ERROR("Error marking transaction as failed");
 
     private final String description;
 
@@ -78,10 +82,16 @@ public enum EventType {
                 return CommandType.ACCOUNT_UPDATE_BALANCE;
 
             case PAYMENT_REVERSAL_COMPLETED:
+            case PAYMENT_REVERSAL_FAILED:
                 return CommandType.PAYMENT_REVERSE_DEPOSIT;
 
             case BALANCE_REVERSAL_COMPLETED:
+            case BALANCE_REVERSAL_FAILED:
                 return CommandType.ACCOUNT_REVERSE_BALANCE_UPDATE;
+
+            case TRANSACTION_MARKED_FAILED:
+            case TRANSACTION_MARK_FAILED_ERROR:
+                return CommandType.ACCOUNT_MARK_TRANSACTION_FAILED;
 
             default:
                 return null;

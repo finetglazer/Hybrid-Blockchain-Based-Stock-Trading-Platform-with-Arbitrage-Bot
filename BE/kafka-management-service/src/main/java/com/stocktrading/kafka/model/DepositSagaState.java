@@ -127,28 +127,31 @@ public class DepositSagaState {
         addEvent("STEP_FAILED", "Step " + stepName + " failed: " + reason);
         lastUpdatedTime = Instant.now();
     }
-    
+
     /**
-     * Start compensation process
+     * Start compensation process with proper reverse order
      */
     public void startCompensation() {
         status = SagaStatus.COMPENSATING;
         addEvent("COMPENSATION_STARTED", "Starting compensation process");
-        
-        // Determine the first compensation step based on completed steps
-        if (completedSteps.contains(DepositSagaStep.UPDATE_BALANCE.name())) {
-            currentStep = DepositSagaStep.REVERSE_BALANCE_UPDATE;
-        } else if (completedSteps.contains(DepositSagaStep.UPDATE_TRANSACTION_STATUS.name()) || 
-                   completedSteps.contains(DepositSagaStep.PROCESS_PAYMENT.name())) {
-            currentStep = DepositSagaStep.REVERSE_PAYMENT;
-        } else {
-            currentStep = DepositSagaStep.MARK_TRANSACTION_FAILED;
-        }
-        
+
+        // Check which steps have been completed to determine correct compensation chain
+        boolean balanceUpdated = completedSteps.contains(DepositSagaStep.UPDATE_BALANCE.name());
+        boolean transactionUpdated = completedSteps.contains(DepositSagaStep.UPDATE_TRANSACTION_STATUS.name());
+        boolean paymentProcessed = completedSteps.contains(DepositSagaStep.PROCESS_PAYMENT.name());
+
+        // Use the helper method to determine first compensation step
+        currentStep = DepositSagaStep.determineFirstCompensationStep(
+                balanceUpdated,
+                transactionUpdated,
+                paymentProcessed
+        );
+
         currentStepStartTime = Instant.now();
         lastUpdatedTime = Instant.now();
+
+        addEvent("COMPENSATION_STEP", "Starting compensation with step: " + currentStep.getDescription());
     }
-    
     /**
      * Complete compensation process
      */

@@ -183,21 +183,62 @@ public class DepositSagaService {
     /**
      * Process a successful event
      */
+    /**
+     * Process a successful event
+     */
     private void processSuccessEvent(DepositSagaState saga, EventMessage event) {
         log.info("Processing success event [{}] for saga [{}]", event.getType(), saga.getSagaId());
-        
+
         // Update saga with event data based on event type
         updateSagaWithEventData(saga, event);
-        
-        // Move to the next step
-        saga.moveToNextStep();
-        
+
+        // Check if this is a compensation event
+        if (saga.getStatus() == SagaStatus.COMPENSATING) {
+            // For compensation steps, we need to handle them differently
+            handleCompensationStepSuccess(saga);
+        } else {
+            // Normal flow - move to the next step
+            saga.moveToNextStep();
+        }
+
         // Save the updated saga
         depositSagaRepository.save(saga);
-        
-        // Process the next step if not completed
-        if (saga.getStatus() != SagaStatus.COMPLETED) {
+
+        // Process the next step if saga is still active
+        if (saga.getStatus() == SagaStatus.IN_PROGRESS ||
+                saga.getStatus() == SagaStatus.COMPENSATING) {
             processNextStep(saga);
+        }
+    }
+
+    /**
+     * Handle successful completion of a compensation step
+     */
+    private void handleCompensationStepSuccess(DepositSagaState saga) {
+        // Get the current compensation step
+        DepositSagaStep currentStep = saga.getCurrentStep();
+
+        // Add to completed steps
+        if (saga.getCompletedSteps() == null) {
+            saga.setCompletedSteps(new ArrayList<>());
+        }
+        saga.getCompletedSteps().add("COMP_" + currentStep.name());
+
+        // Get the next compensation step
+        DepositSagaStep nextStep = currentStep.getNextCompensationStep();
+
+        if (nextStep == DepositSagaStep.COMPLETE_SAGA) {
+            // All compensation steps completed
+            saga.completeCompensation();
+            log.info("Compensation process completed for saga [{}]", saga.getSagaId());
+        } else {
+            // More compensation steps to execute
+            saga.setCurrentStep(nextStep);
+            saga.setCurrentStepStartTime(Instant.now());
+            saga.setLastUpdatedTime(Instant.now());
+            saga.addEvent("COMPENSATION_STEP", "Moving to compensation step: " + nextStep.getDescription());
+            log.info("Moving to next compensation step [{}] for saga [{}]",
+                    nextStep.name(), saga.getSagaId());
         }
     }
     
@@ -331,12 +372,12 @@ public class DepositSagaService {
         try {
             EventType eventType = EventType.valueOf(event.getType());
             CommandType expectedCommandType = saga.getCurrentStep().getCommandType();
-            
+
             // For compensation steps, we need to check the command type directly
             return eventType.getAssociatedCommandType() == expectedCommandType &&
                    event.getStepId() != null &&
                    event.getStepId().equals(saga.getCurrentStep().getStepNumber());
-                   
+
         } catch (Exception e) {
             log.error("Error checking if event matches compensation step", e);
             return false;
