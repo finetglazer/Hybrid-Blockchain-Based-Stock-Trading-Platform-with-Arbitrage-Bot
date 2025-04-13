@@ -14,6 +14,8 @@ public class GetTransactionsRequest {
     private List<String> accountIds;
     private String startDate;
     private String endDate;
+    private String startTime;
+    private String endTime;
     private List<String> types;
     private List<String> statuses;
     private List<String> paymentMethodIds;

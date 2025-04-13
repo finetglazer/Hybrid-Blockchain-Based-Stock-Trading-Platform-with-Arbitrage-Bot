@@ -1,0 +1,118 @@
+.transaction-details-container {
+    width: 70vw;
+    min-height: 70vh;
+    margin-top: -100px;
+}
+
+.transaction-details-container:hover {
+    transform: translateY(0);
+}
+
+.transaction-details-container .summary-section .icon {
+    display: flex;
+    align-items: center;
+    img {
+        width: 15px;
+        height: 15px;
+    }
+    p {
+        margin: 2px 0 0 5px;
+        font-size: 0.8rem;
+    }
+}
+
+.transaction-details-container .summary-section .amount-and-status-wrapper {
+    display: flex;
+    align-items: center;
+    margin-top: -10px;
+    border-bottom: 1px solid white;
+    .amount {
+        font-weight: bold;
+        font-size: 1.7rem;
+        color: #ffb65e;
+    }
+    .currency {
+        font-size: 1.7rem;
+        margin-left: 10px;
+        color: #afacac;
+    }
+    .badge-wrapper {
+        border-radius: 25px;
+        margin: 10px 0 0 20px;
+        padding: 2px 15px;
+        background: rgba(102, 154, 102, 0.66);
+    }
+    .ant-badge {
+        > span {
+            color: white;
+            margin-top: -3px;
+        }
+    }
+}
+
+.transaction-details-container .summary-section .time-wrapper {
+    display: flex;
+    margin-top: 20px;
+    .label-info-pair:not(:last-of-type) {
+        border-right: 1px solid white;
+        padding-right: 140px;
+    }
+    .label-info-pair:not(:first-of-type) {
+        padding-left: 80px;
+    }
+    .label-info-pair {
+        .label {
+            font-size: 1.1rem;
+            color: #eaeaea;
+            text-align: left;
+        }
+        .description {
+            background: none;
+            border-radius: 0;
+            box-shadow: none;
+            font-size: 0.9rem;
+            color: #f35b0a;
+            text-align: left;
+        }
+    }
+}
+
+.transaction-details-container .transaction-details-section, .account-details-section, .payment-method-details-section {
+    margin-top: 100px;
+    text-align: left;
+    .title {
+        font-size: 1.4rem;
+        font-weight: bold;
+        border-bottom: 1px solid grey;
+        padding-bottom: 15px;
+    }
+    .properties-wrapper {
+        margin-top: 10px;
+        .property {
+            display: flex;
+            align-items: center;
+            margin-top: -5px;
+            .name {
+                width: 30%;
+                color: ghostwhite;
+            }
+            .value {
+                color: #ffb65e;
+            }
+            .ant-tag {
+                height: 25px;
+            }
+        }
+    }
+}
+
+.payment-method-details-section .property .ant-tag {
+    img {
+        width: 15px;
+        height: 15px;
+    }
+    span {
+        font-size: 0.9rem;
+        margin: 0 0 0 5px;
+    }
+}

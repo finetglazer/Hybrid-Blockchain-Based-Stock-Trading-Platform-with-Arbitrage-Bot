@@ -1,11 +1,11 @@
 .payment-method-management-container {
     width: 100vw;
-    height: 100vh;
+    margin-top: -150px;
     .breadcrumb {
         color: white;
     }
-    overflow: auto;
     padding-bottom: 20px;
+    min-height: 100vh;
 }
 
 .payment-method-management-container:hover {
@@ -35,6 +35,12 @@
 
 .pm-category-container {
     margin-bottom: 100px;
+}
+
+.body .add-payment-method-btn {
+    margin: 30px 0 0 80%;
+    padding: 10px 50px;
+    background: orange;
 }
 
 .pm-category-container .category-wrapper {

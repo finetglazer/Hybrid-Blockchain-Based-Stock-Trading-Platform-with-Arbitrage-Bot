@@ -1,28 +1,15 @@
-import { Alert, Breadcrumb } from "antd";
+import {Alert, Breadcrumb, notification} from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
+import {InfoOutlined, WarningOutlined} from '@ant-design/icons';
 import "./PaymentMethodsManagement.css";
+import AddPaymentMethod from "./forms/AddPaymentMethod.jsx";
+import VerifyPaymentMethod from "./forms/VerifyPaymentMethod.jsx";
+import UpdatePaymentMethod from "./forms/UpdatePaymentMethod.jsx";
 
 const PaymentMethodsManagement = () => {
-  // {
-  //     id: "67efe208e5ef12698df2070d",
-  //         nickname: "Hung's Updated Bank Account",
-  //     imageSrc: "../../../src/assets/atm-card.png",
-  //     status: "INACTIVE",
-  //     maskedNumber: "*****4321",
-  //     isDefault: true,
-  //     addedAt: "2025-04-04T13:43:36.182Z",
-  //     lastUsedAt: "2025-04-04T13:43:36.182Z",
-  //     metadata: {
-  //     accountHolderName: "HungSenahihi",
-  //         accountNumber: "987654321",
-  //         bankName: "MB",
-  //         routingNumber: "123456789",
-  //         verificationMethod: "MICRO_DEPOSITS",
-  //         verificationRequired: true,
-  //         verifiedAt: null,
-  // },
+  const [api, contextHolder] = notification.useNotification();
 
   const [bankAccounts, setBankAccounts] = useState([]);
   const [creditCards, setCreditCards] = useState([]);
@@ -30,6 +17,11 @@ const PaymentMethodsManagement = () => {
   const [digitalWallets, setDigitalWallets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [openAddForm, setOpenAddForm] = useState(false);
+  const [openVerifyForm, setOpenVerifyForm] = useState(false);
+  const [openUpdateForm, setOpenUpdateForm] = useState(false);
+  const [itemBeingVerified, setItemBeingVerified] = useState();
+  const [itemBeingUpdated, setItemBeingUpdated] = useState();
 
   const onClickCategorySummary = (
     className,
@@ -47,7 +39,8 @@ const PaymentMethodsManagement = () => {
     if (!categoryWrapper.classList.contains("details-show")) {
       const itemDetails = categoryWrapper.querySelector(".item-details");
       itemDetails.remove();
-    } else {
+    }
+    else {
       const container = document.createElement("div");
       container.classList.add("item-details");
       const root = ReactDOM.createRoot(container);
@@ -56,10 +49,16 @@ const PaymentMethodsManagement = () => {
           item={item}
           metadataClassNamePrefix={metadataClassNamePrefix}
           index={index}
+          onClickActivateBtn={onClickActivateBtn}
+          onClickDeactivateBtn={onClickDeactivateBtn}
+          onClickVerifyBtn={onClickVerifyBtn}
+          onClickUpdateBtn={onClickUpdateBtn}
+          onClickDeleteBtn={onClickDeleteBtn}
           onClickMetadata={onClickMetadata}
         />
       );
       categoryWrapper.appendChild(container);
+      console.log(container.innerHTML);
     }
   };
 
@@ -84,20 +83,15 @@ const PaymentMethodsManagement = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("render");
-
     const fetchPaymentMethods = async () => {
         const token = localStorage.getItem("token");
         try {
             const response = await axios.get("/accounts/payment-methods/api/v1/me/get", {
                 headers: {
                     "Authorization": `Bearer ${token}`,
-                    // "Content-Type": "application/json",
-                    "Accept": "application/json",
+                    "Content-Type": "application/json",
                 }
             });
-            console.log(response);
             setLoading(false);
             if (response.data && response.data.status === 1) {
                 const paymentMethods = response.data.data.items;
@@ -125,21 +119,206 @@ const PaymentMethodsManagement = () => {
                 setCreditCards(fetchedCreditCards);
                 setDebitCards(fetchedDebitCards);
                 setDigitalWallets(fetchedDigitalWallets);
+
+            } else {
+                setError(response.data);
+            }
+        } catch (e) {
+            setLoading(false);
+            setError(e);
+        }
+    }
+
+    const onClickAddBtn = () => {
+        setOpenAddForm(true);
+        const body = document.querySelector(".payment-method-management-container").querySelector(".body");
+        body.classList.add("blurred");
+    };
+
+    const onSuccessfullyAdd = () => {
+        setOpenAddForm(false);
+        const body = document.querySelector(".payment-method-management-container").querySelector(".body");
+        body.classList.remove("blurred");
+        setLoading(true);
+        fetchPaymentMethods().then(() => {});
+    };
+
+    const onCancelAdd = () => {
+        setOpenAddForm(false);
+        const body = document.querySelector(".payment-method-management-container").querySelector(".body");
+        body.classList.remove("blurred");
+    };
+
+    const onClickActivateBtn = async (item) => {
+        if (item.status === "VERIFICATION_PENDING") {
+            openNotification("Warning", "You need to verify your payment method first!", <WarningOutlined/>);
+            return;
+        }
+        setLoading(true);
+        const token = localStorage.getItem("token");
+        try {
+            const response = await axios.put(`/accounts/payment-methods/api/v1/${item.id}/update`, {
+                nickname: item.nickname,
+                setAsDefault: item.setAsDefault,
+                status: "ACTIVE",
+                metadata: {
+                    accountHolderName: item.accountHolderName,
+                }
+            }, {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                }
+            });
+            if (response.data && response.data.status === 1) {
+                setLoading(false);
+                fetchPaymentMethods().then(() => {});
+                openNotification("Success", "Your payment method activated successfully!", <InfoOutlined/>)
             }
             else {
-                setError(response.data);
+                setError(response.data.msg);
             }
         }
         catch (e) {
             setLoading(false);
-            setError(e);
+            setError(e.message);
         }
-      };
+    };
 
-    fetchPaymentMethods().then(() => {});
-  }, []);
+    const onClickDeactivateBtn = async (item) => {
+        if (item.status === "VERIFICATION_PENDING") {
+            openNotification("Warning", "You need to verify your payment method first!", <WarningOutlined/>);
+            return;
+        }
+        setLoading(true);
+        const token = localStorage.getItem("token");
+        try {
+            const response = await axios.put(`/accounts/payment-methods/api/v1/${item.id}/update`, {
+                nickname: item.nickname,
+                setAsDefault: item.setAsDefault,
+                status: "INACTIVE",
+                metadata: {
+                    accountHolderName: item.accountHolderName,
+                }
+            }, {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                }
+            });
+            if (response.data && response.data.status === 1) {
+                setLoading(false);
+                fetchPaymentMethods().then(() => {});
+                openNotification("Success", "Your payment method deactivated successfully!", <InfoOutlined/>)
+            }
+            else {
+                setError(response.data.msg);
+            }
+        }
+        catch (e) {
+            setLoading(false);
+            setError(e.message);
+        }
+    };
+
+    const onClickUpdateBtn = (item) => {
+        setOpenUpdateForm(true);
+        setItemBeingUpdated(item);
+        const body = document.querySelector(".payment-method-management-container").querySelector(".body");
+        body.classList.add("blurred");
+    };
+
+    const onCancelUpdate = () => {
+        setOpenUpdateForm(false);
+        const body = document.querySelector(".payment-method-management-container").querySelector(".body");
+        body.classList.remove("blurred");
+    }
+
+    const onSuccessfullyUpdate = () => {
+        setOpenUpdateForm(false);
+        openNotification("Success", "Your payment method updated successfully!", <InfoOutlined />);
+        const body = document.querySelector(".payment-method-management-container").querySelector(".body");
+        body.classList.remove("blurred");
+        setLoading(true);
+        fetchPaymentMethods().then(() => {});
+    };
+
+    const onClickVerifyBtn = (item) => {
+        setOpenVerifyForm(true);
+        setItemBeingVerified(item);
+        const body = document.querySelector(".payment-method-management-container").querySelector(".body");
+        body.classList.add("blurred");
+    };
+
+    const onCancelVerify = () => {
+        setOpenVerifyForm(false);
+        const body = document.querySelector(".payment-method-management-container").querySelector(".body");
+        body.classList.remove("blurred");
+    }
+
+    const onSuccessfullyVerify = () => {
+        setOpenVerifyForm(false);
+        openNotification("Success", "Your payment method verified successfully!", <InfoOutlined />);
+        const body = document.querySelector(".payment-method-management-container").querySelector(".body");
+        body.classList.remove("blurred");
+        setLoading(true);
+        fetchPaymentMethods().then(() => {});
+    };
+
+    const onClickDeleteBtn = async (item) => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await axios.delete(`/accounts/payment-methods/api/v1/${item.id}/delete`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                }
+            });
+            setLoading(false);
+            if (response.data && response.data.status === 1) {
+                setLoading(true);
+                fetchPaymentMethods().then(() => {});
+                openNotification("Success", "Payment method has been removed!", <InfoOutlined/>)
+            }
+            else {
+                setError(response.data.msg);
+            }
+        }
+        catch (e) {
+            setLoading(false);
+            setError(e.message);
+        }
+    };
+
+    const openNotification = (title, description, icon) => {
+        api.open({
+            message: title,
+            description: description,
+            icon: icon
+        })
+    };
+
+    useEffect(() => {
+        fetchPaymentMethods().then(() => {});
+    }, []);
 
   return (
+  <>
+      {openVerifyForm &&
+          <VerifyPaymentMethod
+              onSuccess={onSuccessfullyVerify}
+              onCancel={onCancelVerify}
+              item={itemBeingVerified}
+          />
+      }
+      {openUpdateForm &&
+           <UpdatePaymentMethod
+              onSuccess={onSuccessfullyUpdate}
+              onCancel={onCancelUpdate}
+              item={itemBeingUpdated}
+           />
+      }
+    {contextHolder}
     <div className="container payment-method-management-container">
       <Breadcrumb
         className="breadcrumb"
@@ -183,7 +362,15 @@ const PaymentMethodsManagement = () => {
           showIcon
         />
       )}
+      {openAddForm &&
+          <AddPaymentMethod
+              onSuccess={onSuccessfullyAdd}
+              onCancel={onCancelAdd}
+          />
+      }
+
       <div className="body">
+          <button className="add-payment-method-btn" onClick={onClickAddBtn}>Add</button>
         {loading && (
           <div className="loading-wrapper">
             <p>Fetching your payment methods </p>
@@ -196,36 +383,37 @@ const PaymentMethodsManagement = () => {
           !creditCards.length &&
           !debitCards.length &&
           !digitalWallets.length && <p>No payment methods found</p>}
-        {!loading && !error && bankAccounts.length && (
+        {!loading && !error && bankAccounts.length ? (
           <PaymentMethodCategory
             name="Bank accounts"
             items={bankAccounts}
             onClick={onClickCategorySummary}
           />
-        )}
-        {!loading && !error && creditCards.length && (
+        ) : null}
+        {(!loading && !error && creditCards.length) ? (
           <PaymentMethodCategory
             name="Credit cards"
             items={creditCards}
             onClick={onClickCategorySummary}
           />
-        )}
-        {!loading && !error && debitCards.length && (
+        ) : null}
+        {!loading && !error && debitCards.length ? (
           <PaymentMethodCategory
             name="Debit cards"
             items={debitCards}
             onClick={onClickCategorySummary}
           />
-        )}
-        {!loading && !error && digitalWallets.length && (
+        ) : null}
+        {!loading && !error && digitalWallets.length ? (
           <PaymentMethodCategory
             name="Digital wallets"
             items={digitalWallets}
             onClick={onClickCategorySummary}
           />
-        )}
+        ) : null}
       </div>
     </div>
+  </>
   );
 };
 
@@ -235,7 +423,7 @@ const PaymentMethodCategory = (props) => {
       <div className="pm-category-container">
         <p className="category-name">{props.name}</p>
         {props.items.map((item, index) => {
-          const t = props.name.toLowerCase().split("\\s+");
+          const t = props.name.toLowerCase().split(/\s+/);
           let prefix = "";
           t.map((str) => (prefix += str.charAt(0)));
           return (
@@ -300,6 +488,11 @@ const ItemDetails = ({
   item,
   metadataClassNamePrefix,
   index,
+  onClickActivateBtn,
+  onClickDeactivateBtn,
+  onClickVerifyBtn,
+  onClickUpdateBtn,
+  onClickDeleteBtn,
   onClickMetadata,
 }) => {
   return (
@@ -313,7 +506,7 @@ const ItemDetails = ({
           </div>
           <div className="property">
             <p className="label">Use as default</p>
-            <p className="description">{item.isDefault.toString()}</p>
+            <p className="description">{item.default.toString()}</p>
           </div>
           <div className="property">
             <p className="label">Added at</p>
@@ -350,25 +543,25 @@ const ItemDetails = ({
       <div className="crud-btns">
         <div className="btn btn-wrapper">
           <p className="description">Activate this payment method</p>
-          <button className="activate-btn">Activate</button>
+          <button className="activate-btn" onClick={() => onClickActivateBtn(item)}>Activate</button>
         </div>
         <div className="btn-wrapper">
           <p className="description">Deactivate this payment method</p>
-          <button className="deactivate-btn">Deactivate</button>
+          <button className="deactivate-btn" onClick={() => onClickDeactivateBtn(item)}>Deactivate</button>
         </div>
         <div className="btn-wrapper">
           <p className="description">Verify this payment method</p>
-          <button className="verify-btn">Verify</button>
+          <button className="verify-btn" onClick={() => onClickVerifyBtn(item)}>Verify</button>
         </div>
         <div className="btn-wrapper">
           <p className="description">
             Update information about this payment method
           </p>
-          <button className="update-btn">Update</button>
+          <button className="update-btn" onClick={() => onClickUpdateBtn(item)}>Update</button>
         </div>
         <div className="btn-wrapper">
           <p className="description warning-text">Remove this payment method</p>
-          <button className="delete-btn">Delete</button>
+          <button className="delete-btn" onClick={() => onClickDeleteBtn(item)}>Delete</button>
         </div>
       </div>
     </>

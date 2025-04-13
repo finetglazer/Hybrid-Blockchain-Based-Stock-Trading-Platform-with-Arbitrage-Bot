@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdatePaymentMethodRequest {
     private String nickname;
+    private String status;
     private boolean setAsDefault;
     private UpdatePaymentMethodMetadataRequest metadata;
 }
