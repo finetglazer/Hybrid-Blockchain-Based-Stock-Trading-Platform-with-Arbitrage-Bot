@@ -34,7 +34,7 @@ const CreateAccount = ({ numOfAccount, onSuccess }) => {
     setError("");
 
     try {
-      const response = await axios.post("/api/accounts/api/v1/create", {
+      const response = await axios.post("/accounts/api/v1/create", {
         currency,
         nickname,
       });

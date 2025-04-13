@@ -21,6 +21,8 @@ import TwoFactorAuthenticationSettings from "./pages/SettingPage/2FASettings/2FA
 import {AppContextProvider} from "./AppContextProvider.jsx";
 import ChangePassword from "./pages/SettingPage/ChangePassword/ChangePassword.jsx";
 import PaymentMethodsManagement from "./pages/PaymentMethod/PaymentMethodsManagement.jsx";
+import TransactionHistory from "./pages/TransactionHistory/TransactionHistory.jsx";
+import TransactionDetails from "./pages/TransactionDetails/TransactionDetails.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -44,6 +46,8 @@ const Layout = () => {
           <Route path="/setting/2fa-settings" element={<TwoFactorAuthenticationSettings />} />
           <Route path="/setting/change-password" element={<ChangePassword />} />
           <Route path="/account-dashboard/payment-methods" element={<PaymentMethodsManagement />} />
+          <Route path="/account-dashboard/transaction-history" element={<TransactionHistory />} />
+          <Route path="/account-dashboard/transaction-history/:transactionId/details" element={<TransactionDetails />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/two-factor-auth" element={<TwoFactorAuth />} /> {/* Add this route */}
           <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />

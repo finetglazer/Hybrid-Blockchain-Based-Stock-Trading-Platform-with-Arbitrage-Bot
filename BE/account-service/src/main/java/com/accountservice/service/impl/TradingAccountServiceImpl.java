@@ -12,7 +12,7 @@ import com.accountservice.repository.BalanceRepository;
 import com.accountservice.repository.PaymentMethodRepository;
 import com.accountservice.repository.TradingAccountRepository;
 import com.accountservice.service.TradingAccountService;
-import com.accountservice.service.TransactionService;
+import com.accountservice.service.TransactionHistoryService;
 import com.accountservice.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ public class TradingAccountServiceImpl implements TradingAccountService {
 
     private final MongoTemplate mongoTemplate;
 
-    private final TransactionService transactionService;
+    private final TransactionHistoryService transactionHistoryService;
 
     @Override
     public BaseResponse<?> createTradingAccount(String userId, CreateTradingAccountRequest createTradingAccountRequest) {
@@ -121,7 +121,7 @@ public class TradingAccountServiceImpl implements TradingAccountService {
             );
         }
 
-        Transaction lastTransaction = transactionService.getLastTransaction(accountId);
+        Transaction lastTransaction = transactionHistoryService.getLastTransaction(accountId);
 
         return new BaseResponse<>(
             Const.STATUS_RESPONSE.SUCCESS,
