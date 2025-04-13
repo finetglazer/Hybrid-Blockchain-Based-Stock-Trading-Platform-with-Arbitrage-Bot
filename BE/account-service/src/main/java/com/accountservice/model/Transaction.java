@@ -22,7 +22,7 @@ public class Transaction {
     private String status;
     private BigDecimal amount;
     private String currency;
-    private Float fee;
+    private BigDecimal fee;
     private String description;
     private Instant createdAt;
     private Instant updatedAt;

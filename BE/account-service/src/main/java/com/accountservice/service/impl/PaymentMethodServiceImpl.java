@@ -124,6 +124,13 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
                 verifyPaymentMethodResponse
             );
         }
+        /*
+        The logic code of this implement:
+        1. Check if the payment method exists
+        2. Check if the payment method is already verified
+        3. Check if the verification amounts are correct
+        4. If all checks pass, update the payment method status to verified and save it
+         */
 
         return new BaseResponse<>(
             Const.STATUS_RESPONSE.ERROR,

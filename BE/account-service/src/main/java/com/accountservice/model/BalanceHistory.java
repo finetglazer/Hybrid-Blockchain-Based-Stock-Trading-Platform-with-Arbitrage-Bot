@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -19,10 +20,10 @@ public class BalanceHistory {
     private Date date;
     private String accountId;
     private String userId;
-    private Float openingBalance;
-    private Float closingBalance;
-    private Float deposits;
-    private Float withdrawals;
-    private Float tradesNet;
-    private Float fees;
+    private BigDecimal openingBalance;
+    private BigDecimal closingBalance;
+    private BigDecimal deposits;
+    private BigDecimal withdrawals;
+    private BigDecimal tradesNet;
+    private BigDecimal fees;
 }

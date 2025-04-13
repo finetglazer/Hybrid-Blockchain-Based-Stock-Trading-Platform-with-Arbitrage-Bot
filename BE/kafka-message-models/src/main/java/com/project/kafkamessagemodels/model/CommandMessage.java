@@ -1,4 +1,4 @@
-package com.stocktrading.kafka.model;
+package com.project.kafkamessagemodels.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
