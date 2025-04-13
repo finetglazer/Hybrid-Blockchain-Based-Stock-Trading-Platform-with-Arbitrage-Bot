@@ -1,7 +1,7 @@
 package com.stocktrading.kafka.config;
 
-import com.stocktrading.kafka.model.CommandMessage;
-import com.stocktrading.kafka.model.EventMessage;
+import com.project.kafkamessagemodels.model.CommandMessage;
+import com.project.kafkamessagemodels.model.EventMessage;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -16,6 +16,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.util.backoff.ExponentialBackOff;
@@ -108,6 +109,8 @@ public class KafkaConfig {
         configProps.put(ProducerConfig.ACKS_CONFIG, "all");
         configProps.put(ProducerConfig.RETRIES_CONFIG, 3);
         configProps.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
+        // Add type information to headers - CRITICAL FIX
+        configProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, true);
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
@@ -123,13 +126,17 @@ public class KafkaConfig {
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        props.put(JsonDeserializer.TRUSTED_PACKAGES,
-                "com.stocktrading.kafka.model,com.project.userservice.model.kafka");
-        props.put(JsonDeserializer.TYPE_MAPPINGS,
-                "eventMessage:com.stocktrading.kafka.model.EventMessage");
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+        props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName());
+        // CRITICAL FIX: Set trusted packages with correct pattern
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+        // CRITICAL FIX: Use correct package for model class
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.project.kafkamessagemodels.model.EventMessage");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        // CRITICAL FIX: Add type info for deserialization
+        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, true);
+        props.put(JsonDeserializer.REMOVE_TYPE_INFO_HEADERS, false);
 
         return new DefaultKafkaConsumerFactory<>(props);
     }
@@ -159,11 +166,33 @@ public class KafkaConfig {
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        // CRITICAL FIX: Add type info headers
+        configProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, true);
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
     @Bean
     public KafkaTemplate<String, EventMessage> eventKafkaTemplate() {
         return new KafkaTemplate<>(eventProducerFactory());
+    }
+
+    // ADDED: Error handler bean
+    @Bean
+    public DefaultErrorHandler kafkaErrorHandler() {
+        DefaultErrorHandler handler = new DefaultErrorHandler(
+                (record, exception) -> {
+                    System.err.println("Error processing record: " + exception.getMessage());
+                    exception.printStackTrace();
+                },
+                new ExponentialBackOff(1000, 2) // Retry with exponential backoff
+        );
+
+        // Add non-retryable exceptions
+        handler.addNotRetryableExceptions(
+                org.apache.kafka.common.errors.SerializationException.class,
+                org.springframework.kafka.support.serializer.DeserializationException.class
+        );
+
+        return handler;
     }
 }

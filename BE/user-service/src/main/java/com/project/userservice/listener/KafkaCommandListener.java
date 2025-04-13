@@ -1,8 +1,9 @@
 package com.project.userservice.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.userservice.model.kafka.CommandMessage;
+import com.project.kafkamessagemodels.model.CommandMessage;
 import com.project.userservice.service.kafka.KafkaCommandHandlerService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,20 +20,15 @@ public class KafkaCommandListener {
     private final ObjectMapper objectMapper;
 
     @KafkaListener(
+            id = "userCommandsListener",
             topics = "${kafka.topics.user-commands:user.commands.verify}",
             containerFactory = "kafkaListenerContainerFactory"
     )
-    public void consumeUserCommands(@Payload String commandJson, Acknowledgment ack) {
+    public void consumeUserCommands(@Payload CommandMessage command, Acknowledgment ack) {
         try {
-            log.debug("Received command JSON: {}", commandJson);
-
-            // Convert the JSON string to CommandMessage using ObjectMapper
-            // The objectMapper is already configured to handle unknown properties
-            CommandMessage command = objectMapper.readValue(commandJson, CommandMessage.class);
-
             log.info("Processing command type: {} for saga: {}", command.getType(), command.getSagaId());
 
-            // Route to appropriate handler based on command type
+            // Handle command based on type
             if ("USER_VERIFY_IDENTITY".equals(command.getType())) {
                 commandHandlerService.handleVerifyIdentityCommand(command);
                 log.info("Successfully processed USER_VERIFY_IDENTITY command");
@@ -45,9 +41,8 @@ public class KafkaCommandListener {
 
         } catch (Exception e) {
             log.error("Error processing command: {}", e.getMessage(), e);
-            // We'll acknowledge anyway to prevent infinite retries
-            // In a production environment, you might want a more sophisticated error handling strategy
-            ack.acknowledge();
+            // For business logic errors, don't acknowledge
+            throw new RuntimeException("Command processing failed", e);
         }
     }
 }

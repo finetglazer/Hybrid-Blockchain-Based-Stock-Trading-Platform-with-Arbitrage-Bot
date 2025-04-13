@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Data
@@ -19,9 +20,9 @@ public class Transaction {
     private String accountId;
     private String type;
     private String status;
-    private Float amount;
+    private BigDecimal amount;
     private String currency;
-    private Float fee;
+    private BigDecimal fee;
     private String description;
     private Instant createdAt;
     private Instant updatedAt;

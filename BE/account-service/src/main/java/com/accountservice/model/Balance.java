@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Data
@@ -17,9 +18,19 @@ public class Balance {
     private String id;
 
     private String accountId;
-    private Float total;
+    private BigDecimal total;
     private String currency;
-    private Float available;
-    private Float reserved;
+    private BigDecimal available;
+    private BigDecimal reserved;
     private Instant updatedAt;
+
+    public void calculateTotal() {
+        if (available == null) {
+            available = BigDecimal.ZERO;
+        }
+        if (reserved == null) {
+            reserved = BigDecimal.ZERO;
+        }
+        total = available.add(reserved);
+    }
 }

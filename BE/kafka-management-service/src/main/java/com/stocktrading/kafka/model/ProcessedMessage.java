@@ -11,9 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.Instant;
 import java.util.Map;
 
-/**
- * Represents a message that has been processed to ensure idempotency
- */
 @Data
 @Builder
 @NoArgsConstructor
@@ -21,23 +18,24 @@ import java.util.Map;
 @Document(collection = "processed_messages")
 public class ProcessedMessage {
     @Id
-    private String messageId;
-    
+    private String id; // This will be stored as MongoDB's _id field
+
+    @Indexed
+    private String messageId; // Separate field for messageId
+
     @Indexed
     private String sagaId;
-    
+
     private Integer stepId;
     private String messageType;
     private Instant processedAt;
     private Map<String, Object> result;
-    
-    /**
-     * Create a processed message record
-     */
-    public static ProcessedMessage create(String messageId, String sagaId, Integer stepId, 
-                                     String messageType, Map<String, Object> result) {
+
+    public static ProcessedMessage create(String messageId, String sagaId, Integer stepId,
+                                          String messageType, Map<String, Object> result) {
         return ProcessedMessage.builder()
-                .messageId(messageId)
+                .id(messageId) // Use messageId as the MongoDB _id
+                .messageId(messageId) // Also set a separate messageId field
                 .sagaId(sagaId)
                 .stepId(stepId)
                 .messageType(messageType)

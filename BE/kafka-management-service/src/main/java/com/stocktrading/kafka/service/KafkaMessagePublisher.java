@@ -1,7 +1,8 @@
 package com.stocktrading.kafka.service;
 
-import com.stocktrading.kafka.model.CommandMessage;
-import com.stocktrading.kafka.model.EventMessage;
+
+import com.project.kafkamessagemodels.model.CommandMessage;
+import com.project.kafkamessagemodels.model.EventMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;

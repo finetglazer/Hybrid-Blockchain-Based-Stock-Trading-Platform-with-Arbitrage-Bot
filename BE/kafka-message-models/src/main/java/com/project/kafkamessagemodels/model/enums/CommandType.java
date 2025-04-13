@@ -1,4 +1,4 @@
-package com.stocktrading.kafka.model.enums;
+package com.project.kafkamessagemodels.model.enums;
 
 /**
  * Enum defining all command types used in the system
@@ -8,6 +8,7 @@ public enum CommandType {
     USER_VERIFY_IDENTITY("Verify user identity"),
 
     // Account Service Commands
+    ACCOUNT_VALIDATE("Validate account status"), // Add this new command
     PAYMENT_METHOD_VALIDATE("Validate payment method"),
     ACCOUNT_CREATE_PENDING_TRANSACTION("Create pending transaction"),
     ACCOUNT_UPDATE_TRANSACTION_STATUS("Update transaction status"),
@@ -38,7 +39,16 @@ public enum CommandType {
     /**
      * Get the target service for a command type
      */
+    /**
+     * Get the target service for a command type
+     */
     public String getTargetService() {
+        // Special case for payment method validation which belongs to account service
+        if (this == PAYMENT_METHOD_VALIDATE) {
+            return "ACCOUNT_SERVICE";
+        }
+
+        // Otherwise use the prefix rule
         if (this.name().startsWith("USER_")) {
             return "USER_SERVICE";
         } else if (this.name().startsWith("PAYMENT_")) {
