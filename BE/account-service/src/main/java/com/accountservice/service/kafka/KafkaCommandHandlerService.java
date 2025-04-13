@@ -422,6 +422,10 @@ public class KafkaCommandHandlerService {
             // Find or create balance
             Balance balance = getOrCreateBalance(account);
 
+            // Store original balance values
+            BigDecimal originalAvailable = balance.getAvailable();
+            BigDecimal originalTotal = balance.getTotal();
+
             // Update balance
             BigDecimal newAvailable = balance.getAvailable().add(amount);
             BigDecimal newTotal = balance.getTotal().add(amount);
@@ -444,6 +448,10 @@ public class KafkaCommandHandlerService {
             event.setPayloadValue("newTotalBalance", newTotal);
             event.setPayloadValue("updateType", "DEPOSIT");
             event.setPayloadValue("updatedAt", balance.getUpdatedAt().toString());
+            // Saving original balance values for rollback if needed
+            event.setPayloadValue("originalAvailableBalance", originalAvailable);
+            event.setPayloadValue("originalTotalBalance", originalTotal);
+            event.setPayloadValue("updateAmount", amount);
 
         } catch (Exception e) {
             log.error("Error updating balance", e);
@@ -629,35 +637,83 @@ public class KafkaCommandHandlerService {
                 return;
             }
 
-            // Reverse the balance update (subtract the amount since it was a deposit)
-            BigDecimal newAvailable = balance.getAvailable().subtract(amount);
-            BigDecimal newTotal = balance.getTotal().subtract(amount);
+            // Get expected values from the original operation
+            BigDecimal originalAmount = command.getPayloadValue("amount");
+            BigDecimal expectedAvailable = null;
 
-            balance.setAvailable(newAvailable);
-            balance.setTotal(newTotal);
-            balance.setUpdatedAt(Instant.now());
+            // Get the original event data if possible from the saga
+            if (command.getMetadataValue("originalEventAvailable") != null) {
+                expectedAvailable = new BigDecimal(command.getMetadataValue("originalEventAvailable"));
+            }
 
-            log.debug("Reversing balance update: available={}, total={}", newAvailable, newTotal);
+            // Check if compensation is actually needed
+            boolean needsCompensation = true;
 
-            // Save the updated balance
-            balanceRepository.save(balance);
+            // If we have the data to verify, check if the update was actually completed
+            if (expectedAvailable != null) {
+                // If current balance doesn't match what we'd expect after the update,
+                // the original operation likely didn't complete
+                if (Math.abs(balance.getAvailable().subtract(expectedAvailable).doubleValue()) > 0.001) {
+                    log.info("Skipping compensation as balance update likely didn't complete (current: {}, expected: {})",
+                            balance.getAvailable(), expectedAvailable);
+                    needsCompensation = false;
+                }
+            }
 
-            // Create a reversal transaction record
             Transaction reversalTransaction = new Transaction();
-            reversalTransaction.setId(UUID.randomUUID().toString());
-            reversalTransaction.setAccountId(accountId);
-            reversalTransaction.setType("DEPOSIT_REVERSAL");
-            reversalTransaction.setStatus("COMPLETED");
-            reversalTransaction.setAmount(amount.negate()); // Negative amount
-            reversalTransaction.setCurrency(balance.getCurrency());
-            reversalTransaction.setFee(BigDecimal.ZERO);
-            reversalTransaction.setDescription("Reversal of deposit due to: " + reason);
-            reversalTransaction.setCreatedAt(Instant.now());
-            reversalTransaction.setUpdatedAt(Instant.now());
-            reversalTransaction.setCompletedAt(Instant.now());
-            reversalTransaction.setExternalReferenceId("REV-" + transactionId);
 
-            transactionRepository.save(reversalTransaction);
+            // Initialize balance variables regardless of compensation path
+            BigDecimal newAvailable = balance.getAvailable();
+            BigDecimal newTotal = balance.getTotal();
+
+            if (needsCompensation) {
+                // Reverse the balance update (subtract the amount since it was a deposit)
+                newAvailable = balance.getAvailable().subtract(amount);
+                newTotal = balance.getTotal().subtract(amount);
+
+                balance.setAvailable(newAvailable);
+                balance.setTotal(newTotal);
+                balance.setUpdatedAt(Instant.now());
+
+                log.debug("Reversing balance update: available={}, total={}", newAvailable, newTotal);
+
+                // Save the updated balance
+                balanceRepository.save(balance);
+
+                // Create a reversal transaction record
+
+                reversalTransaction.setId(UUID.randomUUID().toString());
+                reversalTransaction.setAccountId(accountId);
+                reversalTransaction.setType("DEPOSIT_REVERSAL");
+                reversalTransaction.setStatus("COMPLETED");
+                reversalTransaction.setAmount(amount.negate()); // Negative amount
+                reversalTransaction.setCurrency(balance.getCurrency());
+                reversalTransaction.setFee(BigDecimal.ZERO);
+                reversalTransaction.setDescription("Reversal of deposit due to: " + reason);
+                reversalTransaction.setCreatedAt(Instant.now());
+                reversalTransaction.setUpdatedAt(Instant.now());
+                reversalTransaction.setCompletedAt(Instant.now());
+                reversalTransaction.setExternalReferenceId("REV-" + transactionId);
+
+                transactionRepository.save(reversalTransaction);
+            } else {
+                // If no compensation is needed, just log it
+                reversalTransaction.setId(UUID.randomUUID().toString());
+                reversalTransaction.setAccountId(accountId);
+                reversalTransaction.setType("DEPOSIT_REVERSAL_SKIPPED");
+                reversalTransaction.setStatus("COMPLETED");
+                reversalTransaction.setAmount(BigDecimal.ZERO); // No actual change
+                reversalTransaction.setCurrency(balance.getCurrency());
+                reversalTransaction.setFee(BigDecimal.ZERO);
+                reversalTransaction.setDescription("Reversal skipped as original update did not complete");
+                reversalTransaction.setCreatedAt(Instant.now());
+                reversalTransaction.setUpdatedAt(Instant.now());
+                reversalTransaction.setCompletedAt(Instant.now());
+                reversalTransaction.setExternalReferenceId("REV-" + transactionId);
+
+                transactionRepository.save(reversalTransaction);
+            }
+
 
             // Set success response
             event.setType("BALANCE_REVERSAL_COMPLETED");
