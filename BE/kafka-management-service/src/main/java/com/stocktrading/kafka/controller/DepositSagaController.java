@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("sagas/api/v1")
 @RequiredArgsConstructor
-public class SagaController {
+public class DepositSagaController {
     
     private final DepositSagaService depositSagaService;
     
