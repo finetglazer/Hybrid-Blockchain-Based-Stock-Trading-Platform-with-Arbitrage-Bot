@@ -30,10 +30,10 @@ public class OrderBuySagaService {
     private final KafkaMessagePublisher messagePublisher;
     private final IdempotencyService idempotencyService;
 
-    @Value("${saga.order.retry.max-attempts}")
+    @Value("${saga.deposit.retry.max-attempts}")
     private int maxRetries;
 
-    @Value("${saga.order.timeout.default}")
+    @Value("${saga.timeout.default}")
     private long defaultTimeout;
 
     /**

@@ -12,6 +12,7 @@
         <option value="$PROJECT_DIR$/BE/kafka-management-service/pom.xml" />
         <option value="$PROJECT_DIR$/kafka-message-models/pom.xml" />
         <option value="$PROJECT_DIR$/BE/kafka-message-models/pom.xml" />
+        <option value="$PROJECT_DIR$/BE/order-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

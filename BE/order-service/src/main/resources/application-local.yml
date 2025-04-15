@@ -1,0 +1,49 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /order-service
+
+spring:
+  application:
+    name: order-service
+
+  # MongoDB Configuration
+  data:
+    mongodb:
+      uri: mongodb+srv://admin:hw445Rl1pEAXqhti@cluster-1.rylgk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-1
+      database: OrderServiceDB
+
+
+  # Kafka Configuration
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: order-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+      enable-auto-commit: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+
+# Kafka Topics
+kafka:
+  topics:
+    order-commands: order.commands
+    order-events: order.events.orders
+    broker-commands: broker.commands
+    broker-events: broker.events
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.project.orderservice: DEBUG
+    org.springframework.data.mongodb: INFO
+    org.springframework.kafka: INFO
+
