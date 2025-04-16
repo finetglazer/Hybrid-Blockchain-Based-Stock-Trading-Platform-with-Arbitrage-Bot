@@ -3,6 +3,7 @@ package com.stocktrading.kafka.listener;
 import com.project.kafkamessagemodels.model.EventMessage;
 import com.stocktrading.kafka.service.DepositSagaService;
 import com.stocktrading.kafka.service.IdempotencyService;
+import com.stocktrading.kafka.service.OrderBuySagaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 public class KafkaEventListener {
 
     private final DepositSagaService depositSagaService;
+    private final OrderBuySagaService orderBuySagaService;
     private final IdempotencyService idempotencyService;
 
     /**
@@ -137,6 +139,31 @@ public class KafkaEventListener {
             log.error("Error processing DLQ message: {}", e.getMessage(), e);
             // Still acknowledge to prevent infinite loop in DLQ processing
             ack.acknowledge();
+        }
+    }
+
+    /**
+     * Listen for order service events
+     */
+    @KafkaListener(
+            topics = "${kafka.topics.order-events}",
+            containerFactory = "eventKafkaListenerContainerFactory"
+    )
+    public void consumeOrderEvents(@Payload EventMessage event, Acknowledgment ack) {
+        try {
+            log.debug("Received order event: {}", event.getType());
+
+            // Handle the event - this line calls the OrderBuySagaService
+            orderBuySagaService.handleEventMessage(event);
+
+            // Acknowledge the message
+            ack.acknowledge();
+            log.debug("Successfully processed and acknowledged order event: {}", event.getType());
+
+        } catch (Exception e) {
+            log.error("Error processing order event: {} for saga: {}", event.getType(), event.getSagaId(), e);
+            // Don't ack, will be retried or sent to DLQ by error handler
+            throw new RuntimeException("Error processing order event", e);
         }
     }
 

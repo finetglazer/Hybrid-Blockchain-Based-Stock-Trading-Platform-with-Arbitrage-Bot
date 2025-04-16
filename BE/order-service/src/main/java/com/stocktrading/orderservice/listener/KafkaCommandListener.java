@@ -1,6 +1,7 @@
 package com.stocktrading.orderservice.listener;
 
 import com.project.kafkamessagemodels.model.CommandMessage;
+import com.stocktrading.orderservice.service.KafkaCommandHandlerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -8,16 +9,12 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-/**
- * Kafka listener for handling order commands
- * This is a placeholder - you'll implement the actual command handling later
- */
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class KafkaCommandListener {
 
-    // TODO: Add KafkaCommandHandlerService later
+    private final KafkaCommandHandlerService commandHandlerService;
 
     @KafkaListener(
             topics = "${kafka.topics.order-commands}",
@@ -25,19 +22,27 @@ public class KafkaCommandListener {
     )
     public void consumeOrderCommands(@Payload CommandMessage command, Acknowledgment ack) {
         try {
-            log.info("Received order command: {}", command.getType());
+            log.info("Processing command type: {} for saga: {}", command.getType(), command.getSagaId());
 
-            // For now, just log the command and acknowledge it
-            // You'll implement actual command handling later
-            log.info("Command details: sagaId={}, type={}, isCompensation={}",
-                    command.getSagaId(), command.getType(), command.getIsCompensation());
+            // Route to appropriate handler based on command type
+            switch (command.getType()) {
+                case "ORDER_CREATE":
+                    commandHandlerService.handleCreateOrder(command);
+                    break;
+                // Add cases for other commands as they are implemented
+                default:
+                    log.warn("Unknown command type: {}", command.getType());
+                    break;
+            }
 
+            // Acknowledge the message
             ack.acknowledge();
-            log.debug("Command acknowledged");
+            log.debug("Command acknowledged: {}", command.getType());
 
         } catch (Exception e) {
-            log.error("Error processing order command: {}", e.getMessage(), e);
+            log.error("Error processing command: {}", e.getMessage(), e);
             // Don't acknowledge - will be retried or sent to DLQ
+            throw new RuntimeException("Command processing failed", e);
         }
     }
 }
