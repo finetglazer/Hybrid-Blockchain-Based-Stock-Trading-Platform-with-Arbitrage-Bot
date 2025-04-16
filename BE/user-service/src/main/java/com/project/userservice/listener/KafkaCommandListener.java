@@ -17,31 +17,47 @@ import org.springframework.stereotype.Component;
 public class KafkaCommandListener {
 
     private final KafkaCommandHandlerService commandHandlerService;
-    private final ObjectMapper objectMapper;
 
     @KafkaListener(
-            id = "userCommandsListener",
-            topics = "${kafka.topics.user-commands:user.commands.verify}",
-            containerFactory = "kafkaListenerContainerFactory"
+            id = "userDepositCommandsListener",
+            topics = "${kafka.topics.user-commands.deposit}",
+            containerFactory = "depositCommandsListenerFactory"
     )
-    public void consumeUserCommands(@Payload CommandMessage command, Acknowledgment ack) {
+    public void consumeDepositCommands(@Payload CommandMessage command, Acknowledgment ack) {
         try {
-            log.info("Processing command type: {} for saga: {}", command.getType(), command.getSagaId());
+            log.info("Processing deposit command: {} for saga: {}", command.getType(), command.getSagaId());
 
-            // Handle command based on type
             if ("USER_VERIFY_IDENTITY".equals(command.getType())) {
                 commandHandlerService.handleVerifyIdentityCommand(command);
-                log.info("Successfully processed USER_VERIFY_IDENTITY command");
             } else {
-                log.warn("Unknown command type: {}", command.getType());
+                log.warn("Unknown deposit command type: {}", command.getType());
             }
 
-            // Acknowledge the message
             ack.acknowledge();
-
         } catch (Exception e) {
-            log.error("Error processing command: {}", e.getMessage(), e);
-            // For business logic errors, don't acknowledge
+            log.error("Error processing deposit command: {}", e.getMessage(), e);
+            throw new RuntimeException("Command processing failed", e);
+        }
+    }
+
+    @KafkaListener(
+            id = "userOrderCommandsListener",
+            topics = "${kafka.topics.user-commands.order-buy}",
+            containerFactory = "orderCommandsListenerFactory"
+    )
+    public void consumeOrderCommands(@Payload CommandMessage command, Acknowledgment ack) {
+        try {
+            log.info("Processing order command: {} for saga: {}", command.getType(), command.getSagaId());
+
+            if ("USER_VERIFY_TRADING_PERMISSIONS".equals(command.getType())) {
+                commandHandlerService.handleVerifyTradingPermissionCommand(command);
+            } else {
+                log.warn("Unknown order command type: {}", command.getType());
+            }
+
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("Error processing order command: {}", e.getMessage(), e);
             throw new RuntimeException("Command processing failed", e);
         }
     }

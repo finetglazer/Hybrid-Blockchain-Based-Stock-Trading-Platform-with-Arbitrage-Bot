@@ -455,22 +455,15 @@ public class OrderBuySagaService {
         String commandName = commandType.name();
 
         if (commandName.startsWith("USER_")) {
-            return "user.commands.orders";
-        } else if (commandName.startsWith("ACCOUNT_") ||
-                commandName.equals("COMP_RELEASE_FUNDS") ||
-                commandName.equals("COMP_REVERSE_SETTLEMENT")) {
-            return "account.commands.orders";
-        } else if (commandName.startsWith("ORDER_") ||
-                commandName.equals("COMP_CANCEL_ORDER")) {
-            return "order.commands";
+            return "user.commands.order-buy";
+        } else if (commandName.startsWith("ACCOUNT_")) {
+            return "account.commands.order-buy";
+        } else if (commandName.startsWith("ORDER_")) {
+            return "order.commands.order-buy";
         } else if (commandName.startsWith("MARKET_")) {
-            return "market.commands";
-        } else if (commandName.startsWith("PORTFOLIO_") ||
-                commandName.equals("COMP_REMOVE_POSITIONS")) {
-            return "portfolio.commands";
-        } else if (commandName.startsWith("BROKER_") ||
-                commandName.equals("COMP_CANCEL_BROKER_ORDER")) {
-            return "broker.commands";
+            return "market.commands.order-buy";
+        } else if (commandName.startsWith("BROKER_")) {
+            return "broker.commands.order-buy";
         }
 
         return "saga.dlq"; // Default fallback

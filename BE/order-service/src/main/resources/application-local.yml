@@ -34,8 +34,8 @@ spring:
 # Kafka Topics
 kafka:
   topics:
-    order-commands: order.commands
-    order-events: order.events.orders
+    order-commands: order.commands.order-buy
+    order-events: order.events.order-buy
     broker-commands: broker.commands
     broker-events: broker.events
 

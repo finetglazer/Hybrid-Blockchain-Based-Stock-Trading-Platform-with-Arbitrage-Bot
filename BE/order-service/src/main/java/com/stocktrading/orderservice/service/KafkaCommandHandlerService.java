@@ -5,7 +5,10 @@ import com.project.kafkamessagemodels.model.EventMessage;
 import com.stocktrading.orderservice.model.Order;
 import com.stocktrading.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +23,11 @@ public class KafkaCommandHandlerService {
 
     private final OrderRepository orderRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
-
+    
+    //value
+    @Value("${kafka.topics.order-events}")
+    private String orderEventsTopic;
+    
     /**
      * Handle ORDER_CREATE command
      */
@@ -43,53 +50,51 @@ public class KafkaCommandHandlerService {
         event.setSourceService("ORDER_SERVICE");
         event.setTimestamp(Instant.now());
 
-        handleOrderCreationFailure(event, "ORDER_CREATION_ERROR",
-                "Error creating order: ");
-//
-//        try {
-//            // Create new order
-//            Order order = Order.builder()
-//                    .id(UUID.randomUUID().toString())
-//                    .userId(userId)
-//                    .accountId(accountId)
-//                    .stockSymbol(stockSymbol)
-//                    .orderType(orderType)
-//                    .side(Order.OrderSide.BUY) // Assuming this is a buy order
-//                    .quantity(quantity)
-//                    .limitPrice(limitPrice)
-//                    .timeInForce(timeInForce != null ? timeInForce : "DAY")
-//                    .status(Order.OrderStatus.CREATED)
-//                    .createdAt(Instant.now())
-//                    .updatedAt(Instant.now())
-//                    .sagaId(command.getSagaId())
-//                    .build();
-//
-//            // Save the order
-//            Order savedOrder = orderRepository.save(order);
-//
-//            // Set success response
-//            event.setType("ORDER_CREATED");
-//            event.setSuccess(true);
-//            event.setPayloadValue("orderId", savedOrder.getId());
-//            event.setPayloadValue("status", savedOrder.getStatus().name());
-//            event.setPayloadValue("createdAt", savedOrder.getCreatedAt().toString());
-//
-//            log.info("Order created successfully with ID: {}", savedOrder.getId());
-//
-//        } catch (Exception e) {
-//            log.error("Error creating order", e);
-//            handleOrderCreationFailure(event, "ORDER_CREATION_ERROR",
-//                    "Error creating order: " + e.getMessage());
-//            return;
-//        }
-//
-//        // Send the response event
-//        try {
-//            kafkaTemplate.send("order.events", command.getSagaId(), event);
-//            log.info("Sent ORDER_CREATED response for saga: {}", command.getSagaId());
-//        } catch (Exception e) {
-//            log.error("Error sending event", e);
-//        }
+
+        try {
+            // Create new order
+            Order order = Order.builder()
+                    .id(UUID.randomUUID().toString())
+                    .userId(userId)
+                    .accountId(accountId)
+                    .stockSymbol(stockSymbol)
+                    .orderType(orderType)
+                    .side(Order.OrderSide.BUY) // Assuming this is a buy order
+                    .quantity(quantity)
+                    .limitPrice(limitPrice)
+                    .timeInForce(timeInForce != null ? timeInForce : "DAY")
+                    .status(Order.OrderStatus.CREATED)
+                    .createdAt(Instant.now())
+                    .updatedAt(Instant.now())
+                    .sagaId(command.getSagaId())
+                    .build();
+
+            // Save the order
+            Order savedOrder = orderRepository.save(order);
+
+            // Set success response
+            event.setType("ORDER_CREATED");
+            event.setSuccess(true);
+            event.setPayloadValue("orderId", savedOrder.getId());
+            event.setPayloadValue("status", savedOrder.getStatus().name());
+            event.setPayloadValue("createdAt", savedOrder.getCreatedAt().toString());
+
+            log.info("Order created successfully with ID: {}", savedOrder.getId());
+
+        } catch (Exception e) {
+            log.error("Error creating order", e);
+            handleOrderCreationFailure(event, "ORDER_CREATION_ERROR",
+                    "Error creating order: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send(orderEventsTopic, command.getSagaId(), event);
+            log.info("Sent ORDER_CREATED response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
     }
 
     /**
@@ -102,7 +107,7 @@ public class KafkaCommandHandlerService {
         event.setErrorMessage(errorMessage);
 
         try {
-            kafkaTemplate.send("order.events", event.getSagaId(), event);
+            kafkaTemplate.send(orderEventsTopic, event.getSagaId(), event);
             log.info("Sent ORDER_CREATION_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
