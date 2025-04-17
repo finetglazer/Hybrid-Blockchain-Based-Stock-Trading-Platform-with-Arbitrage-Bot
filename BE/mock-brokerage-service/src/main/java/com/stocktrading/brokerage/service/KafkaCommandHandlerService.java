@@ -64,77 +64,74 @@ public class KafkaCommandHandlerService {
         event.setSourceService("MOCK_BROKERAGE_SERVICE");
         event.setTimestamp(Instant.now());
 
-        handleOrderExecutionFailure(event, "EXECUTION_ERROR",
-                "Failed to execute order: market conditions not met");
+        try {
+            // Simulate processing delay (100-500ms)
+            simulateProcessingDelay();
 
-//        try {
-//            // Simulate processing delay (100-500ms)
-//            simulateProcessingDelay();
-//
-//            // Determine if order execution should succeed based on configured success rate
-//            boolean orderExecutionSucceeds = random.nextInt(100) < orderExecutionSuccessRate;
-//
-//            if (orderExecutionSucceeds) {
-//                // Generate execution details for success case
-//                String brokerOrderId = "MBS-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-//
-//                // Determine execution price using the mock order book
-//                BigDecimal executionPrice;
-//                if ("MARKET".equals(orderType)) {
-//                    // For market orders, use the current market price
-//                    executionPrice = mockOrderBook.getCurrentPrice(stockSymbol);
-//                } else if ("LIMIT".equals(orderType) && limitPrice != null) {
-//                    // For limit orders, check if limit price meets market conditions
-//                    BigDecimal marketPrice = mockOrderBook.getCurrentPrice(stockSymbol);
-//
-//                    // For buy orders, limit price must be >= market ask price
-//                    if (limitPrice.compareTo(mockOrderBook.getAskPrice(stockSymbol)) >= 0) {
-//                        // Use a price between market price and limit price
-//                        executionPrice = marketPrice;
-//                    } else {
-//                        // Cannot execute since limit price is too low
-//                        handleOrderExecutionFailure(event, "LIMIT_PRICE_TOO_LOW",
-//                                "Cannot execute buy order: limit price " + limitPrice +
-//                                        " is below market ask price " + mockOrderBook.getAskPrice(stockSymbol));
-//                        return;
-//                    }
-//                } else {
-//                    // Default fallback for other order types
-//                    executionPrice = mockOrderBook.getCurrentPrice(stockSymbol);
-//                }
-//
-//                // Sometimes execute partial fills (10% chance if quantity > 10)
-//                Integer executedQuantity = quantity;
-//                if (quantity > 10 && random.nextInt(100) < 10) {
-//                    executedQuantity = quantity - random.nextInt(quantity / 2);
-//                }
-//
-//                // Set success response
-//                event.setType("ORDER_EXECUTED_BY_BROKER");
-//                event.setSuccess(true);
-//                event.setPayloadValue("orderId", orderId);
-//                event.setPayloadValue("brokerOrderId", brokerOrderId);
-//                event.setPayloadValue("stockSymbol", stockSymbol);
-//                event.setPayloadValue("executionPrice", executionPrice);
-//                event.setPayloadValue("executedQuantity", executedQuantity);
-//                event.setPayloadValue("executedAt", Instant.now().toString());
-//                event.setPayloadValue("status", "FILLED");
-//
-//                log.info("Order executed successfully: {} for {} shares of {} at ${}",
-//                        brokerOrderId, executedQuantity, stockSymbol, executionPrice);
-//            } else {
-//                // Handle order execution failure
-//                handleOrderExecutionFailure(event, "EXECUTION_ERROR",
-//                        "Failed to execute order: market conditions not met");
-//                return;
-//            }
-//
-//        } catch (Exception e) {
-//            log.error("Error executing order", e);
-//            handleOrderExecutionFailure(event, "BROKER_SYSTEM_ERROR",
-//                    "System error while executing order: " + e.getMessage());
-//            return;
-//        }
+            // Determine if order execution should succeed based on configured success rate
+            boolean orderExecutionSucceeds = random.nextInt(100) < orderExecutionSuccessRate;
+
+            if (orderExecutionSucceeds) {
+                // Generate execution details for success case
+                String brokerOrderId = "MBS-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+
+                // Determine execution price using the mock order book
+                BigDecimal executionPrice;
+                if ("MARKET".equals(orderType)) {
+                    // For market orders, use the current market price
+                    executionPrice = mockOrderBook.getCurrentPrice(stockSymbol);
+                } else if ("LIMIT".equals(orderType) && limitPrice != null) {
+                    // For limit orders, check if limit price meets market conditions
+                    BigDecimal marketPrice = mockOrderBook.getCurrentPrice(stockSymbol);
+
+                    // For buy orders, limit price must be >= market ask price
+                    if (limitPrice.compareTo(mockOrderBook.getAskPrice(stockSymbol)) >= 0) {
+                        // Use a price between market price and limit price
+                        executionPrice = marketPrice;
+                    } else {
+                        // Cannot execute since limit price is too low
+                        handleOrderExecutionFailure(event, "LIMIT_PRICE_TOO_LOW",
+                                "Cannot execute buy order: limit price " + limitPrice +
+                                        " is below market ask price " + mockOrderBook.getAskPrice(stockSymbol));
+                        return;
+                    }
+                } else {
+                    // Default fallback for other order types
+                    executionPrice = mockOrderBook.getCurrentPrice(stockSymbol);
+                }
+
+                // Sometimes execute partial fills (10% chance if quantity > 10)
+                Integer executedQuantity = quantity;
+                if (quantity > 10 && random.nextInt(100) < 10) {
+                    executedQuantity = quantity - random.nextInt(quantity / 2);
+                }
+
+                // Set success response
+                event.setType("ORDER_EXECUTED_BY_BROKER");
+                event.setSuccess(true);
+                event.setPayloadValue("orderId", orderId);
+                event.setPayloadValue("brokerOrderId", brokerOrderId);
+                event.setPayloadValue("stockSymbol", stockSymbol);
+                event.setPayloadValue("executionPrice", executionPrice);
+                event.setPayloadValue("executedQuantity", executedQuantity);
+                event.setPayloadValue("executedAt", Instant.now().toString());
+                event.setPayloadValue("status", "FILLED");
+
+                log.info("Order executed successfully: {} for {} shares of {} at ${}",
+                        brokerOrderId, executedQuantity, stockSymbol, executionPrice);
+            } else {
+                // Handle order execution failure
+                handleOrderExecutionFailure(event, "EXECUTION_ERROR",
+                        "Failed to execute order: market conditions not met");
+                return;
+            }
+
+        } catch (Exception e) {
+            log.error("Error executing order", e);
+            handleOrderExecutionFailure(event, "BROKER_SYSTEM_ERROR",
+                    "System error while executing order: " + e.getMessage());
+            return;
+        }
 
         // Send the response event
         publishEvent(event);
