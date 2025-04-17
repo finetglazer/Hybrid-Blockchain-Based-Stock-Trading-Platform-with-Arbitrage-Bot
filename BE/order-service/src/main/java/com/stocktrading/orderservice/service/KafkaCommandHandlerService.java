@@ -225,4 +225,192 @@ public class KafkaCommandHandlerService {
             throw new IllegalArgumentException("Amount is not a valid number: " + amountObj);
         }
     }
+
+    /**
+     * Handle ORDER_UPDATE_EXECUTED command
+     */
+    public void handleUpdateOrderExecuted(CommandMessage command) {
+        log.info("Handling ORDER_UPDATE_EXECUTED command for saga: {}", command.getSagaId());
+
+        String orderId = command.getPayloadValue("orderId");
+        BigDecimal executionPrice = convertToBigDecimal(command.getPayloadValue("executionPrice"));
+        Integer executedQuantity = command.getPayloadValue("executedQuantity");
+        String brokerOrderId = command.getPayloadValue("brokerOrderId");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ORDER_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        handleOrderExecutionUpdateFailure(event, "ORDER_EXECUTION_UPDATE_ERROR",
+                "Error updating order execution: " );
+
+//        try {
+//            // Find order
+//            Optional<Order> orderOpt = orderRepository.findById(orderId);
+//            if (orderOpt.isEmpty()) {
+//                handleOrderExecutionUpdateFailure(event, "ORDER_NOT_FOUND",
+//                        "Order not found with ID: " + orderId);
+//                return;
+//            }
+//
+//            Order order = orderOpt.get();
+//
+//            // Verify order can be updated (state check)
+//            if (order.getStatus() != Order.OrderStatus.VALIDATED &&
+//                    order.getStatus() != Order.OrderStatus.EXECUTING) {
+//                handleOrderExecutionUpdateFailure(event, "INVALID_ORDER_STATE",
+//                        "Order is not in a valid state for execution update: " + order.getStatus());
+//                return;
+//            }
+//
+//            // Update order
+//            order.setStatus(Order.OrderStatus.FILLED);
+//            order.setExecutionPrice(executionPrice);
+//            order.setExecutedQuantity(executedQuantity);
+//            order.setBrokerOrderId(brokerOrderId);
+//            order.setExecutedAt(Instant.now());
+//            order.setUpdatedAt(Instant.now());
+//
+//            // Save updated order
+//            Order updatedOrder = orderRepository.save(order);
+//
+//            // Set success response
+//            event.setType("ORDER_EXECUTED");
+//            event.setSuccess(true);
+//            event.setPayloadValue("orderId", updatedOrder.getId());
+//            event.setPayloadValue("status", updatedOrder.getStatus().name());
+//            event.setPayloadValue("executionPrice", updatedOrder.getExecutionPrice());
+//            event.setPayloadValue("executedQuantity", updatedOrder.getExecutedQuantity());
+//            event.setPayloadValue("brokerOrderId", updatedOrder.getBrokerOrderId());
+//            event.setPayloadValue("executedAt", updatedOrder.getExecutedAt().toString());
+//
+//            log.info("Order execution updated successfully with ID: {}", updatedOrder.getId());
+//
+//        } catch (Exception e) {
+//            log.error("Error updating order execution", e);
+//            handleOrderExecutionUpdateFailure(event, "ORDER_EXECUTION_UPDATE_ERROR",
+//                    "Error updating order execution: " + e.getMessage());
+//            return;
+//        }
+//
+//        // Send the response event
+//        try {
+//            kafkaTemplate.send(orderEventsTopic, command.getSagaId(), event);
+//            log.info("Sent ORDER_EXECUTED response for saga: {}", command.getSagaId());
+//        } catch (Exception e) {
+//            log.error("Error sending event", e);
+//        }
+    }
+
+    /**
+     * Helper method to handle order execution update failures
+     */
+    private void handleOrderExecutionUpdateFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("ORDER_EXECUTION_UPDATE_FAILED");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        try {
+            kafkaTemplate.send(orderEventsTopic, event.getSagaId(), event);
+            log.info("Sent ORDER_EXECUTION_UPDATE_FAILED response for saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Handle ORDER_CANCEL command
+     */
+    public void handleCancelOrder(CommandMessage command) {
+        log.info("Handling ORDER_CANCEL command for saga: {}", command.getSagaId());
+
+        String orderId = command.getPayloadValue("orderId");
+        String reason = command.getPayloadValue("reason");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ORDER_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find order
+            Optional<Order> orderOpt = orderRepository.findById(orderId);
+            if (orderOpt.isEmpty()) {
+                // If order doesn't exist, still return success for saga continuation
+                log.warn("Order not found with ID: {} during cancellation", orderId);
+                event.setType("ORDER_CANCELLED");
+                event.setSuccess(true);
+                event.setPayloadValue("orderId", orderId);
+                event.setPayloadValue("status", "NOT_FOUND");
+                event.setPayloadValue("note", "Order not found, assuming already cancelled");
+
+                kafkaTemplate.send(orderEventsTopic, command.getSagaId(), event);
+                return;
+            }
+
+            Order order = orderOpt.get();
+
+            // Check if order can be cancelled
+            if (!order.canBeCancelled()) {
+                log.warn("Order cannot be cancelled. Current status: {}", order.getStatus());
+
+                // For compensation, we still want to continue the saga, so respond with success
+                event.setType("ORDER_CANCELLED");
+                event.setSuccess(true);
+                event.setPayloadValue("orderId", orderId);
+                event.setPayloadValue("status", order.getStatus().name());
+                event.setPayloadValue("note", "Order already in terminal state: " + order.getStatus());
+
+                kafkaTemplate.send(orderEventsTopic, command.getSagaId(), event);
+                return;
+            }
+
+            // Update order status
+            order.setStatus(Order.OrderStatus.CANCELLED);
+            order.setUpdatedAt(Instant.now());
+            order.setCancelledAt(Instant.now());
+
+            // Add cancellation reason if provided
+            if (reason != null && !reason.isEmpty()) {
+                // Assuming there's a field for rejection reason that can be reused
+                order.setRejectionReason(reason);
+            }
+
+            // Save updated order
+            Order updatedOrder = orderRepository.save(order);
+
+            // Set success response
+            event.setType("ORDER_CANCELLED");
+            event.setSuccess(true);
+            event.setPayloadValue("orderId", updatedOrder.getId());
+            event.setPayloadValue("status", updatedOrder.getStatus().name());
+            event.setPayloadValue("cancelledAt", updatedOrder.getCancelledAt().toString());
+
+            log.info("Order cancelled successfully with ID: {}", updatedOrder.getId());
+
+        } catch (Exception e) {
+            log.error("Error cancelling order", e);
+            event.setType("ORDER_CANCELLATION_FAILED");
+            event.setSuccess(false);
+            event.setErrorCode("CANCELLATION_ERROR");
+            event.setErrorMessage("Error cancelling order: " + e.getMessage());
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send(orderEventsTopic, command.getSagaId(), event);
+            log.info("Sent order cancellation response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
 }

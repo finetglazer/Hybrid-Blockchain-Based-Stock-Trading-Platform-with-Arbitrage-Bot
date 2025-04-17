@@ -32,6 +32,12 @@ public class KafkaCommandListener {
                 case "ORDER_UPDATE_VALIDATED":
                     commandHandlerService.handleUpdateOrderValidated(command);
                     break;
+                case "ORDER_UPDATE_EXECUTED":
+                    commandHandlerService.handleUpdateOrderExecuted(command);
+                    break;
+                case "ORDER_CANCEL":
+                    commandHandlerService.handleCancelOrder(command);
+                    break;
                 // Add cases for other commands as they are implemented
                 default:
                     log.warn("Unknown command type: {}", command.getType());

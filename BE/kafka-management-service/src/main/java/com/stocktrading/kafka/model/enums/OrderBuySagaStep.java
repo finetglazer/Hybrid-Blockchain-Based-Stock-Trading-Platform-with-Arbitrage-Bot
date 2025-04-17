@@ -89,6 +89,7 @@ public enum OrderBuySagaStep {
 
     /**
      * Get next step in compensation flow
+     * Modified to ensure CANCEL_BROKER_ORDER comes before RELEASE_FUNDS
      */
     public OrderBuySagaStep getNextCompensationStep() {
         switch (this) {
@@ -109,6 +110,7 @@ public enum OrderBuySagaStep {
 
     /**
      * Determine the first compensation step based on completed steps
+     * Modified to always try CANCEL_BROKER_ORDER first if we've reached ORDER_VALIDATED
      */
     public static OrderBuySagaStep determineFirstCompensationStep(
             boolean transactionSettled,
@@ -121,9 +123,11 @@ public enum OrderBuySagaStep {
             return REVERSE_SETTLEMENT;
         } else if (portfolioUpdated) {
             return REMOVE_POSITIONS;
-        } else if (orderExecuted) {
+        } else if (orderExecuted || orderValidated) {
+            // Always try CANCEL_BROKER_ORDER first if we've reached ORDER_VALIDATED
+            // This ensures we try to cancel with broker even if the broker order ID is null
             return CANCEL_BROKER_ORDER;
-        } else if (orderValidated || fundsReserved) {
+        } else if (fundsReserved) {
             return RELEASE_FUNDS;
         } else {
             return CANCEL_ORDER;

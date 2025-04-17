@@ -139,6 +139,7 @@ public class KafkaCommandHandlerService {
 
     /**
      * Handle BROKER_CANCEL_ORDER command
+     * Updated to handle null broker order IDs gracefully
      */
     public void handleCancelOrder(CommandMessage command) {
         log.info("Handling BROKER_CANCEL_ORDER command for saga: {}", command.getSagaId());
@@ -155,14 +156,23 @@ public class KafkaCommandHandlerService {
         event.setTimestamp(Instant.now());
 
         try {
-            // Simulate processing delay
-            simulateProcessingDelay();
+            // Handle the case where brokerOrderId is null (order hasn't been sent to broker yet)
+            if (brokerOrderId == null) {
+                log.info("No broker order ID provided for orderId: {}. No cancellation needed.", orderId);
 
-            // Almost always succeed for compensation (99% success rate)
-            boolean cancellationSucceeds = random.nextInt(100) < 99;
+                // Return success even though there was nothing to cancel
+                event.setType("BROKER_ORDER_CANCELLED");
+                event.setSuccess(true);
+                event.setPayloadValue("orderId", orderId);
+                event.setPayloadValue("brokerOrderId", "NO_BROKER_ORDER");
+                event.setPayloadValue("cancelledAt", Instant.now().toString());
+                event.setPayloadValue("status", "NO_BROKER_ORDER");
+                event.setPayloadValue("note", "Order hadn't been submitted to broker yet, no cancellation needed");
+            } else {
+                // Normal cancellation flow for existing broker orders
+                // Simulate processing delay
+                simulateProcessingDelay();
 
-            if (cancellationSucceeds) {
-                // Set success response
                 event.setType("BROKER_ORDER_CANCELLED");
                 event.setSuccess(true);
                 event.setPayloadValue("orderId", orderId);
@@ -171,20 +181,7 @@ public class KafkaCommandHandlerService {
                 event.setPayloadValue("status", "CANCELLED");
 
                 log.info("Order cancelled successfully: {}", brokerOrderId);
-            } else {
-                // Even in the rare case of failure, we want the saga to continue
-                // So we'll still return success but with a note
-                event.setType("BROKER_ORDER_CANCELLED");
-                event.setSuccess(true);
-                event.setPayloadValue("orderId", orderId);
-                event.setPayloadValue("brokerOrderId", brokerOrderId);
-                event.setPayloadValue("cancelledAt", Instant.now().toString());
-                event.setPayloadValue("status", "ALREADY_EXECUTED");
-                event.setPayloadValue("note", "Order was already executed and cannot be cancelled");
-
-                log.warn("Order cancellation failed for {}: already executed", brokerOrderId);
             }
-
         } catch (Exception e) {
             log.error("Error cancelling order", e);
             event.setType("BROKER_ORDER_CANCELLATION_FAILED");
