@@ -19,6 +19,7 @@
         <module>mock-payment-service</module>
         <module>order-service</module>
         <module>market-data-service</module>
+        <module>mock-brokerage-service</module>
     </modules>
 
     <dependencyManagement>
