@@ -154,6 +154,23 @@ public class KafkaEventListener {
         }
     }
 
+    @KafkaListener(
+            topics = "${kafka.topics.portfolio-events.order-buy}",
+            containerFactory = "orderBuyEventKafkaListenerContainerFactory",
+            groupId = "${spring.kafka.consumer.group-id}-order-buy-portfolio"
+    )
+    public void consumePortfolioEvents(@Payload EventMessage event, Acknowledgment ack) {
+        try {
+            log.debug("Received portfolio event: {}", event.getType());
+            orderBuySagaService.handleEventMessage(event);
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("Error processing portfolio event: {}", e.getMessage(), e);
+            throw new RuntimeException("Event processing failed", e);
+        }
+    }
+
+
     // ====== GENERAL DLQ LISTENER ======
 
     @KafkaListener(

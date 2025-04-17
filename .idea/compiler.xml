@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="market-data" />
+        <module name="portfolio" />
         <module name="API-gateway" />
         <module name="user-service" />
         <module name="order-service" />
@@ -39,6 +40,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="portfolio-service" target="17" />
       <module name="project" target="17" />
     </bytecodeTargetLevel>
   </component>
@@ -52,6 +54,8 @@
       <module name="mock-brokerage-service" options="-parameters" />
       <module name="mock-payment-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
+      <module name="portfolio" options="-parameters" />
+      <module name="portfolio-service" options="-parameters" />
       <module name="project" options="" />
       <module name="user-service" options="-parameters" />
     </option>

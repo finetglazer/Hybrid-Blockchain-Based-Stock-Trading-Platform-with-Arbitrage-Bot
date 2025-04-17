@@ -20,6 +20,7 @@
         <module>order-service</module>
         <module>market-data-service</module>
         <module>mock-brokerage-service</module>
+        <module>portfolio-service</module>
     </modules>
 
     <dependencyManagement>

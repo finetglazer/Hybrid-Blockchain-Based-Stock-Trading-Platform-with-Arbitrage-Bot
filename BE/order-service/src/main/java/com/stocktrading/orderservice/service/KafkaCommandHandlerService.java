@@ -245,65 +245,62 @@ public class KafkaCommandHandlerService {
         event.setSourceService("ORDER_SERVICE");
         event.setTimestamp(Instant.now());
 
-        handleOrderExecutionUpdateFailure(event, "ORDER_EXECUTION_UPDATE_ERROR",
-                "Error updating order execution: " );
+        try {
+            // Find order
+            Optional<Order> orderOpt = orderRepository.findById(orderId);
+            if (orderOpt.isEmpty()) {
+                handleOrderExecutionUpdateFailure(event, "ORDER_NOT_FOUND",
+                        "Order not found with ID: " + orderId);
+                return;
+            }
 
-//        try {
-//            // Find order
-//            Optional<Order> orderOpt = orderRepository.findById(orderId);
-//            if (orderOpt.isEmpty()) {
-//                handleOrderExecutionUpdateFailure(event, "ORDER_NOT_FOUND",
-//                        "Order not found with ID: " + orderId);
-//                return;
-//            }
-//
-//            Order order = orderOpt.get();
-//
-//            // Verify order can be updated (state check)
-//            if (order.getStatus() != Order.OrderStatus.VALIDATED &&
-//                    order.getStatus() != Order.OrderStatus.EXECUTING) {
-//                handleOrderExecutionUpdateFailure(event, "INVALID_ORDER_STATE",
-//                        "Order is not in a valid state for execution update: " + order.getStatus());
-//                return;
-//            }
-//
-//            // Update order
-//            order.setStatus(Order.OrderStatus.FILLED);
-//            order.setExecutionPrice(executionPrice);
-//            order.setExecutedQuantity(executedQuantity);
-//            order.setBrokerOrderId(brokerOrderId);
-//            order.setExecutedAt(Instant.now());
-//            order.setUpdatedAt(Instant.now());
-//
-//            // Save updated order
-//            Order updatedOrder = orderRepository.save(order);
-//
-//            // Set success response
-//            event.setType("ORDER_EXECUTED");
-//            event.setSuccess(true);
-//            event.setPayloadValue("orderId", updatedOrder.getId());
-//            event.setPayloadValue("status", updatedOrder.getStatus().name());
-//            event.setPayloadValue("executionPrice", updatedOrder.getExecutionPrice());
-//            event.setPayloadValue("executedQuantity", updatedOrder.getExecutedQuantity());
-//            event.setPayloadValue("brokerOrderId", updatedOrder.getBrokerOrderId());
-//            event.setPayloadValue("executedAt", updatedOrder.getExecutedAt().toString());
-//
-//            log.info("Order execution updated successfully with ID: {}", updatedOrder.getId());
-//
-//        } catch (Exception e) {
-//            log.error("Error updating order execution", e);
-//            handleOrderExecutionUpdateFailure(event, "ORDER_EXECUTION_UPDATE_ERROR",
-//                    "Error updating order execution: " + e.getMessage());
-//            return;
-//        }
-//
-//        // Send the response event
-//        try {
-//            kafkaTemplate.send(orderEventsTopic, command.getSagaId(), event);
-//            log.info("Sent ORDER_EXECUTED response for saga: {}", command.getSagaId());
-//        } catch (Exception e) {
-//            log.error("Error sending event", e);
-//        }
+            Order order = orderOpt.get();
+
+            // Verify order can be updated (state check)
+            if (order.getStatus() != Order.OrderStatus.VALIDATED &&
+                    order.getStatus() != Order.OrderStatus.EXECUTING) {
+                handleOrderExecutionUpdateFailure(event, "INVALID_ORDER_STATE",
+                        "Order is not in a valid state for execution update: " + order.getStatus());
+                return;
+            }
+
+            // Update order
+            order.setStatus(Order.OrderStatus.FILLED);
+            order.setExecutionPrice(executionPrice);
+            order.setExecutedQuantity(executedQuantity);
+            order.setBrokerOrderId(brokerOrderId);
+            order.setExecutedAt(Instant.now());
+            order.setUpdatedAt(Instant.now());
+
+            // Save updated order
+            Order updatedOrder = orderRepository.save(order);
+
+            // Set success response
+            event.setType("ORDER_EXECUTED");
+            event.setSuccess(true);
+            event.setPayloadValue("orderId", updatedOrder.getId());
+            event.setPayloadValue("status", updatedOrder.getStatus().name());
+            event.setPayloadValue("executionPrice", updatedOrder.getExecutionPrice());
+            event.setPayloadValue("executedQuantity", updatedOrder.getExecutedQuantity());
+            event.setPayloadValue("brokerOrderId", updatedOrder.getBrokerOrderId());
+            event.setPayloadValue("executedAt", updatedOrder.getExecutedAt().toString());
+
+            log.info("Order execution updated successfully with ID: {}", updatedOrder.getId());
+
+        } catch (Exception e) {
+            log.error("Error updating order execution", e);
+            handleOrderExecutionUpdateFailure(event, "ORDER_EXECUTION_UPDATE_ERROR",
+                    "Error updating order execution: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send(orderEventsTopic, command.getSagaId(), event);
+            log.info("Sent ORDER_EXECUTED response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
     }
 
     /**

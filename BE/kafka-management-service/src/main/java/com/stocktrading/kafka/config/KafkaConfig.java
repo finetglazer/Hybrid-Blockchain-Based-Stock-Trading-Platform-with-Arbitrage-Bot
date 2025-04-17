@@ -85,6 +85,13 @@ public class KafkaConfig {
     @Value("${kafka.topics.broker-events:broker.events.order-buy}")
     private String brokerEventsTopic;
 
+    @Value("${kafka.topics.portfolio-commands.order-buy}")
+    private String portfolioCommandsTopic;
+
+    @Value("${kafka.topics.portfolio-events.order-buy}")
+    private String portfolioEventsTopic;
+
+
     @Value("${kafka.topics.dlq:saga.dlq}")
     private String dlqTopic;
 
@@ -181,6 +188,16 @@ public class KafkaConfig {
     @Bean
     public NewTopic dlqTopic() {
         return new NewTopic(dlqTopic, 1, (short) 1);
+    }
+
+    @Bean
+    public NewTopic portfolioCommandsTopic() {
+        return new NewTopic(portfolioCommandsTopic, 3, (short) 1);
+    }
+
+    @Bean
+    public NewTopic portfolioEventsTopic() {
+        return new NewTopic(portfolioEventsTopic, 3, (short) 1);
     }
 
     // Producer Configuration for CommandMessage
