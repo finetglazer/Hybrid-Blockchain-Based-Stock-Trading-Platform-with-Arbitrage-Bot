@@ -18,6 +18,7 @@
         <module>kafka-message-models</module>
         <module>mock-payment-service</module>
         <module>order-service</module>
+        <module>market-data-service</module>
     </modules>
 
     <dependencyManagement>

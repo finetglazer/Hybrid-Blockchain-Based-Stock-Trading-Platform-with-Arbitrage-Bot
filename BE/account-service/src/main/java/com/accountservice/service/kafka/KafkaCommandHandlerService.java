@@ -759,4 +759,92 @@ public class KafkaCommandHandlerService {
             log.error("Error sending failure event", e);
         }
     }
+
+    /**
+     * Handle ACCOUNT_VERIFY_STATUS command
+     */
+    public void handleVerifyAccountStatus(CommandMessage command) {
+        log.info("Handling ACCOUNT_VERIFY_STATUS command for saga: {}", command.getSagaId());
+
+        String accountId = command.getPayloadValue("accountId");
+        String userId = command.getPayloadValue("userId");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Validate account exists and belongs to the user
+            Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
+
+            if (accountOpt.isEmpty()) {
+                handleAccountVerificationFailure(event, "ACCOUNT_NOT_FOUND",
+                        "Account not found: " + accountId);
+                return;
+            }
+
+            TradingAccount account = accountOpt.get();
+
+            // Verify ownership
+            if (!account.getUserId().equals(userId)) {
+                handleAccountVerificationFailure(event, "ACCOUNT_NOT_AUTHORIZED",
+                        "Account does not belong to user");
+                return;
+            }
+
+            // Verify account status
+            if (!account.getStatus().equals("ACTIVE")) {
+                handleAccountVerificationFailure(event, "ACCOUNT_NOT_ACTIVE",
+                        "Account is not active: " + account.getStatus());
+                return;
+            }
+
+            // Verify account has sufficient balance or credit
+            // This is optional and depends on your requirements
+            // You might want to check if the account has any funds at all
+
+            // All validations passed
+            event.setType("ACCOUNT_STATUS_VERIFIED");
+            event.setSuccess(true);
+            event.setPayloadValue("accountId", accountId);
+            event.setPayloadValue("accountStatus", account.getStatus());
+            event.setPayloadValue("userId", userId);
+
+        } catch (Exception e) {
+            log.error("Error verifying account status", e);
+            handleAccountVerificationFailure(event, "VERIFICATION_ERROR",
+                    "Error verifying account status: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send("account.events.order-buy", command.getSagaId(), event);
+            log.info("Sent ACCOUNT_STATUS_VERIFIED response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
+    /**
+     * Helper method to handle account verification failures
+     */
+    private void handleAccountVerificationFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("ACCOUNT_STATUS_INVALID");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        try {
+            kafkaTemplate.send("account.events.order-buy", event.getSagaId(), event);
+            log.info("Sent ACCOUNT_STATUS_INVALID response for saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
 }
