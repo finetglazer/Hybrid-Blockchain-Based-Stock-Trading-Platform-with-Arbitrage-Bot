@@ -41,15 +41,16 @@ public enum CommandType {
     // Payment Processor Commands
     PAYMENT_PROCESS_DEPOSIT("Process deposit payment"),
 
-    // Compensation Commands - prefixed with COMP to distinguish
+    // Compensation Commands - using service-specific prefixes instead of COMP_
     ACCOUNT_MARK_TRANSACTION_FAILED("Mark transaction as failed"),
     PAYMENT_REVERSE_DEPOSIT("Reverse deposit payment"),
     ACCOUNT_REVERSE_BALANCE_UPDATE("Reverse balance update"),
-    COMP_RELEASE_FUNDS("Release reserved funds - Compensation"),
-    COMP_CANCEL_ORDER("Cancel order - Compensation"),
-    COMP_CANCEL_BROKER_ORDER("Cancel broker order - Compensation"),
-    COMP_REMOVE_POSITIONS("Remove positions - Compensation"),
-    COMP_REVERSE_SETTLEMENT("Reverse settlement - Compensation");
+    // Changed from COMP_RELEASE_FUNDS to ACCOUNT_RELEASE_FUNDS
+    // Changed from COMP_CANCEL_ORDER to ORDER_CANCEL
+    // Changed from COMP_CANCEL_BROKER_ORDER to BROKER_CANCEL_ORDER
+    // Changed from COMP_REMOVE_POSITIONS to PORTFOLIO_REMOVE_POSITIONS
+    // Changed from COMP_REVERSE_SETTLEMENT to ACCOUNT_REVERSE_SETTLEMENT
+    ACCOUNT_REVERSE_SETTLEMENT("Reverse settlement - Compensation");
 
     private final String description;
 
@@ -72,23 +73,6 @@ public enum CommandType {
         // Special case for payment method validation which belongs to account service
         if (this == PAYMENT_METHOD_VALIDATE) {
             return "ACCOUNT_SERVICE";
-        }
-
-        // Special cases for order-related commands
-        if (this == COMP_RELEASE_FUNDS || this == COMP_REVERSE_SETTLEMENT) {
-            return "ACCOUNT_SERVICE";
-        }
-
-        if (this == COMP_CANCEL_ORDER) {
-            return "ORDER_SERVICE";
-        }
-
-        if (this == COMP_CANCEL_BROKER_ORDER) {
-            return "MOCK_BROKERAGE_SERVICE";
-        }
-
-        if (this == COMP_REMOVE_POSITIONS) {
-            return "PORTFOLIO_SERVICE";
         }
 
         // Otherwise use the prefix rule

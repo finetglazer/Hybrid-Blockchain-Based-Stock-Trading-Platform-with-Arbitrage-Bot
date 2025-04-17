@@ -42,8 +42,8 @@ public class KafkaCommandHandlerService {
         event.setTimestamp(Instant.now());
 
         try {
-            // Simple validation - 70% chance of success
-            boolean stockExists = random.nextInt(100) < 70;
+            // Simple validation - 90% chance of success
+            boolean stockExists = random.nextInt(100) < 90;
 
             if (stockExists) {
                 // Success case
@@ -91,8 +91,8 @@ public class KafkaCommandHandlerService {
         event.setTimestamp(Instant.now());
 
         try {
-            // 70% chance of success in getting price
-            if (random.nextInt(100) < 70) {
+            // 90% chance of success in getting price
+            if (random.nextInt(100) < 90) {
                 // Generate a random price between $10 and $500
                 BigDecimal price = new BigDecimal(10 + random.nextInt(490) + random.nextDouble());
                 // Round to 2 decimal places

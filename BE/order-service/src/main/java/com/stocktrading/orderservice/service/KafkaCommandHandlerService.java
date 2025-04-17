@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -23,11 +24,11 @@ public class KafkaCommandHandlerService {
 
     private final OrderRepository orderRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    
+
     //value
     @Value("${kafka.topics.order-events}")
     private String orderEventsTopic;
-    
+
     /**
      * Handle ORDER_CREATE command
      */
@@ -98,6 +99,81 @@ public class KafkaCommandHandlerService {
     }
 
     /**
+     * Handle ORDER_UPDATE_VALIDATED command
+     */
+    public void handleUpdateOrderValidated(CommandMessage command) {
+        log.info("Handling ORDER_UPDATE_VALIDATED command for saga: {}", command.getSagaId());
+
+        String orderId = command.getPayloadValue("orderId");
+        String reservationId = command.getPayloadValue("reservationId");
+        Object priceObj = command.getPayloadValue("price");
+        BigDecimal price = convertToBigDecimal(priceObj);
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ORDER_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find order
+            Optional<Order> orderOpt = orderRepository.findById(orderId);
+            if (orderOpt.isEmpty()) {
+                handleOrderValidationFailure(event, "ORDER_NOT_FOUND",
+                        "Order not found with ID: " + orderId);
+                return;
+            }
+
+            Order order = orderOpt.get();
+
+            // Verify order can be validated (initial state check)
+            if (order.getStatus() != Order.OrderStatus.CREATED) {
+                handleOrderValidationFailure(event, "INVALID_ORDER_STATE",
+                        "Order is not in CREATED state: " + order.getStatus());
+                return;
+            }
+
+            // Update order
+            order.setStatus(Order.OrderStatus.VALIDATED);
+            order.setReservationId(reservationId);
+            if (price != null) {
+                order.setExecutionPrice(price); // This might be either market price or limit price
+            }
+            order.setUpdatedAt(Instant.now());
+
+            // Save updated order
+            Order updatedOrder = orderRepository.save(order);
+
+            // Set success response
+            event.setType("ORDER_VALIDATED");
+            event.setSuccess(true);
+            event.setPayloadValue("orderId", updatedOrder.getId());
+            event.setPayloadValue("status", updatedOrder.getStatus().name());
+            event.setPayloadValue("reservationId", updatedOrder.getReservationId());
+            event.setPayloadValue("accountId", updatedOrder.getAccountId());
+            if (updatedOrder.getExecutionPrice() != null) {
+                event.setPayloadValue("executionPrice", updatedOrder.getExecutionPrice());
+            }
+
+        } catch (Exception e) {
+            log.error("Error validating order", e);
+            handleOrderValidationFailure(event, "ORDER_VALIDATION_ERROR",
+                    "Error validating order: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send(orderEventsTopic, command.getSagaId(), event);
+            log.info("Sent ORDER_VALIDATED response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
+    /**
      * Helper method to handle order creation failures
      */
     private void handleOrderCreationFailure(EventMessage event, String errorCode, String errorMessage) {
@@ -112,6 +188,41 @@ public class KafkaCommandHandlerService {
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
             log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Helper method to handle order validation failures
+     */
+    private void handleOrderValidationFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("ORDER_VALIDATION_FAILED");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        try {
+            kafkaTemplate.send(orderEventsTopic, event.getSagaId(), event);
+            log.info("Sent ORDER_VALIDATION_FAILED response for saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Helper method to safely convert any numeric type to BigDecimal
+     */
+    private BigDecimal convertToBigDecimal(Object amountObj) {
+        if (amountObj instanceof BigDecimal) {
+            return (BigDecimal) amountObj;
+        } else if (amountObj instanceof Number) {
+            return BigDecimal.valueOf(((Number) amountObj).doubleValue());
+        } else if (amountObj instanceof String) {
+            return new BigDecimal((String) amountObj);
+        } else if (amountObj == null) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("Amount is not a valid number: " + amountObj);
         }
     }
 }

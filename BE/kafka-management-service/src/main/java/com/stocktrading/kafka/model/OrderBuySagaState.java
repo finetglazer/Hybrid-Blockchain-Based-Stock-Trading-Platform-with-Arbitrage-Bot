@@ -247,6 +247,9 @@ public class OrderBuySagaState {
     /**
      * Create command based on current step
      */
+    /**
+     * Create command based on current step
+     */
     public CommandMessage createCommandForCurrentStep() {
         CommandType commandType = currentStep.getCommandType();
         if (commandType == null) {
@@ -259,7 +262,7 @@ public class OrderBuySagaState {
         command.setStepId(currentStep.getStepNumber());
         command.setType(commandType.name());
         command.setSourceService("SAGA_ORCHESTRATOR");
-        command.setTargetService(getTargetServiceForCommand(commandType));
+        command.setTargetService(commandType.getTargetService());
         command.setIsCompensation(currentStep.isCompensationStep());
         command.setTimestamp(Instant.now());
 
@@ -342,24 +345,24 @@ public class OrderBuySagaState {
                 command.setPayloadValue("orderId", orderId);
                 break;
 
-            // Compensation commands
-            case COMP_RELEASE_FUNDS:
+            // Compensation commands - using service-specific command types
+            case ORDER_CANCEL:
+                command.setPayloadValue("orderId", orderId);
+                command.setPayloadValue("reason", failureReason);
+                break;
+
+            case ACCOUNT_RELEASE_FUNDS:
                 command.setPayloadValue("accountId", accountId);
                 command.setPayloadValue("reservationId", reservationId);
                 command.setPayloadValue("orderId", orderId);
                 break;
 
-            case COMP_CANCEL_ORDER:
-                command.setPayloadValue("orderId", orderId);
-                command.setPayloadValue("reason", failureReason);
-                break;
-
-            case COMP_CANCEL_BROKER_ORDER:
+            case BROKER_CANCEL_ORDER:
                 command.setPayloadValue("orderId", orderId);
                 command.setPayloadValue("brokerOrderId", brokerOrderId);
                 break;
 
-            case COMP_REMOVE_POSITIONS:
+            case PORTFOLIO_REMOVE_POSITIONS:
                 command.setPayloadValue("userId", userId);
                 command.setPayloadValue("accountId", accountId);
                 command.setPayloadValue("stockSymbol", stockSymbol);
@@ -367,7 +370,7 @@ public class OrderBuySagaState {
                 command.setPayloadValue("orderId", orderId);
                 break;
 
-            case COMP_REVERSE_SETTLEMENT:
+            case ACCOUNT_REVERSE_SETTLEMENT:
                 command.setPayloadValue("accountId", accountId);
                 command.setPayloadValue("reservationId", reservationId);
                 command.setPayloadValue("orderId", orderId);

@@ -22,12 +22,12 @@ public enum OrderBuySagaStep {
     UPDATE_ORDER_COMPLETED(13, "Update order status to completed", CommandType.ORDER_UPDATE_COMPLETED),
     COMPLETE_SAGA(14, "Complete saga", null),
 
-    // Compensation steps (based on compensation document)
-    COMP_CANCEL_ORDER(101, "Cancel order", CommandType.COMP_CANCEL_ORDER),
-    COMP_RELEASE_FUNDS(102, "Release reserved funds", CommandType.COMP_RELEASE_FUNDS),
-    COMP_CANCEL_BROKER_ORDER(103, "Cancel broker order", CommandType.COMP_CANCEL_BROKER_ORDER),
-    COMP_REMOVE_POSITIONS(104, "Remove positions from portfolio", CommandType.COMP_REMOVE_POSITIONS),
-    COMP_REVERSE_SETTLEMENT(105, "Reverse settlement", CommandType.COMP_REVERSE_SETTLEMENT);
+    // Compensation steps (using service-specific command types)
+    CANCEL_ORDER(101, "Cancel order", CommandType.ORDER_CANCEL),
+    RELEASE_FUNDS(102, "Release reserved funds", CommandType.ACCOUNT_RELEASE_FUNDS),
+    CANCEL_BROKER_ORDER(103, "Cancel broker order", CommandType.BROKER_CANCEL_ORDER),
+    REMOVE_POSITIONS(104, "Remove positions from portfolio", CommandType.PORTFOLIO_REMOVE_POSITIONS),
+    REVERSE_SETTLEMENT(105, "Reverse settlement", CommandType.ACCOUNT_REVERSE_SETTLEMENT);
 
     private final int stepNumber;
     private final String description;
@@ -92,15 +92,15 @@ public enum OrderBuySagaStep {
      */
     public OrderBuySagaStep getNextCompensationStep() {
         switch (this) {
-            case COMP_REVERSE_SETTLEMENT:
-                return COMP_REMOVE_POSITIONS;
-            case COMP_REMOVE_POSITIONS:
-                return COMP_CANCEL_BROKER_ORDER;
-            case COMP_CANCEL_BROKER_ORDER:
-                return COMP_RELEASE_FUNDS;
-            case COMP_RELEASE_FUNDS:
-                return COMP_CANCEL_ORDER;
-            case COMP_CANCEL_ORDER:
+            case REVERSE_SETTLEMENT:
+                return REMOVE_POSITIONS;
+            case REMOVE_POSITIONS:
+                return CANCEL_BROKER_ORDER;
+            case CANCEL_BROKER_ORDER:
+                return RELEASE_FUNDS;
+            case RELEASE_FUNDS:
+                return CANCEL_ORDER;
+            case CANCEL_ORDER:
                 return COMPLETE_SAGA;
             default:
                 return null;
@@ -118,15 +118,15 @@ public enum OrderBuySagaStep {
             boolean fundsReserved) {
 
         if (transactionSettled) {
-            return COMP_REVERSE_SETTLEMENT;
+            return REVERSE_SETTLEMENT;
         } else if (portfolioUpdated) {
-            return COMP_REMOVE_POSITIONS;
+            return REMOVE_POSITIONS;
         } else if (orderExecuted) {
-            return COMP_CANCEL_BROKER_ORDER;
+            return CANCEL_BROKER_ORDER;
         } else if (orderValidated || fundsReserved) {
-            return COMP_RELEASE_FUNDS;
+            return RELEASE_FUNDS;
         } else {
-            return COMP_CANCEL_ORDER;
+            return CANCEL_ORDER;
         }
     }
 

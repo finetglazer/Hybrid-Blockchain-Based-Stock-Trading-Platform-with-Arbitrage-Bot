@@ -502,6 +502,8 @@ public class OrderBuySagaService {
             return "order.commands.order-buy";
         } else if (commandName.startsWith("MARKET_")) {
             return "market.commands.order-buy";
+        } else if (commandName.startsWith("PORTFOLIO_")) {
+            return "portfolio.commands.order-buy";
         } else if (commandName.startsWith("BROKER_")) {
             return "broker.commands.order-buy";
         }

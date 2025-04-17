@@ -207,7 +207,8 @@ public enum EventType {
 
             case SETTLEMENT_REVERSED:
             case SETTLEMENT_REVERSAL_FAILED:
-                return CommandType.COMP_REVERSE_SETTLEMENT;
+                // Updated to use the service-specific naming without COMP_ prefix
+                return CommandType.ACCOUNT_REVERSE_SETTLEMENT;
 
             default:
                 return null;
