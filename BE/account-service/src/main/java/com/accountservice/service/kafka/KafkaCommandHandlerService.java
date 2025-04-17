@@ -1,13 +1,7 @@
 package com.accountservice.service.kafka;
 
-import com.accountservice.model.Balance;
-import com.accountservice.model.PaymentMethod;
-import com.accountservice.model.TradingAccount;
-import com.accountservice.model.Transaction;
-import com.accountservice.repository.BalanceRepository;
-import com.accountservice.repository.PaymentMethodRepository;
-import com.accountservice.repository.TradingAccountRepository;
-import com.accountservice.repository.TransactionRepository;
+import com.accountservice.model.*;
+import com.accountservice.repository.*;
 import com.accountservice.service.PaymentMethodService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.kafkamessagemodels.model.CommandMessage;
@@ -18,6 +12,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,6 +29,7 @@ public class KafkaCommandHandlerService {
     private final TradingAccountRepository tradingAccountRepository;
     private final TransactionRepository transactionRepository;
     private final BalanceRepository balanceRepository;
+    private final ReservationRecordRepository reservationRecordRepository;
 
     /**
      * Handle ACCOUNT_VALIDATE command
@@ -845,6 +841,236 @@ public class KafkaCommandHandlerService {
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
             log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Handle ACCOUNT_RESERVE_FUNDS command
+     */
+    public void handleReserveFunds(CommandMessage command) {
+        log.info("Handling ACCOUNT_RESERVE_FUNDS command for saga: {}", command.getSagaId());
+
+        String accountId = command.getPayloadValue("accountId");
+        String orderId = command.getPayloadValue("orderId");
+        String stockSymbol = command.getPayloadValue("stockSymbol");
+
+        // Handle different possible formats of amount
+        Object amountObj = command.getPayloadValue("amount");
+        BigDecimal amount = convertToBigDecimal(amountObj);
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find account
+            Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
+            if (accountOpt.isEmpty()) {
+                handleReservationFailure(event, "ACCOUNT_NOT_FOUND",
+                        "Account not found: " + accountId);
+                return;
+            }
+
+            TradingAccount account = accountOpt.get();
+
+            // Find or create balance
+            Balance balance = getOrCreateBalance(account);
+
+            // Check if sufficient funds are available
+            if (balance.getAvailable().compareTo(amount) < 0) {
+                handleReservationFailure(event, "INSUFFICIENT_FUNDS",
+                        "Insufficient funds available. Required: " + amount + ", Available: " + balance.getAvailable());
+                return;
+            }
+
+            // Create reservation record
+            ReservationRecord reservation = new ReservationRecord();
+            reservation.setId(UUID.randomUUID().toString());
+            reservation.setAccountId(accountId);
+            reservation.setAmount(amount);
+            reservation.setCurrency(balance.getCurrency());
+            reservation.setPurpose("ORDER_BUY");
+            reservation.setReferenceId(orderId);
+            reservation.setCreatedAt(Instant.now());
+            // Set expiration time (e.g., 1 day from now)
+            reservation.setExpiresAt(Instant.now().plus(Duration.ofDays(1)));
+            reservation.setStatus(ReservationRecord.ReservationStatus.ACTIVE.toString());
+
+            // Update balance (move from available to reserved)
+            BigDecimal newAvailable = balance.getAvailable().subtract(amount);
+            BigDecimal newReserved = balance.getReserved().add(amount);
+
+            balance.setAvailable(newAvailable);
+            balance.setReserved(newReserved);
+            balance.setUpdatedAt(Instant.now());
+
+            // Save both the reservation and updated balance
+            ReservationRecord savedReservation = reservationRecordRepository.save(reservation);
+            balanceRepository.save(balance);
+
+            log.info("Successfully reserved funds: {} for order: {}", amount, orderId);
+
+            // Set success response
+            event.setType("FUNDS_RESERVED");
+            event.setSuccess(true);
+            event.setPayloadValue("reservationId", savedReservation.getId());
+            event.setPayloadValue("accountId", accountId);
+            event.setPayloadValue("orderId", orderId);
+            event.setPayloadValue("amount", amount);
+            event.setPayloadValue("stockSymbol", stockSymbol);
+            event.setPayloadValue("reservedAt", savedReservation.getCreatedAt().toString());
+            event.setPayloadValue("expiresAt", savedReservation.getExpiresAt().toString());
+            event.setPayloadValue("newAvailableBalance", newAvailable);
+            event.setPayloadValue("newReservedBalance", newReserved);
+            event.setPayloadValue("newTotalBalance", balance.getTotal());
+
+        } catch (Exception e) {
+            log.error("Error reserving funds", e);
+            handleReservationFailure(event, "RESERVATION_ERROR",
+                    "Error reserving funds: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send("account.events.order-buy", command.getSagaId(), event);
+            log.info("Sent FUNDS_RESERVED response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
+    /**
+     * Helper method to handle reservation failures
+     */
+    private void handleReservationFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("FUNDS_RESERVATION_FAILED");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        try {
+            kafkaTemplate.send("account.events.order-buy", event.getSagaId(), event);
+            log.info("Sent FUNDS_RESERVATION_FAILED response for saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Helper method to safely convert any numeric type to BigDecimal
+     */
+    private BigDecimal convertToBigDecimal(Object amountObj) {
+        if (amountObj instanceof BigDecimal) {
+            return (BigDecimal) amountObj;
+        } else if (amountObj instanceof Number) {
+            return BigDecimal.valueOf(((Number) amountObj).doubleValue());
+        } else if (amountObj instanceof String) {
+            return new BigDecimal((String) amountObj);
+        } else {
+            throw new IllegalArgumentException("Amount is not a valid number: " + amountObj);
+        }
+    }
+
+    /**
+     * Handle ACCOUNT_RELEASE_FUNDS command (compensation)
+     */
+    public void handleReleaseFunds(CommandMessage command) {
+        log.info("Handling ACCOUNT_RELEASE_FUNDS command for saga: {}", command.getSagaId());
+
+        String accountId = command.getPayloadValue("accountId");
+        String reservationId = command.getPayloadValue("reservationId");
+        String orderId = command.getPayloadValue("orderId");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find the reservation
+            Optional<ReservationRecord> reservationOpt = reservationRecordRepository.findById(reservationId);
+
+            // If reservation doesn't exist, it could be that it was already released or never created
+            if (reservationOpt.isEmpty()) {
+                log.warn("Reservation not found for ID: {}. It may have already been released.", reservationId);
+
+                // Still send a success event to continue the compensation flow
+                event.setType("FUNDS_RELEASED");
+                event.setSuccess(true);
+                event.setPayloadValue("reservationId", reservationId);
+                event.setPayloadValue("accountId", accountId);
+                event.setPayloadValue("orderId", orderId);
+                event.setPayloadValue("releasedAt", Instant.now().toString());
+                event.setPayloadValue("status", "ALREADY_RELEASED");
+
+                kafkaTemplate.send("account.events.order-buy", command.getSagaId(), event);
+                return;
+            }
+
+            ReservationRecord reservation = reservationOpt.get();
+
+            // Only process if the reservation is still active
+            if (reservation.getStatus().equals(ReservationRecord.ReservationStatus.ACTIVE.toString())) {
+                // Find account balance
+                Balance balance = balanceRepository.findByAccountId(reservation.getAccountId());
+
+                if (balance != null) {
+                    // Update balance (move from reserved back to available)
+                    BigDecimal reservedAmount = reservation.getAmount();
+                    BigDecimal newAvailable = balance.getAvailable().add(reservedAmount);
+                    BigDecimal newReserved = balance.getReserved().subtract(reservedAmount);
+
+                    balance.setAvailable(newAvailable);
+                    balance.setReserved(newReserved);
+                    balance.setUpdatedAt(Instant.now());
+
+                    // Save the updated balance
+                    balanceRepository.save(balance);
+
+                    log.info("Released reserved funds: {} for order: {}", reservedAmount, orderId);
+                }
+
+                // Update reservation status
+                reservation.setStatus(ReservationRecord.ReservationStatus.FULLY_RELEASED.toString());
+                reservationRecordRepository.save(reservation);
+            } else {
+                log.info("Reservation {} is already in state: {}. No action needed.",
+                        reservationId, reservation.getStatus());
+            }
+
+            // Set success response
+            event.setType("FUNDS_RELEASED");
+            event.setSuccess(true);
+            event.setPayloadValue("reservationId", reservationId);
+            event.setPayloadValue("accountId", accountId);
+            event.setPayloadValue("orderId", orderId);
+            event.setPayloadValue("releasedAt", Instant.now().toString());
+            event.setPayloadValue("previousStatus", reservation.getStatus());
+            event.setPayloadValue("newStatus", ReservationRecord.ReservationStatus.FULLY_RELEASED.toString());
+
+        } catch (Exception e) {
+            log.error("Error releasing funds", e);
+            event.setType("FUNDS_RELEASE_FAILED");
+            event.setSuccess(false);
+            event.setErrorCode("RELEASE_ERROR");
+            event.setErrorMessage("Error releasing funds: " + e.getMessage());
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send("account.events.order-buy", command.getSagaId(), event);
+            log.info("Sent funds release response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
         }
     }
 }

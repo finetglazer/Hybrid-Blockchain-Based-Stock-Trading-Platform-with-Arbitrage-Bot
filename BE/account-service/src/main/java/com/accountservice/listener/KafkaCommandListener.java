@@ -77,6 +77,12 @@ public class KafkaCommandListener {
                 case "ACCOUNT_VERIFY_STATUS":
                     commandHandlerService.handleVerifyAccountStatus(command);
                     break;
+                case "ACCOUNT_RESERVE_FUNDS":
+                    commandHandlerService.handleReserveFunds(command);
+                    break;
+                case "ACCOUNT_RELEASE_FUNDS":
+                    commandHandlerService.handleReleaseFunds(command);
+                    break;
                 default:
                     log.warn("Unknown account order command type: {}", command.getType());
                     break;
