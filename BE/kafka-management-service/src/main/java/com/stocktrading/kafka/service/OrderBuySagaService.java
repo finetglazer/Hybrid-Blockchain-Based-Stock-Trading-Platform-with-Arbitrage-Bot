@@ -117,10 +117,25 @@ public class OrderBuySagaService {
             log.debug("Calculating required funds for saga: {}", saga.getSagaId());
 
             // Get the market price from previous step
-            BigDecimal marketPrice = (BigDecimal) saga.getStepData("PRICE_PROVIDED_currentPrice");
+            Object priceObj = saga.getStepData("PRICE_PROVIDED_currentPrice");
+            BigDecimal marketPrice;
 
-            if (marketPrice == null) {
+            if (priceObj == null) {
                 throw new IllegalStateException("Market price not available");
+            } else if (priceObj instanceof BigDecimal) {
+                marketPrice = (BigDecimal) priceObj;
+            } else if (priceObj instanceof Double) {
+                // This handles the case in your error
+                marketPrice = BigDecimal.valueOf((Double) priceObj);
+            } else if (priceObj instanceof Number) {
+                // Handle other numeric types
+                marketPrice = BigDecimal.valueOf(((Number) priceObj).doubleValue());
+            } else if (priceObj instanceof String) {
+                // Even handle string representations
+                marketPrice = new BigDecimal((String) priceObj);
+            } else {
+                throw new IllegalStateException("Market price is in an unsupported format: " +
+                        priceObj.getClass().getName());
             }
 
             // For limit orders, use limit price for calculation
@@ -147,12 +162,37 @@ public class OrderBuySagaService {
 
             // Process the next step (RESERVE_FUNDS)
             processNextStep(saga);
-
         } catch (Exception e) {
             log.error("Error calculating required funds", e);
             saga.handleFailure("Failed to calculate required funds: " + e.getMessage(),
                     OrderBuySagaStep.CALCULATE_REQUIRED_FUNDS.name());
             orderBuySagaRepository.save(saga);
+
+            // If cancellation is needed on failure
+            cancelOrder(saga);
+        }
+    }
+
+    // Add this method to handle order cancellation
+    private void cancelOrder(OrderBuySagaState saga) {
+        try {
+            // Only attempt cancellation if we have an order ID
+            if (saga.getOrderId() != null) {
+                log.info("Cancelling order {} due to funds calculation failure", saga.getOrderId());
+
+                // Update order status to CANCELLED in the Order Service
+                // This could be done via a direct API call or through a Kafka message
+
+                saga.addEvent("ORDER_CANCELLED", "Order cancelled due to funds calculation failure");
+            } else {
+                log.info("No order to cancel - funds calculation failed before order creation");
+            }
+            saga.setStatus(SagaStatus.COMPENSATION_COMPLETED);
+            saga.setEndTime(Instant.now());
+            orderBuySagaRepository.save(saga);
+
+        } catch (Exception e) {
+            log.error("Error cancelling order after funds calculation failure", e);
         }
     }
 
