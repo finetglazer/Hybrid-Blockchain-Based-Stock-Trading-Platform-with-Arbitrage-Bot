@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("sagas/api/v1")
 @RequiredArgsConstructor
-public class SagaController {
+public class DepositSagaController {
     
     private final DepositSagaService depositSagaService;
     
@@ -71,7 +71,7 @@ public class SagaController {
         List<DepositSagaState> activeSagas = depositSagaService.findActiveSagas();
         
         SagaListResponse response = new SagaListResponse();
-        response.setSagas(activeSagas.stream().map(this::mapToDto).collect(Collectors.toList()));
+        response.setItems(activeSagas.stream().map(this::mapToDto).collect(Collectors.toList()));
         response.setCount(activeSagas.size());
         
         return ResponseEntity.ok(response);

@@ -37,17 +37,16 @@
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
+        <property name="com.intellij.clouds.kubernetes.db.resource.type" value="Deployment" />
         <property name="com.intellij.clouds.kubernetes.db.container.port" />
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="authServiceDB@cluster-1.rylgk.mongodb.net" uuid="c6c7818a-757c-421f-93ec-6300b6f16b80">
+    <data-source source="LOCAL" name="@cluster-1.rylgk.mongodb.net " uuid="44f24f84-babe-41c2-a395-c92f9954f612">
       <driver-ref>mongo.4</driver-ref>
       <synchronize>true</synchronize>
-      <imported>true</imported>
-      <remarks>$PROJECT_DIR$/BE/wallet-service/src/main/resources/application-docker.properties</remarks>
       <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
-      <jdbc-url>mongodb+srv://cluster-1.rylgk.mongodb.net/authServiceDB/?retryWrites=true&amp;w=majority&amp;appName=Cluster-1</jdbc-url>
+      <jdbc-url>mongodb+srv://cluster-1.rylgk.mongodb.net/OrderServiceDB?retryWrites=true&amp;w=majority&amp;appName=Cluster-1</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
@@ -56,21 +55,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="authServiceDB@cluster-1.rylgk.mongodb.net" uuid="335d2ad7-e00b-4e1f-add3-49591c724c57">
-      <driver-ref>mongo.4</driver-ref>
-      <synchronize>true</synchronize>
-      <imported>true</imported>
-      <remarks>$PROJECT_DIR$/BE/user-service/src/main/resources/application-docker.properties</remarks>
-      <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
-      <jdbc-url>mongodb+srv://cluster-1.rylgk.mongodb.net/authServiceDB/?retryWrites=true&amp;w=majority&amp;appName=Cluster-1</jdbc-url>
-      <jdbc-additional-properties>
-        <property name="com.intellij.clouds.kubernetes.db.host.port" />
-        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
-        <property name="com.intellij.clouds.kubernetes.db.container.port" />
-      </jdbc-additional-properties>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="@cluster-1.rylgk.mongodb.net " uuid="44f24f84-babe-41c2-a395-c92f9954f612">
+    <data-source source="LOCAL" name="@cluster-1.rylgk.mongodb.net" uuid="228330d2-0fea-4544-862f-623570b44a6d">
       <driver-ref>mongo.4</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
@@ -83,11 +68,11 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="AccountServiceDB@cluster-1.rylgk.mongodb.net" uuid="ca972ac4-0f78-45df-9c22-00af2536dfa4">
+    <data-source source="LOCAL" name="portfolioServiceDB@cluster-1.rylgk.mongodb.net" uuid="c3e4f936-f504-4ee8-bcc9-a29d4de8a5dc">
       <driver-ref>mongo.4</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
-      <jdbc-url>mongodb+srv://cluster-1.rylgk.mongodb.net/AccountServiceDB?retryWrites=true&amp;w=majority&amp;appName=Cluster-1</jdbc-url>
+      <jdbc-url>mongodb+srv://cluster-1.rylgk.mongodb.net/portfolioServiceDB?retryWrites=true&amp;w=majority&amp;appName=Cluster-1</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />

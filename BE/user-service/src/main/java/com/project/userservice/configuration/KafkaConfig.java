@@ -37,8 +37,8 @@ public class KafkaConfig {
     @Value("${spring.kafka.consumer.group-id:user-service-group}")
     private String groupId;
 
-    @Bean
-    public ConsumerFactory<String, CommandMessage> commandConsumerFactory() {
+
+    public ConsumerFactory<String, CommandMessage> commandConsumerFactory(String groupId) {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
@@ -59,10 +59,25 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, CommandMessage> kafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, CommandMessage> depositCommandsListenerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, CommandMessage> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(commandConsumerFactory());
+        factory.setConsumerFactory(commandConsumerFactory("user-deposit-group"));
+        factory.setConcurrency(3);
+        factory.getContainerProperties().setAckMode(
+                org.springframework.kafka.listener.ContainerProperties.AckMode.MANUAL_IMMEDIATE);
+
+        // Configure error handler
+        factory.setCommonErrorHandler(errorHandler());
+
+        return factory;
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, CommandMessage> orderCommandsListenerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, CommandMessage> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(commandConsumerFactory("user-order-group"));
         factory.setConcurrency(3);
         factory.getContainerProperties().setAckMode(
                 org.springframework.kafka.listener.ContainerProperties.AckMode.MANUAL_IMMEDIATE);
