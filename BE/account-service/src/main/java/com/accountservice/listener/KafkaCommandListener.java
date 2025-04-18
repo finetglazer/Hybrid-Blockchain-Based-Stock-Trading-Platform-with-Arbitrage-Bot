@@ -64,6 +64,8 @@ public class KafkaCommandListener {
         }
     }
 
+    // In BE/account-service/src/main/java/com/accountservice/listener/KafkaCommandListener.java
+
     @KafkaListener(
             id = "accountOrderCommandsListener",
             topics = "${kafka.topics.account-commands.order-buy}",
@@ -82,6 +84,12 @@ public class KafkaCommandListener {
                     break;
                 case "ACCOUNT_RELEASE_FUNDS":
                     commandHandlerService.handleReleaseFunds(command);
+                    break;
+                case "ACCOUNT_SETTLE_TRANSACTION":  // Add this case
+                    commandHandlerService.handleSettleTransaction(command);
+                    break;
+                case "ACCOUNT_REVERSE_SETTLEMENT":  // Add this for compensation
+                    commandHandlerService.handleReverseSettlement(command);
                     break;
                 default:
                     log.warn("Unknown account order command type: {}", command.getType());

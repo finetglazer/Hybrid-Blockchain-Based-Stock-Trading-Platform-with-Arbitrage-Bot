@@ -26,12 +26,14 @@ public class ReservationRecord {
     private Instant createdAt;
     private Instant expiresAt;
     private String status;
+    private Instant updatedAt;
 
     public enum ReservationStatus {
         ACTIVE,
         PARTIALLY_RELEASED,
         FULLY_RELEASED,
         SETTLED,
-        EXPIRED
+        EXPIRED,
+        REVERSED  // Add this new status
     }
 }

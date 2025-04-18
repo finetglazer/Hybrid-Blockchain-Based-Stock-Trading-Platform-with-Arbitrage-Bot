@@ -1073,4 +1073,281 @@ public class KafkaCommandHandlerService {
             log.error("Error sending event", e);
         }
     }
+
+    /**
+     * Handle ACCOUNT_SETTLE_TRANSACTION command
+     * This finalizes a stock purchase by converting reserved funds into an actual deduction
+     */
+    public void handleSettleTransaction(CommandMessage command) {
+        log.info("Handling ACCOUNT_SETTLE_TRANSACTION command for saga: {}", command.getSagaId());
+
+        String accountId = command.getPayloadValue("accountId");
+        String reservationId = command.getPayloadValue("reservationId");
+        String orderId = command.getPayloadValue("orderId");
+
+        // Get the final amount to settle (could be different from initial reserved amount)
+        Object finalAmountObj = command.getPayloadValue("finalAmount");
+        BigDecimal finalAmount = convertToBigDecimal(finalAmountObj);
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find the account
+            Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
+            if (accountOpt.isEmpty()) {
+                handleSettlementFailure(event, "ACCOUNT_NOT_FOUND",
+                        "Account not found: " + accountId);
+                return;
+            }
+            TradingAccount account = accountOpt.get();
+
+            // Find the reservation
+            Optional<ReservationRecord> reservationOpt = reservationRecordRepository.findById(reservationId);
+            if (reservationOpt.isEmpty()) {
+                handleSettlementFailure(event, "RESERVATION_NOT_FOUND",
+                        "Fund reservation not found: " + reservationId);
+                return;
+            }
+            ReservationRecord reservation = reservationOpt.get();
+
+            // Validate reservation status
+            if (!reservation.getStatus().equals(ReservationRecord.ReservationStatus.ACTIVE.toString())) {
+                handleSettlementFailure(event, "INVALID_RESERVATION_STATUS",
+                        "Reservation is not active: " + reservation.getStatus());
+                return;
+            }
+
+            // Get balance
+            Balance balance = balanceRepository.findByAccountId(accountId);
+            if (balance == null) {
+                handleSettlementFailure(event, "BALANCE_NOT_FOUND",
+                        "Balance record not found for account: " + accountId);
+                return;
+            }
+
+            // Store original values (for potential compensation)
+            BigDecimal originalReserved = balance.getReserved();
+            BigDecimal originalTotal = balance.getTotal();
+
+            // Calculate the difference between reserved and final amount
+            // This handles cases where execution price was different than estimated
+            BigDecimal reservedAmount = reservation.getAmount();
+            BigDecimal refundAmount = BigDecimal.ZERO;
+
+            if (reservedAmount.compareTo(finalAmount) > 0) {
+                // We reserved more than needed, calculate refund
+                refundAmount = reservedAmount.subtract(finalAmount);
+            }
+
+            // Update the balance:
+            // 1. Remove from reserved
+            // 2. Decrease total by finalAmount
+            // 3. Add refund to available if applicable
+            balance.setReserved(balance.getReserved().subtract(reservedAmount));
+            balance.setTotal(balance.getTotal().subtract(finalAmount));
+
+            if (refundAmount.compareTo(BigDecimal.ZERO) > 0) {
+                balance.setAvailable(balance.getAvailable().add(refundAmount));
+            }
+
+            balance.setUpdatedAt(Instant.now());
+
+            // Mark reservation as settled
+            reservation.setStatus(ReservationRecord.ReservationStatus.SETTLED.toString());
+            reservation.setUpdatedAt(Instant.now());
+
+            // Create a transaction record
+            Transaction transaction = new Transaction();
+            transaction.setId(UUID.randomUUID().toString());
+            transaction.setAccountId(accountId);
+            transaction.setType("ORDER_PAYMENT");
+            transaction.setStatus("COMPLETED");
+            transaction.setAmount(finalAmount.negate()); // Negative amount for payment
+            transaction.setCurrency(balance.getCurrency());
+            transaction.setFee(BigDecimal.ZERO); // Set fee as needed
+            transaction.setDescription("Payment for order " + orderId);
+            transaction.setCreatedAt(Instant.now());
+            transaction.setUpdatedAt(Instant.now());
+            transaction.setCompletedAt(Instant.now());
+            transaction.setExternalReferenceId(orderId);
+
+            // Save all updates
+            balanceRepository.save(balance);
+            reservationRecordRepository.save(reservation);
+            transactionRepository.save(transaction);
+
+            // Set success response
+            event.setType("TRANSACTION_SETTLED");
+            event.setSuccess(true);
+            event.setPayloadValue("transactionId", transaction.getId());
+            event.setPayloadValue("accountId", accountId);
+            event.setPayloadValue("reservationId", reservationId);
+            event.setPayloadValue("orderId", orderId);
+            event.setPayloadValue("amount", finalAmount);
+            event.setPayloadValue("newTotalBalance", balance.getTotal());
+            event.setPayloadValue("refundAmount", refundAmount);
+
+            // Save original values for potential compensation
+            event.setPayloadValue("originalReserved", originalReserved);
+            event.setPayloadValue("originalTotal", originalTotal);
+            event.setPayloadValue("settlementTime", transaction.getCompletedAt().toString());
+
+            log.info("Transaction settled successfully for account: {}, order: {}", accountId, orderId);
+
+        } catch (Exception e) {
+            log.error("Error settling transaction", e);
+            handleSettlementFailure(event, "SETTLEMENT_ERROR",
+                    "Error settling transaction: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send("account.events.order-buy", command.getSagaId(), event);
+            log.info("Sent TRANSACTION_SETTLED response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
+    /**
+     * Helper method to handle settlement failures
+     */
+    private void handleSettlementFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("TRANSACTION_SETTLEMENT_FAILED");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        try {
+            kafkaTemplate.send("account.events.order-buy", event.getSagaId(), event);
+            log.info("Sent TRANSACTION_SETTLEMENT_FAILED response for saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Handle ACCOUNT_REVERSE_SETTLEMENT command (compensation)
+     * This undoes a previous settlement when part of the saga fails
+     */
+    public void handleReverseSettlement(CommandMessage command) {
+        log.info("Handling ACCOUNT_REVERSE_SETTLEMENT command for saga: {}", command.getSagaId());
+
+        String accountId = command.getPayloadValue("accountId");
+        String reservationId = command.getPayloadValue("reservationId");
+        String orderId = command.getPayloadValue("orderId");
+
+        // Get the amount to reverse
+        Object amountObj = command.getPayloadValue("amount");
+        BigDecimal amount = convertToBigDecimal(amountObj);
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find the account
+            Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
+            if (accountOpt.isEmpty()) {
+                // Even in compensation, we try to continue the saga
+                log.warn("Account not found during settlement reversal: {}", accountId);
+                event.setType("SETTLEMENT_REVERSED");
+                event.setSuccess(true); // Return success to continue compensation
+                event.setPayloadValue("accountId", accountId);
+                event.setPayloadValue("status", "ACCOUNT_NOT_FOUND");
+
+                kafkaTemplate.send("account.events.order-buy", command.getSagaId(), event);
+                return;
+            }
+
+            TradingAccount account = accountOpt.get();
+
+            // Find relevant balance record
+            Balance balance = balanceRepository.findByAccountId(accountId);
+            if (balance == null) {
+                log.warn("Balance not found during settlement reversal: {}", accountId);
+                event.setType("SETTLEMENT_REVERSED");
+                event.setSuccess(true); // Return success to continue compensation
+                event.setPayloadValue("accountId", accountId);
+                event.setPayloadValue("status", "BALANCE_NOT_FOUND");
+
+                kafkaTemplate.send("account.events.order-buy", command.getSagaId(), event);
+                return;
+            }
+
+            // Create transaction record for reversal
+            Transaction reversal = new Transaction();
+            reversal.setId(UUID.randomUUID().toString());
+            reversal.setAccountId(accountId);
+            reversal.setType("ORDER_PAYMENT_REVERSAL");
+            reversal.setStatus("COMPLETED");
+            reversal.setAmount(amount); // Positive amount (returning funds)
+            reversal.setCurrency(balance.getCurrency());
+            reversal.setFee(BigDecimal.ZERO);
+            reversal.setDescription("Reversal of payment for order " + orderId);
+            reversal.setCreatedAt(Instant.now());
+            reversal.setUpdatedAt(Instant.now());
+            reversal.setCompletedAt(Instant.now());
+            reversal.setExternalReferenceId("REV-" + orderId);
+
+            // Update balance
+            balance.setAvailable(balance.getAvailable().add(amount));
+            balance.setTotal(balance.getTotal().add(amount));
+            balance.setUpdatedAt(Instant.now());
+
+            // Save changes
+            balanceRepository.save(balance);
+            transactionRepository.save(reversal);
+
+            // If the reservation record still exists, update it
+            Optional<ReservationRecord> reservationOpt = reservationRecordRepository.findById(reservationId);
+            if (reservationOpt.isPresent()) {
+                ReservationRecord reservation = reservationOpt.get();
+                reservation.setStatus(ReservationRecord.ReservationStatus.REVERSED.toString());
+                reservation.setUpdatedAt(Instant.now());
+                reservationRecordRepository.save(reservation);
+            }
+
+            // Set success response
+            event.setType("SETTLEMENT_REVERSED");
+            event.setSuccess(true);
+            event.setPayloadValue("reversalTransactionId", reversal.getId());
+            event.setPayloadValue("accountId", accountId);
+            event.setPayloadValue("orderId", orderId);
+            event.setPayloadValue("amount", amount);
+            event.setPayloadValue("newAvailableBalance", balance.getAvailable());
+            event.setPayloadValue("newTotalBalance", balance.getTotal());
+            event.setPayloadValue("reversedAt", reversal.getCompletedAt().toString());
+
+            log.info("Settlement successfully reversed for account: {}, order: {}", accountId, orderId);
+
+        } catch (Exception e) {
+            log.error("Error reversing settlement", e);
+            // Even in case of error, we want the compensation to continue
+            event.setType("SETTLEMENT_REVERSED");
+            event.setSuccess(true); // Return success to continue compensation
+            event.setPayloadValue("error", true);
+            event.setPayloadValue("errorMessage", e.getMessage());
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send("account.events.order-buy", command.getSagaId(), event);
+            log.info("Sent SETTLEMENT_REVERSED response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
 }
