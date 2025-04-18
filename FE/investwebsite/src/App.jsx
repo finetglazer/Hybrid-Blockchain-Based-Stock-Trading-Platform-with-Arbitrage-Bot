@@ -18,7 +18,7 @@ import TwoFactorAuth from "./pages/TwoFactorAuth/TwoFactorAuth.jsx";
 import UpdatePhoneNumber from "./pages/UpdatePhoneNumber/UpdatePhoneNumber.jsx";
 import Disable2FA from "./pages/Disable2FA/Disable2FA.jsx";
 import TwoFactorAuthenticationSettings from "./pages/SettingPage/2FASettings/2FASettings.jsx";
-import {AppContextProvider} from "./AppContextProvider.jsx";
+import { AppContextProvider } from "./AppContextProvider.jsx";
 import ChangePassword from "./pages/SettingPage/ChangePassword/ChangePassword.jsx";
 import PaymentMethodsManagement from "./pages/PaymentMethod/PaymentMethodsManagement.jsx";
 
@@ -41,11 +41,18 @@ const Layout = () => {
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/support" element={<Support />} />
           <Route path="/setting" element={<Setting />} />
-          <Route path="/setting/2fa-settings" element={<TwoFactorAuthenticationSettings />} />
+          <Route
+            path="/setting/2fa-settings"
+            element={<TwoFactorAuthenticationSettings />}
+          />
           <Route path="/setting/change-password" element={<ChangePassword />} />
-          <Route path="/account-dashboard/payment-methods" element={<PaymentMethodsManagement />} />
+          <Route
+            path="/account-dashboard/payment-methods"
+            element={<PaymentMethodsManagement />}
+          />
           <Route path="/forget-password" element={<ForgetPassword />} />
-          <Route path="/two-factor-auth" element={<TwoFactorAuth />} /> {/* Add this route */}
+          <Route path="/two-factor-auth" element={<TwoFactorAuth />} />{" "}
+          {/* Add this route */}
           <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />
           <Route path="/profile/disable2FA" element={<Disable2FA />} />
         </Routes>

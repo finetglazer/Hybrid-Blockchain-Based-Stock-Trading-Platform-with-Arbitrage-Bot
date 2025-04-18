@@ -28,8 +28,9 @@
 
 .wallets-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: 120px;
 }
 
 .wallets-list {
@@ -138,10 +139,23 @@
 }
 
 .btn-add-account {
-  background-color: #7b61ff !important;
-  color: white !important;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+
+  background-color: #7b61ff;
+  color: white;
   font-size: 20px !important;
   border-radius: 50% !important;
   min-width: 50px !important;
   height: 50px !important;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  border: none;
 }
