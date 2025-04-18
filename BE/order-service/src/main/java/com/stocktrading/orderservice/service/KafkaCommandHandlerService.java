@@ -410,4 +410,88 @@ public class KafkaCommandHandlerService {
             log.error("Error sending event", e);
         }
     }
+
+    /**
+     * Handle ORDER_UPDATE_COMPLETED command
+     */
+    public void handleUpdateOrderCompleted(CommandMessage command) {
+        log.info("Handling ORDER_UPDATE_COMPLETED command for saga: {}", command.getSagaId());
+
+        String orderId = command.getPayloadValue("orderId");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ORDER_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find order
+            Optional<Order> orderOpt = orderRepository.findById(orderId);
+            if (orderOpt.isEmpty()) {
+                handleOrderCompletionFailure(event, "ORDER_NOT_FOUND",
+                        "Order not found with ID: " + orderId);
+                return;
+            }
+
+            Order order = orderOpt.get();
+
+            // Verify order can be completed (state check)
+            if (order.getStatus() != Order.OrderStatus.FILLED) {
+                handleOrderCompletionFailure(event, "INVALID_ORDER_STATE",
+                        "Order is not in FILLED state: " + order.getStatus());
+                return;
+            }
+
+            // Update order to COMPLETED status
+            order.setStatus(Order.OrderStatus.COMPLETED);
+            order.setUpdatedAt(Instant.now());
+
+            // Save updated order
+            Order updatedOrder = orderRepository.save(order);
+
+            // Set success response
+            event.setType("ORDER_COMPLETED");
+            event.setSuccess(true);
+            event.setPayloadValue("orderId", updatedOrder.getId());
+            event.setPayloadValue("status", updatedOrder.getStatus().name());
+            event.setPayloadValue("completedAt", updatedOrder.getUpdatedAt().toString());
+
+            log.info("Order completed successfully with ID: {}", updatedOrder.getId());
+
+        } catch (Exception e) {
+            log.error("Error completing order", e);
+            handleOrderCompletionFailure(event, "ORDER_COMPLETION_ERROR",
+                    "Error completing order: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send(orderEventsTopic, command.getSagaId(), event);
+            log.info("Sent ORDER_COMPLETED response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
+    /**
+     * Helper method to handle order completion failures
+     */
+    private void handleOrderCompletionFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("ORDER_COMPLETION_FAILED");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        try {
+            kafkaTemplate.send(orderEventsTopic, event.getSagaId(), event);
+            log.info("Sent ORDER_COMPLETION_FAILED response for saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
 }
