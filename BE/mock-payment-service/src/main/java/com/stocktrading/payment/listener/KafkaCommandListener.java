@@ -32,6 +32,10 @@ public class KafkaCommandListener {
                     break;
                 case "PAYMENT_REVERSE_DEPOSIT":
                     paymentProcessorService.reverseDeposit(command);
+                case "PAYMENT_PROCESS_WITHDRAWAL":
+                    paymentProcessorService.processWithdrawal(command);
+                case "PAYMENT_REVERSE_WITHDRAWAL":
+                    paymentProcessorService.reverseWithdrawal(command);
                     break;
                 default:
                     log.warn("Unknown command type: {}", command.getType());

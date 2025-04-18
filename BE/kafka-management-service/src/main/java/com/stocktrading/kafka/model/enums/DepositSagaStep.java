@@ -10,14 +10,14 @@ public enum DepositSagaStep {
     VERIFY_USER_IDENTITY(1, "Verify user identity", CommandType.USER_VERIFY_IDENTITY),
     VALIDATE_ACCOUNT(2, "Validate account status", CommandType.ACCOUNT_VALIDATE), // Add this new step
     VALIDATE_PAYMENT_METHOD(3, "Validate payment method", CommandType.PAYMENT_METHOD_VALIDATE), // Updated step number
-    CREATE_PENDING_TRANSACTION(4, "Create pending transaction", CommandType.ACCOUNT_CREATE_PENDING_TRANSACTION), // Updated step number
+    CREATE_PENDING_TRANSACTION(4, "Create pending deposit transaction", CommandType.ACCOUNT_CREATE_DEPOSIT_PENDING_TRANSACTION), // Updated step number
     PROCESS_PAYMENT(5, "Process payment", CommandType.PAYMENT_PROCESS_DEPOSIT), // Updated step number
     UPDATE_TRANSACTION_STATUS(6, "Update transaction status", CommandType.ACCOUNT_UPDATE_TRANSACTION_STATUS), // Updated step number
-    UPDATE_BALANCE(7, "Update balance", CommandType.ACCOUNT_UPDATE_BALANCE), // Updated step number
+    UPDATE_BALANCE(7, "Update balance", CommandType.ACCOUNT_DEPOSIT_UPDATE_BALANCE), // Updated step number
     COMPLETE_SAGA(8, "Complete saga", null), // Updated step number
 
     // Compensation steps
-    REVERSE_BALANCE_UPDATE(101, "Reverse balance update", CommandType.ACCOUNT_REVERSE_BALANCE_UPDATE),
+    REVERSE_BALANCE_UPDATE(101, "Reverse balance update", CommandType.ACCOUNT_DEPOSIT_REVERSE_BALANCE_UPDATE),
     REVERSE_PAYMENT(102, "Reverse payment", CommandType.PAYMENT_REVERSE_DEPOSIT),
     MARK_TRANSACTION_FAILED(103, "Mark transaction failed", CommandType.ACCOUNT_MARK_TRANSACTION_FAILED);
     

@@ -89,7 +89,7 @@ public class JobRunrServiceImpl {
         BalanceHistory yesterdayBalanceHistory = balanceHistoryRepository.findBalanceHistoryByAccountIdAndDate(accountId, yesterday);
         assert yesterdayBalanceHistory != null;
 
-        BigDecimal closingBalance = BigDecimal.valueOf(yesterdayBalanceHistory.getOpeningBalance());
+        BigDecimal closingBalance = yesterdayBalanceHistory.getOpeningBalance();
 
         BigDecimal deposits = BigDecimal.ZERO;
         BigDecimal withdrawals = BigDecimal.ZERO;

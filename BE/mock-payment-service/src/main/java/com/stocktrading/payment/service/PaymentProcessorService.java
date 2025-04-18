@@ -53,7 +53,7 @@ public class PaymentProcessorService {
 
             // Simulate random failure (10% chance)
             if (shouldSimulateFailure()) {
-                handlePaymentFailure(event, "PAYMENT_PROCESSING_ERROR", "Simulated payment processing failure");
+                handleDepositPaymentFailure(event, "PAYMENT_PROCESSING_ERROR", "Simulated payment processing failure");
                 return;
             }
 
@@ -61,7 +61,7 @@ public class PaymentProcessorService {
             String paymentReference = generatePaymentReference();
 
             // Set success response
-            event.setType("PAYMENT_PROCESSED");
+            event.setType("DEPOSIT_PAYMENT_PROCESSED");
             event.setSuccess(true);
             event.setPayloadValue("transactionId", transactionId);
             event.setPayloadValue("accountId", accountId);
@@ -75,7 +75,7 @@ public class PaymentProcessorService {
 
         } catch (Exception e) {
             log.error("Error processing payment", e);
-            handlePaymentFailure(event, "PAYMENT_PROCESSING_ERROR",
+            handleDepositPaymentFailure(event, "PAYMENT_PROCESSING_ERROR",
                     "Error processing payment: " + e.getMessage());
             return;
         }
@@ -110,12 +110,12 @@ public class PaymentProcessorService {
 
             // Simulate rare reversal failure (5% chance)
             if (random.nextInt(100) < 5) {
-                handlePaymentFailure(event, "REVERSAL_ERROR", "Simulated reversal failure");
+                handleDepositReversalPaymentFailure(event, "REVERSAL_ERROR", "Simulated reversal failure");
                 return;
             }
 
             // Set success response
-            event.setType("PAYMENT_REVERSAL_COMPLETED");
+            event.setType("DEPOSIT_PAYMENT_REVERSAL_COMPLETED");
             event.setSuccess(true);
             event.setPayloadValue("transactionId", transactionId);
             event.setPayloadValue("originalPaymentReference", paymentReference);
@@ -128,7 +128,118 @@ public class PaymentProcessorService {
 
         } catch (Exception e) {
             log.error("Error processing payment reversal", e);
-            handlePaymentFailure(event, "REVERSAL_ERROR",
+            handleDepositReversalPaymentFailure(event, "REVERSAL_ERROR",
+                    "Error processing payment reversal: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        publishEvent(event);
+    }
+
+    /**
+     * Process a withdrawal payment command
+     */
+    public void processWithdrawal(CommandMessage command) {
+        log.info("Processing withdrawal payment for saga: {}", command.getSagaId());
+
+        String paymentMethodId = command.getPayloadValue("paymentMethodId");
+        Object amountObj = command.getPayloadValue("amount");
+        BigDecimal amount = convertToBigDecimal(amountObj);
+        String currency = command.getPayloadValue("currency");
+        String accountId = command.getPayloadValue("accountId");
+        String transactionId = command.getPayloadValue("transactionId");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("PAYMENT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Simulate payment processing delay (randomly between 500-1500ms)
+            simulateProcessingDelay();
+
+            // Simulate random failure (10% chance)
+            if (shouldSimulateFailure()) {
+                handleWithdrawalPaymentFailure(event, "PAYMENT_PROCESSING_ERROR", "Simulated payment processing failure");
+                return;
+            }
+
+            // Generate a mock payment reference
+            String paymentReference = generatePaymentReference();
+
+            // Set success response
+            event.setType("WITHDRAWAL_PAYMENT_PROCESSED");
+            event.setSuccess(true);
+            event.setPayloadValue("transactionId", transactionId);
+            event.setPayloadValue("accountId", accountId);
+            event.setPayloadValue("amount", amount);
+            event.setPayloadValue("currency", currency);
+            event.setPayloadValue("paymentMethodId", paymentMethodId);
+            event.setPayloadValue("processedAt", Instant.now().toString());
+            event.setPayloadValue("paymentReference", paymentReference);
+
+            log.info("Payment processed successfully with reference: {}", paymentReference);
+
+        } catch (Exception e) {
+            log.error("Error processing payment", e);
+            handleWithdrawalPaymentFailure(event, "PAYMENT_PROCESSING_ERROR",
+                    "Error processing payment: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        publishEvent(event);
+    }
+
+    /**
+     * Process a withdrawal reversal command (compensation)
+     */
+    public void reverseWithdrawal(CommandMessage command) {
+        log.info("Processing withdrawal reversal for saga: {}", command.getSagaId());
+
+        String paymentReference = command.getPayloadValue("paymentReference");
+        Object amountObj = command.getPayloadValue("amount");
+        BigDecimal amount = convertToBigDecimal(amountObj);
+        String reason = command.getPayloadValue("reason");
+        String transactionId = command.getPayloadValue("transactionId");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("PAYMENT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Simulate processing delay
+            simulateProcessingDelay();
+
+            // Simulate rare reversal failure (5% chance)
+            if (random.nextInt(100) < 5) {
+                handleWithdrawalReversalPaymentFailure(event, "REVERSAL_ERROR", "Simulated reversal failure");
+                return;
+            }
+
+            // Set success response
+            event.setType("WITHDRAWAL_PAYMENT_REVERSAL_COMPLETED");
+            event.setSuccess(true);
+            event.setPayloadValue("transactionId", transactionId);
+            event.setPayloadValue("originalPaymentReference", paymentReference);
+            event.setPayloadValue("reversalReference", generatePaymentReference());
+            event.setPayloadValue("amount", amount);
+            event.setPayloadValue("reason", reason);
+            event.setPayloadValue("reversedAt", Instant.now().toString());
+
+            log.info("Payment reversal completed for reference: {}", paymentReference);
+
+        } catch (Exception e) {
+            log.error("Error processing payment reversal", e);
+            handleWithdrawalReversalPaymentFailure(event, "REVERSAL_ERROR",
                     "Error processing payment reversal: " + e.getMessage());
             return;
         }
@@ -153,10 +264,49 @@ public class PaymentProcessorService {
     }
 
     /**
-     * Helper method to handle payment failure
+     * Helper method to handle deposit payment failure
      */
-    private void handlePaymentFailure(EventMessage event, String errorCode, String errorMessage) {
-        event.setType("PAYMENT_FAILED");
+    private void handleDepositPaymentFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("DEPOSIT_PAYMENT_FAILED");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        log.warn("Payment failed: {} - {}", errorCode, errorMessage);
+        publishEvent(event);
+    }
+
+    /**
+     * Helper method to handle withdrawal payment failure
+     */
+    private void handleWithdrawalPaymentFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("WITHDRAWAL_PAYMENT_FAILED");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        log.warn("Payment failed: {} - {}", errorCode, errorMessage);
+        publishEvent(event);
+    }
+
+    /**
+     * Helper method to handle deposit reversal payment failure
+     */
+    public void handleDepositReversalPaymentFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("DEPOSIT_PAYMENT_REVERSAL_FAILED");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        log.warn("Payment failed: {} - {}", errorCode, errorMessage);
+        publishEvent(event);
+    }
+
+    /**
+     * Helper method to handle withdrawal reversal payment failure
+     */
+    public void handleWithdrawalReversalPaymentFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("WITHDRAWAL_PAYMENT_REVERSAL_FAILED");
         event.setSuccess(false);
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);

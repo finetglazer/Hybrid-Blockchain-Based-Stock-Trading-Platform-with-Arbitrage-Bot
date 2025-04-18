@@ -3,6 +3,7 @@ package com.stocktrading.kafka.listener;
 import com.project.kafkamessagemodels.model.EventMessage;
 import com.stocktrading.kafka.service.DepositSagaService;
 import com.stocktrading.kafka.service.IdempotencyService;
+import com.stocktrading.kafka.service.WithdrawalSagaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 public class KafkaEventListener {
 
     private final DepositSagaService depositSagaService;
+    private final WithdrawalSagaService withdrawalSagaService;
     private final IdempotencyService idempotencyService;
 
     /**
@@ -34,7 +36,7 @@ public class KafkaEventListener {
 
             // Handle the event
             depositSagaService.handleEventMessage(event);
-
+            withdrawalSagaService.handleEventMessage(event);
             // Acknowledge the message
             ack.acknowledge();
 

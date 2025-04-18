@@ -1,10 +1,11 @@
 package com.project.kafkamessagemodels.model.enums;
 
-import com.project.kafkamessagemodels.model.enums.CommandType;
+import lombok.Getter;
 
 /**
  * Enum defining all event types used in the system
  */
+@Getter
 public enum EventType {
     // User Service Events
     USER_IDENTITY_VERIFIED("User identity verified"),
@@ -15,22 +16,34 @@ public enum EventType {
     ACCOUNT_VALIDATION_FAILED("Account validation failed"),
     PAYMENT_METHOD_VALID("Payment method validated"),
     PAYMENT_METHOD_INVALID("Payment method invalid"),
-    TRANSACTION_CREATED("Transaction created"),
-    TRANSACTION_CREATION_FAILED("Transaction creation failed"),
-    TRANSACTION_STATUS_UPDATED("Transaction status updated"),
+    BALANCE_VALID("Balance valid"),
+    BALANCE_VALIDATION_ERROR("Balance validation error"),
+    DEPOSIT_TRANSACTION_CREATED("Transaction created"),
+    DEPOSIT_TRANSACTION_CREATION_FAILED("Transaction creation failed"),
+    WITHDRAWAL_TRANSACTION_CREATED("Transaction created"),
+    WITHDRAWAL_TRANSACTION_CREATION_FAILED("Transaction creation failed"),TRANSACTION_STATUS_UPDATED("Transaction status updated"),
     TRANSACTION_UPDATE_FAILED("Transaction status update failed"),
-    BALANCE_UPDATED("Balance updated"),
-    BALANCE_UPDATE_FAILED("Balance update failed"),
+    DEPOSIT_BALANCE_UPDATED("Balance updated"),
+    DEPOSIT_BALANCE_UPDATE_FAILED("Balance update failed"),
+    WITHDRAWAL_BALANCE_UPDATED("Balance updated"),
+    WITHDRAWAL_BALANCE_UPDATE_FAILED("Balance update failed"),
+
 
     // Payment Processor Events
-    PAYMENT_PROCESSED("Payment processed"),
-    PAYMENT_FAILED("Payment processing failed"),
+    DEPOSIT_PAYMENT_PROCESSED("Payment processed"),
+    DEPOSIT_PAYMENT_FAILED("Payment processing failed"),
+    WITHDRAWAL_PAYMENT_PROCESSED("Payment processed"),
+    WITHDRAWAL_PAYMENT_FAILED("Payment processing failed"),
 
     // Compensation Event Responses
-    PAYMENT_REVERSAL_COMPLETED("Payment reversal completed"),
-    PAYMENT_REVERSAL_FAILED("Payment reversal failed"),
-    BALANCE_REVERSAL_COMPLETED("Balance reversal completed"),
-    BALANCE_REVERSAL_FAILED("Balance reversal failed"),
+    DEPOSIT_PAYMENT_REVERSAL_COMPLETED("Payment reversal completed"),
+    DEPOSIT_PAYMENT_REVERSAL_FAILED("Payment reversal failed"),
+    WITHDRAWAL_PAYMENT_REVERSAL_COMPLETED("Payment reversal completed"),
+    WITHDRAWAL_PAYMENT_REVERSAL_FAILED("Payment reversal failed"),
+    DEPOSIT_BALANCE_REVERSAL_COMPLETED("Balance reversal completed"),
+    DEPOSIT_BALANCE_REVERSAL_FAILED("Balance reversal failed"),
+    WITHDRAWAL_BALANCE_REVERSAL_COMPLETED("Balance reversal completed"),
+    WITHDRAWAL_BALANCE_REVERSAL_FAILED("Balance reversal failed"),
     TRANSACTION_MARKED_FAILED("Transaction marked as failed"),
     TRANSACTION_MARK_FAILED_ERROR("Error marking transaction as failed");
 
@@ -38,10 +51,6 @@ public enum EventType {
 
     EventType(String description) {
         this.description = description;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public String getValue() {
@@ -52,49 +61,28 @@ public enum EventType {
      * Get the associated command type for this event (if applicable)
      */
     public CommandType getAssociatedCommandType() {
-        switch (this) {
-            case USER_IDENTITY_VERIFIED:
-            case USER_VERIFICATION_FAILED:
-                return CommandType.USER_VERIFY_IDENTITY;
-
-            case ACCOUNT_VALIDATED:
-            case ACCOUNT_VALIDATION_FAILED:
-                return CommandType.ACCOUNT_VALIDATE;
-
-            case PAYMENT_METHOD_VALID:
-            case PAYMENT_METHOD_INVALID:
-                return CommandType.PAYMENT_METHOD_VALIDATE;
-
-            case TRANSACTION_CREATED:
-            case TRANSACTION_CREATION_FAILED:
-                return CommandType.ACCOUNT_CREATE_PENDING_TRANSACTION;
-
-            case PAYMENT_PROCESSED:
-            case PAYMENT_FAILED:
-                return CommandType.PAYMENT_PROCESS_DEPOSIT;
-
-            case TRANSACTION_STATUS_UPDATED:
-            case TRANSACTION_UPDATE_FAILED:
-                return CommandType.ACCOUNT_UPDATE_TRANSACTION_STATUS;
-
-            case BALANCE_UPDATED:
-            case BALANCE_UPDATE_FAILED:
-                return CommandType.ACCOUNT_UPDATE_BALANCE;
-
-            case PAYMENT_REVERSAL_COMPLETED:
-            case PAYMENT_REVERSAL_FAILED:
-                return CommandType.PAYMENT_REVERSE_DEPOSIT;
-
-            case BALANCE_REVERSAL_COMPLETED:
-            case BALANCE_REVERSAL_FAILED:
-                return CommandType.ACCOUNT_REVERSE_BALANCE_UPDATE;
-
-            case TRANSACTION_MARKED_FAILED:
-            case TRANSACTION_MARK_FAILED_ERROR:
-                return CommandType.ACCOUNT_MARK_TRANSACTION_FAILED;
-
-            default:
-                return null;
-        }
+        return switch (this) {
+            case USER_IDENTITY_VERIFIED, USER_VERIFICATION_FAILED -> CommandType.USER_VERIFY_IDENTITY;
+            case ACCOUNT_VALIDATED, ACCOUNT_VALIDATION_FAILED -> CommandType.ACCOUNT_VALIDATE;
+            case PAYMENT_METHOD_VALID, PAYMENT_METHOD_INVALID -> CommandType.PAYMENT_METHOD_VALIDATE;
+            case BALANCE_VALID, BALANCE_VALIDATION_ERROR -> CommandType.ACCOUNT_CHECK_BALANCE;
+            case DEPOSIT_TRANSACTION_CREATED, DEPOSIT_TRANSACTION_CREATION_FAILED ->
+                    CommandType.ACCOUNT_CREATE_DEPOSIT_PENDING_TRANSACTION;
+            case WITHDRAWAL_TRANSACTION_CREATED, WITHDRAWAL_TRANSACTION_CREATION_FAILED ->
+                    CommandType.ACCOUNT_CREATE_WITHDRAWAL_PENDING_TRANSACTION;
+            case DEPOSIT_PAYMENT_PROCESSED, DEPOSIT_PAYMENT_FAILED -> CommandType.PAYMENT_PROCESS_DEPOSIT;
+            case WITHDRAWAL_PAYMENT_PROCESSED, WITHDRAWAL_PAYMENT_FAILED -> CommandType.PAYMENT_PROCESS_WITHDRAWAL;
+            case TRANSACTION_STATUS_UPDATED, TRANSACTION_UPDATE_FAILED -> CommandType.ACCOUNT_UPDATE_TRANSACTION_STATUS;
+            case DEPOSIT_BALANCE_UPDATED, DEPOSIT_BALANCE_UPDATE_FAILED -> CommandType.ACCOUNT_DEPOSIT_UPDATE_BALANCE;
+            case DEPOSIT_PAYMENT_REVERSAL_COMPLETED, DEPOSIT_PAYMENT_REVERSAL_FAILED -> CommandType.PAYMENT_REVERSE_DEPOSIT;
+            case DEPOSIT_BALANCE_REVERSAL_COMPLETED, DEPOSIT_BALANCE_REVERSAL_FAILED ->
+                    CommandType.ACCOUNT_DEPOSIT_REVERSE_BALANCE_UPDATE;
+            case WITHDRAWAL_BALANCE_UPDATED, WITHDRAWAL_BALANCE_UPDATE_FAILED -> CommandType.ACCOUNT_WITHDRAWAL_UPDATE_BALANCE;
+            case WITHDRAWAL_PAYMENT_REVERSAL_COMPLETED, WITHDRAWAL_PAYMENT_REVERSAL_FAILED -> CommandType.PAYMENT_REVERSE_WITHDRAWAL;
+            case WITHDRAWAL_BALANCE_REVERSAL_COMPLETED, WITHDRAWAL_BALANCE_REVERSAL_FAILED ->
+                    CommandType.ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE;
+            case TRANSACTION_MARKED_FAILED, TRANSACTION_MARK_FAILED_ERROR ->
+                    CommandType.ACCOUNT_MARK_TRANSACTION_FAILED;
+        };
     }
 }

@@ -115,10 +115,7 @@ public class DepositSagaService {
         log.info("Published command [{}] for saga [{}] to topic: {}", 
             command.getType(), saga.getSagaId(), targetTopic);
     }
-    
-    /**
-     * Handle an event message response
-     */
+
     /**
      * Handle an event message response
      */
@@ -196,10 +193,7 @@ public class DepositSagaService {
         log.debug("After event processing, saga state: id={}, status={}, currentStep={}",
                 saga.getSagaId(), saga.getStatus(), saga.getCurrentStep());
     }
-    
-    /**
-     * Process a successful event
-     */
+
     /**
      * Process a successful event
      */
@@ -315,11 +309,11 @@ public class DepositSagaService {
             EventType eventType = EventType.valueOf(event.getType());
             
             switch (eventType) {
-                case TRANSACTION_CREATED:
+                case DEPOSIT_TRANSACTION_CREATED:
                     saga.setTransactionId(event.getPayloadValue("transactionId"));
                     break;
                     
-                case PAYMENT_PROCESSED:
+                case DEPOSIT_PAYMENT_PROCESSED:
                     saga.setPaymentProcessorTransactionId(event.getPayloadValue("paymentReference"));
                     break;
                     
@@ -426,7 +420,7 @@ public class DepositSagaService {
             case "ACCOUNT_SERVICE":
                 return "account.commands.deposit";
             case "PAYMENT_SERVICE":
-                return "payment.commands.process";
+                return "payment.commands.process.deposit";
             default:
                 log.warn("Unknown service for command type: {}", commandType);
                 return "account.commands.deposit"; // Default fallback
