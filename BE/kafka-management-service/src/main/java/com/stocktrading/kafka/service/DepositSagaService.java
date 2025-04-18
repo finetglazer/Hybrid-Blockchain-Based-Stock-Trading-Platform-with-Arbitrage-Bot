@@ -54,7 +54,16 @@ public class DepositSagaService {
     
     @Value("${saga.deposit.timeout.update-balance}")
     private long updateBalanceTimeout;
-    
+
+    @Value("${kafka.topics.user-commands.deposit:user.commands.deposit}")
+    private String userCommandsTopic;
+
+    @Value("${kafka.topics.account-commands:account.commands.deposit}")
+    private String accountCommandsTopic;
+
+    @Value("${kafka.topics.payment-commands:payment.commands.process}")
+    private String paymentCommandsTopic;
+
     /**
      * Start a new deposit saga
      */
@@ -413,17 +422,17 @@ public class DepositSagaService {
      */
     private String getTopicForCommandType(CommandType commandType) {
         String serviceName = commandType.getTargetService();
-        
+
         switch (serviceName) {
             case "USER_SERVICE":
-                return "user.commands.verify";
+                return userCommandsTopic;
             case "ACCOUNT_SERVICE":
-                return "account.commands.deposit";
+                return accountCommandsTopic;
             case "PAYMENT_SERVICE":
-                return "payment.commands.process.deposit";
+                return paymentCommandsTopic;
             default:
                 log.warn("Unknown service for command type: {}", commandType);
-                return "account.commands.deposit"; // Default fallback
+                return accountCommandsTopic; // Default fallback
         }
     }
     

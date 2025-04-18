@@ -24,12 +24,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("sagas/api/v1")
 @RequiredArgsConstructor
-public class SagaController {
+public class DepositSagaController {
     
     private final DepositSagaService depositSagaService;
 
     private final WithdrawalSagaService withdrawalSagaService;
-    
+
     /**
      * Start a new deposit saga
      */
@@ -75,7 +75,7 @@ public class SagaController {
         log.info("Received request to get saga: {}", sagaId);
 
         Optional<DepositSagaState> optionalSaga = depositSagaService.findById(sagaId);
-
+        
         return optionalSaga
             .map(this::mapToDepositDto)
             .map(ResponseEntity::ok)
@@ -92,7 +92,7 @@ public class SagaController {
         List<DepositSagaState> activeSagas = depositSagaService.findActiveSagas();
         
         SagaListResponse response = new SagaListResponse();
-        response.setSagas(activeSagas.stream().map(this::mapToDepositDto).collect(Collectors.toList()));
+        response.setItems(activeSagas.stream().map(this::mapToDto).collect(Collectors.toList()));
         response.setCount(activeSagas.size());
         
         return ResponseEntity.ok(response);

@@ -11,9 +11,14 @@ public enum CommandType {
 
     // User Service Commands
     USER_VERIFY_IDENTITY("Verify user identity"),
+    USER_VERIFY_TRADING_PERMISSIONS("Verify user trading permissions"),
 
     // Account Service Commands
-    ACCOUNT_VALIDATE("Validate account status"), // Add this new command
+    ACCOUNT_VALIDATE("Validate account status"),
+    ACCOUNT_VERIFY_STATUS("Verify account status"),
+    ACCOUNT_RESERVE_FUNDS("Reserve funds for order"),
+    ACCOUNT_SETTLE_TRANSACTION("Settle order transaction"),
+    ACCOUNT_RELEASE_FUNDS("Release reserved funds"),
     PAYMENT_METHOD_VALIDATE("Validate payment method"),
     ACCOUNT_CHECK_BALANCE("Check available balance"),
     ACCOUNT_CREATE_DEPOSIT_PENDING_TRANSACTION("Create pending deposit transaction"),
@@ -21,6 +26,25 @@ public enum CommandType {
     ACCOUNT_UPDATE_TRANSACTION_STATUS("Update transaction status"),
     ACCOUNT_DEPOSIT_UPDATE_BALANCE("Update account balance"),
     ACCOUNT_WITHDRAWAL_UPDATE_BALANCE("Update account balance"),
+
+    // Order Service Commands
+    ORDER_CREATE("Create new order"),
+    ORDER_UPDATE_VALIDATED("Update order to validated status"),
+    ORDER_UPDATE_EXECUTED("Update order to executed status"),
+    ORDER_UPDATE_COMPLETED("Update order to completed status"),
+    ORDER_CANCEL("Cancel an order"),
+
+    // Market Data Service Commands
+    MARKET_VALIDATE_STOCK("Validate stock exists"),
+    MARKET_GET_PRICE("Get current market price"),
+
+    // Portfolio Service Commands
+    PORTFOLIO_UPDATE_POSITIONS("Update portfolio positions"),
+    PORTFOLIO_REMOVE_POSITIONS("Remove positions from portfolio"),
+
+    // Mock Brokerage Service Commands
+    BROKER_EXECUTE_ORDER("Execute order in market"),
+    BROKER_CANCEL_ORDER("Cancel order with broker"),
 
     // Payment Processor Commands
     PAYMENT_PROCESS_DEPOSIT("Process deposit payment"),
@@ -32,18 +56,25 @@ public enum CommandType {
     PAYMENT_REVERSE_DEPOSIT("Reverse deposit payment"),
     PAYMENT_REVERSE_WITHDRAWAL("Reverse withdrawal payment"),
     ACCOUNT_DEPOSIT_REVERSE_BALANCE_UPDATE("Reverse balance update"),
-    ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE("Reverse balance update");
-
+    ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE("Reverse balance update"),
+    ACCOUNT_REVERSE_SETTLEMENT("Reverse settlement - Compensation");
     private final String description;
 
     CommandType(String description) {
         this.description = description;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public String getValue() {
         return this.name();
     }
 
+    /**
+     * Get the target service for a command type
+     */
     /**
      * Get the target service for a command type
      */
@@ -60,6 +91,14 @@ public enum CommandType {
             return "PAYMENT_SERVICE";
         } else if (this.name().startsWith("ACCOUNT_")) {
             return "ACCOUNT_SERVICE";
+        } else if (this.name().startsWith("ORDER_")) {
+            return "ORDER_SERVICE";
+        } else if (this.name().startsWith("MARKET_")) {
+            return "MARKET_DATA_SERVICE";
+        } else if (this.name().startsWith("PORTFOLIO_")) {
+            return "PORTFOLIO_SERVICE";
+        } else if (this.name().startsWith("BROKER_")) {
+            return "MOCK_BROKERAGE_SERVICE";
         } else {
             return "UNKNOWN_SERVICE";
         }

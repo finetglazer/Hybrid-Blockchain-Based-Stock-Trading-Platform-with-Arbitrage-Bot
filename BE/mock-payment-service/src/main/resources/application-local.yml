@@ -22,6 +22,6 @@ spring:
 
 kafka:
   topics:
-    payment-commands: payment.commands.process
-    payment-events: payment.events.process
+    payment-commands: payment.commands.deposit
+    payment-events: payment.events.deposit
     dlq: saga.dlq
