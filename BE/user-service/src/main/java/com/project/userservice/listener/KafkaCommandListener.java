@@ -1,7 +1,6 @@
 
 package com.project.userservice.listener;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.kafkamessagemodels.model.CommandMessage;
 import com.project.userservice.service.kafka.KafkaCommandHandlerService;
 
