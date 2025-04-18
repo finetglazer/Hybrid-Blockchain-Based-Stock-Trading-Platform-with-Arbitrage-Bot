@@ -37,7 +37,7 @@ const HeaderNavbar = () => {
       }
 
       const response = await fetch(
-        "http://localhost:5173/api/users/api/v1/auth/logout",
+        "/users/api/v1/auth/logout",
         {
           method: "POST",
           headers: {
