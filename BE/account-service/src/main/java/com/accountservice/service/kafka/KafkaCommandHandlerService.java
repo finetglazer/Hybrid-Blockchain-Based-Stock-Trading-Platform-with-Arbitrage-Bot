@@ -37,8 +37,8 @@ public class KafkaCommandHandlerService {
     public void handleAccountValidation(CommandMessage command) {
         log.info("Handling ACCOUNT_VALIDATE command for saga: {}", command.getSagaId());
 
-        String accountId = command.getPayloadValue("accountId");
         String userId = command.getPayloadValue("userId");
+        String accountId = command.getPayloadValue("accountId");
 
         // Create response event
         EventMessage event = new EventMessage();
@@ -196,13 +196,71 @@ public class KafkaCommandHandlerService {
     }
 
     /**
-     * Handle ACCOUNT_CREATE_PENDING_TRANSACTION command
+     * Handle ACCOUNT_CHECK_BALANCE command
      */
-    public void handleCreatePendingTransaction(CommandMessage command) {
-        log.info("Handling ACCOUNT_CREATE_PENDING_TRANSACTION command for saga: {}", command.getSagaId());
+    public void handleCheckBalance(CommandMessage command) {
+        Object amountObj = command.getPayloadValue("amount");
+        String accountId = command.getPayloadValue("accountId");
+        BigDecimal amount;
+        if (amountObj instanceof BigDecimal) {
+            amount = (BigDecimal) amountObj;
+        } else if (amountObj instanceof Number) {
+            amount = BigDecimal.valueOf(((Number) amountObj).doubleValue());
+        } else if (amountObj instanceof String) {
+            amount = new BigDecimal((String) amountObj);
+        } else {
+            throw new IllegalArgumentException("Amount is not a valid number: " + amountObj);
+        }
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        Balance balance = balanceRepository.findBalanceByAccountId(accountId).orElse(null);
+        if (balance == null) {
+            handleCheckBalanceFailure(event, "BALANCE_NOT_FOUND", "Balance not found");
+            return;
+        }
+        if (balance.getAvailable().compareTo(amount) < 0) {
+            handleCheckBalanceFailure(event, "BALANCE_NOT_SUFFICIENT", "Balance is not sufficient");
+        }
+
+        event.setType("BALANCE_VALID");
+        try {
+            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            log.info("Sent BALANCE_VALID response for saga: {}", event.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Handle check balance failures
+     */
+    private void handleCheckBalanceFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("BALANCE_VALIDATION_ERROR");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+        try {
+            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            log.info("Sent BALANCE_VALIDATION_ERROR response for saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Handle ACCOUNT_CREATE_DEPOSIT_PENDING_TRANSACTION command
+     */
+    public void handleCreateDepositPendingTransaction(CommandMessage command) {
+        log.info("Handling ACCOUNT_CREATE_DEPOSIT_PENDING_TRANSACTION command for saga: {}", command.getSagaId());
 
         String accountId = command.getPayloadValue("accountId");
-        // Safe conversion from any numeric type to BigDecimal
+//         Safe conversion from any numeric type to BigDecimal
         Object amountObj = command.getPayloadValue("amount");
         BigDecimal amount;
         if (amountObj instanceof BigDecimal) {
@@ -253,7 +311,7 @@ public class KafkaCommandHandlerService {
             Transaction savedTransaction = transactionRepository.save(transaction);
 
             // Set success response
-            event.setType("TRANSACTION_CREATED");
+            event.setType("DEPOSIT_TRANSACTION_CREATED");
             event.setSuccess(true);
             event.setPayloadValue("transactionId", savedTransaction.getId());
             event.setPayloadValue("status", savedTransaction.getStatus());
@@ -262,16 +320,16 @@ public class KafkaCommandHandlerService {
             event.setPayloadValue("createdAt", savedTransaction.getCreatedAt().toString());
 
         } catch (Exception e) {
-            log.error("Error creating pending transaction", e);
-            handleTransactionFailure(event, "TRANSACTION_CREATION_ERROR",
-                    "Error creating pending transaction: " + e.getMessage());
+            log.error("Error creating transaction", e);
+            handleCreateDepositPendingTransactionFailure(event, "TRANSACTION_CREATION_ERROR",
+                    "Error creating transaction: " + e.getMessage());
             return;
         }
 
         // Send the response event
         try {
             kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
-            log.info("Sent TRANSACTION_CREATED response for saga: {}", command.getSagaId());
+            log.info("Sent DEPOSIT_TRANSACTION_CREATED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
         }
@@ -280,15 +338,109 @@ public class KafkaCommandHandlerService {
     /**
      * Helper method to handle transaction creation failures
      */
-    private void handleTransactionFailure(EventMessage event, String errorCode, String errorMessage) {
-        event.setType("TRANSACTION_CREATION_FAILED");
+    private void handleCreateDepositPendingTransactionFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("DEPOSIT_TRANSACTION_CREATION_FAILED");
         event.setSuccess(false);
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);
 
         try {
             kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
-            log.info("Sent TRANSACTION_CREATION_FAILED response for saga: {} - {}",
+            log.info("Sent DEPOSIT_TRANSACTION_CREATION_FAILED response for saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Handle ACCOUNT_CREATE_WITHDRAWAL_PENDING_TRANSACTION command
+     */
+    public void handleCreateWithdrawalPendingTransaction(CommandMessage command) {
+        log.info("Handling ACCOUNT_CREATE_WITHDRAWAL_PENDING_TRANSACTION command for saga: {}", command.getSagaId());
+        String accountId = command.getPayloadValue("accountId");
+//         Safe conversion from any numeric type to BigDecimal
+        Object amountObj = command.getPayloadValue("amount");
+        BigDecimal amount;
+        if (amountObj instanceof BigDecimal) {
+            amount = (BigDecimal) amountObj;
+        } else if (amountObj instanceof Number) {
+            amount = BigDecimal.valueOf(((Number) amountObj).doubleValue());
+        } else if (amountObj instanceof String) {
+            amount = new BigDecimal((String) amountObj);
+        } else {
+            throw new IllegalArgumentException("Amount is not a valid number: " + amountObj);
+        }
+        String currency = command.getPayloadValue("currency");
+        String description = command.getPayloadValue("description");
+        String paymentMethodId = command.getPayloadValue("paymentMethodId");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // No need to validate account here - it's already validated in the previous step
+
+            // Create pending transaction
+            Transaction transaction = new Transaction();
+            transaction.setId(UUID.randomUUID().toString());
+            transaction.setAccountId(accountId);
+            transaction.setType("WITHDRAWAL"); // Using String type since we have a String field, not enum
+            transaction.setStatus("PENDING"); // Using String status
+            transaction.setPaymentMethodId(paymentMethodId);
+            transaction.setAmount(amount);
+            transaction.setCurrency(currency);
+            transaction.setFee(BigDecimal.ZERO); // Set fee later if needed
+            transaction.setDescription(description);
+            transaction.setCreatedAt(Instant.now());
+            transaction.setUpdatedAt(Instant.now());
+
+            // Debug output
+            log.debug("Transaction saved: {}", transaction);
+
+            // Save the transaction
+            Transaction transactionSaved = transactionRepository.save(transaction);
+
+            // Set success response
+            event.setType("WITHDRAWAL_TRANSACTION_CREATED");
+            event.setSuccess(true);
+            event.setPayloadValue("transactionId", transactionSaved.getId());
+            event.setPayloadValue("status", transactionSaved.getStatus());
+            event.setPayloadValue("amount", transactionSaved.getAmount());
+            event.setPayloadValue("currency", transactionSaved.getCurrency());
+            event.setPayloadValue("createdAt", transactionSaved.getCreatedAt().toString());
+
+        } catch (Exception e) {
+            log.error("Error creating withdrawal pending transaction", e);
+            handleCreateWithdrawalPendingTransactionFailure(event, "TRANSACTION_CREATION_ERROR",
+                    "Error creating transaction: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            log.info("Sent WITHDRAWAL_TRANSACTION_CREATED response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+    /**
+     * Handle create withdrawal pending transaction failures
+     */
+    public void handleCreateWithdrawalPendingTransactionFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("WITHDRAWAL_TRANSACTION_CREATION_FAILED");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+        try {
+            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            log.info("Sent WITHDRAWAL_TRANSACTION_CREATION_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
             log.error("Error sending failure event", e);
@@ -376,10 +528,10 @@ public class KafkaCommandHandlerService {
     }
 
     /**
-     * Handle ACCOUNT_UPDATE_BALANCE command
+     * Handle ACCOUNT_DEPOSIT_UPDATE_BALANCE command
      */
-    public void handleUpdateBalance(CommandMessage command) {
-        log.info("Handling ACCOUNT_UPDATE_BALANCE command for saga: {}", command.getSagaId());
+    public void handleDepositUpdateBalance(CommandMessage command) {
+        log.info("Handling ACCOUNT_DEPOSIT_UPDATE_BALANCE command for saga: {}", command.getSagaId());
 
         String accountId = command.getPayloadValue("accountId");
         // Safe conversion from any numeric type to BigDecimal
@@ -408,7 +560,7 @@ public class KafkaCommandHandlerService {
             // Find account
             Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
             if (accountOpt.isEmpty()) {
-                handleBalanceUpdateFailure(event, "ACCOUNT_NOT_FOUND",
+                handleDepositUpdateBalanceFailure(event, "ACCOUNT_NOT_FOUND",
                         "Account not found: " + accountId);
                 return;
             }
@@ -436,7 +588,7 @@ public class KafkaCommandHandlerService {
             balanceRepository.save(balance);
 
             // Set success response
-            event.setType("BALANCE_UPDATED");
+            event.setType("DEPOSIT_BALANCE_UPDATED");
             event.setSuccess(true);
             event.setPayloadValue("accountId", accountId);
             event.setPayloadValue("transactionId", transactionId);
@@ -451,7 +603,7 @@ public class KafkaCommandHandlerService {
 
         } catch (Exception e) {
             log.error("Error updating balance", e);
-            handleBalanceUpdateFailure(event, "BALANCE_UPDATE_ERROR",
+            handleDepositUpdateBalanceFailure(event, "BALANCE_UPDATE_ERROR",
                     "Error updating balance: " + e.getMessage());
             return;
         }
@@ -459,7 +611,7 @@ public class KafkaCommandHandlerService {
         // Send the response event
         try {
             kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
-            log.info("Sent BALANCE_UPDATED response for saga: {}", command.getSagaId());
+            log.info("Sent DEPOSIT_BALANCE_UPDATED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
         }
@@ -468,8 +620,116 @@ public class KafkaCommandHandlerService {
     /**
      * Helper method to handle balance update failures
      */
-    private void handleBalanceUpdateFailure(EventMessage event, String errorCode, String errorMessage) {
-        event.setType("BALANCE_UPDATE_FAILED");
+    private void handleDepositUpdateBalanceFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("DEPOSIT_BALANCE_UPDATE_FAILED");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        try {
+            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            log.info("Sent DEPOSIT_BALANCE_UPDATE_FAILED response for saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Handle ACCOUNT_WITHDRAWAL_UPDATE_BALANCE command
+     */
+    public void handleWithdrawalUpdateBalance(CommandMessage command) {
+        log.info("Handling ACCOUNT_WITHDRAWAL_UPDATE_BALANCE command for saga: {}", command.getSagaId());
+
+        String accountId = command.getPayloadValue("accountId");
+        // Safe conversion from any numeric type to BigDecimal
+        Object amountObj = command.getPayloadValue("amount");
+        BigDecimal amount;
+        if (amountObj instanceof BigDecimal) {
+            amount = (BigDecimal) amountObj;
+        } else if (amountObj instanceof Number) {
+            amount = BigDecimal.valueOf(((Number) amountObj).doubleValue());
+        } else if (amountObj instanceof String) {
+            amount = new BigDecimal((String) amountObj);
+        } else {
+            throw new IllegalArgumentException("Amount is not a valid number: " + amountObj);
+        }
+        String transactionId = command.getPayloadValue("transactionId");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find account
+            Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
+            if (accountOpt.isEmpty()) {
+                handleWithdrawalUpdateBalanceFailure(event, "ACCOUNT_NOT_FOUND",
+                        "Account not found: " + accountId);
+                return;
+            }
+
+            TradingAccount account = accountOpt.get();
+
+            // Find or create balance
+            Balance balance = getOrCreateBalance(account);
+
+            // Store original balance values
+            BigDecimal originalAvailable = balance.getAvailable();
+            BigDecimal originalTotal = balance.getTotal();
+
+            // Update balance
+            BigDecimal newAvailable = balance.getAvailable().subtract(amount);
+            BigDecimal newTotal = balance.getTotal().subtract(amount);
+
+            balance.setAvailable(newAvailable);
+            balance.setTotal(newTotal);
+            balance.setUpdatedAt(Instant.now());
+
+            log.debug("Updating balance: available={}, total={}", newAvailable, newTotal);
+
+            // Save the updated balance
+            balanceRepository.save(balance);
+
+            // Set success response
+            event.setType("WITHDRAWAL_BALANCE_UPDATED");
+            event.setSuccess(true);
+            event.setPayloadValue("accountId", accountId);
+            event.setPayloadValue("transactionId", transactionId);
+            event.setPayloadValue("newAvailableBalance", newAvailable);
+            event.setPayloadValue("newTotalBalance", newTotal);
+            event.setPayloadValue("updateType", "WITHDRAWAL");
+            event.setPayloadValue("updatedAt", balance.getUpdatedAt().toString());
+            // Saving original balance values for rollback if needed
+            event.setPayloadValue("originalAvailableBalance", originalAvailable);
+            event.setPayloadValue("originalTotalBalance", originalTotal);
+            event.setPayloadValue("updateAmount", amount);
+
+        } catch (Exception e) {
+            log.error("Error updating balance", e);
+            handleWithdrawalUpdateBalanceFailure(event, "BALANCE_UPDATE_ERROR",
+                    "Error updating balance: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            log.info("Sent WITHDRAWAL_BALANCE_UPDATED response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
+    /**
+     * Handle update balance failures for withdrawal case
+     */
+    public void handleWithdrawalUpdateBalanceFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("WITHDRAWAL_BALANCE_UPDATED_FAILED");
         event.setSuccess(false);
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);
@@ -550,6 +810,7 @@ public class KafkaCommandHandlerService {
             event.setPayloadValue("transactionId", updatedTransaction.getId());
             event.setPayloadValue("status", updatedTransaction.getStatus());
             event.setPayloadValue("accountId", updatedTransaction.getAccountId());
+            event.setPayloadValue("errorCode", errorCode);
             event.setPayloadValue("updatedAt", updatedTransaction.getUpdatedAt().toString());
 
         } catch (Exception e) {
@@ -587,10 +848,10 @@ public class KafkaCommandHandlerService {
     }
 
     /**
-     * Handle ACCOUNT_REVERSE_BALANCE_UPDATE command
+     * Handle ACCOUNT_DEPOSIT_REVERSE_BALANCE_UPDATE command
      */
-    public void handleReverseBalanceUpdate(CommandMessage command) {
-        log.info("Handling ACCOUNT_REVERSE_BALANCE_UPDATE command for saga: {}", command.getSagaId());
+    public void handleDepositReverseBalanceUpdate(CommandMessage command) {
+        log.info("Handling ACCOUNT_DEPOSIT_REVERSE_BALANCE_UPDATE command for saga: {}", command.getSagaId());
 
         String accountId = command.getPayloadValue("accountId");
         // Safe conversion from any numeric type to BigDecimal
@@ -620,7 +881,7 @@ public class KafkaCommandHandlerService {
             // Find account
             Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
             if (accountOpt.isEmpty()) {
-                handleBalanceReverseFailure(event, "ACCOUNT_NOT_FOUND",
+                handleDepositBalanceReverseFailure(event, "ACCOUNT_NOT_FOUND",
                         "Account not found: " + accountId);
                 return;
             }
@@ -628,7 +889,7 @@ public class KafkaCommandHandlerService {
             // Find balance
             Balance balance = balanceRepository.findByAccountId(accountId);
             if (balance == null) {
-                handleBalanceReverseFailure(event, "BALANCE_NOT_FOUND",
+                handleDepositBalanceReverseFailure(event, "BALANCE_NOT_FOUND",
                         "Balance not found for account: " + accountId);
                 return;
             }
@@ -712,19 +973,19 @@ public class KafkaCommandHandlerService {
 
 
             // Set success response
-            event.setType("BALANCE_REVERSAL_COMPLETED");
+            event.setType("DEPOSIT_BALANCE_REVERSAL_COMPLETED");
             event.setSuccess(true);
             event.setPayloadValue("accountId", accountId);
             event.setPayloadValue("originalTransactionId", transactionId);
             event.setPayloadValue("reversalTransactionId", reversalTransaction.getId());
             event.setPayloadValue("newAvailableBalance", newAvailable);
             event.setPayloadValue("newTotalBalance", newTotal);
-            event.setPayloadValue("reversedAmount", amount);
             event.setPayloadValue("updatedAt", balance.getUpdatedAt().toString());
+            event.setPayloadValue("reversedAmount", amount);
 
         } catch (Exception e) {
             log.error("Error reversing balance update", e);
-            handleBalanceReverseFailure(event, "BALANCE_REVERSAL_ERROR",
+            handleDepositBalanceReverseFailure(event, "BALANCE_REVERSAL_ERROR",
                     "Error reversing balance update: " + e.getMessage());
             return;
         }
@@ -732,7 +993,7 @@ public class KafkaCommandHandlerService {
         // Send the response event
         try {
             kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
-            log.info("Sent BALANCE_REVERSAL_COMPLETED response for saga: {}", command.getSagaId());
+            log.info("Sent DEPOSIT_BALANCE_REVERSAL_COMPLETED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
         }
@@ -741,15 +1002,157 @@ public class KafkaCommandHandlerService {
     /**
      * Helper method for balance reversal failures
      */
-    private void handleBalanceReverseFailure(EventMessage event, String errorCode, String errorMessage) {
-        event.setType("BALANCE_REVERSAL_FAILED");
+    private void handleDepositBalanceReverseFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("DEPOSIT_BALANCE_REVERSAL_FAILED");
         event.setSuccess(false);
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);
 
         try {
             kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
-            log.info("Sent BALANCE_REVERSAL_FAILED response for saga: {} - {}",
+            log.info("Sent DEPOSIT_BALANCE_REVERSAL_FAILED response for saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Handle ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE command
+     */
+    public void handleWithdrawalReverseBalanceUpdate(CommandMessage command) {
+        log.info("Handling ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE command for saga: {}", command.getSagaId());
+
+        String accountId = command.getPayloadValue("accountId");
+        // Safe conversion from any numeric type to BigDecimal
+        Object amountObj = command.getPayloadValue("amount");
+        BigDecimal amount;
+        if (amountObj instanceof BigDecimal) {
+            amount = (BigDecimal) amountObj;
+        } else if (amountObj instanceof Number) {
+            amount = BigDecimal.valueOf(((Number) amountObj).doubleValue());
+        } else if (amountObj instanceof String) {
+            amount = new BigDecimal((String) amountObj);
+        } else {
+            throw new IllegalArgumentException("Amount is not a valid number: " + amountObj);
+        }
+        String transactionId = command.getPayloadValue("transactionId");
+        String reason = command.getPayloadValue("reason");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find account
+            Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
+            if (accountOpt.isEmpty()) {
+                handleDepositBalanceReverseFailure(event, "ACCOUNT_NOT_FOUND",
+                        "Account not found: " + accountId);
+                return;
+            }
+
+            // Find balance
+            Balance balance = balanceRepository.findByAccountId(accountId);
+            if (balance == null) {
+                handleDepositBalanceReverseFailure(event, "BALANCE_NOT_FOUND",
+                        "Balance not found for account: " + accountId);
+                return;
+            }
+
+            Transaction reversalTransaction = new Transaction();
+            BigDecimal newAvailable = balance.getAvailable();
+            BigDecimal newTotal = balance.getTotal();
+
+            if (!amount.equals(BigDecimal.ZERO)) {
+                newAvailable = balance.getAvailable().add(amount);
+                newTotal = balance.getTotal().add(amount);
+
+                balance.setUpdatedAt(Instant.now());
+                balance.setAvailable(newAvailable);
+                balance.setTotal(newTotal);
+
+                log.debug("Reversing balance update: available={}, total={}", newAvailable, newTotal);
+
+                // Save the updated balance
+                balanceRepository.save(balance);
+
+                // Create a reversal transaction record
+
+                reversalTransaction.setId(UUID.randomUUID().toString());
+                reversalTransaction.setAccountId(accountId);
+                reversalTransaction.setType("WITHDRAWAL_REVERSAL");
+                reversalTransaction.setStatus("COMPLETED");
+                reversalTransaction.setAmount(amount);
+                reversalTransaction.setCurrency(balance.getCurrency());
+                reversalTransaction.setFee(BigDecimal.ZERO);
+                reversalTransaction.setDescription("Reversal of withdrawal due to: " + reason);
+                reversalTransaction.setCreatedAt(Instant.now());
+                reversalTransaction.setUpdatedAt(Instant.now());
+                reversalTransaction.setCompletedAt(Instant.now());
+                reversalTransaction.setExternalReferenceId("REV-" + transactionId);
+
+                transactionRepository.save(reversalTransaction);
+            } else {
+                // If no compensation is needed, just log it
+                reversalTransaction.setId(UUID.randomUUID().toString());
+                reversalTransaction.setAccountId(accountId);
+                reversalTransaction.setType("WITHDRAWAL_REVERSAL_SKIPPED");
+                reversalTransaction.setStatus("COMPLETED");
+                reversalTransaction.setAmount(BigDecimal.ZERO);
+                reversalTransaction.setCurrency(balance.getCurrency());
+                reversalTransaction.setFee(BigDecimal.ZERO);
+                reversalTransaction.setDescription("Reversal skipped as original update did not complete");
+                reversalTransaction.setCreatedAt(Instant.now());
+                reversalTransaction.setUpdatedAt(Instant.now());
+                reversalTransaction.setCompletedAt(Instant.now());
+                reversalTransaction.setExternalReferenceId("REV-" + transactionId);
+
+                transactionRepository.save(reversalTransaction);
+            }
+
+
+            // Set success response
+            event.setType("WITHDRAWAL_BALANCE_REVERSAL_COMPLETED");
+            event.setSuccess(true);
+            event.setPayloadValue("accountId", accountId);
+            event.setPayloadValue("originalTransactionId", transactionId);
+            event.setPayloadValue("reversalTransactionId", reversalTransaction.getId());
+            event.setPayloadValue("newAvailableBalance", newAvailable);
+            event.setPayloadValue("newTotalBalance", newTotal);
+            event.setPayloadValue("reversedAmount", amount);
+            event.setPayloadValue("updatedAt", balance.getUpdatedAt().toString());
+        } catch(Exception e){
+            log.error("Error reversing balance update", e);
+            handleWithdrawalBalanceReverseFailure(event, "WITHDRAWAL_BALANCE_REVERSAL_ERROR",
+                    "Error reversing balance update: " + e.getMessage());
+            return;
+        }
+        // Send the response event
+        try {
+            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            log.info("Sent WITHDRAWAL_BALANCE_REVERSAL_COMPLETED response for saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
+    /**
+     * Handle reversal update balance failures for withdrawal
+     */
+    public void handleWithdrawalBalanceReverseFailure(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("WITHDRAWAL_BALANCE_REVERSAL_FAILED");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        try {
+            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            log.info("Sent WITHDRAWAL_BALANCE_REVERSAL_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
             log.error("Error sending failure event", e);

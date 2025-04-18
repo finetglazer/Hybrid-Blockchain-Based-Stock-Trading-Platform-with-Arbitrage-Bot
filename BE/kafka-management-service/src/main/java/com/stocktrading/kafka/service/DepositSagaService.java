@@ -63,7 +63,7 @@ public class DepositSagaService {
 
     @Value("${kafka.topics.payment-commands:payment.commands.process}")
     private String paymentCommandsTopic;
-    
+
     /**
      * Start a new deposit saga
      */
@@ -124,10 +124,7 @@ public class DepositSagaService {
         log.info("Published command [{}] for saga [{}] to topic: {}", 
             command.getType(), saga.getSagaId(), targetTopic);
     }
-    
-    /**
-     * Handle an event message response
-     */
+
     /**
      * Handle an event message response
      */
@@ -205,10 +202,7 @@ public class DepositSagaService {
         log.debug("After event processing, saga state: id={}, status={}, currentStep={}",
                 saga.getSagaId(), saga.getStatus(), saga.getCurrentStep());
     }
-    
-    /**
-     * Process a successful event
-     */
+
     /**
      * Process a successful event
      */
@@ -324,11 +318,11 @@ public class DepositSagaService {
             EventType eventType = EventType.valueOf(event.getType());
             
             switch (eventType) {
-                case TRANSACTION_CREATED:
+                case DEPOSIT_TRANSACTION_CREATED:
                     saga.setTransactionId(event.getPayloadValue("transactionId"));
                     break;
                     
-                case PAYMENT_PROCESSED:
+                case DEPOSIT_PAYMENT_PROCESSED:
                     saga.setPaymentProcessorTransactionId(event.getPayloadValue("paymentReference"));
                     break;
                     

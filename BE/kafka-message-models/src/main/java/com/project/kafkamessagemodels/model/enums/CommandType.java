@@ -1,9 +1,14 @@
 package com.project.kafkamessagemodels.model.enums;
 
+import lombok.Getter;
+
 /**
  * Enum defining all command types used in the system
  */
+@Getter
 public enum CommandType {
+    START("Start"),
+
     // User Service Commands
     USER_VERIFY_IDENTITY("Verify user identity"),
     USER_VERIFY_TRADING_PERMISSIONS("Verify user trading permissions"),
@@ -15,9 +20,12 @@ public enum CommandType {
     ACCOUNT_SETTLE_TRANSACTION("Settle order transaction"),
     ACCOUNT_RELEASE_FUNDS("Release reserved funds"),
     PAYMENT_METHOD_VALIDATE("Validate payment method"),
-    ACCOUNT_CREATE_PENDING_TRANSACTION("Create pending transaction"),
+    ACCOUNT_CHECK_BALANCE("Check available balance"),
+    ACCOUNT_CREATE_DEPOSIT_PENDING_TRANSACTION("Create pending deposit transaction"),
+    ACCOUNT_CREATE_WITHDRAWAL_PENDING_TRANSACTION("Create pending withdrawal transaction"),
     ACCOUNT_UPDATE_TRANSACTION_STATUS("Update transaction status"),
-    ACCOUNT_UPDATE_BALANCE("Update account balance"),
+    ACCOUNT_DEPOSIT_UPDATE_BALANCE("Update account balance"),
+    ACCOUNT_WITHDRAWAL_UPDATE_BALANCE("Update account balance"),
 
     // Order Service Commands
     ORDER_CREATE("Create new order"),
@@ -40,18 +48,16 @@ public enum CommandType {
 
     // Payment Processor Commands
     PAYMENT_PROCESS_DEPOSIT("Process deposit payment"),
+    PAYMENT_PROCESS_WITHDRAWAL("Process withdrawal payment"),
 
-    // Compensation Commands - using service-specific prefixes instead of COMP_
+    // Compensation Commands
+    START_COMPENSATION("Start compensation"),
     ACCOUNT_MARK_TRANSACTION_FAILED("Mark transaction as failed"),
     PAYMENT_REVERSE_DEPOSIT("Reverse deposit payment"),
-    ACCOUNT_REVERSE_BALANCE_UPDATE("Reverse balance update"),
-    // Changed from COMP_RELEASE_FUNDS to ACCOUNT_RELEASE_FUNDS
-    // Changed from COMP_CANCEL_ORDER to ORDER_CANCEL
-    // Changed from COMP_CANCEL_BROKER_ORDER to BROKER_CANCEL_ORDER
-    // Changed from COMP_REMOVE_POSITIONS to PORTFOLIO_REMOVE_POSITIONS
-    // Changed from COMP_REVERSE_SETTLEMENT to ACCOUNT_REVERSE_SETTLEMENT
+    PAYMENT_REVERSE_WITHDRAWAL("Reverse withdrawal payment"),
+    ACCOUNT_DEPOSIT_REVERSE_BALANCE_UPDATE("Reverse balance update"),
+    ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE("Reverse balance update"),
     ACCOUNT_REVERSE_SETTLEMENT("Reverse settlement - Compensation");
-
     private final String description;
 
     CommandType(String description) {
@@ -66,6 +72,9 @@ public enum CommandType {
         return this.name();
     }
 
+    /**
+     * Get the target service for a command type
+     */
     /**
      * Get the target service for a command type
      */

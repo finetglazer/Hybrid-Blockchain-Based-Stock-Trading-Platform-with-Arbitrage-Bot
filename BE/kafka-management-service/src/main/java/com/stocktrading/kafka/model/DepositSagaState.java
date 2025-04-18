@@ -257,7 +257,7 @@ public class DepositSagaState {
                 command.setPayloadValue("currency", currency);
                 break;
                 
-            case ACCOUNT_CREATE_PENDING_TRANSACTION:
+            case ACCOUNT_CREATE_DEPOSIT_PENDING_TRANSACTION:
                 command.setPayloadValue("accountId", accountId);
                 command.setPayloadValue("amount", amount);
                 command.setPayloadValue("currency", currency);
@@ -279,13 +279,13 @@ public class DepositSagaState {
                 command.setPayloadValue("paymentReference", paymentProcessorTransactionId);
                 break;
                 
-            case ACCOUNT_UPDATE_BALANCE:
+            case ACCOUNT_DEPOSIT_UPDATE_BALANCE:
                 command.setPayloadValue("accountId", accountId);
                 command.setPayloadValue("amount", amount);
                 command.setPayloadValue("transactionId", transactionId);
                 break;
                 
-            case ACCOUNT_REVERSE_BALANCE_UPDATE:
+            case ACCOUNT_DEPOSIT_REVERSE_BALANCE_UPDATE:
                 command.setPayloadValue("accountId", accountId);
                 command.setPayloadValue("amount", amount);
                 command.setPayloadValue("transactionId", transactionId);

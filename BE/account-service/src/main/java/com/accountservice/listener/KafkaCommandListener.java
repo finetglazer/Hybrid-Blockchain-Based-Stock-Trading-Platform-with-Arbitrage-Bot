@@ -33,22 +33,33 @@ public class KafkaCommandListener {
                 case "PAYMENT_METHOD_VALIDATE":
                     commandHandlerService.handleValidatePaymentMethod(command);
                     break;
-                case "ACCOUNT_CREATE_PENDING_TRANSACTION":
-                    commandHandlerService.handleCreatePendingTransaction(command);
+                case "ACCOUNT_CHECK_BALANCE":
+                    commandHandlerService.handleCheckBalance(command);
                     break;
                 case "ACCOUNT_UPDATE_TRANSACTION_STATUS":
                     commandHandlerService.handleUpdateTransactionStatus(command);
                     break;
-                case "ACCOUNT_UPDATE_BALANCE":
-                    commandHandlerService.handleUpdateBalance(command);
+                case "ACCOUNT_CREATE_WITHDRAWAL_PENDING_TRANSACTION":
+                    commandHandlerService.handleCreateWithdrawalPendingTransaction(command);
+                    break;
+                case "ACCOUNT_CREATE_DEPOSIT_PENDING_TRANSACTION":
+                    commandHandlerService.handleCreateDepositPendingTransaction(command);
+                    break;
+                case "ACCOUNT_DEPOSIT_UPDATE_BALANCE":
+                    commandHandlerService.handleDepositUpdateBalance(command);
+                    break;
+                case "ACCOUNT_WITHDRAWAL_UPDATE_BALANCE":
+                    commandHandlerService.handleWithdrawalUpdateBalance(command);
                     break;
                 // Add handlers for compensation commands
                 case "ACCOUNT_MARK_TRANSACTION_FAILED":
                     commandHandlerService.handleMarkTransactionFailed(command);
                     break;
-                case "ACCOUNT_REVERSE_BALANCE_UPDATE":
-                    commandHandlerService.handleReverseBalanceUpdate(command);
+                case "ACCOUNT_DEPOSIT_REVERSE_BALANCE_UPDATE":
+                    commandHandlerService.handleDepositReverseBalanceUpdate(command);
                     break;
+                case "ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE":
+                    commandHandlerService.handleWithdrawalReverseBalanceUpdate(command);
                 default:
                     log.warn("Unknown command type: {}", command.getType());
                     break;

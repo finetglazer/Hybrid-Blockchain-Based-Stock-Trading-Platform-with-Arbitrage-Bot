@@ -3,6 +3,7 @@ package com.stocktrading.kafka.listener;
 import com.project.kafkamessagemodels.model.EventMessage;
 import com.stocktrading.kafka.service.DepositSagaService;
 import com.stocktrading.kafka.service.IdempotencyService;
+import com.stocktrading.kafka.service.WithdrawalSagaService;
 import com.stocktrading.kafka.service.OrderBuySagaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,12 +12,16 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+/**
+ * Kafka listener for processing event messages
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class KafkaEventListener {
 
     private final DepositSagaService depositSagaService;
+    private final WithdrawalSagaService withdrawalSagaService;
     private final OrderBuySagaService orderBuySagaService;
     private final IdempotencyService idempotencyService;
 
@@ -31,6 +36,8 @@ public class KafkaEventListener {
         try {
             log.debug("Received account deposit event: {}", event.getType());
             depositSagaService.handleEventMessage(event);
+            withdrawalSagaService.handleEventMessage(event);
+            // Acknowledge the message
             ack.acknowledge();
         } catch (Exception e) {
             log.error("Error processing account deposit event: {}", e.getMessage(), e);
