@@ -92,7 +92,7 @@ public class DepositSagaController {
         List<DepositSagaState> activeSagas = depositSagaService.findActiveSagas();
         
         SagaListResponse response = new SagaListResponse();
-        response.setItems(activeSagas.stream().map(this::mapToDto).collect(Collectors.toList()));
+        response.setItems(activeSagas.stream().map(this::mapToDepositDto).collect(Collectors.toList()));
         response.setCount(activeSagas.size());
         
         return ResponseEntity.ok(response);
