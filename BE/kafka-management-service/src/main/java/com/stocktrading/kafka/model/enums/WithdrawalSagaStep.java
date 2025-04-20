@@ -21,7 +21,7 @@ public enum WithdrawalSagaStep {
     START_COMPENSATION(100, "Start compensation", CommandType.START_COMPENSATION),
     ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE(101, "Reverse balance update", CommandType.ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE),
     PAYMENT_REVERSE_WITHDRAWAL(102, "Reverse payment", CommandType.PAYMENT_REVERSE_WITHDRAWAL),
-    MARK_TRANSACTION_FAILED(103, "Mark transaction failed", CommandType.ACCOUNT_MARK_TRANSACTION_FAILED),
+    ACCOUNT_MARK_TRANSACTION_FAILED(103, "Mark transaction failed", CommandType.ACCOUNT_MARK_TRANSACTION_FAILED),
     COMPLETE_COMPENSATION(104, "Complete compensation", null);
 
     private final int stepNumber;

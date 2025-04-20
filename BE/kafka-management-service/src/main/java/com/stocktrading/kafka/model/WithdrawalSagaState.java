@@ -64,7 +64,6 @@ public class WithdrawalSagaState {
         initialPayload.put("description", description);
 
         return WithdrawalSagaState.builder()
-                .id(sagaId)       // Set the MongoDB _id field
                 .sagaId(sagaId)   // Set the business sagaId field
                 .userId(userId)
                 .accountId(accountId)

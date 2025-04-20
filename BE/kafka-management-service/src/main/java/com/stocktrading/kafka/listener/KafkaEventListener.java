@@ -3,8 +3,8 @@ package com.stocktrading.kafka.listener;
 import com.project.kafkamessagemodels.model.EventMessage;
 import com.stocktrading.kafka.service.DepositSagaService;
 import com.stocktrading.kafka.service.IdempotencyService;
-import com.stocktrading.kafka.service.WithdrawalSagaService;
 import com.stocktrading.kafka.service.OrderBuySagaService;
+import com.stocktrading.kafka.service.WithdrawalSagaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -26,9 +26,44 @@ public class KafkaEventListener {
     private final IdempotencyService idempotencyService;
 
     // ====== DEPOSIT SAGA EVENT LISTENERS ======
+    @KafkaListener(
+            topics = "${kafka.topics.account-events.common}",
+            containerFactory = "eventKafkaListenerContainerFactory",
+            groupId = "${spring.kafka.consumer.group-id}-account-common"
+    )
+    public void consumeAccountCommonEvents(@Payload EventMessage event, Acknowledgment ack) {
+        try {
+            log.debug("Received account common event: {}", event.getType());
+            depositSagaService.handleEventMessage(event);
+            withdrawalSagaService.handleEventMessage(event);
+            // Acknowledge the message
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("Error processing account common event: {}", e.getMessage(), e);
+            throw new RuntimeException("Event processing failed", e);
+        }
+    }
 
     @KafkaListener(
-            topics = "${kafka.topics.account-events}",
+            topics = "${kafka.topics.user-events.common}",
+            containerFactory = "eventKafkaListenerContainerFactory",
+            groupId = "${spring.kafka.consumer.group-id}-user-common"
+    )
+    public void consumeUserCommonEvents(@Payload EventMessage event, Acknowledgment ack) {
+        try {
+            log.debug("Received user common event: {}", event.getType());
+            depositSagaService.handleEventMessage(event);
+            withdrawalSagaService.handleEventMessage(event);
+            // Acknowledge the message
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("Error processing user common event: {}", e.getMessage(), e);
+            throw new RuntimeException("Event processing failed", e);
+        }
+    }
+
+    @KafkaListener(
+            topics = "${kafka.topics.account-events.deposit}",
             containerFactory = "eventKafkaListenerContainerFactory",
             groupId = "${spring.kafka.consumer.group-id}-deposit-account"
     )
@@ -36,7 +71,6 @@ public class KafkaEventListener {
         try {
             log.debug("Received account deposit event: {}", event.getType());
             depositSagaService.handleEventMessage(event);
-            withdrawalSagaService.handleEventMessage(event);
             // Acknowledge the message
             ack.acknowledge();
         } catch (Exception e) {
@@ -46,7 +80,7 @@ public class KafkaEventListener {
     }
 
     @KafkaListener(
-            topics = "${kafka.topics.payment-events}",
+            topics = "${kafka.topics.payment-events.deposit}",
             containerFactory = "eventKafkaListenerContainerFactory",
             groupId = "${spring.kafka.consumer.group-id}-deposit-payment"
     )
@@ -61,19 +95,36 @@ public class KafkaEventListener {
         }
     }
 
+    // ====== WITHDRAWAL SAGA EVENT LISTENERS ======
     @KafkaListener(
-            topics = "${kafka.topics.user-events.deposit}",
+            topics = "${kafka.topics.account-events.withdrawal}",
             containerFactory = "eventKafkaListenerContainerFactory",
-            groupId = "${spring.kafka.consumer.group-id}-deposit-user"
+            groupId = "${spring.kafka.consumer.group-id}-withdrawal-account"
     )
-    public void consumeUserDepositEvents(@Payload EventMessage event, Acknowledgment ack) {
+    public void consumeAccountWithdrawalEvents(@Payload EventMessage event, Acknowledgment ack) {
         try {
-            log.debug("Received user deposit event: {}", event.getType());
-            depositSagaService.handleEventMessage(event);
+            log.debug("Received account withdrawal event: {}", event.getType());
+            withdrawalSagaService.handleEventMessage(event);
+            // Acknowledge the message
             ack.acknowledge();
-            log.debug("Successfully processed and acknowledged user deposit event: {}", event.getType());
         } catch (Exception e) {
-            log.error("Error processing user deposit event: {}", event.getType(), e);
+            log.error("Error processing account withdrawal event: {}", e.getMessage(), e);
+            throw new RuntimeException("Event processing failed", e);
+        }
+    }
+
+    @KafkaListener(
+            topics = "${kafka.topics.payment-events.withdrawal}",
+            containerFactory = "eventKafkaListenerContainerFactory",
+            groupId = "${spring.kafka.consumer.group-id}-withdrawal-payment"
+    )
+    public void consumePaymentWithdrawalEvents(@Payload EventMessage event, Acknowledgment ack) {
+        try {
+            log.debug("Received payment withdrawal event: {}", event.getType());
+            withdrawalSagaService.handleEventMessage(event);
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("Error processing payment withdrawal event: {}", e.getMessage(), e);
             throw new RuntimeException("Event processing failed", e);
         }
     }

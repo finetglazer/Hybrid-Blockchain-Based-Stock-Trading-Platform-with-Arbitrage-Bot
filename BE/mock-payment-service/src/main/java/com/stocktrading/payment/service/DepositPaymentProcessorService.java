@@ -18,13 +18,13 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class PaymentProcessorService {
+public class DepositPaymentProcessorService {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final Random random = new Random();
 
-    @Value("${kafka.topics.payment-events}")
-    private String paymentEventsTopic;
+    @Value("${kafka.topics.payment-events.deposit}")
+    private String depositEventsTopic;
 
     /**
      * Process a deposit payment command
@@ -138,117 +138,6 @@ public class PaymentProcessorService {
     }
 
     /**
-     * Process a withdrawal payment command
-     */
-    public void processWithdrawal(CommandMessage command) {
-        log.info("Processing withdrawal payment for saga: {}", command.getSagaId());
-
-        String paymentMethodId = command.getPayloadValue("paymentMethodId");
-        Object amountObj = command.getPayloadValue("amount");
-        BigDecimal amount = convertToBigDecimal(amountObj);
-        String currency = command.getPayloadValue("currency");
-        String accountId = command.getPayloadValue("accountId");
-        String transactionId = command.getPayloadValue("transactionId");
-
-        // Create response event
-        EventMessage event = new EventMessage();
-        event.setMessageId(UUID.randomUUID().toString());
-        event.setSagaId(command.getSagaId());
-        event.setStepId(command.getStepId());
-        event.setSourceService("PAYMENT_SERVICE");
-        event.setTimestamp(Instant.now());
-
-        try {
-            // Simulate payment processing delay (randomly between 500-1500ms)
-            simulateProcessingDelay();
-
-            // Simulate random failure (10% chance)
-            if (shouldSimulateFailure()) {
-                handleWithdrawalPaymentFailure(event, "PAYMENT_PROCESSING_ERROR", "Simulated payment processing failure");
-                return;
-            }
-
-            // Generate a mock payment reference
-            String paymentReference = generatePaymentReference();
-
-            // Set success response
-            event.setType("WITHDRAWAL_PAYMENT_PROCESSED");
-            event.setSuccess(true);
-            event.setPayloadValue("transactionId", transactionId);
-            event.setPayloadValue("accountId", accountId);
-            event.setPayloadValue("amount", amount);
-            event.setPayloadValue("currency", currency);
-            event.setPayloadValue("paymentMethodId", paymentMethodId);
-            event.setPayloadValue("processedAt", Instant.now().toString());
-            event.setPayloadValue("paymentReference", paymentReference);
-
-            log.info("Payment processed successfully with reference: {}", paymentReference);
-
-        } catch (Exception e) {
-            log.error("Error processing payment", e);
-            handleWithdrawalPaymentFailure(event, "PAYMENT_PROCESSING_ERROR",
-                    "Error processing payment: " + e.getMessage());
-            return;
-        }
-
-        // Send the response event
-        publishEvent(event);
-    }
-
-    /**
-     * Process a withdrawal reversal command (compensation)
-     */
-    public void reverseWithdrawal(CommandMessage command) {
-        log.info("Processing withdrawal reversal for saga: {}", command.getSagaId());
-
-        String paymentReference = command.getPayloadValue("paymentReference");
-        Object amountObj = command.getPayloadValue("amount");
-        BigDecimal amount = convertToBigDecimal(amountObj);
-        String reason = command.getPayloadValue("reason");
-        String transactionId = command.getPayloadValue("transactionId");
-
-        // Create response event
-        EventMessage event = new EventMessage();
-        event.setMessageId(UUID.randomUUID().toString());
-        event.setSagaId(command.getSagaId());
-        event.setStepId(command.getStepId());
-        event.setSourceService("PAYMENT_SERVICE");
-        event.setTimestamp(Instant.now());
-
-        try {
-            // Simulate processing delay
-            simulateProcessingDelay();
-
-            // Simulate rare reversal failure (5% chance)
-            if (random.nextInt(100) < 5) {
-                handleWithdrawalReversalPaymentFailure(event, "REVERSAL_ERROR", "Simulated reversal failure");
-                return;
-            }
-
-            // Set success response
-            event.setType("WITHDRAWAL_PAYMENT_REVERSAL_COMPLETED");
-            event.setSuccess(true);
-            event.setPayloadValue("transactionId", transactionId);
-            event.setPayloadValue("originalPaymentReference", paymentReference);
-            event.setPayloadValue("reversalReference", generatePaymentReference());
-            event.setPayloadValue("amount", amount);
-            event.setPayloadValue("reason", reason);
-            event.setPayloadValue("reversedAt", Instant.now().toString());
-
-            log.info("Payment reversal completed for reference: {}", paymentReference);
-
-        } catch (Exception e) {
-            log.error("Error processing payment reversal", e);
-            handleWithdrawalReversalPaymentFailure(event, "REVERSAL_ERROR",
-                    "Error processing payment reversal: " + e.getMessage());
-            return;
-        }
-
-        // Send the response event
-        publishEvent(event);
-    }
-
-    /**
      * Helper method to convert any numeric type to BigDecimal
      */
     private BigDecimal convertToBigDecimal(Object amountObj) {
@@ -277,19 +166,6 @@ public class PaymentProcessorService {
     }
 
     /**
-     * Helper method to handle withdrawal payment failure
-     */
-    private void handleWithdrawalPaymentFailure(EventMessage event, String errorCode, String errorMessage) {
-        event.setType("WITHDRAWAL_PAYMENT_FAILED");
-        event.setSuccess(false);
-        event.setErrorCode(errorCode);
-        event.setErrorMessage(errorMessage);
-
-        log.warn("Payment failed: {} - {}", errorCode, errorMessage);
-        publishEvent(event);
-    }
-
-    /**
      * Helper method to handle deposit reversal payment failure
      */
     public void handleDepositReversalPaymentFailure(EventMessage event, String errorCode, String errorMessage) {
@@ -303,24 +179,11 @@ public class PaymentProcessorService {
     }
 
     /**
-     * Helper method to handle withdrawal reversal payment failure
-     */
-    public void handleWithdrawalReversalPaymentFailure(EventMessage event, String errorCode, String errorMessage) {
-        event.setType("WITHDRAWAL_PAYMENT_REVERSAL_FAILED");
-        event.setSuccess(false);
-        event.setErrorCode(errorCode);
-        event.setErrorMessage(errorMessage);
-
-        log.warn("Payment failed: {} - {}", errorCode, errorMessage);
-        publishEvent(event);
-    }
-
-    /**
      * Publish event to Kafka
      */
     private void publishEvent(EventMessage event) {
         try {
-            kafkaTemplate.send(paymentEventsTopic, event.getSagaId(), event);
+            kafkaTemplate.send(depositEventsTopic, event.getSagaId(), event);
             log.debug("Published event: {} for saga: {}", event.getType(), event.getSagaId());
         } catch (Exception e) {
             log.error("Error publishing event to Kafka", e);
