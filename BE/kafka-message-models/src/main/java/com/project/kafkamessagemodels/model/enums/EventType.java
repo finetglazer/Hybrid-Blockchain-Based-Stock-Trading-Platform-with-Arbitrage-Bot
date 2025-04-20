@@ -109,7 +109,8 @@ public enum EventType {
     public CommandType getAssociatedCommandType() {
         return switch (this) {
             case USER_IDENTITY_VERIFIED, USER_VERIFICATION_FAILED -> CommandType.USER_VERIFY_IDENTITY;
-            case USER_TRADING_PERMISSIONS_VERIFIED, USER_TRADING_PERMISSIONS_INVALID -> CommandType.USER_VERIFY_TRADING_PERMISSIONS;
+            case USER_TRADING_PERMISSIONS_VERIFIED, USER_TRADING_PERMISSIONS_INVALID ->
+                    CommandType.USER_VERIFY_TRADING_PERMISSIONS;
             case ACCOUNT_VALIDATED, ACCOUNT_VALIDATION_FAILED -> CommandType.ACCOUNT_VALIDATE;
             case ACCOUNT_STATUS_VERIFIED, ACCOUNT_STATUS_INVALID -> CommandType.ACCOUNT_VERIFY_STATUS;
             case PAYMENT_METHOD_VALID, PAYMENT_METHOD_INVALID -> CommandType.PAYMENT_METHOD_VALIDATE;
@@ -179,7 +180,8 @@ Looking at the error, the switch expression doesn't cover all possible enum valu
             case USER_IDENTITY_VERIFIED, USER_VERIFICATION_FAILED -> CommandType.USER_VERIFY_IDENTITY;
             case USER_TRADING_PERMISSIONS_VERIFIED, USER_TRADING_PERMISSIONS_INVALID -> CommandType.USER_VERIFY_TRADING_PERMISSIONS;
             case ACCOUNT_VALIDATED, ACCOUNT_VALIDATION_FAILED -> CommandType.ACCOUNT_VALIDATE;
-            case ACCOUNT_STATUS_VERIFIED, ACCOUNT_STATUS_INVALID -> CommandType.ACCOUNT_VERIFY_STATUS;
+            case ACCOUNT_STATUS_VERIFIED, ACCOUNT_STATUS_INVALID ->
+                    CommandType.ACCOUNT_VERIFY_STATUS;
             case PAYMENT_METHOD_VALID, PAYMENT_METHOD_INVALID -> CommandType.PAYMENT_METHOD_VALIDATE;
             case BALANCE_VALID, BALANCE_VALIDATION_ERROR -> CommandType.ACCOUNT_CHECK_BALANCE;
             case DEPOSIT_TRANSACTION_CREATED, DEPOSIT_TRANSACTION_CREATION_FAILED ->
@@ -201,39 +203,52 @@ Looking at the error, the switch expression doesn't cover all possible enum valu
                     CommandType.ACCOUNT_MARK_TRANSACTION_FAILED;
             case FUNDS_RESERVED, FUNDS_RESERVATION_FAILED ->
                     CommandType.ACCOUNT_RESERVE_FUNDS;
+
             case TRANSACTION_SETTLED, TRANSACTION_SETTLEMENT_FAILED ->
                     CommandType.ACCOUNT_SETTLE_TRANSACTION;
+
             case FUNDS_RELEASED, FUNDS_RELEASE_FAILED ->
-                    CommandType.ACCOUNT_RELEASE_FUNDS;
+                CommandType.ACCOUNT_RELEASE_FUNDS;
             // Order service events
             case ORDER_CREATED, ORDER_CREATION_FAILED ->
-                    CommandType.ORDER_CREATE;
+                CommandType.ORDER_CREATE;
+
             case ORDER_VALIDATED, ORDER_VALIDATION_FAILED ->
-                    CommandType.ORDER_UPDATE_VALIDATED;
+                CommandType.ORDER_UPDATE_VALIDATED;
+
             case ORDER_EXECUTED, ORDER_EXECUTION_UPDATE_FAILED ->
-                    CommandType.ORDER_UPDATE_EXECUTED;
+                CommandType.ORDER_UPDATE_EXECUTED;
+
             case ORDER_COMPLETED, ORDER_COMPLETION_FAILED ->
-                    CommandType.ORDER_UPDATE_COMPLETED;
+                CommandType.ORDER_UPDATE_COMPLETED;
+
             case ORDER_CANCELLED, ORDER_CANCELLATION_FAILED ->
-                    CommandType.ORDER_CANCEL;
+                CommandType.ORDER_CANCEL;
+
             // Market data service events
             case STOCK_VALIDATED, STOCK_VALIDATION_FAILED ->
-                    CommandType.MARKET_VALIDATE_STOCK;
+                CommandType.MARKET_VALIDATE_STOCK;
+
             case PRICE_PROVIDED, PRICE_RETRIEVAL_FAILED ->
-                    CommandType.MARKET_GET_PRICE;
+                CommandType.MARKET_GET_PRICE;
+
             // Portfolio service events
             case POSITIONS_UPDATED, POSITIONS_UPDATE_FAILED ->
-                    CommandType.PORTFOLIO_UPDATE_POSITIONS;
+                CommandType.PORTFOLIO_UPDATE_POSITIONS;
+
             case POSITIONS_REMOVED, POSITIONS_REMOVAL_FAILED ->
-                    CommandType.PORTFOLIO_REMOVE_POSITIONS;
+                CommandType.PORTFOLIO_REMOVE_POSITIONS;
+
             // Brokerage service events
             case ORDER_EXECUTED_BY_BROKER, ORDER_EXECUTION_FAILED ->
-                    CommandType.BROKER_EXECUTE_ORDER;
+                CommandType.BROKER_EXECUTE_ORDER;
+
             case BROKER_ORDER_CANCELLED, BROKER_ORDER_CANCELLATION_FAILED ->
-                    CommandType.BROKER_CANCEL_ORDER;
+                CommandType.BROKER_CANCEL_ORDER;
             case SETTLEMENT_REVERSED, SETTLEMENT_REVERSAL_FAILED ->
-                    CommandType.ACCOUNT_REVERSE_SETTLEMENT;
-            default -> null; // Return null for any unhandled event types
+                // Updated to use the service-specific naming without COMP_ prefix
+                CommandType.ACCOUNT_REVERSE_SETTLEMENT;
+
         };
 ```
  */

@@ -19,23 +19,23 @@ public class KafkaCommandListener {
     private final KafkaCommandHandlerService commandHandlerService;
 
     @KafkaListener(
-            id = "userDepositCommandsListener",
-            topics = "${kafka.topics.user-commands.deposit}",
+            id = "userCommonCommandsListener",
+            topics = "${kafka.topics.user-commands.common}",
             containerFactory = "depositCommandsListenerFactory"
     )
-    public void consumeDepositCommands(@Payload CommandMessage command, Acknowledgment ack) {
+    public void consumeCommonCommands(@Payload CommandMessage command, Acknowledgment ack) {
         try {
-            log.info("Processing deposit command: {} for saga: {}", command.getType(), command.getSagaId());
+            log.info("Processing common command: {} for saga: {}", command.getType(), command.getSagaId());
 
             if ("USER_VERIFY_IDENTITY".equals(command.getType())) {
                 commandHandlerService.handleVerifyIdentityCommand(command);
             } else {
-                log.warn("Unknown deposit command type: {}", command.getType());
+                log.warn("Unknown common command type: {}", command.getType());
             }
 
             ack.acknowledge();
         } catch (Exception e) {
-            log.error("Error processing deposit command: {}", e.getMessage(), e);
+            log.error("Error processing common command: {}", e.getMessage(), e);
             throw new RuntimeException("Command processing failed", e);
         }
     }

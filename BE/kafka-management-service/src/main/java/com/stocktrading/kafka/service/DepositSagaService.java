@@ -11,6 +11,7 @@ import com.stocktrading.kafka.model.DepositSagaState;
 import com.stocktrading.kafka.model.enums.DepositSagaStep;
 
 import com.stocktrading.kafka.model.enums.SagaStatus;
+import com.stocktrading.kafka.model.enums.WithdrawalSagaStep;
 import com.stocktrading.kafka.repository.DepositSagaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,14 +56,17 @@ public class DepositSagaService {
     @Value("${saga.deposit.timeout.update-balance}")
     private long updateBalanceTimeout;
 
-    @Value("${kafka.topics.user-commands.deposit:user.commands.deposit}")
-    private String userCommandsTopic;
+    @Value("${kafka.topics.user-commands.common:user.commands.common}")
+    private String userCommonCommandsTopic;
 
-    @Value("${kafka.topics.account-commands:account.commands.deposit}")
-    private String accountCommandsTopic;
+    @Value("${kafka.topics.account-commands.common:user.commands.common}")
+    private String accountCommonCommandsTopic;
 
-    @Value("${kafka.topics.payment-commands:payment.commands.process}")
-    private String paymentCommandsTopic;
+    @Value("${kafka.topics.account-commands.deposit:user.commands.deposit}")
+    private String accountDepositCommandsTopic;
+
+    @Value("${kafka.topics.payment-commands.deposit:payment.commands.process}")
+    private String paymentDepositCommandsTopic;
 
     /**
      * Start a new deposit saga
@@ -71,14 +75,14 @@ public class DepositSagaService {
                                      String currency, String paymentMethodId) {
         String sagaId = UUID.randomUUID().toString();
 
-        log.debug("Starting saga with ID: {}, amount: {} (type: {})",
+        log.debug("Starting saga with sagaId: {}, amount: {} (type: {})",
                 sagaId, amount, amount.getClass().getName());
 
         DepositSagaState saga = DepositSagaState.initiate(
                 sagaId, userId, accountId, amount, currency, paymentMethodId, maxRetries);
 
         // Debug: Verify saga fields before saving
-        log.debug("Saga before save: id={}, amount={} (type={})",
+        log.debug("Saga before save: sagaId={}, amount={} (type={})",
                 saga.getSagaId(), saga.getAmount(), saga.getAmount().getClass().getName());
 
         depositSagaRepository.save(saga);
@@ -134,7 +138,7 @@ public class DepositSagaService {
         log.debug("Handling event [{}] for saga: {}", event.getType(), sagaId);
 
         // Find the saga
-        Optional<DepositSagaState> optionalSaga = depositSagaRepository.findById(sagaId);
+        Optional<DepositSagaState> optionalSaga = depositSagaRepository.getDepositSagaStateBySagaId(sagaId);
         if (optionalSaga.isEmpty()) {
             log.warn("Received event for unknown saga: {}", sagaId);
             return;
@@ -425,15 +429,22 @@ public class DepositSagaService {
 
         switch (serviceName) {
             case "USER_SERVICE":
-                return userCommandsTopic;
+                return userCommonCommandsTopic;
             case "ACCOUNT_SERVICE":
-                return accountCommandsTopic;
+                if (commandType.equals(WithdrawalSagaStep.ACCOUNT_VALIDATE.getCommandType())
+                        || commandType.equals(WithdrawalSagaStep.ACCOUNT_CHECK_BALANCE.getCommandType())
+                        || commandType.equals(WithdrawalSagaStep.PAYMENT_METHOD_VALIDATE.getCommandType())
+                        || commandType.equals(WithdrawalSagaStep.ACCOUNT_UPDATE_TRANSACTION_STATUS.getCommandType())
+                        || commandType.equals(WithdrawalSagaStep.ACCOUNT_MARK_TRANSACTION_FAILED.getCommandType())) {
+
+                    return accountCommonCommandsTopic;
+                }
+                return accountDepositCommandsTopic;
             case "PAYMENT_SERVICE":
-                return paymentCommandsTopic;
-            default:
-                log.warn("Unknown service for command type: {}", commandType);
-                return accountCommandsTopic; // Default fallback
+                return paymentDepositCommandsTopic;
         }
+        log.warn("Unsupported command type: {}", commandType);
+        return accountDepositCommandsTopic;
     }
     
     /**

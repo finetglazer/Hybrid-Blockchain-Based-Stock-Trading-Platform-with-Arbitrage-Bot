@@ -1,6 +1,5 @@
 package com.project.userservice.service.kafka;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.kafkamessagemodels.model.CommandMessage;
 import com.project.kafkamessagemodels.model.EventMessage;
 import com.project.userservice.common.BaseResponse;
@@ -16,8 +15,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,8 +27,8 @@ public class KafkaCommandHandlerService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final UserRepository userRepository;
 
-    @Value("${kafka.topics.user-events.deposit}")
-    private String userDepositEventsTopic;
+    @Value("${kafka.topics.user-events.common}")
+    private String userCommonEventsTopic;
 
     @Value("${kafka.topics.user-events.order-buy}")
     private String userOrderEventsTopic;
@@ -78,7 +75,7 @@ public class KafkaCommandHandlerService {
         }
 
         try {
-            kafkaTemplate.send(userDepositEventsTopic, command.getSagaId(), event);
+            kafkaTemplate.send(userCommonEventsTopic, command.getSagaId(), event);
             log.info("Sent USER_IDENTITY_VERIFIED response for saga: {}, verified: {}",
                     command.getSagaId(), isVerified);
         } catch (Exception e) {

@@ -8,6 +8,7 @@ import com.project.kafkamessagemodels.model.CommandMessage;
 import com.project.kafkamessagemodels.model.EventMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -30,6 +32,16 @@ public class KafkaCommandHandlerService {
     private final TransactionRepository transactionRepository;
     private final BalanceRepository balanceRepository;
     private final ReservationRecordRepository reservationRecordRepository;
+    private final Random random = new Random();
+
+    @Value("${kafka.topics.account-events.common}")
+    private String commonEventsTopic;
+
+    @Value("${kafka.topics.account-events.deposit}")
+    private String depositEventsTopic;
+
+    @Value("${kafka.topics.account-events.withdrawal}")
+    private String withdrawalEventsTopic;
 
     /**
      * Handle ACCOUNT_VALIDATE command
@@ -88,7 +100,7 @@ public class KafkaCommandHandlerService {
 
         // Send the response event
         try {
-            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            kafkaTemplate.send(commonEventsTopic, command.getSagaId(), event);
             log.info("Sent ACCOUNT_VALIDATED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
@@ -105,7 +117,7 @@ public class KafkaCommandHandlerService {
         event.setErrorMessage(errorMessage);
 
         try {
-            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            kafkaTemplate.send(commonEventsTopic, event.getSagaId(), event);
             log.info("Sent ACCOUNT_VALIDATION_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
@@ -170,7 +182,7 @@ public class KafkaCommandHandlerService {
 
         // Send the response event
         try {
-            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            kafkaTemplate.send(commonEventsTopic, command.getSagaId(), event);
             log.info("Sent PAYMENT_METHOD_VALID response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
@@ -187,7 +199,7 @@ public class KafkaCommandHandlerService {
         event.setErrorMessage(errorMessage);
 
         try {
-            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            kafkaTemplate.send(commonEventsTopic, event.getSagaId(), event);
             log.info("Sent PAYMENT_METHOD_INVALID response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
@@ -229,7 +241,7 @@ public class KafkaCommandHandlerService {
 
         event.setType("BALANCE_VALID");
         try {
-            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            kafkaTemplate.send(withdrawalEventsTopic, event.getSagaId(), event);
             log.info("Sent BALANCE_VALID response for saga: {}", event.getSagaId());
         } catch (Exception e) {
             log.error("Error sending failure event", e);
@@ -245,7 +257,7 @@ public class KafkaCommandHandlerService {
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);
         try {
-            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            kafkaTemplate.send(withdrawalEventsTopic, event.getSagaId(), event);
             log.info("Sent BALANCE_VALIDATION_ERROR response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
@@ -328,7 +340,7 @@ public class KafkaCommandHandlerService {
 
         // Send the response event
         try {
-            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            kafkaTemplate.send(depositEventsTopic, command.getSagaId(), event);
             log.info("Sent DEPOSIT_TRANSACTION_CREATED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
@@ -345,7 +357,7 @@ public class KafkaCommandHandlerService {
         event.setErrorMessage(errorMessage);
 
         try {
-            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            kafkaTemplate.send(depositEventsTopic, event.getSagaId(), event);
             log.info("Sent DEPOSIT_TRANSACTION_CREATION_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
@@ -424,7 +436,7 @@ public class KafkaCommandHandlerService {
 
         // Send the response event
         try {
-            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            kafkaTemplate.send(withdrawalEventsTopic, command.getSagaId(), event);
             log.info("Sent WITHDRAWAL_TRANSACTION_CREATED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
@@ -439,7 +451,7 @@ public class KafkaCommandHandlerService {
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);
         try {
-            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            kafkaTemplate.send(withdrawalEventsTopic, event.getSagaId(), event);
             log.info("Sent WITHDRAWAL_TRANSACTION_CREATION_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
@@ -502,7 +514,7 @@ public class KafkaCommandHandlerService {
 
         // Send the response event
         try {
-            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            kafkaTemplate.send(commonEventsTopic, command.getSagaId(), event);
             log.info("Sent TRANSACTION_STATUS_UPDATED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
@@ -519,7 +531,7 @@ public class KafkaCommandHandlerService {
         event.setErrorMessage(errorMessage);
 
         try {
-            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            kafkaTemplate.send(commonEventsTopic, event.getSagaId(), event);
             log.info("Sent TRANSACTION_UPDATE_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
@@ -610,7 +622,7 @@ public class KafkaCommandHandlerService {
 
         // Send the response event
         try {
-            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            kafkaTemplate.send(depositEventsTopic, command.getSagaId(), event);
             log.info("Sent DEPOSIT_BALANCE_UPDATED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
@@ -627,7 +639,7 @@ public class KafkaCommandHandlerService {
         event.setErrorMessage(errorMessage);
 
         try {
-            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            kafkaTemplate.send(depositEventsTopic, event.getSagaId(), event);
             log.info("Sent DEPOSIT_BALANCE_UPDATE_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
@@ -663,6 +675,11 @@ public class KafkaCommandHandlerService {
         event.setStepId(command.getStepId());
         event.setSourceService("ACCOUNT_SERVICE");
         event.setTimestamp(Instant.now());
+
+        if (shouldSimulateFailure()) {
+            handleWithdrawalUpdateBalanceFailure(event, "WITHDRAWAL_UPDATE_BALANCE_FAILED", "Update balance failed!");
+            return;
+        }
 
         try {
             // Find account
@@ -718,7 +735,7 @@ public class KafkaCommandHandlerService {
 
         // Send the response event
         try {
-            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            kafkaTemplate.send(withdrawalEventsTopic, command.getSagaId(), event);
             log.info("Sent WITHDRAWAL_BALANCE_UPDATED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
@@ -729,13 +746,13 @@ public class KafkaCommandHandlerService {
      * Handle update balance failures for withdrawal case
      */
     public void handleWithdrawalUpdateBalanceFailure(EventMessage event, String errorCode, String errorMessage) {
-        event.setType("WITHDRAWAL_BALANCE_UPDATED_FAILED");
+        event.setType("WITHDRAWAL_BALANCE_UPDATE_FAILED");
         event.setSuccess(false);
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);
 
         try {
-            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            kafkaTemplate.send(withdrawalEventsTopic, event.getSagaId(), event);
             log.info("Sent BALANCE_UPDATE_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
@@ -822,7 +839,7 @@ public class KafkaCommandHandlerService {
 
         // Send the response event
         try {
-            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            kafkaTemplate.send(commonEventsTopic, command.getSagaId(), event);
             log.info("Sent TRANSACTION_MARKED_FAILED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
@@ -839,7 +856,7 @@ public class KafkaCommandHandlerService {
         event.setErrorMessage(errorMessage);
 
         try {
-            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            kafkaTemplate.send(commonEventsTopic, event.getSagaId(), event);
             log.info("Sent TRANSACTION_MARK_FAILED_ERROR response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
@@ -992,7 +1009,7 @@ public class KafkaCommandHandlerService {
 
         // Send the response event
         try {
-            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            kafkaTemplate.send(depositEventsTopic, command.getSagaId(), event);
             log.info("Sent DEPOSIT_BALANCE_REVERSAL_COMPLETED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
@@ -1009,7 +1026,7 @@ public class KafkaCommandHandlerService {
         event.setErrorMessage(errorMessage);
 
         try {
-            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            kafkaTemplate.send(depositEventsTopic, event.getSagaId(), event);
             log.info("Sent DEPOSIT_BALANCE_REVERSAL_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
@@ -1068,7 +1085,7 @@ public class KafkaCommandHandlerService {
             BigDecimal newAvailable = balance.getAvailable();
             BigDecimal newTotal = balance.getTotal();
 
-            if (!amount.equals(BigDecimal.ZERO)) {
+            if (!(amount.compareTo(BigDecimal.ZERO) == 0)) {
                 newAvailable = balance.getAvailable().add(amount);
                 newTotal = balance.getTotal().add(amount);
 
@@ -1126,15 +1143,19 @@ public class KafkaCommandHandlerService {
             event.setPayloadValue("newTotalBalance", newTotal);
             event.setPayloadValue("reversedAmount", amount);
             event.setPayloadValue("updatedAt", balance.getUpdatedAt().toString());
+
+//            if (shouldSimulateFailure()) {
+//                handleWithdrawalReverseBalanceUpdateFailure(event, "WITHDRAWAL_BALANCE_REVERSAL_ERROR", "Error reversing balance update!");
+//            }
         } catch(Exception e){
             log.error("Error reversing balance update", e);
-            handleWithdrawalBalanceReverseFailure(event, "WITHDRAWAL_BALANCE_REVERSAL_ERROR",
+            handleWithdrawalReverseBalanceUpdateFailure(event, "WITHDRAWAL_BALANCE_REVERSAL_ERROR",
                     "Error reversing balance update: " + e.getMessage());
             return;
         }
         // Send the response event
         try {
-            kafkaTemplate.send("account.events.deposit", command.getSagaId(), event);
+            kafkaTemplate.send(withdrawalEventsTopic, command.getSagaId(), event);
             log.info("Sent WITHDRAWAL_BALANCE_REVERSAL_COMPLETED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
@@ -1144,14 +1165,14 @@ public class KafkaCommandHandlerService {
     /**
      * Handle reversal update balance failures for withdrawal
      */
-    public void handleWithdrawalBalanceReverseFailure(EventMessage event, String errorCode, String errorMessage) {
+    public void handleWithdrawalReverseBalanceUpdateFailure(EventMessage event, String errorCode, String errorMessage) {
         event.setType("WITHDRAWAL_BALANCE_REVERSAL_FAILED");
         event.setSuccess(false);
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);
 
         try {
-            kafkaTemplate.send("account.events.deposit", event.getSagaId(), event);
+            kafkaTemplate.send(withdrawalEventsTopic, event.getSagaId(), event);
             log.info("Sent WITHDRAWAL_BALANCE_REVERSAL_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
@@ -1752,5 +1773,12 @@ public class KafkaCommandHandlerService {
         } catch (Exception e) {
             log.error("Error sending event", e);
         }
+    }
+
+    /**
+     * Should we simulate a failure? (10% chance)
+     */
+    private boolean shouldSimulateFailure() {
+        return random.nextInt(100) < 10;
     }
 }
