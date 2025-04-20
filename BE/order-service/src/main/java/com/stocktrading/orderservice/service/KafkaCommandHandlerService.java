@@ -427,57 +427,54 @@ public class KafkaCommandHandlerService {
         event.setSourceService("ORDER_SERVICE");
         event.setTimestamp(Instant.now());
 
-        handleOrderCompletionFailure(event, "ORDER_COMPLETION_ERROR",
-                "Error completing order: ");
+       try {
+           // Find order
+           Optional<Order> orderOpt = orderRepository.findById(orderId);
+           if (orderOpt.isEmpty()) {
+               handleOrderCompletionFailure(event, "ORDER_NOT_FOUND",
+                       "Order not found with ID: " + orderId);
+               return;
+           }
 
-//        try {
-//            // Find order
-//            Optional<Order> orderOpt = orderRepository.findById(orderId);
-//            if (orderOpt.isEmpty()) {
-//                handleOrderCompletionFailure(event, "ORDER_NOT_FOUND",
-//                        "Order not found with ID: " + orderId);
-//                return;
-//            }
-//
-//            Order order = orderOpt.get();
-//
-//            // Verify order can be completed (state check)
-//            if (order.getStatus() != Order.OrderStatus.FILLED) {
-//                handleOrderCompletionFailure(event, "INVALID_ORDER_STATE",
-//                        "Order is not in FILLED state: " + order.getStatus());
-//                return;
-//            }
-//
-//            // Update order to COMPLETED status
-//            order.setStatus(Order.OrderStatus.COMPLETED);
-//            order.setUpdatedAt(Instant.now());
-//
-//            // Save updated order
-//            Order updatedOrder = orderRepository.save(order);
-//
-//            // Set success response
-//            event.setType("ORDER_COMPLETED");
-//            event.setSuccess(true);
-//            event.setPayloadValue("orderId", updatedOrder.getId());
-//            event.setPayloadValue("status", updatedOrder.getStatus().name());
-//            event.setPayloadValue("completedAt", updatedOrder.getUpdatedAt().toString());
-//
-//            log.info("Order completed successfully with ID: {}", updatedOrder.getId());
-//
-//        } catch (Exception e) {
-//            log.error("Error completing order", e);
-//            handleOrderCompletionFailure(event, "ORDER_COMPLETION_ERROR",
-//                    "Error completing order: " + e.getMessage());
-//            return;
-//        }
-//
-//        // Send the response event
-//        try {
-//            kafkaTemplate.send(orderEventsTopic, command.getSagaId(), event);
-//            log.info("Sent ORDER_COMPLETED response for saga: {}", command.getSagaId());
-//        } catch (Exception e) {
-//            log.error("Error sending event", e);
-//        }
+           Order order = orderOpt.get();
+
+           // Verify order can be completed (state check)
+           if (order.getStatus() != Order.OrderStatus.FILLED) {
+               handleOrderCompletionFailure(event, "INVALID_ORDER_STATE",
+                       "Order is not in FILLED state: " + order.getStatus());
+               return;
+           }
+
+           // Update order to COMPLETED status
+           order.setStatus(Order.OrderStatus.COMPLETED);
+           order.setUpdatedAt(Instant.now());
+
+           // Save updated order
+           Order updatedOrder = orderRepository.save(order);
+
+           // Set success response
+           event.setType("ORDER_COMPLETED");
+           event.setSuccess(true);
+           event.setPayloadValue("orderId", updatedOrder.getId());
+           event.setPayloadValue("status", updatedOrder.getStatus().name());
+           event.setPayloadValue("completedAt", updatedOrder.getUpdatedAt().toString());
+
+           log.info("Order completed successfully with ID: {}", updatedOrder.getId());
+
+       } catch (Exception e) {
+           log.error("Error completing order", e);
+           handleOrderCompletionFailure(event, "ORDER_COMPLETION_ERROR",
+                   "Error completing order: " + e.getMessage());
+           return;
+       }
+
+       // Send the response event
+       try {
+           kafkaTemplate.send(orderEventsTopic, command.getSagaId(), event);
+           log.info("Sent ORDER_COMPLETED response for saga: {}", command.getSagaId());
+       } catch (Exception e) {
+           log.error("Error sending event", e);
+       }
     }
 
     /**
