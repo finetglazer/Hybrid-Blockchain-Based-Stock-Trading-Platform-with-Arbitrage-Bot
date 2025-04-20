@@ -15,11 +15,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -31,8 +29,38 @@ public class WithdrawalSagaService {
 
     private final IdempotencyService idempotencyService;
 
-    @Value("${saga.deposit.retry.max-attempts}")
+    @Value("${saga.withdrawal.retry.max-attempts}")
     private int maxRetries;
+
+    @Value("${saga.deposit.timeout.verify-identity}")
+    private long verifyIdentityTimeout;
+
+    @Value("${saga.deposit.timeout.validate-payment}")
+    private long validatePaymentTimeout;
+
+    @Value("${saga.deposit.timeout.create-transaction}")
+    private long createTransactionTimeout;
+
+    @Value("${saga.deposit.timeout.process-payment}")
+    private long processPaymentTimeout;
+
+    @Value("${saga.deposit.timeout.update-transaction}")
+    private long updateTransactionTimeout;
+
+    @Value("${saga.deposit.timeout.update-balance}")
+    private long updateBalanceTimeout;
+
+    @Value("${kafka.topics.user-commands.common:user.commands.common}")
+    private String userCommonCommandsTopic;
+
+    @Value("${kafka.topics.account-commands.common:account.commands.common}")
+    private String accountCommonCommandsTopic;
+
+    @Value("${kafka.topics.account-commands.withdrawal:account.commands.withdrawal}")
+    private String accountWithdrawalCommandsTopic;
+
+    @Value("${kafka.topics.payment-commands.withdrawal:payment.commands.withdrawal}")
+    private String paymentWithdrawalCommandsTopic;
 
     public WithdrawalSagaState startWithdrawalSaga(String userId, String accountId, BigDecimal amount, String currency,
                                                    String paymentMethodId, String description) {
@@ -62,17 +90,17 @@ public class WithdrawalSagaService {
         command.setTimestamp(Instant.now());
         command.setType(nextStep.name());
 
-        if (nextStep == WithdrawalSagaStep.USER_VERIFY_IDENTITY) {
+        if (nextStep.equals(WithdrawalSagaStep.USER_VERIFY_IDENTITY)) {
             command.setTargetService("USER_SERVICE");
             command.setPayloadValue("userId", saga.getUserId());
             command.setPayloadValue("verificationType", "BASIC");
         }
-        if (nextStep == WithdrawalSagaStep.ACCOUNT_VALIDATE) {
+        if (nextStep.equals(WithdrawalSagaStep.ACCOUNT_VALIDATE)) {
             command.setTargetService("ACCOUNT_SERVICE");
             command.setPayloadValue("accountId", saga.getAccountId());
             command.setPayloadValue("userId", saga.getUserId());
         }
-        if (nextStep == WithdrawalSagaStep.ACCOUNT_CHECK_BALANCE) {
+        if (nextStep.equals(WithdrawalSagaStep.ACCOUNT_CHECK_BALANCE)) {
             command.setTargetService("ACCOUNT_SERVICE");
             command.setPayloadValue("accountId", saga.getAccountId());
             command.setPayloadValue("userId", saga.getUserId());
@@ -80,13 +108,13 @@ public class WithdrawalSagaService {
             command.setPayloadValue("currency", saga.getCurrency());
             command.setPayloadValue("paymentMethodId", saga.getPaymentMethodId());
         }
-        if (nextStep == WithdrawalSagaStep.PAYMENT_METHOD_VALIDATE) {
+        if (nextStep.equals(WithdrawalSagaStep.PAYMENT_METHOD_VALIDATE)) {
             command.setTargetService("ACCOUNT_SERVICE");
             command.setPayloadValue("paymentMethodId", saga.getPaymentMethodId());
             command.setPayloadValue("accountId", saga.getAccountId());
             command.setPayloadValue("userId", saga.getUserId());
         }
-        if (nextStep == WithdrawalSagaStep.ACCOUNT_CREATE_WITHDRAWAL_PENDING_TRANSACTION) {
+        if (nextStep.equals(WithdrawalSagaStep.ACCOUNT_CREATE_WITHDRAWAL_PENDING_TRANSACTION)) {
             command.setTargetService("ACCOUNT_SERVICE");
             command.setPayloadValue("accountId", saga.getAccountId());
             command.setPayloadValue("userId", saga.getUserId());
@@ -95,7 +123,7 @@ public class WithdrawalSagaService {
             command.setPayloadValue("currency", saga.getCurrency());
             command.setPayloadValue("description", saga.getStepData().get("description"));
         }
-        if (nextStep == WithdrawalSagaStep.PAYMENT_PROCESS_WITHDRAWAL) {
+        if (nextStep.equals(WithdrawalSagaStep.PAYMENT_PROCESS_WITHDRAWAL)) {
             command.setTargetService("PAYMENT_SERVICE");
             command.setPayloadValue("paymentMethodId", saga.getPaymentMethodId());
             command.setPayloadValue("amount", saga.getAmount());
@@ -103,35 +131,28 @@ public class WithdrawalSagaService {
             command.setPayloadValue("accountId", saga.getAccountId());
             command.setPayloadValue("transactionId", saga.getTransactionId());
         }
-        if (nextStep == WithdrawalSagaStep.ACCOUNT_UPDATE_TRANSACTION_STATUS) {
+        if (nextStep.equals(WithdrawalSagaStep.ACCOUNT_UPDATE_TRANSACTION_STATUS)) {
             command.setTargetService("ACCOUNT_SERVICE");
             command.setPayloadValue("transactionId", saga.getTransactionId());
             command.setPayloadValue("status", "COMPLETED");
             command.setPayloadValue("paymentReference", saga.getPaymentProcessorTransactionId());
         }
-        if (nextStep == WithdrawalSagaStep.ACCOUNT_WITHDRAWAL_UPDATE_BALANCE) {
+        if (nextStep.equals(WithdrawalSagaStep.ACCOUNT_WITHDRAWAL_UPDATE_BALANCE)) {
             command.setTargetService("ACCOUNT_SERVICE");
             command.setPayloadValue("accountId", saga.getAccountId());
             command.setPayloadValue("amount", saga.getAmount());
             command.setPayloadValue("transactionId", saga.getTransactionId());
         }
-        if (nextStep == WithdrawalSagaStep.COMPLETE_SAGA) {
-            command.setTargetService(null);
 
-            saga.setEndTime(Instant.now());
-        }
-        if (nextStep == WithdrawalSagaStep.ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE) {
+        if (nextStep.equals(WithdrawalSagaStep.ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE)) {
             command.setIsCompensation(true);
             command.setTargetService("ACCOUNT_SERVICE");
             command.setPayloadValue("accountId", saga.getAccountId());
             command.setPayloadValue("amount", saga.getAmount());
             command.setPayloadValue("transactionId", saga.getTransactionId());
             command.setPayloadValue("reason", saga.getFailureReason());
-
-            saga.getSagaEvents().add(SagaEvent.of("COMPENSATION_STARTED", "Starting compensation process"));
-            saga.getSagaEvents().add(SagaEvent.of("COMPENSATION_STEP", "Starting compensation with step: " + nextStep));
         }
-        if (nextStep == WithdrawalSagaStep.PAYMENT_REVERSE_WITHDRAWAL) {
+        if (nextStep.equals(WithdrawalSagaStep.PAYMENT_REVERSE_WITHDRAWAL)) {
             command.setIsCompensation(true);
             command.setTargetService("PAYMENT_SERVICE");
             command.setPayloadValue("paymentReference", saga.getPaymentProcessorTransactionId());
@@ -139,38 +160,58 @@ public class WithdrawalSagaService {
             command.setPayloadValue("reason", saga.getFailureReason());
             command.setPayloadValue("transactionId", saga.getTransactionId());
         }
-        if (nextStep == WithdrawalSagaStep.MARK_TRANSACTION_FAILED) {
+        if (nextStep.equals(WithdrawalSagaStep.ACCOUNT_MARK_TRANSACTION_FAILED)) {
             command.setIsCompensation(true);
             command.setTargetService("ACCOUNT_SERVICE");
             command.setPayloadValue("transactionId", saga.getTransactionId());
             command.setPayloadValue("failureReason", saga.getFailureReason());
             command.setPayloadValue("errorCode", "SAGA_FAILURE");
         }
-        saga.getCompletedSteps().add(command.getIsCompensation() ? "COMP_" + saga.getCurrentStep().name() : saga.getCurrentStep().name());
         command.setMetadataValue("retryCount", String.valueOf(saga.getRetryCount()));
-        String targetTopic = getTopicForCommandType(command.getTargetService());
 
-        if (nextStep != WithdrawalSagaStep.COMPLETE_SAGA && nextStep != WithdrawalSagaStep.COMPLETE_COMPENSATION) {
-            saga.setStatus(!command.getIsCompensation() ? SagaStatus.IN_PROGRESS : SagaStatus.COMPENSATING);
-            saga.getSagaEvents().add(SagaEvent.of("STEP_CHANGED", "Moving to step: " + nextStep.getDescription()));
-            saga.setCurrentStep(nextStep);
-            saga.setLastUpdatedTime(Instant.now());
-            saga.setCurrentStepStartTime(Instant.now());
+        saga.getCompletedSteps().add(command.getIsCompensation() || nextStep.equals(WithdrawalSagaStep.COMPLETE_COMPENSATION) ? (saga.getStepData().get("isFirstCompensationStep") == Boolean.TRUE ? WithdrawalSagaStep.START_COMPENSATION.name() : "COMP_" + saga.getCurrentStep().name())
+                : saga.getCurrentStep().name());
 
-            kafkaMessagePublisher.publishCommand(command, targetTopic);
-            log.info("Published command [{}] for saga [{}] to topic: {}",
-                    command.getType(), saga.getSagaId(), targetTopic);
-        }
-        else if (nextStep == WithdrawalSagaStep.COMPLETE_SAGA) {
+        log.info("Completed steps: {}", saga.getCompletedSteps());
+
+        if (nextStep == WithdrawalSagaStep.COMPLETE_SAGA) {
+            command.setTargetService(null);
+
+            saga.setEndTime(Instant.now());
             saga.setStatus(SagaStatus.COMPLETED);
             saga.getSagaEvents().add(SagaEvent.of("SAGA_COMPLETED","Withdrawal saga completed successfully"));
+            log.info("Saga {} COMPLETED", saga.getSagaId());
         }
-        else {
+        else if (nextStep == WithdrawalSagaStep.COMPLETE_COMPENSATION) {
+            command.setTargetService(null);
+
+            saga.setEndTime(Instant.now());
             saga.setStatus(SagaStatus.COMPENSATION_COMPLETED);
             saga.getSagaEvents().add(SagaEvent.of("COMPENSATION_COMPLETED", "Compensation process completed"));
+            log.info("Saga {} COMPENSATION_COMPLETED", saga.getSagaId());
+        }
+        else {
+            saga.setStatus(!command.getIsCompensation() ? SagaStatus.IN_PROGRESS : SagaStatus.COMPENSATING);
+            saga.getSagaEvents().add(SagaEvent.of("STEP_CHANGED", "Moving to step: " + nextStep.name()));
+        }
+
+        saga.setCurrentStep(nextStep);
+        saga.setLastUpdatedTime(Instant.now());
+        saga.setCurrentStepStartTime(Instant.now());
+
+        if (nextStep.equals(WithdrawalSagaStep.COMPLETE_SAGA) || nextStep.equals(WithdrawalSagaStep.COMPLETE_COMPENSATION)) {
+            saga.getCompletedSteps().add(nextStep.equals(WithdrawalSagaStep.COMPLETE_SAGA) ? WithdrawalSagaStep.COMPLETE_SAGA.name() : WithdrawalSagaStep.COMPLETE_COMPENSATION.name());
+            withdrawalSagaRepository.save(saga);
+            return;
         }
 
         withdrawalSagaRepository.save(saga);
+
+        String targetTopic = getTopicForCommandType(command);
+        kafkaMessagePublisher.publishCommand(command, targetTopic);
+
+        log.info("Published command [{}] for saga [{}] to topic: {}",
+                command.getType(), saga.getSagaId(), targetTopic);
     }
 
     public void handleEventMessage(EventMessage event) {
@@ -179,7 +220,7 @@ public class WithdrawalSagaService {
         log.debug("Handling event [{}] for saga: {}", event.getType(), sagaId);
 
         // Find the saga
-        Optional<WithdrawalSagaState> optionalSaga = withdrawalSagaRepository.findById(sagaId);
+        Optional<WithdrawalSagaState> optionalSaga = withdrawalSagaRepository.getWithdrawalSagaStateBySagaId(sagaId);
         if (optionalSaga.isEmpty()) {
             log.warn("Received event for unknown saga: {}", sagaId);
             return;
@@ -225,6 +266,8 @@ public class WithdrawalSagaService {
                 saga.setPaymentProcessorTransactionId(event.getPayloadValue("paymentReference"));
             }
 
+            saga.getStepData().put("isFirstCompensationStep", Boolean.FALSE);
+
             withdrawalSagaRepository.save(saga);
 
             nextSagaStep(saga);
@@ -247,15 +290,24 @@ public class WithdrawalSagaService {
                     saga.getSagaEvents().add(SagaEvent.of("SAGA_TERMINATED", "Saga terminated due to validation failure"));
 
                     withdrawalSagaRepository.save(saga);
+
+                    log.error("Saga terminated with error code: {}, error message: {}", event.getErrorCode(), event.getErrorMessage());
                 }
-                else {
-                    saga.setCurrentStep(saga.getCompletedSteps().contains(WithdrawalSagaStep.ACCOUNT_WITHDRAWAL_UPDATE_BALANCE.name())
-                                        ? WithdrawalSagaStep.START_COMPENSATION
-                                        : WithdrawalSagaStep.ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE);
+                else if (saga.getCurrentStep().equals(WithdrawalSagaStep.ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE)
+                        || saga.getCurrentStep().equals(WithdrawalSagaStep.PAYMENT_REVERSE_WITHDRAWAL)
+                        || saga.getCurrentStep().equals(WithdrawalSagaStep.ACCOUNT_MARK_TRANSACTION_FAILED)) {
+                    // If reversal saga steps failed
+                    saga.setCurrentStep(saga.getCurrentStep().equals(WithdrawalSagaStep.ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE)
+                            ? WithdrawalSagaStep.START_COMPENSATION
+                            : (saga.getCurrentStep().equals(WithdrawalSagaStep.PAYMENT_REVERSE_WITHDRAWAL)
+                                ? WithdrawalSagaStep.ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE : WithdrawalSagaStep.PAYMENT_REVERSE_WITHDRAWAL));
+
+                    saga.getStepData().put("isFirstCompensationStep", Boolean.TRUE);
 
                     withdrawalSagaRepository.save(saga);
-
-                    nextSagaStep(saga);
+                }
+                else {
+                    startCompensation(saga);
                 }
             } catch (Exception e) {
                 log.error("Error processing failure event: {}", e.getMessage(), e);
@@ -280,6 +332,106 @@ public class WithdrawalSagaService {
         // Log final state after processing
         log.debug("After event processing, saga state: id={}, status={}, currentStep={}",
                 saga.getSagaId(), saga.getStatus(), saga.getCurrentStep());
+    }
+
+    /**
+     * Check for timed-out steps and handle them
+     */
+    public void checkForTimeouts() {
+        log.debug("Checking for timed-out saga steps");
+
+        List<SagaStatus> activeStatuses = Arrays.asList(SagaStatus.STARTED, SagaStatus.IN_PROGRESS);
+
+        // Find sagas that might have timed out
+        Instant cutoffTime = Instant.now().minus(Duration.ofMillis(Math.max(
+                verifyIdentityTimeout, Math.max(
+                        validatePaymentTimeout, Math.max(
+                                createTransactionTimeout, Math.max(
+                                        processPaymentTimeout, Math.max(
+                                                updateTransactionTimeout, updateBalanceTimeout
+                                        )
+                                )
+                        )
+                )
+        )));
+
+        List<WithdrawalSagaState> potentiallyTimedOutSagas =
+                withdrawalSagaRepository.findPotentiallyTimedOutSagas(activeStatuses, cutoffTime);
+
+        for (WithdrawalSagaState saga : potentiallyTimedOutSagas) {
+            handlePotentialTimeout(saga);
+        }
+    }
+
+    /**
+     * Check if the current step has timed out
+     */
+    public boolean isCurrentStepTimedOut(WithdrawalSagaState saga, Duration timeout) {
+        if (saga.getCurrentStepStartTime() == null) {
+            return false;
+        }
+        return Duration.between(saga.getCurrentStepStartTime(), Instant.now()).compareTo(timeout) > 0;
+    }
+
+    /**
+     * Handle a potentially timed-out saga
+     */
+    private void handlePotentialTimeout(WithdrawalSagaState saga) {
+        if (saga.getCurrentStep() == null) {
+            return;
+        }
+
+        Duration timeout = getTimeoutForStep(saga.getCurrentStep());
+
+        if (isCurrentStepTimedOut(saga, timeout)) {
+            log.warn("Step [{}] has timed out for saga: {}", saga.getCurrentStep(), saga.getSagaId());
+
+            // Check if we can retry
+            if (saga.getRetryCount() < saga.getMaxRetries()) {
+                // Increment retry count
+                saga.setRetryCount(saga.getRetryCount() + 1);
+                saga.getSagaEvents().add(SagaEvent.of("RETRY", "Retrying step " + saga.getCurrentStep() + " after timeout"));
+
+                // Save and retry the step
+                withdrawalSagaRepository.save(saga);
+
+                nextSagaStep(saga);
+
+            } else {
+                // We've exceeded retries, start compensation
+                saga.setFailureReason("Step timed out after " + saga.getMaxRetries() + " retries");
+                saga.setStatus(SagaStatus.FAILED);
+                saga.getSagaEvents().add(SagaEvent.of("STEP_FAILED", "Step " + saga.getCurrentStep().name() + " failed: " + "Step timed out after " + saga.getMaxRetries() + " retries"));
+                saga.setLastUpdatedTime(Instant.now());
+
+                withdrawalSagaRepository.save(saga);
+
+                startCompensation(saga);
+            }
+        }
+    }
+
+    /**
+     * Get the timeout duration for a specific step
+     */
+    private Duration getTimeoutForStep(WithdrawalSagaStep step) {
+        switch (step) {
+            case USER_VERIFY_IDENTITY:
+                return Duration.ofMillis(verifyIdentityTimeout);
+            case PAYMENT_METHOD_VALIDATE:
+                return Duration.ofMillis(validatePaymentTimeout);
+            case ACCOUNT_CREATE_WITHDRAWAL_PENDING_TRANSACTION:
+                return Duration.ofMillis(createTransactionTimeout);
+            case PAYMENT_PROCESS_WITHDRAWAL:
+                return Duration.ofMillis(processPaymentTimeout);
+            case ACCOUNT_UPDATE_TRANSACTION_STATUS:
+                return Duration.ofMillis(updateTransactionTimeout);
+            case ACCOUNT_WITHDRAWAL_UPDATE_BALANCE:
+                return Duration.ofMillis(updateBalanceTimeout);
+            default:
+                // For compensation steps, use a generous timeout
+                return Duration.ofMillis(processPaymentTimeout);
+        }
     }
 
 /*===================================================== PRIVATE FUNCTIONS =============================================================================*/
@@ -318,23 +470,49 @@ public class WithdrawalSagaService {
             return WithdrawalSagaStep.PAYMENT_REVERSE_WITHDRAWAL;
         }
         if (currentStep.equals(WithdrawalSagaStep.PAYMENT_REVERSE_WITHDRAWAL)) {
-            return WithdrawalSagaStep.MARK_TRANSACTION_FAILED;
+            return WithdrawalSagaStep.ACCOUNT_MARK_TRANSACTION_FAILED;
         }
         return WithdrawalSagaStep.COMPLETE_COMPENSATION;
     }
 
-    private String getTopicForCommandType(String targetService) {
+    private void startCompensation(WithdrawalSagaState saga) {
+        WithdrawalSagaStep nextStep = saga.getCurrentStep().equals(WithdrawalSagaStep.ACCOUNT_WITHDRAWAL_UPDATE_BALANCE)
+                ? WithdrawalSagaStep.START_COMPENSATION
+                : WithdrawalSagaStep.ACCOUNT_WITHDRAWAL_REVERSE_BALANCE_UPDATE;
+
+        saga.setCurrentStep(nextStep);
+        saga.getSagaEvents().add(SagaEvent.of("COMPENSATION_STARTED", "Starting compensation process"));
+        saga.getSagaEvents().add(SagaEvent.of("COMPENSATION_STEP", "Starting compensation with step: " + nextStep));
+
+        saga.getStepData().put("isFirstCompensationStep", Boolean.TRUE);
+
+        withdrawalSagaRepository.save(saga);
+
+        nextSagaStep(saga);
+    }
+
+    private String getTopicForCommandType(CommandMessage command) {
+        String targetService = command.getTargetService();
+        CommandType commandType = CommandType.valueOf(command.getType());
+
         switch (targetService) {
             case "USER_SERVICE":
-                return "user.commands.verify";
+                return userCommonCommandsTopic;
             case "ACCOUNT_SERVICE":
-                return "account.commands.deposit";
+                if (commandType.equals(WithdrawalSagaStep.ACCOUNT_VALIDATE.getCommandType())
+                    || commandType.equals(WithdrawalSagaStep.ACCOUNT_CHECK_BALANCE.getCommandType())
+                    || commandType.equals(WithdrawalSagaStep.PAYMENT_METHOD_VALIDATE.getCommandType())
+                    || commandType.equals(WithdrawalSagaStep.ACCOUNT_UPDATE_TRANSACTION_STATUS.getCommandType())
+                    || commandType.equals(WithdrawalSagaStep.ACCOUNT_MARK_TRANSACTION_FAILED.getCommandType())) {
+
+                    return accountCommonCommandsTopic;
+                }
+                return accountWithdrawalCommandsTopic;
             case "PAYMENT_SERVICE":
-                return "payment.commands.process.deposit";
-            default:
-                log.warn("Unknown service: {}", targetService);
-                return "account.commands.deposit";
+                return paymentWithdrawalCommandsTopic;
         }
+        log.warn("Unsupported command type: {}", commandType);
+        return accountWithdrawalCommandsTopic;
     }
 
     /**
