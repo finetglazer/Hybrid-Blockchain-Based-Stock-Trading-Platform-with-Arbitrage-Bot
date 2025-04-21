@@ -116,31 +116,35 @@ public class OrderBuySagaService {
         try {
             log.debug("Calculating required funds for saga: {}", saga.getSagaId());
 
-            // Get the market price from previous step
-            Object priceObj = saga.getStepData("PRICE_PROVIDED_currentPrice");
-            BigDecimal marketPrice;
+            BigDecimal priceToUse;
 
-            if (priceObj == null) {
-                throw new IllegalStateException("Market price not available");
-            } else if (priceObj instanceof BigDecimal) {
-                marketPrice = (BigDecimal) priceObj;
-            } else if (priceObj instanceof Double) {
-                // This handles the case in your error
-                marketPrice = BigDecimal.valueOf((Double) priceObj);
-            } else if (priceObj instanceof Number) {
-                // Handle other numeric types
-                marketPrice = BigDecimal.valueOf(((Number) priceObj).doubleValue());
-            } else if (priceObj instanceof String) {
-                // Even handle string representations
-                marketPrice = new BigDecimal((String) priceObj);
+            // For LIMIT orders, always use the limit price for calculations
+            if ("LIMIT".equals(saga.getOrderType()) && saga.getLimitPrice() != null) {
+                priceToUse = saga.getLimitPrice();
+                log.debug("Using limit price for calculation: {}", priceToUse);
             } else {
-                throw new IllegalStateException("Market price is in an unsupported format: " +
-                        priceObj.getClass().getName());
-            }
+                // For MARKET orders, get the price from the previous step
+                Object priceObj = saga.getStepData("PRICE_PROVIDED_currentPrice");
+                if (priceObj == null) {
+                    throw new IllegalStateException("Market price not available");
+                }
 
-            // For limit orders, use limit price for calculation
-            BigDecimal priceToUse = "LIMIT".equals(saga.getOrderType()) && saga.getLimitPrice() != null ?
-                    saga.getLimitPrice() : marketPrice;
+                // Handle different price formats
+                if (priceObj instanceof BigDecimal) {
+                    priceToUse = (BigDecimal) priceObj;
+                } else if (priceObj instanceof Double) {
+                    priceToUse = BigDecimal.valueOf((Double) priceObj);
+                } else if (priceObj instanceof Number) {
+                    priceToUse = BigDecimal.valueOf(((Number) priceObj).doubleValue());
+                } else if (priceObj instanceof String) {
+                    priceToUse = new BigDecimal((String) priceObj);
+                } else {
+                    throw new IllegalStateException("Market price is in an unsupported format: " +
+                            priceObj.getClass().getName());
+                }
+
+                log.debug("Using market price for calculation: {}", priceToUse);
+            }
 
             // Calculate the amount to reserve
             BigDecimal requiredAmount = priceToUse.multiply(new BigDecimal(saga.getQuantity()));
@@ -168,7 +172,7 @@ public class OrderBuySagaService {
                     OrderBuySagaStep.CALCULATE_REQUIRED_FUNDS.name());
             orderBuySagaRepository.save(saga);
 
-            // If cancellation is needed on failure
+            // Cancel the order on calculation failure
             cancelOrder(saga);
         }
     }
@@ -180,9 +184,19 @@ public class OrderBuySagaService {
             if (saga.getOrderId() != null) {
                 log.info("Cancelling order {} due to funds calculation failure", saga.getOrderId());
 
-                // Update order status to CANCELLED in the Order Service
-                // This could be done via a direct API call or through a Kafka message
+                // Create a command to cancel the order
+                CommandMessage command = new CommandMessage();
+                command.initialize();
+                command.setSagaId(saga.getSagaId());
+                command.setType(CommandType.ORDER_CANCEL.name());
+                command.setSourceService("SAGA_ORCHESTRATOR");
+                command.setTargetService("ORDER_SERVICE");
+                command.setPayloadValue("orderId", saga.getOrderId());
+                command.setPayloadValue("reason", saga.getFailureReason());
 
+                // Publish the command
+                String topic = getTopicForCommandType(CommandType.ORDER_CANCEL);
+                messagePublisher.publishCommand(command, topic);
                 saga.addEvent("ORDER_CANCELLED", "Order cancelled due to funds calculation failure");
             } else {
                 log.info("No order to cancel - funds calculation failed before order creation");
@@ -324,10 +338,11 @@ public class OrderBuySagaService {
         saga.handleFailure(failureReason, saga.getCurrentStep().name());
 
         // Check if we need compensation
-        if (!isValidationStep(saga.getCurrentStep())) {
-            startCompensation(saga);
+        // For validation steps like VALIDATE_STOCK, cancel the order if it exists
+        if (saga.getOrderId() != null) {
+            cancelOrder(saga);
         } else {
-            // For validation steps, just terminate without compensation
+            // No order to cancel - just terminate the saga
             saga.setEndTime(Instant.now());
             saga.addEvent("SAGA_TERMINATED", "Saga terminated due to validation failure");
             orderBuySagaRepository.save(saga);
