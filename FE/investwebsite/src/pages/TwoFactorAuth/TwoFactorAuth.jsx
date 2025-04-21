@@ -189,7 +189,6 @@ const TwoFactorAuth = () => {
             } else {
                 setError(response.data?.msg || "Failed to start verification");
                 if (callbackUrl) {  // Navigate to page called back after 2FA process
-                    console.log(11111111);
                     window.location.assign(callbackUrl);
                     setCallbackUrl("");
                 }
@@ -197,7 +196,6 @@ const TwoFactorAuth = () => {
         } catch (err) {
             console.error("Verification error:", err);
             if (callbackUrl) {  // Navigate to page called back after 2FA process
-                console.log(2222222222);
                 window.location.assign(callbackUrl);
                 setCallbackUrl("");
             }
@@ -260,7 +258,6 @@ const TwoFactorAuth = () => {
                 setStep("success");
 
                 if (callbackUrl) {  // Navigate to page called back after 2FA process
-                    console.log(333333);
                     window.location.assign(callbackUrl);
                     setCallbackUrl("");
                 }
@@ -275,7 +272,6 @@ const TwoFactorAuth = () => {
             } else {
                 setError(response.data?.msg || "Failed to verify code");
                 if (callbackUrl) {  // Navigate to page called back after 2FA process
-                    console.log(4444444);
                     window.location.assign(callbackUrl);
                     setCallbackUrl("");
                 }
@@ -283,7 +279,6 @@ const TwoFactorAuth = () => {
         } catch (err) {
             console.error("Error verifying code:", err);
             if (callbackUrl) {  // Navigate to page called back after 2FA process
-                console.log(55555555);
                 window.location.assign(callbackUrl);
                 setCallbackUrl("");
             }

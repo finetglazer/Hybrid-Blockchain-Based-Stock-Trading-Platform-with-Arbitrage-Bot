@@ -23,6 +23,7 @@ import ChangePassword from "./pages/SettingPage/ChangePassword/ChangePassword.js
 import PaymentMethodsManagement from "./pages/PaymentMethod/PaymentMethodsManagement.jsx";
 import TransactionHistory from "./pages/TransactionHistory/TransactionHistory.jsx";
 import TransactionDetails from "./pages/TransactionDetails/TransactionDetails.jsx";
+import GenerateRecoveryKeys from "./pages/SettingPage/GenerateRecoveryKeys/GenerateRecoveryKeys.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -45,6 +46,7 @@ const Layout = () => {
           <Route path="/setting" element={<Setting />} />
           <Route path="/setting/2fa-settings" element={<TwoFactorAuthenticationSettings />} />
           <Route path="/setting/change-password" element={<ChangePassword />} />
+          <Route path="/setting/generate-recovery-keys" element={<GenerateRecoveryKeys />} />
           <Route path="/account-dashboard/payment-methods" element={<PaymentMethodsManagement />} />
           <Route path="/account-dashboard/transaction-history" element={<TransactionHistory />} />
           <Route path="/account-dashboard/transaction-history/:transactionId/details" element={<TransactionDetails />} />
