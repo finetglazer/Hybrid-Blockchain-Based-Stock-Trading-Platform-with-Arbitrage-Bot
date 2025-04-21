@@ -345,7 +345,7 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
             return new BaseResponse<>(
                     Const.STATUS_RESPONSE.ERROR,
                     "User not found",
-                    ""
+                    "USER_NOT_FOUND"
             );
         }
 
@@ -356,7 +356,7 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
             return new BaseResponse<>(
                     Const.STATUS_RESPONSE.ERROR,
                     "Two-factor authentication is not enabled for this user",
-                    ""
+                    "NOT_ENABLED"
             );
         }
 
