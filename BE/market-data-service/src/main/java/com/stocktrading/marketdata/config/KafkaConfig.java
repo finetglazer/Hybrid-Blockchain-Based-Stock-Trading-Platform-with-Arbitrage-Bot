@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.kafkamessagemodels.model.CommandMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -37,6 +38,9 @@ public class KafkaConfig {
 
     @Value("${spring.kafka.consumer.group-id:market-data-service-group}")
     private String groupId;
+
+    @Value("${kafka.topics.market-price-updates:market.price.updates}")
+    private String marketPriceUpdatesTopic;
 
     @Bean
     public ConsumerFactory<String, CommandMessage> commandConsumerFactory() {
@@ -105,5 +109,10 @@ public class KafkaConfig {
     @Bean
     public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
+    }
+
+    @Bean
+    public NewTopic marketPriceUpdatesTopic() {
+        return new NewTopic(marketPriceUpdatesTopic, 3, (short) 1);
     }
 }

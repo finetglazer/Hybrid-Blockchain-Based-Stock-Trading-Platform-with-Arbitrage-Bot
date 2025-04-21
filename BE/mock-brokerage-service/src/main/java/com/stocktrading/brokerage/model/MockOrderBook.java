@@ -1,151 +1,295 @@
 package com.stocktrading.brokerage.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.stocktrading.brokerage.service.MarketPriceCache;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Map;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 /**
- * A simple mock implementation of a stock order book
+ * Mock implementation of a stock exchange order book
+ * Uses MarketPriceCache for price data
  */
 @Slf4j
 @Component
+@Data
 public class MockOrderBook {
 
-    // Map to store current market prices for each symbol
-    private final Map<String, StockPrice> marketPrices;
+    @Autowired
+    private MarketPriceCache marketPriceCache;
 
-    public MockOrderBook() {
-        this.marketPrices = new ConcurrentHashMap<>();
+    // Pending limit orders - key is symbol, value is list of pending orders for that symbol
+    private final Map<String, List<PendingOrder>> pendingOrders = new ConcurrentHashMap<>();
 
-        // Initialize with some default stocks
-        initializeDefaultStocks();
-    }
+    // Random generator for fallback price simulation if cache is empty
+    private final Random random = new Random();
 
-    private void initializeDefaultStocks() {
-        // Initialize some default stocks with mock prices
-        addStock("AAPL", new BigDecimal("180.50"));
-        addStock("GOOGL", new BigDecimal("2750.75"));
-        addStock("MSFT", new BigDecimal("340.25"));
-        addStock("AMZN", new BigDecimal("3300.50"));
-        addStock("TSLA", new BigDecimal("850.20"));
-        addStock("FB", new BigDecimal("330.15"));
-        addStock("NFLX", new BigDecimal("550.80"));
-        addStock("JPM", new BigDecimal("150.40"));
-        addStock("V", new BigDecimal("225.60"));
-        addStock("JNJ", new BigDecimal("165.30"));
-    }
+    // Default stock prices for initialization - used only if market data is not available
+    private final Map<String, BigDecimal> defaultPrices = new ConcurrentHashMap<>();
 
     /**
-     * Add a stock to the order book
+     * Initialize with some default stock prices (used only as fallback)
      */
-    public void addStock(String symbol, BigDecimal price) {
-        StockPrice stockPrice = StockPrice.builder()
-                .symbol(symbol)
-                .currentPrice(price)
-                .bid(price.subtract(randomVariance(price, 0.01)))
-                .ask(price.add(randomVariance(price, 0.01)))
-                .build();
-
-        marketPrices.put(symbol, stockPrice);
+    public MockOrderBook() {
+        // Initialize some fallback stock prices
+        defaultPrices.put("AAPL", new BigDecimal("185.50"));
+        defaultPrices.put("MSFT", new BigDecimal("328.75"));
+        defaultPrices.put("GOOGL", new BigDecimal("142.30"));
+        defaultPrices.put("AMZN", new BigDecimal("178.25"));
+        defaultPrices.put("TSLA", new BigDecimal("245.65"));
     }
 
     /**
-     * Get the current price for a stock
+     * Get current price for a stock symbol
+     * Prioritizes market data from cache
      */
     public BigDecimal getCurrentPrice(String symbol) {
-        StockPrice stockPrice = marketPrices.get(symbol);
-        if (stockPrice == null) {
-            // If stock doesn't exist, create it with a random price
-            BigDecimal randomPrice = new BigDecimal(ThreadLocalRandom.current().nextDouble(50, 500))
-                    .setScale(2, BigDecimal.ROUND_HALF_UP);
-            addStock(symbol, randomPrice);
-            return randomPrice;
+        // Try to get price from market data cache first
+        BigDecimal price = marketPriceCache.getPrice(symbol);
+
+        // If not in cache, use default price or generate a reasonable random price
+        if (price == null) {
+            log.warn("No market price found for {}. Using fallback price.", symbol);
+
+            if (defaultPrices.containsKey(symbol)) {
+                price = defaultPrices.get(symbol);
+            } else {
+                // Generate a random price between $50 and $500
+                price = BigDecimal.valueOf(50 + random.nextInt(450) + random.nextDouble())
+                        .setScale(2, BigDecimal.ROUND_HALF_UP);
+                defaultPrices.put(symbol, price);
+            }
         }
 
-        // Simulate price movement each time it's queried
-        simulatePriceMovement(stockPrice);
-        return stockPrice.getCurrentPrice();
+        return price;
     }
 
     /**
-     * Get the bid price for a stock
+     * Get bid price (highest buy order) for a stock
+     * Prioritizes market data from cache
      */
     public BigDecimal getBidPrice(String symbol) {
-        StockPrice stockPrice = marketPrices.get(symbol);
-        if (stockPrice == null) {
-            getCurrentPrice(symbol); // This will create the stock if it doesn't exist
-            stockPrice = marketPrices.get(symbol);
+        // Try to get bid price from market data cache first
+        BigDecimal bidPrice = marketPriceCache.getBidPrice(symbol);
+
+        // If not in cache, calculate a reasonable bid price from current price
+        if (bidPrice == null) {
+            BigDecimal currentPrice = getCurrentPrice(symbol);
+            double spreadPercent = 0.001 + random.nextDouble() * 0.004; // 0.1% to 0.5% spread
+            bidPrice = currentPrice.multiply(BigDecimal.valueOf(1 - spreadPercent))
+                    .setScale(2, BigDecimal.ROUND_HALF_UP);
         }
-        return stockPrice.getBid();
+
+        return bidPrice;
     }
 
     /**
-     * Get the ask price for a stock
+     * Get ask price (lowest sell order) for a stock
+     * Prioritizes market data from cache
      */
     public BigDecimal getAskPrice(String symbol) {
-        StockPrice stockPrice = marketPrices.get(symbol);
-        if (stockPrice == null) {
-            getCurrentPrice(symbol); // This will create the stock if it doesn't exist
-            stockPrice = marketPrices.get(symbol);
+        // Try to get ask price from market data cache first
+        BigDecimal askPrice = marketPriceCache.getAskPrice(symbol);
+
+        // If not in cache, calculate a reasonable ask price from current price
+        if (askPrice == null) {
+            BigDecimal currentPrice = getCurrentPrice(symbol);
+            double spreadPercent = 0.001 + random.nextDouble() * 0.004; // 0.1% to 0.5% spread
+            askPrice = currentPrice.multiply(BigDecimal.valueOf(1 + spreadPercent))
+                    .setScale(2, BigDecimal.ROUND_HALF_UP);
         }
-        return stockPrice.getAsk();
+
+        return askPrice;
     }
 
     /**
-     * Simulate market price movement
+     * Add a pending limit order to the order book
      */
-    private void simulatePriceMovement(StockPrice stockPrice) {
-        BigDecimal currentPrice = stockPrice.getCurrentPrice();
+    public PendingOrder addPendingOrder(String orderId, String stockSymbol, String orderType,
+                                        String side, Integer quantity, BigDecimal limitPrice,
+                                        String timeInForce, String sagaId) {
+        // Create pending order
+        PendingOrder order = new PendingOrder(
+                orderId,
+                stockSymbol,
+                orderType,
+                side,
+                quantity,
+                limitPrice,
+                timeInForce,
+                sagaId,
+                Instant.now(),
+                calculateExpirationTime(timeInForce)
+        );
 
-        // Generate a small random price movement (±1%)
-        BigDecimal movement = randomVariance(currentPrice, 0.01);
+        // Add to pending orders
+        pendingOrders.computeIfAbsent(stockSymbol, k -> new CopyOnWriteArrayList<>()).add(order);
+        log.info("Added limit order to book: {}", order);
 
-        // Randomly decide if price goes up or down
-        if (ThreadLocalRandom.current().nextBoolean()) {
-            currentPrice = currentPrice.add(movement);
+        // Return the pending order object
+        return order;
+    }
+
+    /**
+     * Check if a limit order can be executed at current market prices
+     */
+    public boolean canExecuteImmediately(String stockSymbol, String side, BigDecimal limitPrice) {
+        if ("BUY".equals(side)) {
+            // For buy orders, limit price must be >= ask price
+            BigDecimal askPrice = getAskPrice(stockSymbol);
+            return limitPrice.compareTo(askPrice) >= 0;
+        } else if ("SELL".equals(side)) {
+            // For sell orders, limit price must be <= bid price
+            BigDecimal bidPrice = getBidPrice(stockSymbol);
+            return limitPrice.compareTo(bidPrice) <= 0;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get execution price for an order
+     */
+    public BigDecimal getExecutionPrice(String stockSymbol, String side) {
+        if ("BUY".equals(side)) {
+            return getAskPrice(stockSymbol);
         } else {
-            currentPrice = currentPrice.subtract(movement);
+            return getBidPrice(stockSymbol);
         }
-
-        // Ensure price doesn't go below $1
-        if (currentPrice.compareTo(BigDecimal.ONE) < 0) {
-            currentPrice = BigDecimal.ONE;
-        }
-
-        // Update the stock price
-        stockPrice.setCurrentPrice(currentPrice);
-        stockPrice.setBid(currentPrice.subtract(randomVariance(currentPrice, 0.01)));
-        stockPrice.setAsk(currentPrice.add(randomVariance(currentPrice, 0.01)));
     }
 
     /**
-     * Generate a random variance based on a percentage of the price
+     * Check for orders that can be executed based on current prices
+     * @return List of orders that should be executed
      */
-    private BigDecimal randomVariance(BigDecimal price, double percentage) {
-        double variance = price.doubleValue() * percentage;
-        double randomVariance = ThreadLocalRandom.current().nextDouble(0, variance);
-        return new BigDecimal(randomVariance).setScale(2, BigDecimal.ROUND_HALF_UP);
+    public List<PendingOrder> findExecutableOrders() {
+        List<PendingOrder> executableOrders = new ArrayList<>();
+
+        for (Map.Entry<String, List<PendingOrder>> entry : pendingOrders.entrySet()) {
+            String symbol = entry.getKey();
+            List<PendingOrder> orders = entry.getValue();
+
+            List<PendingOrder> toExecute = orders.stream()
+                    .filter(order -> !order.isExpired() && canExecute(order, symbol))
+                    .collect(Collectors.toList());
+
+            executableOrders.addAll(toExecute);
+        }
+
+        return executableOrders;
     }
 
     /**
-     * Internal class to represent stock price data
+     * Remove a pending order from the order book
      */
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    private static class StockPrice {
-        private String symbol;
-        private BigDecimal currentPrice;
-        private BigDecimal bid;
-        private BigDecimal ask;
+    public boolean removePendingOrder(String orderId) {
+        for (List<PendingOrder> orders : pendingOrders.values()) {
+            Iterator<PendingOrder> iterator = orders.iterator();
+            while (iterator.hasNext()) {
+                PendingOrder order = iterator.next();
+                if (order.getOrderId().equals(orderId)) {
+                    orders.remove(order);
+                    log.info("Removed pending order: {}", orderId);
+                    return true;
+                }
+            }
+        }
+
+        log.warn("Order not found in pending orders: {}", orderId);
+        return false;
+    }
+
+    /**
+     * Find a pending order by ID
+     */
+    public Optional<PendingOrder> findPendingOrder(String orderId) {
+        for (List<PendingOrder> orders : pendingOrders.values()) {
+            for (PendingOrder order : orders) {
+                if (order.getOrderId().equals(orderId)) {
+                    return Optional.of(order);
+                }
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Check if an order can be executed at current market price
+     */
+    private boolean canExecute(PendingOrder order, String symbol) {
+        if ("BUY".equals(order.getSide())) {
+            // Can execute buy if limit price >= ask price
+            BigDecimal askPrice = getAskPrice(symbol);
+            return order.getLimitPrice().compareTo(askPrice) >= 0;
+        } else if ("SELL".equals(order.getSide())) {
+            // Can execute sell if limit price <= bid price
+            BigDecimal bidPrice = getBidPrice(symbol);
+            return order.getLimitPrice().compareTo(bidPrice) <= 0;
+        }
+
+        return false;
+    }
+
+    /**
+     * Find expired orders that need cancellation
+     */
+    public List<PendingOrder> findExpiredOrders() {
+        List<PendingOrder> expiredOrders = new ArrayList<>();
+        Instant now = Instant.now();
+
+        for (List<PendingOrder> orders : pendingOrders.values()) {
+            for (PendingOrder order : orders) {
+                if (order.getExpirationTime() != null && order.getExpirationTime().isBefore(now)) {
+                    expiredOrders.add(order);
+                }
+            }
+        }
+
+        return expiredOrders;
+    }
+
+    /**
+     * Calculate expiration time based on time-in-force
+     */
+    private Instant calculateExpirationTime(String timeInForce) {
+        if ("GTC".equalsIgnoreCase(timeInForce)) {
+            // Good Till Cancel - doesn't expire automatically
+            return null;
+        } else if ("DAY".equalsIgnoreCase(timeInForce)) {
+            // End of trading day (assuming 4:00 PM Eastern Time)
+            LocalDate today = LocalDate.now();
+            LocalTime marketClose = LocalTime.of(16, 0); // 4:00 PM
+            return today.atTime(marketClose).atZone(ZoneId.of("America/New_York")).toInstant();
+        } else if (timeInForce != null && timeInForce.startsWith("GTD-")) {
+            // Good Till Date - format GTD-YYYY-MM-DD
+            try {
+                String dateStr = timeInForce.substring(4);
+                LocalDate date = LocalDate.parse(dateStr);
+                LocalTime marketClose = LocalTime.of(16, 0); // 4:00 PM
+                return date.atTime(marketClose).atZone(ZoneId.of("America/New_York")).toInstant();
+            } catch (Exception e) {
+                log.error("Invalid GTD date format: {}", timeInForce);
+                // Default to DAY order
+                LocalDate today = LocalDate.now();
+                LocalTime marketClose = LocalTime.of(16, 0);
+                return today.atTime(marketClose).atZone(ZoneId.of("America/New_York")).toInstant();
+            }
+        } else {
+            // Default to DAY order
+            LocalDate today = LocalDate.now();
+            LocalTime marketClose = LocalTime.of(16, 0);
+            return today.atTime(marketClose).atZone(ZoneId.of("America/New_York")).toInstant();
+        }
     }
 }
