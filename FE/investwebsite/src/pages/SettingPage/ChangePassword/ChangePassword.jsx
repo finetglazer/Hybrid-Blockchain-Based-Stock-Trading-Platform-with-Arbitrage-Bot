@@ -113,6 +113,7 @@ const ChangePassword = () => {
             if (response.data) {
                 if (response.data.status === 1) {
                     setChangePasswordSucceeded(true);
+                    setChangePasswordError(false);
                 }
                 else {
                     setChangePasswordSucceeded(false);

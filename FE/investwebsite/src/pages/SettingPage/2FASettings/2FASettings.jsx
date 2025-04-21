@@ -31,8 +31,6 @@ const TwoFactorAuthenticationSettings = () => {
     }
 
     useEffect(() => {
-        console.log("Im called");
-
         const token = localStorage.getItem("token");
         const get2FaInfo = async () => {
             try {
@@ -45,12 +43,14 @@ const TwoFactorAuthenticationSettings = () => {
                 if (response.data && response.data.status === 1) {
                     setTwoFaEnabled(true);
                     setPhone2FaEnabled(true);
+                    setError("");
                 }
                 else {
                     console.log(response.data.data);
                     if (typeof(response.data.data) === "string" && response.data.data === "NOT_ENABLED") {
                         setTwoFaEnabled(false);
                         setPhone2FaEnabled(false);
+                        setError("");
                     }
                     else {
                         setError(response.data.msg);
@@ -73,9 +73,6 @@ const TwoFactorAuthenticationSettings = () => {
         else if (wantToEnable2Fa === false) {  // This condition only happens when called back after 2FA and user wants to disable 2FA
             setTwoFaEnabled(false);
             setPhone2FaEnabled(false);
-        }
-        else {      // enable2Fa === undefined means user have just accessed this page from security setting page
-            setTwoFaEnabled(false);     // Assume that 2FA is disabled by default (2FA enable or disable should be queried using API)
         }
     }, [wantToEnable2Fa]);
 
