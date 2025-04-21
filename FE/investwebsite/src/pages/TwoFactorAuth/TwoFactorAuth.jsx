@@ -188,9 +188,19 @@ const TwoFactorAuth = () => {
                 }
             } else {
                 setError(response.data?.msg || "Failed to start verification");
+                if (callbackUrl) {  // Navigate to page called back after 2FA process
+                    console.log(11111111);
+                    window.location.assign(callbackUrl);
+                    setCallbackUrl("");
+                }
             }
         } catch (err) {
             console.error("Verification error:", err);
+            if (callbackUrl) {  // Navigate to page called back after 2FA process
+                console.log(2222222222);
+                window.location.assign(callbackUrl);
+                setCallbackUrl("");
+            }
 
             // Handle specific Firebase Auth errors
             if (err.code === 'auth/invalid-app-credential') {
@@ -250,8 +260,9 @@ const TwoFactorAuth = () => {
                 setStep("success");
 
                 if (callbackUrl) {  // Navigate to page called back after 2FA process
-                    setCallbackUrl("")
-                    navigate(callbackUrl)
+                    console.log(333333);
+                    window.location.assign(callbackUrl);
+                    setCallbackUrl("");
                 }
 
                 // Clean up Firebase user created during verification
@@ -263,9 +274,19 @@ const TwoFactorAuth = () => {
                 }
             } else {
                 setError(response.data?.msg || "Failed to verify code");
+                if (callbackUrl) {  // Navigate to page called back after 2FA process
+                    console.log(4444444);
+                    window.location.assign(callbackUrl);
+                    setCallbackUrl("");
+                }
             }
         } catch (err) {
             console.error("Error verifying code:", err);
+            if (callbackUrl) {  // Navigate to page called back after 2FA process
+                console.log(55555555);
+                window.location.assign(callbackUrl);
+                setCallbackUrl("");
+            }
 
             if (err.code === 'auth/code-expired') {
                 setError("Verification code has expired. Please request a new code.");
