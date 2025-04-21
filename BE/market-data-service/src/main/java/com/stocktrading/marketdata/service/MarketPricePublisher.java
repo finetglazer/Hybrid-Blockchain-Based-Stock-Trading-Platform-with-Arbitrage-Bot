@@ -58,7 +58,7 @@ public class MarketPricePublisher {
     /**
      * Publish price updates for all tracked stocks every 5 seconds
      */
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 15000)
     public void publishPriceUpdates() {
         log.debug("Publishing market price updates");
 

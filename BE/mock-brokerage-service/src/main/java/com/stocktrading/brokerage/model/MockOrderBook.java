@@ -1,164 +1,132 @@
 package com.stocktrading.brokerage.model;
 
+import com.project.kafkamessagemodels.model.EventMessage;
 import com.stocktrading.brokerage.service.MarketPriceCache;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 /**
- * Mock implementation of a stock exchange order book
- * Uses MarketPriceCache for price data
+ * Simulates an order book for the mock brokerage
  */
 @Slf4j
 @Component
-@Data
+@RequiredArgsConstructor
 public class MockOrderBook {
 
-    @Autowired
-    private MarketPriceCache marketPriceCache;
-
-    // Pending limit orders - key is symbol, value is list of pending orders for that symbol
-    private final Map<String, List<PendingOrder>> pendingOrders = new ConcurrentHashMap<>();
-
-    // Random generator for fallback price simulation if cache is empty
+    private final MarketPriceCache marketPriceCache;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
     private final Random random = new Random();
 
-    // Default stock prices for initialization - used only if market data is not available
-    private final Map<String, BigDecimal> defaultPrices = new ConcurrentHashMap<>();
+    // Map to store pending limit orders (orderId -> PendingOrder)
+    private final Map<String, PendingOrder> pendingOrders = new ConcurrentHashMap<>();
+
+    @Value("${kafka.topics.broker-events}")
+    private String brokerEventsTopic;
+
+    @Value("${market.simulation.price-variation:0.02}")
+    private double priceVariation; // Default 2% variation for simulated prices
 
     /**
-     * Initialize with some default stock prices (used only as fallback)
-     */
-    public MockOrderBook() {
-        // Initialize some fallback stock prices
-        defaultPrices.put("AAPL", new BigDecimal("185.50"));
-        defaultPrices.put("MSFT", new BigDecimal("328.75"));
-        defaultPrices.put("GOOGL", new BigDecimal("142.30"));
-        defaultPrices.put("AMZN", new BigDecimal("178.25"));
-        defaultPrices.put("TSLA", new BigDecimal("245.65"));
-    }
-
-    /**
-     * Get current price for a stock symbol
-     * Prioritizes market data from cache
-     */
-    public BigDecimal getCurrentPrice(String symbol) {
-        // Try to get price from market data cache first
-        BigDecimal price = marketPriceCache.getPrice(symbol);
-
-        // If not in cache, use default price or generate a reasonable random price
-        if (price == null) {
-            log.warn("No market price found for {}. Using fallback price.", symbol);
-
-            if (defaultPrices.containsKey(symbol)) {
-                price = defaultPrices.get(symbol);
-            } else {
-                // Generate a random price between $50 and $500
-                price = BigDecimal.valueOf(50 + random.nextInt(450) + random.nextDouble())
-                        .setScale(2, BigDecimal.ROUND_HALF_UP);
-                defaultPrices.put(symbol, price);
-            }
-        }
-
-        return price;
-    }
-
-    /**
-     * Get bid price (highest buy order) for a stock
-     * Prioritizes market data from cache
-     */
-    public BigDecimal getBidPrice(String symbol) {
-        // Try to get bid price from market data cache first
-        BigDecimal bidPrice = marketPriceCache.getBidPrice(symbol);
-
-        // If not in cache, calculate a reasonable bid price from current price
-        if (bidPrice == null) {
-            BigDecimal currentPrice = getCurrentPrice(symbol);
-            double spreadPercent = 0.001 + random.nextDouble() * 0.004; // 0.1% to 0.5% spread
-            bidPrice = currentPrice.multiply(BigDecimal.valueOf(1 - spreadPercent))
-                    .setScale(2, BigDecimal.ROUND_HALF_UP);
-        }
-
-        return bidPrice;
-    }
-
-    /**
-     * Get ask price (lowest sell order) for a stock
-     * Prioritizes market data from cache
-     */
-    public BigDecimal getAskPrice(String symbol) {
-        // Try to get ask price from market data cache first
-        BigDecimal askPrice = marketPriceCache.getAskPrice(symbol);
-
-        // If not in cache, calculate a reasonable ask price from current price
-        if (askPrice == null) {
-            BigDecimal currentPrice = getCurrentPrice(symbol);
-            double spreadPercent = 0.001 + random.nextDouble() * 0.004; // 0.1% to 0.5% spread
-            askPrice = currentPrice.multiply(BigDecimal.valueOf(1 + spreadPercent))
-                    .setScale(2, BigDecimal.ROUND_HALF_UP);
-        }
-
-        return askPrice;
-    }
-
-    /**
-     * Add a pending limit order to the order book
+     * Add a pending order to the order book
      */
     public PendingOrder addPendingOrder(String orderId, String stockSymbol, String orderType,
                                         String side, Integer quantity, BigDecimal limitPrice,
                                         String timeInForce, String sagaId) {
-        // Create pending order
-        PendingOrder order = new PendingOrder(
-                orderId,
-                stockSymbol,
-                orderType,
-                side,
-                quantity,
-                limitPrice,
-                timeInForce,
-                sagaId,
-                Instant.now(),
-                calculateExpirationTime(timeInForce)
-        );
 
-        // Add to pending orders
-        pendingOrders.computeIfAbsent(stockSymbol, k -> new CopyOnWriteArrayList<>()).add(order);
-        log.info("Added limit order to book: {}", order);
+        // Calculate expiration time based on timeInForce
+        Instant expirationTime = calculateExpirationTime(timeInForce);
 
-        // Return the pending order object
-        return order;
+        // Create and store the pending order
+        PendingOrder pendingOrder = PendingOrder.builder()
+                .orderId(orderId)
+                .stockSymbol(stockSymbol)
+                .orderType(orderType)
+                .side(side)
+                .quantity(quantity)
+                .limitPrice(limitPrice)
+                .timeInForce(timeInForce)
+                .createdAt(Instant.now())
+                .expirationTime(expirationTime)
+                .sagaId(sagaId)
+                .build();
+
+        pendingOrders.put(orderId, pendingOrder);
+
+        log.info("LIMIT ORDER ADDED: Added pending {} order to order book: {} at limit price {}. Total pending orders: {}",
+                side, orderId, limitPrice, pendingOrders.size());
+
+        return pendingOrder;
     }
 
     /**
-     * Check if a limit order can be executed at current market prices
+     * Remove a pending order from the order book
+     */
+    public boolean removePendingOrder(String orderId) {
+        PendingOrder removed = pendingOrders.remove(orderId);
+        if (removed != null) {
+            log.info("Removed pending order from order book: {}", orderId);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Find a pending order by orderId
+     */
+    public Optional<PendingOrder> findPendingOrder(String orderId) {
+        return Optional.ofNullable(pendingOrders.get(orderId));
+    }
+
+    /**
+     * Get the current number of pending orders
+     */
+    public int getPendingOrderCount() {
+        return pendingOrders.size();
+    }
+
+    /**
+     * Get the current market price for a stock
+     */
+    public BigDecimal getCurrentPrice(String stockSymbol) {
+        // Try to get from price cache first
+        BigDecimal cachedPrice = marketPriceCache.getPrice(stockSymbol);
+        if (cachedPrice != null) {
+            return cachedPrice;
+        }
+
+        // Fallback to generating a random price if not in cache
+        return generateRandomPrice(stockSymbol);
+    }
+
+    /**
+     * Check if a limit order can be executed immediately based on current market prices
      */
     public boolean canExecuteImmediately(String stockSymbol, String side, BigDecimal limitPrice) {
         if ("BUY".equals(side)) {
-            // For buy orders, limit price must be >= ask price
+            // For buy orders, can execute if askPrice <= limitPrice
             BigDecimal askPrice = getAskPrice(stockSymbol);
-            return limitPrice.compareTo(askPrice) >= 0;
+            return askPrice.compareTo(limitPrice) <= 0;
         } else if ("SELL".equals(side)) {
-            // For sell orders, limit price must be <= bid price
+            // For sell orders, can execute if bidPrice >= limitPrice
             BigDecimal bidPrice = getBidPrice(stockSymbol);
-            return limitPrice.compareTo(bidPrice) <= 0;
+            return bidPrice.compareTo(limitPrice) >= 0;
         }
 
         return false;
     }
 
     /**
-     * Get execution price for an order
+     * Get execution price for an order - uses ask price for buy orders, bid price for sell orders
      */
     public BigDecimal getExecutionPrice(String stockSymbol, String side) {
         if ("BUY".equals(side)) {
@@ -169,127 +137,217 @@ public class MockOrderBook {
     }
 
     /**
-     * Check for orders that can be executed based on current prices
-     * @return List of orders that should be executed
+     * Get the ask price (what buyers pay) for a stock
      */
-    public List<PendingOrder> findExecutableOrders() {
-        List<PendingOrder> executableOrders = new ArrayList<>();
-
-        for (Map.Entry<String, List<PendingOrder>> entry : pendingOrders.entrySet()) {
-            String symbol = entry.getKey();
-            List<PendingOrder> orders = entry.getValue();
-
-            List<PendingOrder> toExecute = orders.stream()
-                    .filter(order -> !order.isExpired() && canExecute(order, symbol))
-                    .collect(Collectors.toList());
-
-            executableOrders.addAll(toExecute);
+    public BigDecimal getAskPrice(String stockSymbol) {
+        // Try to get from price cache first
+        BigDecimal cachedAskPrice = marketPriceCache.getAskPrice(stockSymbol);
+        if (cachedAskPrice != null) {
+            return cachedAskPrice;
         }
 
-        return executableOrders;
+        // Fallback: Calculate from current price with a small spread
+        BigDecimal currentPrice = getCurrentPrice(stockSymbol);
+        return currentPrice.multiply(BigDecimal.valueOf(1.001)).setScale(2, RoundingMode.HALF_UP);
     }
 
     /**
-     * Remove a pending order from the order book
+     * Get the bid price (what sellers receive) for a stock
      */
-    public boolean removePendingOrder(String orderId) {
-        for (List<PendingOrder> orders : pendingOrders.values()) {
-            Iterator<PendingOrder> iterator = orders.iterator();
-            while (iterator.hasNext()) {
-                PendingOrder order = iterator.next();
-                if (order.getOrderId().equals(orderId)) {
-                    orders.remove(order);
-                    log.info("Removed pending order: {}", orderId);
-                    return true;
-                }
-            }
+    public BigDecimal getBidPrice(String stockSymbol) {
+        // Try to get from price cache first
+        BigDecimal cachedBidPrice = marketPriceCache.getBidPrice(stockSymbol);
+        if (cachedBidPrice != null) {
+            return cachedBidPrice;
         }
 
-        log.warn("Order not found in pending orders: {}", orderId);
-        return false;
+        // Fallback: Calculate from current price with a small spread
+        BigDecimal currentPrice = getCurrentPrice(stockSymbol);
+        return currentPrice.multiply(BigDecimal.valueOf(0.999)).setScale(2, RoundingMode.HALF_UP);
     }
 
     /**
-     * Find a pending order by ID
+     * Generate a random price for a stock symbol
      */
-    public Optional<PendingOrder> findPendingOrder(String orderId) {
-        for (List<PendingOrder> orders : pendingOrders.values()) {
-            for (PendingOrder order : orders) {
-                if (order.getOrderId().equals(orderId)) {
-                    return Optional.of(order);
-                }
-            }
-        }
+    private BigDecimal generateRandomPrice(String stockSymbol) {
+        // Deterministic but unique base price for each symbol based on hash code
+        int hash = Math.abs(stockSymbol.hashCode()) % 1000;
+        double basePrice = 50 + hash % 450; // Base price between $50 and $500
 
-        return Optional.empty();
+        // Add some randomness to make it slightly different each time
+        basePrice = basePrice * (1 + (random.nextDouble() * priceVariation * 2 - priceVariation));
+
+        return BigDecimal.valueOf(basePrice).setScale(2, RoundingMode.HALF_UP);
     }
 
     /**
-     * Check if an order can be executed at current market price
-     */
-    private boolean canExecute(PendingOrder order, String symbol) {
-        if ("BUY".equals(order.getSide())) {
-            // Can execute buy if limit price >= ask price
-            BigDecimal askPrice = getAskPrice(symbol);
-            return order.getLimitPrice().compareTo(askPrice) >= 0;
-        } else if ("SELL".equals(order.getSide())) {
-            // Can execute sell if limit price <= bid price
-            BigDecimal bidPrice = getBidPrice(symbol);
-            return order.getLimitPrice().compareTo(bidPrice) <= 0;
-        }
-
-        return false;
-    }
-
-    /**
-     * Find expired orders that need cancellation
-     */
-    public List<PendingOrder> findExpiredOrders() {
-        List<PendingOrder> expiredOrders = new ArrayList<>();
-        Instant now = Instant.now();
-
-        for (List<PendingOrder> orders : pendingOrders.values()) {
-            for (PendingOrder order : orders) {
-                if (order.getExpirationTime() != null && order.getExpirationTime().isBefore(now)) {
-                    expiredOrders.add(order);
-                }
-            }
-        }
-
-        return expiredOrders;
-    }
-
-    /**
-     * Calculate expiration time based on time-in-force
+     * Calculate expiration time based on timeInForce
      */
     private Instant calculateExpirationTime(String timeInForce) {
-        if ("GTC".equalsIgnoreCase(timeInForce)) {
-            // Good Till Cancel - doesn't expire automatically
-            return null;
-        } else if ("DAY".equalsIgnoreCase(timeInForce)) {
-            // End of trading day (assuming 4:00 PM Eastern Time)
-            LocalDate today = LocalDate.now();
-            LocalTime marketClose = LocalTime.of(16, 0); // 4:00 PM
-            return today.atTime(marketClose).atZone(ZoneId.of("America/New_York")).toInstant();
-        } else if (timeInForce != null && timeInForce.startsWith("GTD-")) {
-            // Good Till Date - format GTD-YYYY-MM-DD
-            try {
-                String dateStr = timeInForce.substring(4);
-                LocalDate date = LocalDate.parse(dateStr);
-                LocalTime marketClose = LocalTime.of(16, 0); // 4:00 PM
-                return date.atTime(marketClose).atZone(ZoneId.of("America/New_York")).toInstant();
-            } catch (Exception e) {
-                log.error("Invalid GTD date format: {}", timeInForce);
-                // Default to DAY order
-                LocalDate today = LocalDate.now();
-                LocalTime marketClose = LocalTime.of(16, 0);
-                return today.atTime(marketClose).atZone(ZoneId.of("America/New_York")).toInstant();
+        if (timeInForce == null) {
+            timeInForce = "DAY"; // Default
+        }
+
+        switch (timeInForce) {
+            case "DAY":
+                // Expires at end of trading day (for simulation, 8 hours from now)
+                return Instant.now().plusSeconds(8 * 60 * 60);
+            case "GTC": // Good Till Canceled
+                // Doesn't expire automatically (use 30 days for simulation)
+                return Instant.now().plusSeconds(30 * 24 * 60 * 60);
+            case "IOC": // Immediate or Cancel
+                // Expires immediately if not fully filled
+                return Instant.now();
+            case "FOK": // Fill or Kill
+                // Must be executed immediately and completely or not at all
+                return Instant.now();
+            case "GTD": // Good Till Date (using default of 3 days for simulation)
+                return Instant.now().plusSeconds(3 * 24 * 60 * 60);
+            default:
+                return Instant.now().plusSeconds(8 * 60 * 60); // Default to DAY
+        }
+    }
+
+    /**
+     * Scheduled task to check for expired orders
+     * Runs every minute
+     */
+    @Scheduled(fixedRate = 60000)
+    public void checkForExpiredOrders() {
+        Instant now = Instant.now();
+        log.debug("Checking for expired orders at {}", now);
+
+        List<String> expiredOrderIds = new ArrayList<>();
+
+        // Find expired orders
+        for (PendingOrder order : pendingOrders.values()) {
+            if (order.getExpirationTime() != null && order.getExpirationTime().isBefore(now)) {
+                expiredOrderIds.add(order.getOrderId());
+
+                // Send ORDER_EXPIRED event
+                sendOrderExpiredEvent(order);
             }
-        } else {
-            // Default to DAY order
-            LocalDate today = LocalDate.now();
-            LocalTime marketClose = LocalTime.of(16, 0);
-            return today.atTime(marketClose).atZone(ZoneId.of("America/New_York")).toInstant();
+        }
+
+        // Remove expired orders
+        for (String orderId : expiredOrderIds) {
+            pendingOrders.remove(orderId);
+            log.info("Removed expired order: {}", orderId);
+        }
+
+        if (!expiredOrderIds.isEmpty()) {
+            log.info("Removed {} expired orders", expiredOrderIds.size());
+        }
+    }
+
+    /**
+     * Send an ORDER_EXPIRED event for a limit order
+     */
+    private void sendOrderExpiredEvent(PendingOrder order) {
+        try {
+            EventMessage event = EventMessage.builder()
+                    .messageId(UUID.randomUUID().toString())
+                    .sagaId(order.getSagaId())
+                    .type("ORDER_EXPIRED")
+                    .sourceService("MOCK_BROKERAGE_SERVICE")
+                    .timestamp(Instant.now())
+                    .success(true)
+                    .build();
+
+            event.setPayloadValue("orderId", order.getOrderId());
+            event.setPayloadValue("stockSymbol", order.getStockSymbol());
+            event.setPayloadValue("limitPrice", order.getLimitPrice());
+            event.setPayloadValue("expiredAt", Instant.now().toString());
+            event.setPayloadValue("status", "EXPIRED");
+
+            kafkaTemplate.send(brokerEventsTopic, order.getSagaId(), event);
+            log.info("Sent ORDER_EXPIRED event for order: {}", order.getOrderId());
+        } catch (Exception e) {
+            log.error("Error sending ORDER_EXPIRED event", e);
+        }
+    }
+
+    /**
+     * Scheduled task to check pending limit orders against current market prices
+     * Runs every 5 seconds
+     */
+    @Scheduled(fixedRate = 2000)
+    public void checkPendingLimitOrders() {
+        if (pendingOrders.isEmpty()) {
+            return; // Nothing to check
+        }
+
+        log.info("SCHEDULED TASK: Checking pending limit orders. Count: {}", pendingOrders.size());
+        // Create a copy to avoid concurrent modification
+        List<PendingOrder> ordersToCheck = new ArrayList<>(pendingOrders.values());
+
+        for (PendingOrder order : ordersToCheck) {
+            // For now, only BUY orders are supported
+            if (!"BUY".equals(order.getSide())) {
+                continue;
+            }
+
+            checkAndExecuteBuyOrder(order);
+        }
+    }
+
+    /**
+     * Check and execute a buy order if price conditions are met
+     */
+    private void checkAndExecuteBuyOrder(PendingOrder order) {
+        String stockSymbol = order.getStockSymbol();
+        BigDecimal limitPrice = order.getLimitPrice();
+
+        // Get current ask price
+        BigDecimal currentAskPrice = getAskPrice(stockSymbol);
+
+        // For BUY orders, execute if askPrice <= limitPrice
+        boolean shouldExecute = currentAskPrice.compareTo(limitPrice) <= 0;
+
+        log.debug("Checking BUY order {} - limitPrice: {}, currentAskPrice: {}, shouldExecute: {}",
+                order.getOrderId(), limitPrice, currentAskPrice, shouldExecute);
+
+        if (shouldExecute) {
+            executeOrder(order, currentAskPrice);
+        }
+    }
+
+    /**
+     * Execute a pending limit order at the specified price
+     */
+    private void executeOrder(PendingOrder order, BigDecimal executionPrice) {
+        // First remove from pending orders
+        pendingOrders.remove(order.getOrderId());
+
+        log.info("Executing limit order: {} for {} shares of {} at price {}",
+                order.getOrderId(), order.getQuantity(), order.getStockSymbol(), executionPrice);
+
+        // Generate a broker order ID
+        String brokerOrderId = "MBS-LMT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+
+        try {
+            // Send ORDER_EXECUTED_BY_BROKER event
+            EventMessage event = EventMessage.builder()
+                    .messageId(UUID.randomUUID().toString())
+                    .sagaId(order.getSagaId())
+                    .type("ORDER_EXECUTED_BY_BROKER")
+                    .sourceService("MOCK_BROKERAGE_SERVICE")
+                    .timestamp(Instant.now())
+                    .success(true)
+                    .build();
+
+            event.setPayloadValue("orderId", order.getOrderId());
+            event.setPayloadValue("brokerOrderId", brokerOrderId);
+            event.setPayloadValue("stockSymbol", order.getStockSymbol());
+            event.setPayloadValue("executionPrice", executionPrice);
+            event.setPayloadValue("executedQuantity", order.getQuantity());
+            event.setPayloadValue("executedAt", Instant.now().toString());
+            event.setPayloadValue("status", "FILLED");
+
+            kafkaTemplate.send(brokerEventsTopic, order.getSagaId(), event);
+            log.info("Sent ORDER_EXECUTED_BY_BROKER event for limit order: {}", order.getOrderId());
+        } catch (Exception e) {
+            log.error("Error sending ORDER_EXECUTED_BY_BROKER event", e);
         }
     }
 }
