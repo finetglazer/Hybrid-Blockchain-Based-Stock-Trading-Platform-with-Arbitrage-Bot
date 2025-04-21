@@ -366,8 +366,28 @@ public class OrderBuySagaService {
 
         // Update saga with execution details
         saga.setBrokerOrderId(event.getPayloadValue("brokerOrderId"));
-        saga.setExecutedQuantity(event.getPayloadValue("executedQuantity"));
-        saga.setExecutionPrice(event.getPayloadValue("executionPrice"));
+
+        // Handle type conversion for executedQuantity
+        Object quantityObj = event.getPayloadValue("executedQuantity");
+        if (quantityObj instanceof Integer) {
+            saga.setExecutedQuantity((Integer) quantityObj);
+        } else if (quantityObj instanceof String) {
+            saga.setExecutedQuantity(Integer.parseInt((String) quantityObj));
+        } else if (quantityObj != null) {
+            saga.setExecutedQuantity(((Number) quantityObj).intValue());
+        }
+
+        // Handle type conversion for executionPrice
+        Object priceObj = event.getPayloadValue("executionPrice");
+        if (priceObj instanceof BigDecimal) {
+            saga.setExecutionPrice((BigDecimal) priceObj);
+        } else if (priceObj instanceof Double) {
+            saga.setExecutionPrice(BigDecimal.valueOf((Double) priceObj));
+        } else if (priceObj instanceof Number) {
+            saga.setExecutionPrice(BigDecimal.valueOf(((Number) priceObj).doubleValue()));
+        } else if (priceObj instanceof String) {
+            saga.setExecutionPrice(new BigDecimal((String) priceObj));
+        }
 
         // Resume the saga at the UPDATE_ORDER_EXECUTED step
         saga.setStatus(SagaStatus.IN_PROGRESS);

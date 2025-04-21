@@ -85,7 +85,8 @@ public class MarketPriceCache {
                         askPrices.put(symbol, convertToBigDecimal(askObj));
                     }
 
-                    log.debug("Updated price cache for {}: price={}, bid={}, ask={}",
+                    // Changed from debug to trace to reduce terminal output
+                    log.trace("Updated price cache for {}: price={}, bid={}, ask={}",
                             symbol, price, bidPrices.get(symbol), askPrices.get(symbol));
                 }
             } catch (Exception e) {

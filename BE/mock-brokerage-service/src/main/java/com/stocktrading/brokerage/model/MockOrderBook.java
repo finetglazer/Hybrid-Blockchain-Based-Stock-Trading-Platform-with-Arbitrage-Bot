@@ -214,6 +214,11 @@ public class MockOrderBook {
      */
     @Scheduled(fixedRate = 60000)
     public void checkForExpiredOrders() {
+        // Skip if no pending orders to check
+        if (pendingOrders.isEmpty()) {
+            return;
+        }
+
         Instant now = Instant.now();
         log.debug("Checking for expired orders at {}", now);
 
@@ -269,15 +274,17 @@ public class MockOrderBook {
 
     /**
      * Scheduled task to check pending limit orders against current market prices
-     * Runs every 5 seconds
+     * Runs every 2 seconds, but only if there are pending orders to check
      */
-    @Scheduled(fixedRate = 2000)
+    @Scheduled(fixedRate = 5000)
     public void checkPendingLimitOrders() {
         if (pendingOrders.isEmpty()) {
             return; // Nothing to check
         }
 
-        log.info("SCHEDULED TASK: Checking pending limit orders. Count: {}", pendingOrders.size());
+        // Only log when actually checking orders (not every 2 seconds)
+        log.debug("Checking pending limit orders. Count: {}", pendingOrders.size());
+
         // Create a copy to avoid concurrent modification
         List<PendingOrder> ordersToCheck = new ArrayList<>(pendingOrders.values());
 
@@ -304,7 +311,8 @@ public class MockOrderBook {
         // For BUY orders, execute if askPrice <= limitPrice
         boolean shouldExecute = currentAskPrice.compareTo(limitPrice) <= 0;
 
-        log.debug("Checking BUY order {} - limitPrice: {}, currentAskPrice: {}, shouldExecute: {}",
+        // Changed to trace level to reduce output
+        log.trace("Checking BUY order {} - limitPrice: {}, currentAskPrice: {}, shouldExecute: {}",
                 order.getOrderId(), limitPrice, currentAskPrice, shouldExecute);
 
         if (shouldExecute) {

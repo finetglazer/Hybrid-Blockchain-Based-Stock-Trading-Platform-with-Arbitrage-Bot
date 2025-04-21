@@ -56,11 +56,12 @@ public class MarketPricePublisher {
     }
 
     /**
-     * Publish price updates for all tracked stocks every 5 seconds
+     * Publish price updates for all tracked stocks every 15 seconds
      */
-    @Scheduled(fixedRate = 15000)
+    @Scheduled(fixedRate = 5000)
     public void publishPriceUpdates() {
-        log.debug("Publishing market price updates");
+        // Changed from debug to info level for less frequent logging
+        log.info("Publishing market price updates for {} stocks", trackedSymbols.size());
 
         try {
             // Ensure we have initialized prices
@@ -115,11 +116,10 @@ public class MarketPricePublisher {
                 // Publish with symbol as key for partitioning
                 kafkaTemplate.send(marketPriceUpdatesTopic, symbol, event);
 
-                log.debug("Published price update for {}: {} (bid: {}, ask: {})",
+                // Changed from debug to trace to reduce terminal output
+                log.trace("Published price update for {}: {} (bid: {}, ask: {})",
                         symbol, newPrice, bidPrice, askPrice);
             }
-
-            log.debug("Published price updates for {} stocks", trackedSymbols.size());
 
         } catch (Exception e) {
             log.error("Error publishing market price updates", e);
