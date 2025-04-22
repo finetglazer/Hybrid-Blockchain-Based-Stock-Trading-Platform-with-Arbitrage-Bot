@@ -9,15 +9,15 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/api": {
-        // target: "https://good-musical-joey.ngrok-free.app",
-        target: "https://6f56-2402-800-61c3-255d-8d9c-a556-d3cb-21a9.ngrok-free.app",
+        target: "https://good-musical-joey.ngrok-free.app",
+        // target: "https://6f56-2402-800-61c3-255d-8d9c-a556-d3cb-21a9.ngrok-free.app",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
         logLevel: 'debug',
       },
       '/users': {
-        // target: 'https://good-musical-joey.ngrok-free.app',
-        target: "https://6f56-2402-800-61c3-255d-8d9c-a556-d3cb-21a9.ngrok-free.app",
+        target: 'https://good-musical-joey.ngrok-free.app',
+        // target: "https://6f56-2402-800-61c3-255d-8d9c-a556-d3cb-21a9.ngrok-free.app",
         changeOrigin: true,
         logLevel: 'debug',
         configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
@@ -29,8 +29,8 @@ export default defineConfig({
         }
       },
       '/accounts': {
-        target: "https://6f56-2402-800-61c3-255d-8d9c-a556-d3cb-21a9.ngrok-free.app",
-        // target: 'https://good-musical-joey.ngrok-free.app',
+        // target: "https://6f56-2402-800-61c3-255d-8d9c-a556-d3cb-21a9.ngrok-free.app",
+        target: 'https://good-musical-joey.ngrok-free.app',
         changeOrigin: true,
         logLevel: 'debug',
         configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
