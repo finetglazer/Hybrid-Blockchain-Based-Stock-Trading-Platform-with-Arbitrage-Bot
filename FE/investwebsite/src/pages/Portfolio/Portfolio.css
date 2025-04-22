@@ -1,0 +1,169 @@
+.portfolio-container {
+    position: relative;
+    font-family: 'Open Sans', serif;
+    min-width: 100vw;
+    min-height: 100vh;
+    padding-left: 30px;
+}
+
+.portfolio-container .title {
+    display: flex;
+    align-items: center;
+    margin: -30px 0 10px -20px;
+    button {
+        background: none;
+        width: 20px;
+        height: 20px;
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
+    p {
+        margin: 22px 0 0 10px;
+        font-size: 2rem;
+    }
+}
+
+.portfolio-container .body {
+    .portfolio-info {
+        .prop {
+            display: flex;
+            align-items: center;
+            img {
+                width: 20px;
+                height: 20px;
+            }
+            p {
+                margin-left: 10px;
+                color: #77b78a;
+                font-size: 0.9rem;
+            }
+        }
+        .value-info {
+            text-align: left;
+            margin-top: -20px;
+            .portfolio-name {
+                font-size: 3rem;
+            }
+            .portfolio-id {
+                margin-top: -10px;
+                color: #b9dcc3;
+                font-size: 0.9rem;
+            }
+            .date {
+                margin-top: -10px;
+                color: #9af1b6;
+            }
+        }
+        .total-value-info {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            margin-top: -40px;
+            .total-value {
+                font-size: 3.2rem;
+            }
+            .gain-percentage-wrapper {
+                display: flex;
+                align-items: center;
+                background-color: #670202;
+                border-radius: 8px;
+                height: 33px;
+                padding: 2px 5px;
+                margin: 30px 0 0 20px;
+                img {
+                    width: 20px;
+                    height: 20px;
+                }
+                .gain-percentage {
+                    color: #ff0044;
+                    font-size: 0.8rem;
+                }
+            }
+            .gain-value {
+                color: #e01937;
+                font-size: 1.1rem;
+                margin: 30px 0 0 10px;
+            }
+        }
+    }
+    .chart-and-highlight-container {
+        display: flex;
+        align-items: center;
+        .highlight-container {
+            text-align: left;
+            box-shadow: none;
+            .title {
+                font-size: 1.7rem;
+                margin: -10px 0 0 -10px;
+            }
+            .categories {
+                display: flex;
+                margin: 10px 0 0 -10px;
+                .category-wrapper {
+                    margin-right: 50px;
+                    .category-name {
+                        font-size: 0.9rem;
+                    }
+                    .value-wrapper {
+                        margin-top: -10px;
+                        border-radius: 10px;
+                        background-color: #670202;
+                        padding: 10px 40px 10px 10px;
+                        height: 75px;
+                        .value {
+                            margin-top: 0;
+                            color: #ff2343;
+                            font-weight: bold;
+                        }
+                        .percentage {
+                            display: flex;
+                            align-items: center;
+                            img {
+                                width: 20px;
+                                height: 20px;
+                            }
+                            p {
+                                color: #ff2343;
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.portfolio-container .investments-table {
+    margin-top: 50px;
+    .table-btn {
+        border-radius: 30px;
+        height: 35px;
+    }
+    .buttons {
+        display: flex;
+        margin-bottom: 10px;
+        .left-buttons, .right-buttons {
+            display: flex;
+            align-items: center;
+            width: 50%;
+        }
+        .right-buttons {
+            width: 50%;
+            .add-investment-btn {
+                display: flex;
+                background: #0864ee;
+                align-items: center;
+                padding: 0 10px;
+                img {
+                    width: 12px;
+                    height: 12px;
+                    margin-right: 5px;
+                    margin-top: -2px;
+                }
+            }
+        }
+    }
+}
