@@ -1,6 +1,7 @@
 package com.stocktrading.kafka.scheduler;
 
 import com.stocktrading.kafka.service.DepositSagaService;
+import com.stocktrading.kafka.service.WithdrawalSagaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 public class SagaTimeoutScheduler {
     
     private final DepositSagaService depositSagaService;
+    private final WithdrawalSagaService withdrawalSagaService;
     
     /**
      * Check for timed-out sagas every 30 seconds

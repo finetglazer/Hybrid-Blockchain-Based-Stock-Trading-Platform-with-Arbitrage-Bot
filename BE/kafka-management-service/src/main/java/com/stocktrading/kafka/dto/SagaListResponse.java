@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * Response DTO for saga list
+ * Generic response DTO for saga lists
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SagaListResponse {
-    private List<com.stocktrading.kafka.dto.DepositSagaDto> sagas;
+public class SagaListResponse<T> {
+    private List<T> items;
     private int count;
 }

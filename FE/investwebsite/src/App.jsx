@@ -15,14 +15,17 @@ import Login from "./pages/Login";
 import NavbarSide from "./pages/NavbarSide/NavbarSide";
 import PaymentMethodsManagement from "./pages/PaymentMethod/PaymentMethodsManagement.jsx";
 import Register from "./pages/Register";
+import ResetPassword from "./pages/ResetPassword.jsx";
 import TwoFactorAuthenticationSettings from "./pages/SettingPage/2FASettings/2FASettings.jsx";
 import ChangePassword from "./pages/SettingPage/ChangePassword/ChangePassword.jsx";
 import Setting from "./pages/SettingPage/Setting";
 import Support from "./pages/Support";
+import TransactionDetails from "./pages/TransactionDetails/TransactionDetails.jsx";
+import TransactionHistory from "./pages/TransactionHistory/TransactionHistory.jsx";
 import TwoFactorAuth from "./pages/TwoFactorAuth/TwoFactorAuth.jsx";
 import UpdatePhoneNumber from "./pages/UpdatePhoneNumber/UpdatePhoneNumber.jsx";
 import Wallet from "./pages/Wallet";
-import Withdraw from "./pages/Withdraw.jsx";
+import Withdraw from "./pages/Withdraw";
 
 const Layout = () => {
   const location = useLocation();
@@ -39,6 +42,7 @@ const Layout = () => {
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/home" element={<Home />} />
           <Route path="/withdraw" element={<Withdraw/>} />
           <Route path="/deposit" element={<Deposit/>} />
@@ -48,6 +52,8 @@ const Layout = () => {
           <Route path="/setting/2fa-settings" element={<TwoFactorAuthenticationSettings />} />
           <Route path="/setting/change-password" element={<ChangePassword />} />
           <Route path="/account-dashboard/payment-methods" element={<PaymentMethodsManagement />} />
+          <Route path="/account-dashboard/transaction-history" element={<TransactionHistory />} />
+          <Route path="/account-dashboard/transaction-history/:transactionId/details" element={<TransactionDetails />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/two-factor-auth" element={<TwoFactorAuth />} /> {/* Add this route */}
           <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />

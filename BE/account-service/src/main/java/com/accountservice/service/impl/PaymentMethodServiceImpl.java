@@ -11,7 +11,7 @@ import com.accountservice.payload.response.PaymentMethodVerificationDetailsRespo
 import com.accountservice.payload.response.client.*;
 import com.accountservice.repository.PaymentMethodRepository;
 import com.accountservice.service.PaymentMethodService;
-import com.accountservice.service.TransactionService;
+import com.accountservice.service.TransactionHistoryService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -34,7 +34,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 
     private final PaymentMethodRepository paymentMethodRepository;
 
-    private final TransactionService transactionService;
+    private final TransactionHistoryService transactionHistoryService;
 
     private final MongoTemplate mongoTemplate;
 
@@ -124,6 +124,13 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
                 verifyPaymentMethodResponse
             );
         }
+        /*
+        The logic code of this implement:
+        1. Check if the payment method exists
+        2. Check if the payment method is already verified
+        3. Check if the verification amounts are correct
+        4. If all checks pass, update the payment method status to verified and save it
+         */
 
         return new BaseResponse<>(
             Const.STATUS_RESPONSE.ERROR,
@@ -152,15 +159,16 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
         for (PaymentMethod paymentMethod : paymentMethods) {
             RetrievePaymentMethodResponse retrievePaymentMethodResponse = new RetrievePaymentMethodResponse();
             retrievePaymentMethodResponse.setId(paymentMethod.getId());
-            retrievePaymentMethodResponse.setType(paymentMethod.getType());
             retrievePaymentMethodResponse.setNickname(paymentMethod.getNickname());
             retrievePaymentMethodResponse.setMaskedNumber(paymentMethod.getMaskedNumber());
+            retrievePaymentMethodResponse.setType(paymentMethod.getType());
             retrievePaymentMethodResponse.setDefault(paymentMethod.isDefault());
             retrievePaymentMethodResponse.setStatus(paymentMethod.getStatus());
             retrievePaymentMethodResponse.setAddedAt(paymentMethod.getAddedAt());
-            List<Transaction> transactions = transactionService.getTransactions(
-                    new GetTransactionsRequest(userId, null, null, null, null, null, List.of(paymentMethod.getId()), null, null)
-            ).getData();
+            retrievePaymentMethodResponse.setMetadata(paymentMethod.getMetadata());
+            List<Transaction> transactions = transactionHistoryService.getTransactions(
+                    new GetTransactionsRequest(userId, null, null, null, null, null, null, null, List.of(paymentMethod.getId()), null, null)
+            ).getData().getItems();
             Instant lastUsedAt = transactions.isEmpty() ? null : transactions.get(0).getCreatedAt();
             retrievePaymentMethodResponse.setLastUsedAt(lastUsedAt);
 
@@ -184,9 +192,9 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
             );
         }
 
-        List<Transaction> transactions = transactionService.getTransactions(
-                new GetTransactionsRequest(paymentMethod.getUserId(), null, null, null, null, null, List.of(paymentMethod.getId()), null, null)
-        ).getData();
+        List<Transaction> transactions = transactionHistoryService.getTransactions(
+                new GetTransactionsRequest(paymentMethod.getUserId(), null, null, null, null, null, null, null, List.of(paymentMethod.getId()), null, null)
+        ).getData().getItems();
 
         Instant lastUsedAt = transactions.isEmpty() ? null : transactions.get(0).getCreatedAt();
 
@@ -211,6 +219,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
     @Override
     public BaseResponse<?> updatePaymentMethod(String paymentMethodId, UpdatePaymentMethodRequest updatePaymentMethodRequest) {
         String nickname = updatePaymentMethodRequest.getNickname();
+        String status = updatePaymentMethodRequest.getStatus();
         String accountHolderName = updatePaymentMethodRequest.getMetadata().getAccountHolderName();
         boolean isDefault = updatePaymentMethodRequest.isSetAsDefault();
         PaymentMethod paymentMethod = paymentMethodRepository.findById(paymentMethodId).orElse(null);
@@ -232,6 +241,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
         Map<String, Object> metadata = paymentMethod.getMetadata();
         metadata.put("accountHolderName", accountHolderName);
         paymentMethod.setNickname(nickname);
+        paymentMethod.setStatus(status);
         paymentMethod.setDefault(isDefault);
         paymentMethod.setMetadata(metadata);
         paymentMethod.setUpdatedAt(Instant.now());

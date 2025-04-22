@@ -1,5 +1,6 @@
 # Frontend files to ignore
 FE/node_modules/
+/FE/investwebsite/node_modules/
 FE/package-lock.json
 FE/package.json
 # Backend files to ignore

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DepositSagaRepository extends MongoRepository<DepositSagaState, String> {
@@ -43,4 +44,6 @@ public interface DepositSagaRepository extends MongoRepository<DepositSagaState,
      */
     @Query("{ 'status' : { $in : ?0 }, 'currentStepStartTime' : { $lt : ?1 } }")
     List<DepositSagaState> findPotentiallyTimedOutSagas(List<SagaStatus> statuses, Instant cutoffTime);
+
+    Optional<DepositSagaState> getDepositSagaStateBySagaId(String sagaId);
 }

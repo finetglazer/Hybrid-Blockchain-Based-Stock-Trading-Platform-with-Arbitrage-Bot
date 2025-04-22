@@ -1,0 +1,34 @@
+# src/main/java/resources/application.yml
+server:
+  port: 8086
+
+spring:
+  application:
+    name: mock-payment-service
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: payment-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+      enable-auto-commit: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+
+kafka:
+  topics:
+    payment-commands:
+      deposit:
+        payment.commands.deposit
+      withdrawal:
+        payment.commands.withdrawal
+    payment-events:
+      deposit:
+        payment.events.deposit
+      withdrawal:
+        payment.events.withdrawal

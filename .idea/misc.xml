@@ -10,7 +10,19 @@
         <option value="$PROJECT_DIR$/BE/user-service/pom.xml" />
         <option value="$PROJECT_DIR$/BE/pom.xml" />
         <option value="$PROJECT_DIR$/BE/kafka-management-service/pom.xml" />
+        <option value="$PROJECT_DIR$/kafka-message-models/pom.xml" />
+        <option value="$PROJECT_DIR$/BE/kafka-message-models/pom.xml" />
+        <option value="$PROJECT_DIR$/BE/order-service/pom.xml" />
+        <option value="$PROJECT_DIR$/BE/market-data-service/pom.xml" />
+        <option value="$PROJECT_DIR$/BE/mock-brokerage-service/pom.xml" />
+        <option value="$PROJECT_DIR$/BE/portfolio-service/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/BE/portfolio/pom.xml" />
+        <option value="$PROJECT_DIR$/kafka-message-models/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_22" default="true" project-jdk-name="openjdk-22" project-jdk-type="JavaSDK">
