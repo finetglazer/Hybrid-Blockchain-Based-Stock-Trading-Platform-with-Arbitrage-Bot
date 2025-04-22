@@ -215,6 +215,15 @@ h3 {
   animation: spin 1s linear infinite; /* Apply the animation */
 }
 
+.disabled-btn {
+  background: #6e6e6e;
+  cursor: default;
+  &:hover {
+    background: #6e6e6e;
+    transform: none;
+  }
+}
+
 .blurred {
   filter: blur(10px);
   pointer-events: none;

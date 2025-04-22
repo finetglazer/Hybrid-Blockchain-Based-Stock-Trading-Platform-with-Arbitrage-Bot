@@ -18,6 +18,13 @@ export default defineConfig({
         target: 'https://good-musical-joey.ngrok-free.app',
         changeOrigin: true,
         logLevel: 'debug',
+        configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
+          proxy.on('proxyReq', (proxyReq) => {
+            // Set the header Ngrok uses to skip the interstitial page
+            proxyReq.setHeader('ngrok-skip-browser-warning', 'true'); // Value can be anything, 'true' is clear
+            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header');
+          });
+        }
       },
       '/accounts': {
         target: 'https://good-musical-joey.ngrok-free.app',
