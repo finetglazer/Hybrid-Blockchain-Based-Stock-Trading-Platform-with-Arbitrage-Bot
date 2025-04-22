@@ -6,6 +6,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import ForgetPassword from "./pages/ForgetPassword";
+import ResetPassword from "./pages/ResetPassword/ResetPassword.jsx";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home/Home";
@@ -54,6 +55,7 @@ const Layout = () => {
           <Route path="/two-factor-auth" element={<TwoFactorAuth />} /> {/* Add this route */}
           <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />
           <Route path="/profile/disable2FA" element={<Disable2FA />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </AppContextProvider>
     </>

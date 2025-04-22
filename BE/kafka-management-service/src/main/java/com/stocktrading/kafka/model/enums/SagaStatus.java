@@ -9,5 +9,6 @@ public enum SagaStatus {
     COMPLETED,
     FAILED,
     COMPENSATING,
-    COMPENSATION_COMPLETED
+    COMPENSATION_COMPLETED,
+    LIMIT_ORDER_PENDING // Added for LIMIT order flow
 }
