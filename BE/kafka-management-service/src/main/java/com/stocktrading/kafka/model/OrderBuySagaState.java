@@ -108,7 +108,8 @@ public class OrderBuySagaState {
             completedSteps.add(currentStep.name());
         }
 
-        OrderBuySagaStep nextStep = currentStep.getNextStep();
+        // Use our custom logic to determine the next step
+        OrderBuySagaStep nextStep = determineNextStep();
         currentStep = nextStep;
         currentStepStartTime = Instant.now();
 
@@ -404,5 +405,18 @@ public class OrderBuySagaState {
         }
 
         return "UNKNOWN_SERVICE";
+    }
+
+    /**
+     * Determine the next step based on order type and current step
+     */
+    public OrderBuySagaStep determineNextStep() {
+        // For LIMIT orders, skip GET_MARKET_PRICE step after stock validation
+        if (currentStep == OrderBuySagaStep.VALIDATE_STOCK && "LIMIT".equals(orderType)) {
+            return OrderBuySagaStep.CALCULATE_REQUIRED_FUNDS;
+        }
+
+        // Otherwise, follow the normal flow
+        return currentStep.getNextStep();
     }
 }
