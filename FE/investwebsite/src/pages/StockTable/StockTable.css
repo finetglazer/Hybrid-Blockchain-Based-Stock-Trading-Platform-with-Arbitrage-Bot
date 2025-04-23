@@ -231,3 +231,14 @@
     color: #999;
     margin: 0 5px;
 }
+
+.next-page-blur {
+    filter: brightness(0.8) blur(0.5px);
+    border-color: #1ca443c5 !important;
+    transition: all 0.3s ease;
+}
+
+.next-page-blur:hover {
+    filter: brightness(1) blur(0px);
+    transform: scale(1.05);
+}

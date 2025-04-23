@@ -320,7 +320,8 @@ const StockTable = () => {
                             typeof pageNum === 'number' ? (
                                 <button
                                     key={index}
-                                    className={currentPage === pageNum ? 'active' : ''}
+                                    className={`${currentPage === pageNum ? 'active' : ''} 
+                        ${pageNum === 2 && currentPage === 1 ? 'next-page-blur' : ''}`}
                                     onClick={() => setCurrentPage(pageNum)}
                                 >
                                     {pageNum}

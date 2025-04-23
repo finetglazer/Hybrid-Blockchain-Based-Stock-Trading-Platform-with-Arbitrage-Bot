@@ -214,13 +214,33 @@ public class MarketDataWebSocketHandler extends TextWebSocketHandler {
         try {
             message = objectMapper.writeValueAsString(update);
 
+            List<WebSocketSession> sessionsToRemove = new ArrayList<>();
+
             for (WebSocketSession session : sessions) {
-                if (session.isOpen()) {
-                    session.sendMessage(new TextMessage(message));
+                try {
+                    if (session.isOpen()) {
+                        synchronized (session) {
+                            // Synchronize on the session to prevent concurrent sends
+                            session.sendMessage(new TextMessage(message));
+                        }
+                    } else {
+                        // Session is closed, mark for removal
+                        sessionsToRemove.add(session);
+                    }
+                } catch (IOException e) {
+                    log.warn("Error sending message to session {}: {}", session.getId(), e.getMessage());
+                    // If there was an error, mark the session for removal
+                    sessionsToRemove.add(session);
                 }
             }
+
+            // Remove any problematic sessions after iteration
+            if (!sessionsToRemove.isEmpty()) {
+                sessions.removeAll(sessionsToRemove);
+                log.info("Removed {} problematic WebSocket sessions", sessionsToRemove.size());
+            }
         } catch (IOException e) {
-            log.error("Error broadcasting update", e);
+            log.error("Error preparing broadcast message", e);
         }
     }
 
