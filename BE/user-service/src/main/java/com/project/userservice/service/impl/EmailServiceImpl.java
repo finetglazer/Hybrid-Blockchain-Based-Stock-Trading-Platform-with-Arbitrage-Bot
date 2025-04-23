@@ -3,16 +3,21 @@ package com.project.userservice.service.impl;
 import com.project.userservice.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.JavaMailSender;
 
 @Service
 public class EmailServiceImpl implements EmailService {
+
+    private static final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     @Value("${spring.mail.username}")
     private String fromEmail;
@@ -22,6 +27,8 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${resetBaseUrl}")
     private String resetBaseUrl;
+
+    private String frontendUrl = "http://127.0.0.1:5173";
 
     @Override
     public void sendVerificationEmail(String toEmail, String token) {
@@ -133,21 +140,69 @@ public class EmailServiceImpl implements EmailService {
     }
 
 
+    @Async
     @Override
     public void sendPasswordResetEmail(String toEmail, String token) {
-        String subject = "Reset your password";
-        String resetLink = "https://good-musical-joey.ngrok-free.app/users/api/v1/auth/reset-password?token=" + token;
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-        String body = "Please click the following link to reset your password: \n" + resetLink;
+            helper.setFrom(fromEmail);
+            helper.setTo(toEmail);
+            helper.setSubject("Reset Your Password");
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(fromEmail);
-        message.setTo(toEmail);
-        message.setSubject(subject);
-        message.setText(body);
+            // Create reset password URL that points to frontend (not backend)
+            String resetUrl = frontendUrl + "/reset-password?token=" + token;
 
-        mailSender.send(message);
+            String htmlContent =
+                    "<!DOCTYPE html>" +
+                            "<html lang=\"en\">" +
+                            "<head>" +
+                            "    <meta charset=\"UTF-8\">" +
+                            "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+                            "    <title>Password Reset</title>" +
+                            "    <style>" +
+                            "        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }" +
+                            "        .container { max-width: 600px; margin: 0 auto; padding: 20px; }" +
+                            "        .header { background-color: #3498db; color: #ffffff; padding: 20px; text-align: center; }" +
+                            "        .content { padding: 20px; background-color: #f9f9f9; }" +
+                            "        .button { display: inline-block; background-color: #3498db; color: #ffffff; text-decoration: none; " +
+                            "                  padding: 10px 20px; border-radius: 4px; margin-top: 15px; }" +
+                            "        .warning { color: #e74c3c; font-weight: bold; }" +
+                            "        .footer { padding: 15px; text-align: center; font-size: 12px; color: #777; }" +
+                            "    </style>" +
+                            "</head>" +
+                            "<body>" +
+                            "    <div class=\"container\">" +
+                            "        <div class=\"header\">" +
+                            "            <h2>Password Reset Request</h2>" +
+                            "        </div>" +
+                            "        <div class=\"content\">" +
+                            "            <p>Hello,</p>" +
+                            "            <p>We received a request to reset your password. Click the button below to create a new password:</p>" +
+                            "            <p style=\"text-align: center;\">" +
+                            "                <a href=\"" + resetUrl + "\" class=\"button\">Reset Password</a>" +
+                            "            </p>" +
+                            "            <p>If the button doesn't work, you can also copy and paste the following link into your browser:</p>" +
+                            "            <p>" + resetUrl + "</p>" +
+                            "            <p class=\"warning\">This link will expire in 1 hour for security reasons.</p>" +
+                            "            <p>If you didn't request a password reset, please ignore this email or contact support if you have concerns.</p>" +
+                            "            <p>Best regards,<br>Your Application Team</p>" +
+                            "        </div>" +
+                            "        <div class=\"footer\">" +
+                            "            <p>This is an automated email. Please do not reply to this message.</p>" +
+                            "        </div>" +
+                            "    </div>" +
+                            "</body>" +
+                            "</html>";
 
+            helper.setText(htmlContent, true);
+            mailSender.send(message);
+
+            logger.info("Password reset email sent to: {}", toEmail);
+        } catch (MessagingException e) {
+            logger.error("Failed to send password reset email to {}: {}", toEmail, e.getMessage());
+        }
     }
 
     @Override
