@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/gateway.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/gateway.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,7 +133,7 @@
       <recent name="com.accountservice.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.AccountServiceApplication">
+  <component name="RunManager" selected="Spring Boot.ApiGatewayApplication">
     <configuration name="console.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/consoles/db/386254c4-74ac-45e4-8c77-834a59e1ad94/console.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
@@ -279,11 +281,11 @@
       <item itemvalue="Docker.user-service/Dockerfile" />
       <item itemvalue="Docker.wallet-service/Dockerfile" />
       <item itemvalue="Node.js.console.js" />
-      <item itemvalue="Spring Boot.KafkaMessageModelsApplication" />
-      <item itemvalue="Spring Boot.MockPaymentServiceApplication" />
       <item itemvalue="Spring Boot.AccountServiceApplication" />
       <item itemvalue="Spring Boot.ApiGatewayApplication" />
       <item itemvalue="Spring Boot.KafkaManagementServiceApplication" />
+      <item itemvalue="Spring Boot.KafkaMessageModelsApplication" />
+      <item itemvalue="Spring Boot.MockPaymentServiceApplication" />
       <item itemvalue="Spring Boot.TradingServiceApplication" />
       <item itemvalue="Spring Boot.UserServiceApplication" />
       <item itemvalue="Spring Boot.WalletServiceApplication" />
@@ -341,6 +343,10 @@
       <workItem from="1745082469071" duration="36884000" />
       <workItem from="1745205605406" duration="244000" />
       <workItem from="1745205898184" duration="7216000" />
+      <workItem from="1745314112943" duration="3716000" />
+      <workItem from="1745367390242" duration="43000" />
+      <workItem from="1745367591162" duration="14000" />
+      <workItem from="1745367766146" duration="94000" />
     </task>
     <servers />
   </component>

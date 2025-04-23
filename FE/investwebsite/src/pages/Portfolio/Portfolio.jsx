@@ -1,15 +1,38 @@
 import "./Portfolio.css"
 import {useNavigate, useParams} from "react-router-dom";
-import React, {useEffect} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Table} from "antd";
 import {Chart} from "chart.js/auto";
 import 'chartjs-adapter-date-fns';
+import "glider-js/glider.min.css";
+import Glider from "glider-js/glider";
 
 const Portfolio = () => {
     const accountId = useParams();
 
     const navigate = useNavigate();
-    const performacne
+    const performanceChart = useRef(null);
+    const gliderRef = useRef(null);
+    const [testData, setTestData] = useState([]);
+    const [wilshireData, setWilshireData] = useState([]);
+    const [openComparisonObjectsList, setOpenComparisonObjectsList] = useState(false);
+
+    const comparisonData = [
+        {
+            name: 'TEST',
+            symbol: "TEST",
+            totalValue: "$9,254,878,152.77",
+            totalGainValue: "+$6,725,812.05",
+            totalGainPercentage: "7.93%"
+        },
+        {
+            name: 'Dow Johns Industrial Average',
+            symbol: "DJI",
+            totalValue: "38,837.58",
+            totalGainValue: "+747.17",
+            totalGainPercentage: "1.96%"
+        },
+    ];
 
     const onClickBackBtn = () => {
         navigate("/home");
@@ -23,43 +46,15 @@ const Portfolio = () => {
         return now;
     }
 
-// Simulate data points based on the visual representation
-    const testData = [
-        { x: createDate(21, 0), y: 0.2 },  // Around 9 PM
-        { x: createDate(21, 30), y: -0.5 },
-        { x: createDate(22, 0), y: -1.8 }, // 10 PM
-        { x: createDate(22, 30), y: -2.5 },
-        { x: createDate(23, 0), y: -2.2 }, // 11 PM
-        { x: createDate(23, 30), y: -2.8 },
-        { x: createDate(23, 55), y: -2.6 }, // Just before midnight drop
-        { x: createDate(0, 1), y: -8.8 },  // Midnight Drop (12:01 AM)
-        { x: createDate(0, 30), y: -8.6 },
-        { x: createDate(1, 0), y: -8.9 }, // 1 AM
-        { x: createDate(1, 30), y: -8.5 },
-        { x: createDate(2, 0), y: -8.7 }, // 2 AM
-        { x: createDate(2, 30), y: -8.2 },
-        { x: createDate(3, 0), y: -7.8 }   // End point slightly up
-    ];
-
-    const wilshireData = [
-        { x: createDate(21, 0), y: -0.8 }, // Around 9 PM
-        { x: createDate(21, 30), y: -1.2 },
-        { x: createDate(22, 0), y: -1.9 }, // 10 PM
-        { x: createDate(22, 30), y: -2.1 },
-        { x: createDate(23, 0), y: -2.4 }, // 11 PM
-        { x: createDate(23, 30), y: -2.6 },
-        { x: createDate(0, 0), y: -2.8 },  // Midnight (12:00 AM)
-        { x: createDate(0, 30), y: -3.0 },
-        { x: createDate(1, 0), y: -3.3 }, // 1 AM
-        { x: createDate(1, 30), y: -3.1 },
-        { x: createDate(2, 0), y: -3.4 }, // 2 AM
-        { x: createDate(2, 30), y: -2.9 },
-        { x: createDate(3, 0), y: -2.4 }  // End point slightly up
-    ];
-
     const drawPerformanceChart = () => {
         const ctx = document.getElementById('performance-chart').getContext('2d');
-        new Chart(ctx, {
+
+        if (performanceChart.current) {
+            performanceChart.current.destroy();
+            performanceChart.current = null; // Clear the ref
+        }
+
+        performanceChart.current = new Chart(ctx, {
             type: 'line',
             data: {
                 datasets: [
@@ -107,7 +102,7 @@ const Portfolio = () => {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 // --- Interaction Settings ---
                 interaction: {
                     mode: 'index', // Important: Finds items at the same index on x-axis
@@ -198,10 +193,10 @@ const Portfolio = () => {
                     x: {
                         type: 'time',
                         time: {
-                            unit: 'day', // Adjust unit based on data range (day, hour, etc.)
+                            unit: 'hour', // Adjust unit based on data range (day, hour, etc.)
                             displayFormats: {
-                                day: 'MMM d' // Format like 'Apr 16'
-                                // hour: 'h:mm a' // Example if unit is 'hour'
+                                day: 'MMM d', // Format like 'Apr 16'
+                                hour: 'h:mm a', // Example if unit is 'hour'
                             },
                             // Removed problematic tooltipFormat: 'll HH:mm',
                         },
@@ -210,7 +205,7 @@ const Portfolio = () => {
                         },
                         ticks: {
                             source: 'auto',
-                            maxTicksLimit: 6,
+                            maxTicksLimit: 25,
                             autoSkip: true,
                         }
                     },
@@ -431,8 +426,46 @@ const Portfolio = () => {
     ];
 
     useEffect(() => {
+        let currentTestY = 0.1;
+        let currentWilshireY = -0.1;
+        let generatedTestData = [];
+        let generatedWilshireData = [];
+        for (let hour = 0; hour < 24; hour++) {
+            const currentDate = createDate(hour, 0);
+            generatedTestData.push({ x: currentDate, y: parseFloat(currentTestY.toFixed(2)) });
+            generatedWilshireData.push({ x: currentDate, y: parseFloat(currentWilshireY.toFixed(2)) });
+            let testChange = (Math.random() - 0.6) * 0.8;
+            let wilshireChange = (Math.random() - 0.5) * 0.5;
+            if (hour > 8 && hour < 17) {
+                testChange -= 0.2 * Math.random();
+            }
+            currentTestY += testChange;
+            currentWilshireY += wilshireChange;
+        }
+
+        setTestData(generatedTestData);
+        setWilshireData(generatedWilshireData);
+
+    }, []);
+
+    useEffect(() => {
+        console.log(testData);
+        console.log(wilshireData);
         drawPerformanceChart();
     }, [testData, wilshireData]);
+
+    useEffect(() => {
+        new Glider(gliderRef.current, {
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            draggable: true,
+            dots: "#dots",
+            arrows: {
+                prev: "#glider-prev",
+                next: "#glider-next"
+            }
+        });
+    }, []);
 
     return (
         <div className="container portfolio-container">
@@ -465,7 +498,82 @@ const Portfolio = () => {
                     </div>
                 </div>
                 <div className="chart-and-highlight-container">
-                    <canvas id="performance-chart" />
+                    <div className="performance-chart-container">
+                        <canvas id="performance-chart" />
+                        <div className="comparison-object-container">
+                            {comparisonData.map((comparisonObject, index) => (
+                                <div className="comparison-object">
+                                    <div className="color-streak" style={{background: index === 0 ? "#4285F4" : "#F9AB00"}}/>
+                                    <p className="name">
+                                        {comparisonObject.name.length > 18
+                                        ? comparisonObject.name.substring(0, 18) + "..."
+                                        : comparisonObject.name
+                                        }
+                                    </p>
+                                    <p className="total-value">{comparisonObject.totalValue}</p>
+                                    <p className="total-gain-value">{comparisonObject.totalGainValue}</p>
+                                    <div className="total-gain-percentage">
+                                        <img src="../../../src/assets/up-arrow.png" alt="direction icon" />
+                                        <p>{comparisonObject.totalGainPercentage}</p>
+                                    </div>
+                                    <button className="remove-btn">
+                                        <img src="../../../src/assets/x-white.png" alt="remove icon" />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="chart-buttons">
+                            <button className="add-comparison-btn" onClick={() => {setOpenComparisonObjectsList(true)}}>
+                                <img src="../../../src/assets/add.png" alt="add icon" />
+                                <p>Add comparison</p>
+                            </button>
+                            {comparisonData && comparisonData.length > 0 && (
+                                <button className="clear-all-btn">
+                                    Clear all
+                                </button>
+                            )}
+                            {openComparisonObjectsList && (
+                                <div className="comparison-objects-list-container">
+                                <div className="search-bar">
+                                    <input placeholder="Search for stocks, ETFs & more to compare with"></input>
+                                    <button className="close-btn" onClick={() => {
+                                        setOpenComparisonObjectsList(false)
+                                    }}>
+                                        <img src="../../../src/assets/x-white.png" alt="close icon"/>
+                                    </button>
+                                </div>
+                                <div className="comparison-objects-list">
+                                    {comparisonData.map(comparisonObject => (
+                                        <div className="comparison-object">
+                                            <div className="comparison-object-info">
+                                                <p className="name">{comparisonObject.name}</p>
+                                                <p className="symbol">{comparisonObject.symbol}</p>
+                                            </div>
+                                            <div className="value">
+                                                <p className="total-value">{comparisonObject.totalValue}</p>
+                                                <p className="total-gain-percentage">
+                                                    <img src="../../../src/assets/up-arrow.png" alt="direction icon"/>
+                                                    <p>{comparisonObject.totalGainPercentage}</p>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            )}
+                        </div>
+                        <div className="glider-container">
+                            <div className="glider" ref={gliderRef}>
+                                {/*<div>Slide 1</div>*/}
+                                {/*<div>Slide 2</div>*/}
+                                {/*<div>Slide 3</div>*/}
+                                {/*<div>Slide 4</div>*/}
+                            </div>
+
+                            <button id="glider-prev">«</button>
+                            <button id="glider-next">»</button>
+                        </div>
+                    </div>
                     <div className="highlight-container container">
                         <p className="title">Portfolio highlights</p>
                         <div className="categories">
@@ -510,7 +618,6 @@ const Portfolio = () => {
                         <Table
                             dataSource={mockData}
                             columns={columns}
-
                         />
                     </div>
                 </div>

@@ -90,7 +90,167 @@
     }
     .chart-and-highlight-container {
         display: flex;
+        margin: 40px 0 0 50px;
         align-items: center;
+        .performance-chart-container {
+            width: 800px;
+            height: 400px;
+            position: relative;
+            .comparison-object-container {
+                .comparison-object {
+                    display: flex;
+                    align-items: center;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.38);
+                    font-weight: 600;
+                    .color-streak {
+                        width: 3px;
+                        border-radius: 15px;
+                        height: 20px;
+                        margin-right: 5px;
+                    }
+                    .name {
+                        width: 30%;
+                        text-align: left;
+                    }
+                    .total-value {
+                        width: 25%;
+                        text-align: left;
+                    }
+                    .total-gain-value {
+                        width: 20%;
+                        color: #88ec9f;
+                        text-align: left;
+                    }
+                    .total-gain-percentage {
+                        width: 10%;
+                        height: 35px;
+                        background: #054d05;
+                        border-radius: 10px;
+                        padding-left: 10px;
+                        text-align: left;
+                        p {
+                            color: #88ec9f;
+                        }
+                    }
+                    .total-gain-percentage {
+                        display: flex;
+                        align-items: center;
+
+                        img {
+                            width: 15px;
+                            height: 15px;
+                        }
+                        p {
+                            font-weight: 600;
+                            margin-left: 3px;
+                        }
+                    }
+                    .remove-btn {
+                        width: 10%;
+                        padding: 0;
+                        background: none;
+                        text-align: right;
+                        img {
+                            width: 15px;
+                            height: 15px;
+                        }
+                    }
+                }
+            }
+            .chart-buttons {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-top: 15px;
+                .add-comparison-btn {
+                    display: flex;
+                    align-items: center;
+                    height: 30px;
+                    background: tomato;
+                    img {
+                        width: 15px;
+                        height: 15px;
+                        margin: -3px 5px 0 0;
+                    }
+                }
+            }
+            .comparison-objects-list-container {
+                position: absolute;
+                z-index: 99;
+                top: 142%;
+                .search-bar {
+                    display: flex;
+                    input {
+                        width: 730px;
+                    }
+                    .close-btn {
+                        background: none;
+                        img {
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+                }
+                .comparison-objects-list {
+                    background: #144f25;
+                    width: 750px;
+                    .comparison-object {
+                        display: flex;
+                        font-weight: 600;
+                        height: 70px;
+                        padding-left: 15px;
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.38);
+                        &:hover {
+                            cursor: pointer;
+                            background: #39804f;
+                        }
+                        .comparison-object-info {
+                            width: 50%;
+                            margin-top: 12px;
+                            p {
+                                margin: 0;
+                                text-align: left;
+                            }
+                            .name {
+                                margin-bottom: 5px;
+                            }
+                            .symbol {
+                                font-size: 0.8rem;
+                                font-weight: 400;
+                            }
+                        }
+                        .value {
+                            width: 70%;
+                            display: flex;
+                            .total-value {
+                                width: 50%;
+                            }
+                            .total-value {
+                                margin-top: 25px;
+                                text-align: right;
+                            }
+                            .total-gain-percentage {
+                                display: flex;
+                                align-items: center;
+                                width: 70px;
+                                background: #054d05;
+                                border-radius: 10px;
+                                margin-left: 80px;
+                                padding: 2px 5px;
+                                img {
+                                    width: 15px;
+                                    height: 15px;
+                                    margin-right: 3px;
+                                }
+                                p {
+                                    color: #88ec9f;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         .highlight-container {
             text-align: left;
             box-shadow: none;
@@ -137,7 +297,7 @@
 }
 
 .portfolio-container .investments-table {
-    margin-top: 50px;
+    margin-top: 250px;
     .table-btn {
         border-radius: 30px;
         height: 35px;
