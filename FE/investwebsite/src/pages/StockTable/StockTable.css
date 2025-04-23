@@ -1,0 +1,154 @@
+.stock-table-container {
+    font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: black;
+    color: white;
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.stock-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-container {
+    width: 50%;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(28, 27, 26, 0.999);
+    border: 1px solid #b8b8b8;
+    color: white;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+.time-period {
+    display: flex;
+    gap: 10px;
+}
+
+.time-period button {
+    background-color: rgba(28, 27, 26, 0.999);
+    color: #a7a7a7;
+    border: 1px solid #b8b8b8;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.time-period button.active {
+    background-color: #1ca443c5;
+    color: white;
+    border-color: #1ca443c5;
+}
+
+.stock-table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.stock-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stock-row:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.stock-info {
+    width: 200px;
+    text-align: left;
+}
+
+.stock-symbol {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.stock-name {
+    color: #a8a8a8;
+    font-size: 0.9rem;
+    margin-top: 3px;
+}
+
+.stock-chart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+}
+
+.stock-change {
+    width: 120px;
+    text-align: center;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.stock-change.positive {
+    background-color: #006d00;
+    color: white;
+}
+
+.stock-change.negative {
+    background-color: #910000;
+    color: white;
+}
+
+.stock-change.neutral {
+    background-color: #333;
+    color: white;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+.pagination button {
+    background-color: rgba(28, 27, 26, 0.999);
+    color: white;
+    border: 1px solid #b8b8b8;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-numbers {
+    font-size: 14px;
+    color: #a8a8a8;
+}
+
+.loading, .error, .no-stocks {
+    text-align: center;
+    padding: 50px 0;
+    font-size: 18px;
+    color: #a8a8a8;
+}
+
+.error {
+    color: #ff6b6b;
+}

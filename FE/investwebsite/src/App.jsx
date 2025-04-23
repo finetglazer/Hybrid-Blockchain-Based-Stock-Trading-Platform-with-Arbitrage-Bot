@@ -25,6 +25,7 @@ import PaymentMethodsManagement from "./pages/PaymentMethod/PaymentMethodsManage
 import TransactionHistory from "./pages/TransactionHistory/TransactionHistory.jsx";
 import TransactionDetails from "./pages/TransactionDetails/TransactionDetails.jsx";
 import GenerateRecoveryKeys from "./pages/SettingPage/GenerateRecoveryKeys/GenerateRecoveryKeys.jsx";
+import StockTable from "./pages/StockTable/StockeTable.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -56,6 +57,7 @@ const Layout = () => {
           <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />
           <Route path="/profile/disable2FA" element={<Disable2FA />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/market" element={<StockTable />} />
         </Routes>
       </AppContextProvider>
     </>
