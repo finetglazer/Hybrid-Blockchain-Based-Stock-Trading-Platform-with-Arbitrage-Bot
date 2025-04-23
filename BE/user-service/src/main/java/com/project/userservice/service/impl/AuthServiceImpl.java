@@ -267,22 +267,22 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public BaseResponse<?> forgotPassword(String email) {
         // Rate-limit check
-        if (!rateLimiterService.isAllowed(email)) {
-            return new BaseResponse<>(
-                Const.STATUS_RESPONSE.ERROR,
-                "Too many requests. Please wait before trying again",
-                ""
-            );
-        }
+//        if (!rateLimiterService.isAllowed(email)) {
+//            return new BaseResponse<>(
+//                    Const.STATUS_RESPONSE.ERROR,
+//                    "Too many requests. Please wait before trying again",
+//                    ""
+//            );
+//        }
 
         // Check if a user with this email exists
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
-            // Send message no email exist
+            // For security, don't reveal if email exists or not
             return new BaseResponse<>(
-                Const.STATUS_RESPONSE.ERROR,
-                "No user found with this email",
-                ""
+                    Const.STATUS_RESPONSE.SUCCESS,
+                    "If an account with that email exists, a password reset link has been sent",
+                    ""
             );
         }
 
@@ -298,23 +298,16 @@ public class AuthServiceImpl implements AuthService {
 
         passwordResetTokenRepository.save(prt);
 
-        // Construct the reset link (adjust the host/port as needed)
-        //testing
-
-        String resetLink = resetBaseUrl + "/users/api/v1/auth/reset-password?token=" + resetToken;
-
-        // Send the reset email (here we simulate by logging the link)
+        // Send the reset email with proper template
         emailService.sendPasswordResetEmail(email, resetToken);
-        logger.info("Password reset link for {}: {}", email, resetLink);
-
 
         // Log the audit event
         logger.info("Audit: Password reset requested for email: {}", email);
 
         return new BaseResponse<>(
-            Const.STATUS_RESPONSE.ERROR,
-            "If an email exists, a reset link has been sent",
-            ""
+                Const.STATUS_RESPONSE.SUCCESS,
+                "If an account with that email exists, a password reset link has been sent",
+                ""
         );
     }
 
