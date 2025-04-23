@@ -30,6 +30,7 @@ public class WebfluxSecurityConfig {
                         .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/register").permitAll()
                         .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/2fa/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/users/api/v1/auth/verify").permitAll() // Add this line
+                        .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/reset-password").permitAll()
                         .anyExchange().authenticated()
                 )
                 .build();

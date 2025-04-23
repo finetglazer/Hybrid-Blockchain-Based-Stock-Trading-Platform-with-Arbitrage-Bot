@@ -31,6 +31,7 @@ public class JwtAuthenticationFilter implements WebFilter {
         if (path.equals("/users/api/v1/auth/login")
                 || path.equals("/users/api/v1/auth/register")
                 || path.equals("/users/api/v1/auth/forgot-password")
+                || path.equals("/users/api/v1/auth/reset-password")
                 || path.equals("/users/api/v1/auth/verify") // Add this line
                 || path.startsWith("/users/api/v1/auth/verify")) { // Also consider this for query params
             return chain.filter(exchange);
