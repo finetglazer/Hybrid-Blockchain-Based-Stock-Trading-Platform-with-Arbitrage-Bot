@@ -107,7 +107,6 @@ public class OrderBuySagaService {
         log.info("Published command [{}] for saga [{}] to topic: {}",
                 command.getType(), saga.getSagaId(), targetTopic);
     }
-
     /**
      * Handle the CALCULATE_REQUIRED_FUNDS step
      * This step is executed in the orchestrator without sending a command
@@ -116,31 +115,35 @@ public class OrderBuySagaService {
         try {
             log.debug("Calculating required funds for saga: {}", saga.getSagaId());
 
-            // Get the market price from previous step
-            Object priceObj = saga.getStepData("PRICE_PROVIDED_currentPrice");
-            BigDecimal marketPrice;
+            BigDecimal priceToUse;
 
-            if (priceObj == null) {
-                throw new IllegalStateException("Market price not available");
-            } else if (priceObj instanceof BigDecimal) {
-                marketPrice = (BigDecimal) priceObj;
-            } else if (priceObj instanceof Double) {
-                // This handles the case in your error
-                marketPrice = BigDecimal.valueOf((Double) priceObj);
-            } else if (priceObj instanceof Number) {
-                // Handle other numeric types
-                marketPrice = BigDecimal.valueOf(((Number) priceObj).doubleValue());
-            } else if (priceObj instanceof String) {
-                // Even handle string representations
-                marketPrice = new BigDecimal((String) priceObj);
+            // For LIMIT orders, always use the limit price for calculations
+            if ("LIMIT".equals(saga.getOrderType()) && saga.getLimitPrice() != null) {
+                priceToUse = saga.getLimitPrice();
+                log.debug("Using limit price for calculation: {}", priceToUse);
             } else {
-                throw new IllegalStateException("Market price is in an unsupported format: " +
-                        priceObj.getClass().getName());
-            }
+                // For MARKET orders, get the price from the previous step
+                Object priceObj = saga.getStepData("PRICE_PROVIDED_currentPrice");
+                if (priceObj == null) {
+                    throw new IllegalStateException("Market price not available");
+                }
 
-            // For limit orders, use limit price for calculation
-            BigDecimal priceToUse = "LIMIT".equals(saga.getOrderType()) && saga.getLimitPrice() != null ?
-                    saga.getLimitPrice() : marketPrice;
+                // Handle different price formats
+                if (priceObj instanceof BigDecimal) {
+                    priceToUse = (BigDecimal) priceObj;
+                } else if (priceObj instanceof Double) {
+                    priceToUse = BigDecimal.valueOf((Double) priceObj);
+                } else if (priceObj instanceof Number) {
+                    priceToUse = BigDecimal.valueOf(((Number) priceObj).doubleValue());
+                } else if (priceObj instanceof String) {
+                    priceToUse = new BigDecimal((String) priceObj);
+                } else {
+                    throw new IllegalStateException("Market price is in an unsupported format: " +
+                            priceObj.getClass().getName());
+                }
+
+                log.debug("Using market price for calculation: {}", priceToUse);
+            }
 
             // Calculate the amount to reserve
             BigDecimal requiredAmount = priceToUse.multiply(new BigDecimal(saga.getQuantity()));
@@ -168,7 +171,7 @@ public class OrderBuySagaService {
                     OrderBuySagaStep.CALCULATE_REQUIRED_FUNDS.name());
             orderBuySagaRepository.save(saga);
 
-            // If cancellation is needed on failure
+            // Cancel the order on calculation failure
             cancelOrder(saga);
         }
     }
@@ -180,9 +183,19 @@ public class OrderBuySagaService {
             if (saga.getOrderId() != null) {
                 log.info("Cancelling order {} due to funds calculation failure", saga.getOrderId());
 
-                // Update order status to CANCELLED in the Order Service
-                // This could be done via a direct API call or through a Kafka message
+                // Create a command to cancel the order
+                CommandMessage command = new CommandMessage();
+                command.initialize();
+                command.setSagaId(saga.getSagaId());
+                command.setType(CommandType.ORDER_CANCEL.name());
+                command.setSourceService("SAGA_ORCHESTRATOR");
+                command.setTargetService("ORDER_SERVICE");
+                command.setPayloadValue("orderId", saga.getOrderId());
+                command.setPayloadValue("reason", saga.getFailureReason());
 
+                // Publish the command
+                String topic = getTopicForCommandType(CommandType.ORDER_CANCEL);
+                messagePublisher.publishCommand(command, topic);
                 saga.addEvent("ORDER_CANCELLED", "Order cancelled due to funds calculation failure");
             } else {
                 log.info("No order to cancel - funds calculation failed before order creation");
@@ -218,6 +231,26 @@ public class OrderBuySagaService {
             return;
         }
 
+        // Special handling for LIMIT_ORDER_QUEUED event
+        if ("LIMIT_ORDER_QUEUED".equals(event.getType())) {
+            handleLimitOrderQueued(saga, event);
+            return;
+        }
+
+        // Special handling for ORDER_EXPIRED event
+        if ("ORDER_EXPIRED".equals(event.getType())) {
+            handleOrderExpired(saga, event);
+            return;
+        }
+
+        // Special handling for ORDER_EXECUTED_BY_BROKER event (for limit orders)
+        if ("ORDER_EXECUTED_BY_BROKER".equals(event.getType()) &&
+                saga.getStatus() == SagaStatus.LIMIT_ORDER_PENDING) {
+            // Resume the saga from the paused state
+            resumeLimitOrderSaga(saga, event);
+            return;
+        }
+
         // Check if this is a response to the current step
         boolean matchesCurrentStep = isEventForCurrentStep(saga, event);
         if (!matchesCurrentStep) {
@@ -246,6 +279,152 @@ public class OrderBuySagaService {
         result.put("newStep", saga.getCurrentStep() != null ? saga.getCurrentStep().name() : "null");
         idempotencyService.recordProcessing(event, result);
     }
+
+    /**
+     * Handle the LIMIT_ORDER_QUEUED event
+     * This pauses the saga until the order is executed or expires
+     */
+    private void handleLimitOrderQueued(OrderBuySagaState saga, EventMessage event) {
+        log.info("Limit order queued in broker order book: {}", saga.getOrderId());
+
+        // Update saga state
+        saga.setStatus(SagaStatus.LIMIT_ORDER_PENDING);
+        saga.addEvent("LIMIT_ORDER_QUEUED", "Order added to broker order book for price monitoring");
+
+        // Store expiration time if available
+        String expiresAt = event.getPayloadValue("expiresAt");
+        if (expiresAt != null) {
+            saga.storeStepData("limitOrderExpiresAt", expiresAt);
+            saga.addEvent("EXPIRATION_SET", "Order will expire at " + expiresAt);
+        }
+
+        // Store current market price for reference
+        Object priceObj = event.getPayloadValue("currentPrice");
+        if (priceObj != null) {
+            BigDecimal currentPrice;
+            if (priceObj instanceof BigDecimal) {
+                currentPrice = (BigDecimal) priceObj;
+            } else if (priceObj instanceof Double) {
+                currentPrice = BigDecimal.valueOf((Double) priceObj);
+            } else if (priceObj instanceof Number) {
+                currentPrice = BigDecimal.valueOf(((Number) priceObj).doubleValue());
+            } else if (priceObj instanceof String) {
+                currentPrice = new BigDecimal((String) priceObj);
+            } else {
+                log.warn("Skipping currentMarketPrice storage due to unsupported format: {}",
+                        priceObj.getClass().getName());
+                currentPrice = null;
+            }
+
+            if (currentPrice != null) {
+                saga.storeStepData("currentMarketPrice", currentPrice);
+            }
+        }
+
+        saga.setLastUpdatedTime(Instant.now());
+        orderBuySagaRepository.save(saga);
+
+        // Record the event as processed
+        Map<String, Object> result = new HashMap<>();
+        result.put("status", "LIMIT_ORDER_PENDING");
+        result.put("action", "Saga paused waiting for price match or expiration");
+        idempotencyService.recordProcessing(event, result);
+
+        log.info("Saga [{}] paused waiting for limit order execution or expiration", saga.getSagaId());
+    }
+
+    /**
+     * Handle the ORDER_EXPIRED event
+     * This initiates compensation for an expired limit order
+     */
+    private void handleOrderExpired(OrderBuySagaState saga, EventMessage event) {
+        log.info("Processing order expired event for saga: {}", saga.getSagaId());
+
+        saga.setStatus(SagaStatus.FAILED);
+        saga.setFailureReason("Order expired before execution conditions were met");
+        saga.addEvent("ORDER_EXPIRED", "Limit order expired: " + event.getPayloadValue("expiredAt"));
+
+        // Save the updated state
+        saga.setLastUpdatedTime(Instant.now());
+        orderBuySagaRepository.save(saga);
+
+        // Start compensation
+        startCompensation(saga);
+
+        // Record the event as processed
+        Map<String, Object> result = new HashMap<>();
+        result.put("status", "FAILED");
+        result.put("action", "Started compensation for expired order");
+        idempotencyService.recordProcessing(event, result);
+    }
+
+    /**
+     * Resume a saga that was paused waiting for limit order execution
+     */
+    private void resumeLimitOrderSaga(OrderBuySagaState saga, EventMessage event) {
+        log.info("Resuming saga [{}] after limit order execution", saga.getSagaId());
+
+        // Update saga with execution details
+        saga.setBrokerOrderId(event.getPayloadValue("brokerOrderId"));
+
+        // Handle type conversion for executedQuantity
+        Object quantityObj = event.getPayloadValue("executedQuantity");
+        if (quantityObj instanceof Integer) {
+            saga.setExecutedQuantity((Integer) quantityObj);
+        } else if (quantityObj instanceof String) {
+            saga.setExecutedQuantity(Integer.parseInt((String) quantityObj));
+        } else if (quantityObj != null) {
+            saga.setExecutedQuantity(((Number) quantityObj).intValue());
+        }
+
+        // Handle type conversion for executionPrice
+        Object priceObj = event.getPayloadValue("executionPrice");
+        if (priceObj instanceof BigDecimal) {
+            saga.setExecutionPrice((BigDecimal) priceObj);
+        } else if (priceObj instanceof Double) {
+            saga.setExecutionPrice(BigDecimal.valueOf((Double) priceObj));
+        } else if (priceObj instanceof Number) {
+            saga.setExecutionPrice(BigDecimal.valueOf(((Number) priceObj).doubleValue()));
+        } else if (priceObj instanceof String) {
+            saga.setExecutionPrice(new BigDecimal((String) priceObj));
+        }
+
+        // Resume the saga at the UPDATE_ORDER_EXECUTED step
+        saga.setStatus(SagaStatus.IN_PROGRESS);
+        saga.setCurrentStep(OrderBuySagaStep.UPDATE_ORDER_EXECUTED);
+        saga.setCurrentStepStartTime(Instant.now());
+        saga.addEvent("LIMIT_ORDER_EXECUTED", "Limit order executed at price: " + saga.getExecutionPrice());
+
+        // Save the updated state
+        saga.setLastUpdatedTime(Instant.now());
+        orderBuySagaRepository.save(saga);
+
+        // Continue with next step
+        processNextStep(saga);
+
+        // Record the event as processed
+        Map<String, Object> result = new HashMap<>();
+        result.put("status", "IN_PROGRESS");
+        result.put("action", "Resumed saga at UPDATE_ORDER_EXECUTED step");
+        idempotencyService.recordProcessing(event, result);
+    }
+
+    /**
+     * Add additional method implementations for supporting LIMIT orders
+     */
+
+    /**
+     * Called to add a SagaStatus.LIMIT_ORDER_PENDING to the existing states
+     */
+    private void addLimitOrderPendingStatus(OrderBuySagaState saga) {
+        saga.getStepData().put("limitOrderPendingStep", saga.getCurrentStep().name());
+        saga.setStatus(SagaStatus.LIMIT_ORDER_PENDING);
+        saga.setLastUpdatedTime(Instant.now());
+        saga.addEvent("LIMIT_ORDER_PENDING",
+                "Saga paused while waiting for price conditions to be met");
+        orderBuySagaRepository.save(saga);
+    }
+
 
     /**
      * Process a successful event
@@ -323,14 +502,21 @@ public class OrderBuySagaService {
 
         saga.handleFailure(failureReason, saga.getCurrentStep().name());
 
-        // Check if we need compensation
-        if (!isValidationStep(saga.getCurrentStep())) {
+        // Start compensation based on the saga status
+        if (saga.getStatus() == SagaStatus.LIMIT_ORDER_PENDING) {
+            // For a limit order waiting in the order book
+            saga.setBrokerOrderId(null); // Ensure this is null since order wasn't executed
             startCompensation(saga);
-        } else {
-            // For validation steps, just terminate without compensation
-            saga.setEndTime(Instant.now());
-            saga.addEvent("SAGA_TERMINATED", "Saga terminated due to validation failure");
-            orderBuySagaRepository.save(saga);
+        } else if (saga.getStatus() == SagaStatus.FAILED) {
+            if (isValidationStep(saga.getCurrentStep())) {
+                // For validation steps, just terminate without compensation
+                saga.setEndTime(Instant.now());
+                saga.addEvent("SAGA_TERMINATED", "Saga terminated due to validation failure");
+                orderBuySagaRepository.save(saga);
+            } else {
+                // For other steps, start compensation
+                startCompensation(saga);
+            }
         }
     }
 
@@ -569,9 +755,11 @@ public class OrderBuySagaService {
         return orderBuySagaRepository.findById(sagaId);
     }
 
+    // Add status LIMIT_ORDER_PENDING to active statuses method
     public List<OrderBuySagaState> findActiveSagas() {
         List<SagaStatus> activeStatuses = Arrays.asList(
-                SagaStatus.STARTED, SagaStatus.IN_PROGRESS, SagaStatus.COMPENSATING);
+                SagaStatus.STARTED, SagaStatus.IN_PROGRESS,
+                SagaStatus.COMPENSATING, SagaStatus.LIMIT_ORDER_PENDING);
         return orderBuySagaRepository.findByStatusIn(activeStatuses);
     }
 

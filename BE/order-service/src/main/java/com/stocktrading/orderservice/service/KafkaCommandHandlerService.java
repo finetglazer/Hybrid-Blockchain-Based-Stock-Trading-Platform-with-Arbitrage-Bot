@@ -40,7 +40,22 @@ public class KafkaCommandHandlerService {
         String stockSymbol = command.getPayloadValue("stockSymbol");
         String orderType = command.getPayloadValue("orderType");
         Integer quantity = command.getPayloadValue("quantity");
-        BigDecimal limitPrice = command.getPayloadValue("limitPrice");
+
+        // Safe conversion for limitPrice - handle various number formats
+        BigDecimal limitPrice = null;
+        Object limitPriceObj = command.getPayloadValue("limitPrice");
+        if (limitPriceObj != null) {
+            if (limitPriceObj instanceof BigDecimal) {
+                limitPrice = (BigDecimal) limitPriceObj;
+            } else if (limitPriceObj instanceof Double) {
+                limitPrice = BigDecimal.valueOf((Double) limitPriceObj);
+            } else if (limitPriceObj instanceof Number) {
+                limitPrice = BigDecimal.valueOf(((Number) limitPriceObj).doubleValue());
+            } else if (limitPriceObj instanceof String) {
+                limitPrice = new BigDecimal((String) limitPriceObj);
+            }
+        }
+
         String timeInForce = command.getPayloadValue("timeInForce");
 
         // Create response event
@@ -50,7 +65,6 @@ public class KafkaCommandHandlerService {
         event.setStepId(command.getStepId());
         event.setSourceService("ORDER_SERVICE");
         event.setTimestamp(Instant.now());
-
 
         try {
             // Create new order

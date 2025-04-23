@@ -15,17 +15,18 @@ import Login from "./pages/Login";
 import NavbarSide from "./pages/NavbarSide/NavbarSide";
 import PaymentMethodsManagement from "./pages/PaymentMethod/PaymentMethodsManagement.jsx";
 import Register from "./pages/Register";
-import ResetPassword from "./pages/ResetPassword.jsx";
+import ResetPassword from "./pages/ResetPassword/ResetPassword.jsx";
 import TwoFactorAuthenticationSettings from "./pages/SettingPage/2FASettings/2FASettings.jsx";
 import ChangePassword from "./pages/SettingPage/ChangePassword/ChangePassword.jsx";
+import GenerateRecoveryKeys from "./pages/SettingPage/GenerateRecoveryKeys/GenerateRecoveryKeys.jsx";
 import Setting from "./pages/SettingPage/Setting";
 import Support from "./pages/Support";
 import TransactionDetails from "./pages/TransactionDetails/TransactionDetails.jsx";
 import TransactionHistory from "./pages/TransactionHistory/TransactionHistory.jsx";
 import TwoFactorAuth from "./pages/TwoFactorAuth/TwoFactorAuth.jsx";
 import UpdatePhoneNumber from "./pages/UpdatePhoneNumber/UpdatePhoneNumber.jsx";
-import Wallet from "./pages/Wallet";
-import Withdraw from "./pages/Withdraw";
+import Wallet from "./pages/Wallet.jsx";
+import Withdraw from "./pages/Withdraw.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -51,10 +52,10 @@ const Layout = () => {
           <Route path="/setting" element={<Setting />} />
           <Route path="/setting/2fa-settings" element={<TwoFactorAuthenticationSettings />} />
           <Route path="/setting/change-password" element={<ChangePassword />} />
+          <Route path="/setting/generate-recovery-keys" element={<GenerateRecoveryKeys />} />
           <Route path="/account-dashboard/payment-methods" element={<PaymentMethodsManagement />} />
           <Route path="/account-dashboard/transaction-history" element={<TransactionHistory />} />
           <Route path="/account-dashboard/transaction-history/:transactionId/details" element={<TransactionDetails />} />
-          <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/two-factor-auth" element={<TwoFactorAuth />} /> {/* Add this route */}
           <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />
           <Route path="/profile/disable2FA" element={<Disable2FA />} />
