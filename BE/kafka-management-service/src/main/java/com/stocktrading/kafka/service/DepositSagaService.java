@@ -54,20 +54,25 @@ public class DepositSagaService {
     /**
      * Start a new deposit saga
      */
-    public DepositSagaState startSaga(String userId, String accountId, BigDecimal amount, 
+    public DepositSagaState startSaga(String userId, String accountId, BigDecimal amount,
                                      String currency, String paymentMethodId) {
         String sagaId = UUID.randomUUID().toString();
-        
-        log.info("Starting deposit saga [{}] for account: {}, amount: {}", sagaId, accountId, amount);
-        
+
+        log.debug("Starting saga with ID: {}, amount: {} (type: {})",
+                sagaId, amount, amount.getClass().getName());
+
         DepositSagaState saga = DepositSagaState.initiate(
                 sagaId, userId, accountId, amount, currency, paymentMethodId, maxRetries);
-        
+
+        // Debug: Verify saga fields before saving
+        log.debug("Saga before save: id={}, amount={} (type={})",
+                saga.getSagaId(), saga.getAmount(), saga.getAmount().getClass().getName());
+
         depositSagaRepository.save(saga);
-        
+
         // Process the first step
         processNextStep(saga);
-        
+
         return saga;
     }
     

@@ -5,22 +5,24 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
+import { AppContextProvider } from "./AppContextProvider.jsx";
+import Deposit from "./pages/Deposit.jsx";
+import Disable2FA from "./pages/Disable2FA/Disable2FA.jsx";
 import ForgetPassword from "./pages/ForgetPassword";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Home from "./pages/Home/Home";
-import Wallet from "./pages/Wallet";
-import NavbarSide from "./pages/NavbarSide/NavbarSide";
 import HeaderNavbar from "./pages/HeaderNavbar/HeaderNavbar";
-import Support from "./pages/Support";
+import Home from "./pages/Home/Home";
+import Login from "./pages/Login";
+import NavbarSide from "./pages/NavbarSide/NavbarSide";
+import PaymentMethodsManagement from "./pages/PaymentMethod/PaymentMethodsManagement.jsx";
+import Register from "./pages/Register";
+import TwoFactorAuthenticationSettings from "./pages/SettingPage/2FASettings/2FASettings.jsx";
+import ChangePassword from "./pages/SettingPage/ChangePassword/ChangePassword.jsx";
 import Setting from "./pages/SettingPage/Setting";
+import Support from "./pages/Support";
 import TwoFactorAuth from "./pages/TwoFactorAuth/TwoFactorAuth.jsx";
 import UpdatePhoneNumber from "./pages/UpdatePhoneNumber/UpdatePhoneNumber.jsx";
-import Disable2FA from "./pages/Disable2FA/Disable2FA.jsx";
-import TwoFactorAuthenticationSettings from "./pages/SettingPage/2FASettings/2FASettings.jsx";
-import { AppContextProvider } from "./AppContextProvider.jsx";
-import ChangePassword from "./pages/SettingPage/ChangePassword/ChangePassword.jsx";
-import PaymentMethodsManagement from "./pages/PaymentMethod/PaymentMethodsManagement.jsx";
+import Wallet from "./pages/Wallet";
+import Withdraw from "./pages/Withdraw.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -38,6 +40,8 @@ const Layout = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/withdraw" element={<Withdraw />} />
+          <Route path="/deposit" element={<Deposit />} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/support" element={<Support />} />
           <Route path="/setting" element={<Setting />} />

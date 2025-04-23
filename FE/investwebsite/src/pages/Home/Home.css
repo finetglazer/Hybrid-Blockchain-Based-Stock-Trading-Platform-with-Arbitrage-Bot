@@ -10,6 +10,7 @@
   border-radius: 10px;
   backdrop-filter: blur(10px);
   box-shadow: 5px 0;
+  z-index: -1;
 }
 .main-content-row {
   display: flex;
@@ -67,7 +68,7 @@
   color: white;
 }
 
-.wallet-balance {
+.wallet-currency {
   font-size: 14px;
   color: #aaa;
 }
@@ -109,7 +110,7 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: #7b61ff;
+  background-color: #1ca443c5;
   color: white;
   font-size: 30px;
   display: flex;
@@ -126,11 +127,13 @@
 
 /* Tạo tài khoản */
 .create-trading-account {
-  margin-top: 20px;
+  position: fixed; /* Quan trọng: để nó gắn vào màn hình */
+  bottom: 70px; /* Khoảng cách với đáy */
+  right: 50px; /* Khoảng cách với cạnh phải */
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 10px;
+  z-index: 1000;
 }
 
 .account-question {
@@ -139,21 +142,12 @@
 }
 
 .btn-add-account {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1000;
-
   background-color: #7b61ff;
   color: white;
-  font-size: 20px !important;
+  font-size: 40px !important;
   border-radius: 50% !important;
-  min-width: 50px !important;
-  height: 50px !important;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  min-width: 70px !important;
+  height: 70px !important;
 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   cursor: pointer;

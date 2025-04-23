@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import "./PaymentMethodsManagement.css";
+import { useNavigate } from "react-router-dom";
 
 const PaymentMethodsManagement = () => {
   // {
@@ -23,7 +24,7 @@ const PaymentMethodsManagement = () => {
   //         verificationRequired: true,
   //         verifiedAt: null,
   // },
-
+  const nativigate = useNavigate();
   const [bankAccounts, setBankAccounts] = useState([]);
   const [creditCards, setCreditCards] = useState([]);
   const [debitCards, setDebitCards] = useState([]);
@@ -88,53 +89,70 @@ const PaymentMethodsManagement = () => {
     console.log("render");
 
     const fetchPaymentMethods = async () => {
-        const token = localStorage.getItem("token");
-        try {
-            const response = await axios.get("/accounts/payment-methods/api/v1/me/get", {
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    // "Content-Type": "application/json",
-                    "Accept": "application/json",
-                }
-            });
-            console.log(response);
-            setLoading(false);
-            if (response.data && response.data.status === 1) {
-                const paymentMethods = response.data.data.items;
-                let fetchedBankAccounts = [];
-                let fetchedCreditCards = [];
-                let fetchedDebitCards = [];
-                let fetchedDigitalWallets = [];
-                paymentMethods.forEach((paymentMethod) => {
-                    switch (paymentMethod.type) {
-                        case "BANK_ACCOUNT":
-                            fetchedBankAccounts.push(Object.assign(paymentMethod, {imageSrc: "../../../src/assets/atm-card.png"}));
-                            break;
-                        case "CREDIT_CARD":
-                            fetchedCreditCards.push(Object.assign(paymentMethod, {imageSrc: "../../../src/assets/credit-card.png"}));
-                            break;
-                        case "DEBIT_CARD":
-                            fetchedDebitCards.push(Object.assign(paymentMethod, {imageSrc: "../../../src/assets/debit-card.png"}));
-                            break;
-                        case "DIGITAL_WALLET":
-                            fetchedDigitalWallets.push(Object.assign(paymentMethod, {imageSrc: "../../../src/assets/digital-wallet.png"}));
-                            break;
-                    }
-                });
-                setBankAccounts(fetchedBankAccounts);
-                setCreditCards(fetchedCreditCards);
-                setDebitCards(fetchedDebitCards);
-                setDigitalWallets(fetchedDigitalWallets);
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.get(
+          "/accounts/payment-methods/api/v1/me/get",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        );
+        console.log(response);
+        setLoading(false);
+        if (response.data && response.data.status === 1) {
+          const paymentMethods = response.data.data.items;
+          let fetchedBankAccounts = [];
+          let fetchedCreditCards = [];
+          let fetchedDebitCards = [];
+          let fetchedDigitalWallets = [];
+          paymentMethods.forEach((paymentMethod) => {
+            switch (paymentMethod.type) {
+              case "BANK_ACCOUNT":
+                fetchedBankAccounts.push(
+                  Object.assign(paymentMethod, {
+                    imageSrc: "../../../src/assets/atm-card.png",
+                  })
+                );
+                break;
+              case "CREDIT_CARD":
+                fetchedCreditCards.push(
+                  Object.assign(paymentMethod, {
+                    imageSrc: "../../../src/assets/credit-card.png",
+                  })
+                );
+                break;
+              case "DEBIT_CARD":
+                fetchedDebitCards.push(
+                  Object.assign(paymentMethod, {
+                    imageSrc: "../../../src/assets/debit-card.png",
+                  })
+                );
+                break;
+              case "DIGITAL_WALLET":
+                fetchedDigitalWallets.push(
+                  Object.assign(paymentMethod, {
+                    imageSrc: "../../../src/assets/digital-wallet.png",
+                  })
+                );
+                break;
             }
-            else {
-                setError(response.data);
-            }
+          });
+          setBankAccounts(fetchedBankAccounts);
+          setCreditCards(fetchedCreditCards);
+          setDebitCards(fetchedDebitCards);
+          setDigitalWallets(fetchedDigitalWallets);
+        } else {
+          setError(response.data);
         }
-        catch (e) {
-            setLoading(false);
-            setError(e);
-        }
-      };
+      } catch (e) {
+        setLoading(false);
+        setError(e);
+      }
+    };
 
     fetchPaymentMethods().then(() => {});
   }, []);
@@ -147,11 +165,13 @@ const PaymentMethodsManagement = () => {
         items={[
           {
             title: (
-              <span style={{ color: "rgba(255, 255, 255, 0.6)" }}>
+              <span
+                style={{ color: "rgba(255, 255, 255, 0.6)" }}
+                onClick={() => nativigate("/home")}
+              >
                 Account dashboard
               </span>
             ),
-            href: "/account-dashboard",
           },
           {
             title: (
@@ -168,6 +188,7 @@ const PaymentMethodsManagement = () => {
           },
         ]}
       />
+
       <div className="title">
         <p className="name">Payment methods</p>
         <p className="description">
