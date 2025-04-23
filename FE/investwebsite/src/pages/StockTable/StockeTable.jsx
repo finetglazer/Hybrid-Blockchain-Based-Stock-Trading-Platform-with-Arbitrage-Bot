@@ -58,7 +58,6 @@ const StockTable = () => {
     const [stocks, setStocks] = useState([]);
     const [filteredStocks, setFilteredStocks] = useState([]);
     const [filter, setFilter] = useState('');
-    const [timePeriod, setTimePeriod] = useState('day');
     const [currentPage, setCurrentPage] = useState(1);
     const [stocksHistory, setStocksHistory] = useState({});
     const [loading, setLoading] = useState(true);
@@ -168,16 +167,44 @@ const StockTable = () => {
         }
     };
 
-    // Handle time period change
-    const handleTimePeriodChange = (period) => {
-        setTimePeriod(period);
-    };
-
     // Calculate pagination
     const indexOfLastStock = currentPage * stocksPerPage;
     const indexOfFirstStock = indexOfLastStock - stocksPerPage;
     const currentStocks = filteredStocks.slice(indexOfFirstStock, indexOfLastStock);
     const totalPages = Math.ceil(filteredStocks.length / stocksPerPage);
+
+    // Generate page numbers for pagination
+    const getPageNumbers = () => {
+        const pageNumbers = [];
+        const maxPagesToShow = 5; // Show max 5 page numbers at once
+
+        if (totalPages <= maxPagesToShow) {
+            // Less than maxPagesToShow pages - show all
+            for (let i = 1; i <= totalPages; i++) {
+                pageNumbers.push(i);
+            }
+        } else {
+            // More than maxPagesToShow pages - show current with neighbors
+            const startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+            const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+            if (startPage > 1) {
+                pageNumbers.push(1);
+                if (startPage > 2) pageNumbers.push('...'); // ellipsis
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                pageNumbers.push(i);
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) pageNumbers.push('...'); // ellipsis
+                pageNumbers.push(totalPages);
+            }
+        }
+
+        return pageNumbers;
+    };
 
     // Format percent change
     const formatPercentChange = (change) => {
@@ -190,6 +217,24 @@ const StockTable = () => {
     const getChangeClass = (change) => {
         if (!change && change !== 0) return 'neutral';
         return change >= 0 ? 'positive' : 'negative';
+    };
+
+    // Update this function in StockTable.jsx
+    const formatDetailedTime = (timestamp) => {
+        if (!timestamp) return '';
+
+        try {
+            const date = new Date(timestamp);
+            return date.toLocaleString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+                // Removed the hour, minute, second options
+            });
+        } catch (e) {
+            console.error('Error formatting timestamp:', e);
+            return timestamp;
+        }
     };
 
     if (loading) {
@@ -213,24 +258,7 @@ const StockTable = () => {
                     />
                 </div>
                 <div className="time-period">
-                    <button
-                        className={timePeriod === 'day' ? 'active' : ''}
-                        onClick={() => handleTimePeriodChange('day')}
-                    >
-                        Day
-                    </button>
-                    <button
-                        className={timePeriod === 'week' ? 'active' : ''}
-                        onClick={() => handleTimePeriodChange('week')}
-                    >
-                        Week
-                    </button>
-                    <button
-                        className={timePeriod === 'month' ? 'active' : ''}
-                        onClick={() => handleTimePeriodChange('month')}
-                    >
-                        Month
-                    </button>
+                    <div className="time-label">Daily View</div>
                 </div>
             </div>
 
@@ -248,6 +276,7 @@ const StockTable = () => {
                                 <div className="stock-info">
                                     <div className="stock-symbol">{stock.symbol}</div>
                                     <div className="stock-name">{stock.name}</div>
+                                    <div className="stock-time">{formatDetailedTime(stock.timestamp)}</div>
                                 </div>
                                 <div className="stock-chart">
                                     <Sparkline
@@ -279,6 +308,7 @@ const StockTable = () => {
             {totalPages > 1 && (
                 <div className="pagination">
                     <button
+                        className="prev-btn"
                         disabled={currentPage === 1}
                         onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                     >
@@ -286,10 +316,23 @@ const StockTable = () => {
                     </button>
 
                     <div className="page-numbers">
-                        {currentPage} of {totalPages}
+                        {getPageNumbers().map((pageNum, index) =>
+                            typeof pageNum === 'number' ? (
+                                <button
+                                    key={index}
+                                    className={currentPage === pageNum ? 'active' : ''}
+                                    onClick={() => setCurrentPage(pageNum)}
+                                >
+                                    {pageNum}
+                                </button>
+                            ) : (
+                                <span key={index} className="ellipsis">{pageNum}</span>
+                            )
+                        )}
                     </div>
 
                     <button
+                        className="next-btn"
                         disabled={currentPage === totalPages}
                         onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                     >
@@ -297,6 +340,12 @@ const StockTable = () => {
                     </button>
                 </div>
             )}
+
+            <div className="table-info">
+                {filteredStocks.length > 0 && (
+                    <span>Showing {indexOfFirstStock + 1}-{Math.min(indexOfLastStock, filteredStocks.length)} of {filteredStocks.length} stocks</span>
+                )}
+            </div>
         </div>
     );
 };

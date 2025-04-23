@@ -192,12 +192,12 @@ public class MarketPricePublisher {
     @Scheduled(fixedRate = 5000)
     public void publishPriceUpdates() {
         // Check if market is open (simplified for simulation)
-        LocalDateTime now = LocalDateTime.now();
-        if (now.getDayOfWeek().getValue() >= 6 || // Weekend
-                now.getHour() < 9 || now.getHour() >= 16) { // Outside trading hours (9 AM - 4 PM)
-            // Market closed - no updates
-            return;
-        }
+//        LocalDateTime now = LocalDateTime.now();
+//        if (now.getDayOfWeek().getValue() >= 6 || // Weekend
+//                now.getHour() < 9 || now.getHour() >= 16) { // Outside trading hours (9 AM - 4 PM)
+//            // Market closed - no updates
+//            return;
+//        }
 
         log.info("Publishing market price updates for {} stocks", trackedSymbols.size());
 
