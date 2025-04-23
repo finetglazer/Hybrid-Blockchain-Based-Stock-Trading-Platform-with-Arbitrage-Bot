@@ -46,7 +46,9 @@ public class MarketDataWebSocketHandler extends TextWebSocketHandler {
 
         // Send initial stock data to new connection
         try {
+            log.info("Sending initial data to session: {}", session.getId());
             sendInitialData(session);
+            log.info("Initial data sent successfully to session: {}", session.getId());
         } catch (IOException e) {
             log.error("Error sending initial data to client", e);
         }
@@ -54,8 +56,13 @@ public class MarketDataWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-        log.info("WebSocket connection closed: {}", session.getId());
+        log.info("WebSocket connection closed: {} with status: {}", session.getId(), status);
         sessions.remove(session);
+    }
+
+    @Override
+    public void handleTransportError(WebSocketSession session, Throwable exception) {
+        log.error("WebSocket transport error for session {}: {}", session.getId(), exception.getMessage(), exception);
     }
 
     @Override
@@ -83,10 +90,20 @@ public class MarketDataWebSocketHandler extends TextWebSocketHandler {
         if ("MARKET_PRICES_UPDATED".equals(event.getType())) {
             try {
                 String symbol = event.getPayloadValue("symbol");
-                BigDecimal price = (BigDecimal) event.getPayloadValue("price");
-                BigDecimal bidPrice = (BigDecimal) event.getPayloadValue("bidPrice");
-                BigDecimal askPrice = (BigDecimal) event.getPayloadValue("askPrice");
-                Long volume = event.getPayloadValue("volume");
+                BigDecimal price = BigDecimal.valueOf((Double) event.getPayloadValue("price"));
+                BigDecimal bidPrice = BigDecimal.valueOf((Double) event.getPayloadValue("bidPrice"));
+                BigDecimal askPrice = BigDecimal.valueOf((Double) event.getPayloadValue("askPrice"));
+                Object volumeObj = event.getPayloadValue("volume");
+                Long volume;
+                if (volumeObj instanceof Integer) {
+                    volume = ((Integer) volumeObj).longValue();
+                } else if (volumeObj instanceof Long) {
+                    volume = (Long) volumeObj;
+                } else if (volumeObj instanceof Number) {
+                    volume = ((Number) volumeObj).longValue();
+                } else {
+                    volume = 0L; // Default value
+                }
 
                 // Update current stock data
                 Map<String, Object> stockInfo = new HashMap<>();
@@ -148,8 +165,16 @@ public class MarketDataWebSocketHandler extends TextWebSocketHandler {
         Map<String, Object> initialData = new HashMap<>();
         initialData.put("type", "initialData");
         initialData.put("stocks", new ArrayList<>(stockData.values()));
-        initialData.put("history", stockHistory);
 
+        // Limit history data size - only send most recent 20 points per stock
+        Map<String, List<Map<String, Object>>> limitedHistory = new HashMap<>();
+        stockHistory.forEach((symbol, history) -> {
+            int size = history.size();
+            int start = Math.max(0, size - 20); // Only take last 20 points
+            limitedHistory.put(symbol, history.subList(start, size));
+        });
+
+        initialData.put("history", limitedHistory);
         session.sendMessage(new TextMessage(objectMapper.writeValueAsString(initialData)));
     }
 

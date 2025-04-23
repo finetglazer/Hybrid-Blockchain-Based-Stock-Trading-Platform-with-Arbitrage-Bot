@@ -69,24 +69,34 @@ const StockTable = () => {
     // Connect to WebSocket when component mounts
     useEffect(() => {
         // Connect to WebSocket server
+        console.log("Attempting to connect to WebSocket server...");
         const ws = new WebSocket('ws://localhost:8080/ws/market-data');
         websocket.current = ws;
 
-        ws.onopen = () => {
-            console.log('Connected to market data server');
+        ws.onopen = (event) => {
+            console.log('Connected to market data server', event);
+            setError(null); // Clear any previous errors
         };
 
         ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
+            console.log('Received message from server');
+            try {
+                const data = JSON.parse(event.data);
+                console.log('Parsed data type:', data.type);
 
-            if (data.type === 'initialData') {
-                setStocks(data.stocks);
-                setStocksHistory(data.history || {});
-                setLoading(false);
-            } else if (data.type === 'update') {
-                updateStockData(data.symbol, data.data, data.history);
-            } else if (data.type === 'filteredData') {
-                setFilteredStocks(data.stocks);
+                if (data.type === 'initialData') {
+                    console.log('Received initial data with stocks:', data.stocks?.length || 0);
+                    setStocks(data.stocks || []);
+                    setStocksHistory(data.history || {});
+                    setLoading(false);
+                } else if (data.type === 'update') {
+                    updateStockData(data.symbol, data.data, data.history);
+                } else if (data.type === 'filteredData') {
+                    setFilteredStocks(data.stocks);
+                }
+            } catch (err) {
+                console.error('Error parsing WebSocket message:', err);
+                setError('Failed to process market data');
             }
         };
 
@@ -96,8 +106,11 @@ const StockTable = () => {
             setLoading(false);
         };
 
-        ws.onclose = () => {
-            console.log('Disconnected from market data server');
+        ws.onclose = (event) => {
+            console.log('WebSocket closed with code:', event.code, 'reason:', event.reason);
+            if (event.code !== 1000) { // Normal closure
+                setError(`Connection closed unexpectedly. Code: ${event.code}, Reason: ${event.reason}`);
+            }
         };
 
         // Clean up WebSocket connection on unmount

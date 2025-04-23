@@ -35,9 +35,9 @@
 }
 
 .time-period button {
-    background-color: rgba(28, 27, 26, 0.999);
-    color: #a7a7a7;
-    border: 1px solid #b8b8b8;
+    background-color: #1ca443c5;
+    color: white;
+    border: 1px solid #1ca443c5;
     padding: 8px 16px;
     cursor: pointer;
     font-size: 14px;
@@ -69,7 +69,7 @@
 }
 
 .stock-info {
-    width: 200px;
+    width: 240px;
     text-align: left;
 }
 
@@ -82,6 +82,12 @@
     color: #a8a8a8;
     font-size: 0.9rem;
     margin-top: 3px;
+}
+
+.stock-time {
+    color: #767676;
+    font-size: 0.8rem;
+    margin-top: 5px;
 }
 
 .stock-chart {
@@ -119,7 +125,7 @@
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-    gap: 20px;
+    gap: 10px;
 }
 
 .pagination button {
@@ -130,6 +136,7 @@
     cursor: pointer;
     font-size: 14px;
     border-radius: 4px;
+    min-width: 40px;
 }
 
 .pagination button:disabled {
@@ -137,9 +144,23 @@
     cursor: not-allowed;
 }
 
+.pagination button.active {
+    background-color: #1ca443c5;
+    border-color: #1ca443c5;
+}
+
+.prev-btn, .next-btn {
+    padding: 8px 12px;
+}
+
 .page-numbers {
-    font-size: 14px;
-    color: #a8a8a8;
+    display: flex;
+    gap: 5px;
+}
+
+.ellipsis {
+    color: white;
+    padding: 8px 5px;
 }
 
 .loading, .error, .no-stocks {
