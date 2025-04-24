@@ -289,4 +289,20 @@ public class TradingAccountServiceImpl implements TradingAccountService {
         int randomNumber = 10000 + rand.nextInt(90000);
         return prefix + "-" + date + "-" + randomNumber;
     }
+
+
+    // get the list of names of all trading account of an user which is active
+    @Override
+    public BaseResponse<?> getUserAccountNames(String userId) {
+        List<TradingAccount> tradingAccounts = tradingAccountRepository.findAllByUserIdAndStatus(userId, TradingAccount.AccountStatus.ACTIVE.name());
+        List<String> accountNames = new ArrayList<>();
+        for (TradingAccount tradingAccount : tradingAccounts) {
+            accountNames.add(tradingAccount.getNickname());
+        }
+        return new BaseResponse<>(
+                Const.STATUS_RESPONSE.SUCCESS,
+                "Retrieved account names successfully",
+                accountNames
+        );
+    }
 }

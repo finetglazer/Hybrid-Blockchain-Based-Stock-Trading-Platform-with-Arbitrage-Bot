@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './BuyOrderForm.css';
+import axios from 'axios';
 
-// Custom filterable dropdown component
-const FilterableDropdown = ({ options, value, onChange, name, id, required, label, resetKey }) => {
+/**
+ * FilterableDropdown component for searchable dropdowns
+ */
+const FilterableDropdown = ({ options, value, onChange, name, id, required, label, resetKey, disabled, isLoading }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [filterText, setFilterText] = useState('');
     const [filteredOptions, setFilteredOptions] = useState(options);
@@ -19,11 +22,11 @@ const FilterableDropdown = ({ options, value, onChange, name, id, required, labe
 
     // Set initial filterText to match the value prop
     useEffect(() => {
-        // Only set initial value once
-        if (!filterText && value) {
+        // Only set initial value once when value changes
+        if (value) {
             setFilterText(value);
         }
-    }, []);  // Empty dependency array means this runs only once
+    }, [value]);
 
     // Filter options when filterText changes
     useEffect(() => {
@@ -43,8 +46,6 @@ const FilterableDropdown = ({ options, value, onChange, name, id, required, labe
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsOpen(false);
                 setIsFocused(false);
-                // Don't reset the filter text when clicking outside
-                // This allows users to keep typing where they left off
             }
         };
 
@@ -66,9 +67,9 @@ const FilterableDropdown = ({ options, value, onChange, name, id, required, labe
     };
 
     const toggleDropdown = () => {
+        if (disabled || isLoading) return;
         setIsOpen(!isOpen);
         if (!isOpen) {
-            // Focus the input when opening
             setTimeout(() => {
                 if (inputRef.current) {
                     inputRef.current.focus();
@@ -78,6 +79,7 @@ const FilterableDropdown = ({ options, value, onChange, name, id, required, labe
     };
 
     const handleInputFocus = () => {
+        if (disabled || isLoading) return;
         setIsOpen(true);
         setIsFocused(true);
     };
@@ -85,7 +87,7 @@ const FilterableDropdown = ({ options, value, onChange, name, id, required, labe
     return (
         <div className="form-group" ref={dropdownRef}>
             <label htmlFor={id}>{label}</label>
-            <div className="custom-dropdown">
+            <div className={`custom-dropdown ${disabled ? 'disabled' : ''} ${isLoading ? 'loading' : ''}`}>
                 <div className="dropdown-input-container">
                     <input
                         ref={inputRef}
@@ -95,31 +97,34 @@ const FilterableDropdown = ({ options, value, onChange, name, id, required, labe
                         value={filterText}
                         onChange={handleInputChange}
                         onFocus={handleInputFocus}
-                        placeholder={`Search or select ${label}`}
+                        placeholder={isLoading ? 'Loading...' : `Search or select ${label}`}
                         className="dropdown-input"
                         required={required}
+                        disabled={disabled || isLoading}
                     />
                     <button
                         type="button"
                         className="dropdown-toggle"
                         onClick={toggleDropdown}
+                        disabled={disabled || isLoading}
                     >
                         <span className={`dropdown-arrow ${isOpen ? 'open' : ''}`}>▼</span>
                     </button>
                 </div>
 
-                {isOpen && (
+                {isOpen && !disabled && !isLoading && (
                     <ul className="dropdown-options">
-                        {filteredOptions.map((option, index) => (
-                            <li
-                                key={index}
-                                className={`dropdown-option ${option === value ? 'selected' : ''}`}
-                                onClick={() => handleOptionClick(option)}
-                            >
-                                {option}
-                            </li>
-                        ))}
-                        {filteredOptions.length === 0 && (
+                        {filteredOptions.length > 0 ? (
+                            filteredOptions.map((option, index) => (
+                                <li
+                                    key={index}
+                                    className={`dropdown-option ${option === value ? 'selected' : ''}`}
+                                    onClick={() => handleOptionClick(option)}
+                                >
+                                    {option}
+                                </li>
+                            ))
+                        ) : (
                             <li className="dropdown-option no-results">No matches found</li>
                         )}
                     </ul>
@@ -129,23 +134,20 @@ const FilterableDropdown = ({ options, value, onChange, name, id, required, labe
     );
 };
 
-const BuyOrderForm = ({ stockData }) => {
-    // Mock data for accounts and symbols
-    const accounts = [
-        "Trading Account #1",
-        "Trading Account #2",
-        "Retirement Account",
-        "Joint Account",
-        "Individual Account #1",
-        "Individual Account #2",
-        "Investment Account",
-        "Savings Account",
-        "IRA Account",
-        "401K Account",
-        "Educational Fund Account",
-        "Family Trust Account"
-    ];
+/**
+ * Buy Order Form Component
+ * @param {Object} props - Component props
+ * @param {Object} props.stockData - Selected stock data
+ * @param {Function} props.onSubmit - Function to handle form submission
+ * @param {boolean} props.disabled - Whether the form is disabled
+ */
+const BuyOrderForm = ({ stockData, onSubmit, disabled = false }) => {
+    // State for accounts fetched from API
+    const [accounts, setAccounts] = useState([]);
+    const [accountsLoading, setAccountsLoading] = useState(true);
+    const [accountsError, setAccountsError] = useState(null);
 
+    // Mock data for symbols
     const symbols = [
         "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA",
         "META", "NVDA", "JPM", "V", "JNJ",
@@ -170,6 +172,50 @@ const BuyOrderForm = ({ stockData }) => {
 
     // Add a reset key to trigger resets in child components
     const [resetKey, setResetKey] = useState(0);
+
+    // Fetch accounts from API
+    useEffect(() => {
+        const fetchAccounts = async () => {
+            try {
+                setAccountsLoading(true);
+                const token = localStorage.getItem("token");
+                const response = await axios.get('/accounts/api/v1/get-names', { // Use relative path
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    }
+                });
+
+                if (response.data && response.data.status === 1) {
+                    setAccounts(response.data.data || []);
+                    setAccountsError(null);
+                } else {
+                    throw new Error(response.data?.msg || 'Failed to fetch accounts');
+                }
+            } catch (error) {
+                console.error('Error fetching accounts:', error);
+                setAccountsError(error.message || 'Failed to load trading accounts');
+
+                // Set some fallback accounts in case of error
+                setAccounts([
+                    "Trading Account #1",
+                    "Trading Account #2",
+                    "Error loading accounts"
+                ]);
+            } finally {
+                setAccountsLoading(false);
+            }
+        };
+
+        fetchAccounts();
+    }, []);
+
+    // Update symbol when stockData changes
+    useEffect(() => {
+        if (stockData?.symbol) {
+            setFormData(prev => ({ ...prev, symbol: stockData.symbol }));
+        }
+    }, [stockData]);
 
     // Calculate required funds only for LIMIT orders
     useEffect(() => {
@@ -207,14 +253,23 @@ const BuyOrderForm = ({ stockData }) => {
     // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Just log the form data since we're not connecting to an API yet
-        console.log("Order submitted:", formData);
-        alert(`Order submitted!\n${JSON.stringify(formData, null, 2)}`);
+        if (onSubmit && !disabled) {
+            onSubmit(formData);
+        }
     };
 
+    const formTitle = disabled ? "Processing Order..." : "Place Buy Order";
+
     return (
-        <div className="buy-order-form-container">
-            <h2>Place Buy Order</h2>
+        <div className={`buy-order-form-container ${disabled ? 'disabled' : ''}`}>
+            <h2>{formTitle}</h2>
+
+            {accountsError && (
+                <div className="api-error-message">
+                    <p>{accountsError}</p>
+                    <p>Using fallback account list...</p>
+                </div>
+            )}
 
             <form onSubmit={handleSubmit}>
                 {/* Account Field - Single Column */}
@@ -228,6 +283,8 @@ const BuyOrderForm = ({ stockData }) => {
                         required={true}
                         label="Account"
                         resetKey={resetKey}
+                        disabled={disabled}
+                        isLoading={accountsLoading}
                     />
                 </div>
 
@@ -242,6 +299,7 @@ const BuyOrderForm = ({ stockData }) => {
                         required={true}
                         label="Symbol"
                         resetKey={resetKey}
+                        disabled={disabled}
                     />
                 </div>
 
@@ -255,6 +313,8 @@ const BuyOrderForm = ({ stockData }) => {
                             value={formData.orderType}
                             onChange={handleChange}
                             required
+                            disabled={disabled}
+                            className={disabled ? 'disabled' : ''}
                         >
                             <option value="MARKET">MARKET</option>
                             <option value="LIMIT">LIMIT</option>
@@ -276,6 +336,8 @@ const BuyOrderForm = ({ stockData }) => {
                             step="1"
                             required
                             placeholder="Enter quantity"
+                            disabled={disabled}
+                            className={disabled ? 'disabled' : ''}
                         />
                     </div>
                 </div>
@@ -291,7 +353,8 @@ const BuyOrderForm = ({ stockData }) => {
                                 value={formData.timeInForce}
                                 onChange={handleChange}
                                 required
-                                className="time-in-force-select"
+                                className={`time-in-force-select ${disabled ? 'disabled' : ''}`}
+                                disabled={disabled}
                             >
                                 <option value="DAY">DAY</option>
                                 <option value="GTC">GTC (Good Till Canceled)</option>
@@ -317,6 +380,8 @@ const BuyOrderForm = ({ stockData }) => {
                                     min="0.01"
                                     required
                                     placeholder="Enter price"
+                                    disabled={disabled}
+                                    className={disabled ? 'disabled' : ''}
                                 />
                             </div>
                         </div>
@@ -331,9 +396,29 @@ const BuyOrderForm = ({ stockData }) => {
                     </div>
                 )}
 
+                {/* Stock price display if stockData is available */}
+                {stockData && stockData.price && (
+                    <div className="current-price-display">
+                        <span className="price-label">Current Market Price:</span>
+                        <span className="price-value">${parseFloat(stockData.price).toFixed(2)}</span>
+                    </div>
+                )}
+
                 <div className="form-actions">
-                    <button onClick={handleReset} className="reset-button">Reset</button>
-                    <button type="submit" className="submit-button">Place Order</button>
+                    <button
+                        onClick={handleReset}
+                        className="reset-button"
+                        disabled={disabled}
+                    >
+                        Reset
+                    </button>
+                    <button
+                        type="submit"
+                        className="submit-button"
+                        disabled={disabled || accountsLoading}
+                    >
+                        {disabled ? 'Processing...' : 'Place Order'}
+                    </button>
                 </div>
             </form>
         </div>

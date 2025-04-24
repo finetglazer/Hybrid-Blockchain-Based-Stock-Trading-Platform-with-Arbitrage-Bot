@@ -1,0 +1,121 @@
+/* OrderProgressTracker.css */
+.order-progress-tracker {
+    background: #1c1b1a;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid rgba(50, 50, 50, 0.8);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.status-title {
+    color: #ccc;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(80, 80, 80, 0.5);
+    padding-bottom: 10px;
+}
+
+.status-completed {
+    color: #1ca443;
+    font-weight: bold;
+}
+
+.status-failed, .status-compensation_completed {
+    color: #ff4d4d;
+    font-weight: bold;
+}
+
+.status-in_progress, .status-started {
+    color: #3498db;
+    font-weight: bold;
+}
+
+.status-compensating {
+    color: #f39c12;
+    font-weight: bold;
+}
+
+.status-limit_order_pending {
+    color: #9b59b6;
+    font-weight: bold;
+}
+
+.steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.steps-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.steps-container::-webkit-scrollbar-track {
+    background: #333;
+    border-radius: 10px;
+}
+
+.steps-container::-webkit-scrollbar-thumb {
+    background-color: #1ca443c5;
+    border-radius: 10px;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 4px;
+    background: #2a2a2a;
+    color: #888;
+    transition: all 0.3s ease;
+}
+
+.step.active {
+    background: rgba(28, 164, 67, 0.2);
+    color: white;
+    border-left: 4px solid #1ca443c5;
+    padding-left: 11px;
+}
+
+.step.completed {
+    border-left: 4px solid #1ca443c5;
+    padding-left: 11px;
+    color: white;
+    background: rgba(28, 164, 67, 0.1);
+}
+
+.step.failed {
+    background: rgba(145, 0, 0, 0.3);
+    color: white;
+    border-left: 4px solid #910000;
+    padding-left: 11px;
+}
+
+.step-indicator {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.step.completed .step-indicator {
+    color: #1ca443;
+}
+
+.step.failed .step-indicator {
+    color: #ff4d4d;
+}
+
+.step-name {
+    flex: 1;
+    font-size: 14px;
+}

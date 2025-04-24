@@ -1,0 +1,53 @@
+/* StockTableWithOrderForm.css */
+.stock-trading-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    color: white;
+}
+
+.stock-table-section {
+    margin-bottom: 30px;
+}
+
+.order-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-error {
+    background-color: rgba(200, 0, 0, 0.2);
+    border-left: 4px solid #ff4d4d;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 4px;
+    color: #ff8080;
+}
+
+.order-error p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Responsive layout for larger screens */
+@media (min-width: 1200px) {
+    .stock-trading-container {
+        flex-direction: row;
+        gap: 30px;
+        align-items: flex-start;
+    }
+
+    .stock-table-section {
+        flex: 2;
+        margin-bottom: 0;
+    }
+
+    .order-section {
+        flex: 1;
+        position: sticky;
+        top: 20px;
+    }
+}
