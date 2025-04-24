@@ -238,6 +238,16 @@ public class MarketPricePublisher {
         long volume = 1000 + random.nextInt(99000);
 
         // Update stock data
+        /*
+        Explain these below fields:
+        - previousPrice: The last price before the update
+        - currentPrice: The new price after the update
+        - bidPrice: The price at which buyers are willing to buy the stock
+        - askPrice: The price at which sellers are willing to sell the stock
+        - volume: The number of shares traded in the last update
+        - cumulativeVolume: The total volume of shares traded since the last update
+        - lastUpdate: The timestamp of the last update
+         */
         stockData.previousPrice = lastPrice;
         stockData.currentPrice = newPrice;
         stockData.bidPrice = bidPrice;
@@ -245,6 +255,8 @@ public class MarketPricePublisher {
         stockData.volume = volume;
         stockData.cumulativeVolume += volume;
         stockData.lastUpdate = Instant.now();
+
+
 
         // Update high/low prices
         if (stockData.highPrice == null || newPrice.compareTo(stockData.highPrice) > 0) {

@@ -26,6 +26,7 @@ import TransactionHistory from "./pages/TransactionHistory/TransactionHistory.js
 import TransactionDetails from "./pages/TransactionDetails/TransactionDetails.jsx";
 import GenerateRecoveryKeys from "./pages/SettingPage/GenerateRecoveryKeys/GenerateRecoveryKeys.jsx";
 import StockTable from "./pages/StockTable/StockeTable.jsx";
+import StockTableWithOrderForm from "./pages/StockTable/StockTableWithOrderForm.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -57,7 +58,7 @@ const Layout = () => {
           <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />
           <Route path="/profile/disable2FA" element={<Disable2FA />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/market" element={<StockTable />} />
+          <Route path="/market" element={<StockTableWithOrderForm />} />
         </Routes>
       </AppContextProvider>
     </>

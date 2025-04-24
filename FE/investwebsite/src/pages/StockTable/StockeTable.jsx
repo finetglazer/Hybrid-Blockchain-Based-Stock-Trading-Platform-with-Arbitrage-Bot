@@ -379,6 +379,13 @@ const StockTable = () => {
                 </div>
             </div>
 
+            <div className="chart-headers">
+                <div className="chart-header-space"></div>
+                <div className="chart-header-label">VOLUME</div>
+                <div className="chart-header-label">PRICE</div>
+                <div className="chart-header-space"></div>
+            </div>
+
             <div className="stock-table">
                 {currentStocks.length === 0 ? (
                     <div className="no-stocks">No stocks found</div>
