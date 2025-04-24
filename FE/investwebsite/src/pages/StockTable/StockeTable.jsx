@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './StockTable.css';
 
-// Simple sparkline chart component
+// Modified Sparkline component with vertical line indicator
 const Sparkline = ({ data, color, fillColor, type = 'line', height = 50, width = 150 }) => {
     const canvasRef = useRef(null);
+    const tooltipRef = useRef(null);
+    const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, value: null, date: null });
 
     useEffect(() => {
         if (!data || !data.length || !canvasRef.current) return;
@@ -11,6 +13,7 @@ const Sparkline = ({ data, color, fillColor, type = 'line', height = 50, width =
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         const values = type === 'volume' ? data.map(point => point.volume) : data.map(point => point.price);
+        const dates = data.map(point => point.timestamp ? new Date(point.timestamp) : null);
 
         // Clear canvas
         ctx.clearRect(0, 0, width, height);
@@ -19,6 +22,9 @@ const Sparkline = ({ data, color, fillColor, type = 'line', height = 50, width =
         const min = Math.min(...values);
         const max = Math.max(...values);
         const range = max - min || 1; // Avoid division by zero
+
+        // Store point coordinates for tooltip interaction
+        const points = [];
 
         // Set line style
         ctx.strokeStyle = color;
@@ -29,6 +35,9 @@ const Sparkline = ({ data, color, fillColor, type = 'line', height = 50, width =
         values.forEach((value, i) => {
             const x = (i / (values.length - 1)) * width;
             const y = height - ((value - min) / range) * height;
+
+            // Store coordinates and values for tooltip
+            points.push({ x, y, value, date: dates[i] });
 
             if (i === 0) {
                 ctx.moveTo(x, y);
@@ -49,9 +58,117 @@ const Sparkline = ({ data, color, fillColor, type = 'line', height = 50, width =
             ctx.fill();
             ctx.globalAlpha = 1.0;
         }
+
+        // Add mouse event listeners
+        const handleMouseMove = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+
+            // Find closest point
+            let closestPoint = null;
+            let closestDistance = Infinity;
+
+            points.forEach(point => {
+                const distance = Math.abs(point.x - mouseX);
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestPoint = point;
+                }
+            });
+
+            // Only show tooltip if we're reasonably close to a point
+            if (closestDistance < 10 && closestPoint) {
+                setTooltip({
+                    visible: true,
+                    x: closestPoint.x,
+                    y: closestPoint.y,
+                    value: closestPoint.value,
+                    date: closestPoint.date
+                });
+            } else {
+                setTooltip(prev => ({ ...prev, visible: false }));
+            }
+        };
+
+        const handleMouseOut = () => {
+            setTooltip(prev => ({ ...prev, visible: false }));
+        };
+
+        canvas.addEventListener('mousemove', handleMouseMove);
+        canvas.addEventListener('mouseout', handleMouseOut);
+
+        return () => {
+            canvas.removeEventListener('mousemove', handleMouseMove);
+            canvas.removeEventListener('mouseout', handleMouseOut);
+        };
     }, [data, color, fillColor, type, height, width]);
 
-    return <canvas ref={canvasRef} height={height} width={width} />;
+    // Format value for display
+    const formatValue = (value) => {
+        if (type === 'volume') {
+            return Number(value).toLocaleString();
+        } else {
+            return Number(value).toFixed(2);
+        }
+    };
+
+    // Format date for display
+    const formatDate = (date) => {
+        if (!date) return '';
+        return date.toISOString().split('T')[0];
+    };
+
+    return (
+        <div style={{ position: 'relative', width, height }}>
+            <canvas ref={canvasRef} height={height} width={width} />
+
+            {tooltip.visible && (
+                <>
+                    {/* Vertical red line indicator */}
+                    <div
+                        style={{
+                            position: 'absolute',
+                            left: `${tooltip.x}px`,
+                            top: 0,
+                            width: '1px',
+                            height: '100%',
+                            backgroundColor: 'red',
+                            pointerEvents: 'none',
+                            zIndex: 5
+                        }}
+                    />
+
+                    {/* Tooltip */}
+                    <div
+                        ref={tooltipRef}
+                        style={{
+                            position: 'absolute',
+                            left: `${tooltip.x}px`,
+                            top: `${tooltip.y - 40}px`,
+                            background: '#222',
+                            color: 'white',
+                            padding: '4px 8px',
+                            borderRadius: '3px',
+                            fontSize: '12px',
+                            pointerEvents: 'none',
+                            transform: 'translateX(-50%)',
+                            zIndex: 10,
+                            border: '1px solid #444'
+                        }}
+                    >
+                        {type === 'volume' ? (
+                            <div>{formatValue(tooltip.value)}</div>
+                        ) : (
+                            <div>
+                                <div>{formatValue(tooltip.value)}</div>
+                                <div>{formatDate(tooltip.date)}</div>
+                            </div>
+                        )}
+                    </div>
+                </>
+            )}
+        </div>
+    );
 };
 
 const StockTable = () => {

@@ -242,3 +242,19 @@
     filter: brightness(1) blur(0px);
     transform: scale(1.05);
 }
+
+.stock-chart {
+    position: relative;
+}
+
+.sparkline-tooltip {
+    position: absolute;
+    background: #222;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 10;
+    border: 1px solid #444;
+}
