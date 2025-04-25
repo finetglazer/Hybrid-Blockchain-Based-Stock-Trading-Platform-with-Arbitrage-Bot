@@ -117,35 +117,42 @@ const StockTableWithOrderForm = () => {
     }, [selectedStock]);
 
     return (
-        <div className="stock-trading-container">
-            {/* Stock table section */}
-            <div className="stock-table-section">
-                <StockTable onSelectStock={handleStockSelect} />
+        <>
+            {/* Added page title */}
+            <div className="page-header">
+                <h1 className="page-title">Stock Trading Dashboard</h1>
             </div>
 
-            {/* Order form and status section */}
-            <div className="order-section">
-                <BuyOrderForm
-                    stockData={selectedStock}
-                    onSubmit={handleSubmitOrder}
-                    disabled={!!activeOrderId}
-                />
+            <div className="stock-trading-container">
+                {/* Stock table section */}
+                <div className="stock-table-section">
+                    <StockTable onSelectStock={handleStockSelect} />
+                </div>
 
-                {orderError && (
-                    <div className="order-error">
-                        <p>{orderError}</p>
-                    </div>
-                )}
-
-                {orderStatus && (
-                    <OrderProgressTracker
-                        currentStep={orderStatus.currentStep}
-                        completedSteps={orderStatus.completedSteps || []}
-                        status={orderStatus.status}
+                {/* Order form and status section */}
+                <div className="order-section">
+                    <BuyOrderForm
+                        stockData={selectedStock}
+                        onSubmit={handleSubmitOrder}
+                        disabled={!!activeOrderId}
                     />
-                )}
+
+                    {orderError && (
+                        <div className="order-error">
+                            <p>{orderError}</p>
+                        </div>
+                    )}
+
+                    {orderStatus && (
+                        <OrderProgressTracker
+                            currentStep={orderStatus.currentStep}
+                            completedSteps={orderStatus.completedSteps || []}
+                            status={orderStatus.status}
+                        />
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

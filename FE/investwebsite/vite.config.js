@@ -10,14 +10,14 @@ export default defineConfig({
     proxy: {
       "/api": {
         // target: "https://good-musical-joey.ngrok-free.app",
-        target: ' https://6c4f395560672a.lhr.life',
+        target: 'https://47bad567ee33f3.lhr.life',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
         logLevel: 'debug',
       },
       '/users': {
         // target: 'https://good-musical-joey.ngrok-free.app',
-        target: ' https://6c4f395560672a.lhr.life',
+        target: 'https://47bad567ee33f3.lhr.life',
         changeOrigin: true,
         logLevel: 'debug',
         configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
@@ -29,7 +29,7 @@ export default defineConfig({
         }
       },
       '/accounts': {
-        target: ' https://6c4f395560672a.lhr.life',
+        target: 'https://47bad567ee33f3.lhr.life',
         // target: 'https://good-musical-joey.ngrok-free.app',
         changeOrigin: true,
         logLevel: 'debug',
@@ -42,7 +42,7 @@ export default defineConfig({
         }
       },
       '/sagas': {
-        target: ' https://6c4f395560672a.lhr.life',
+        target: 'https://47bad567ee33f3.lhr.life',
         // target: 'https://good-musical-joey.ngrok-free.app',
         changeOrigin: true,
         logLevel: 'debug',
