@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './OrderNotificationModal.css';
 
 /**
@@ -8,6 +8,7 @@ import './OrderNotificationModal.css';
  * @param {Object} props - Component props
  * @param {boolean} props.isSuccess - Whether the order was successful
  * @param {Object} props.orderDetails - Details about the order
+ * @param {string} props.errorMessage - Error message from backend when order fails
  * @param {Function} props.onViewPortfolio - Callback for the "View Portfolio" button
  * @param {Function} props.onClose - Callback for the "Close" button
  * @returns {JSX.Element} - The notification modal
@@ -15,14 +16,28 @@ import './OrderNotificationModal.css';
 const OrderNotificationModal = ({
                                     isSuccess,
                                     orderDetails,
+                                    errorMessage,
                                     onViewPortfolio,
                                     onClose
                                 }) => {
+    const [completedTime, setCompletedTime] = useState('');
+
+    useEffect(() => {
+        const now = new Date();
+        const formattedTime = now.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        const formattedDate = now.toLocaleDateString();
+        setCompletedTime(`${formattedDate} ${formattedTime}`);
+    }, []);
+
     const status = isSuccess ? 'success' : 'failed';
     const title = isSuccess ? 'Order Completed' : 'Order Failed';
     const message = isSuccess
         ? 'Your order has been executed successfully.'
-        : 'There was a problem processing your order.';
+        : errorMessage || 'There was a problem processing your order.';
 
     return (
         <div className="order-notification-overlay">
@@ -72,6 +87,16 @@ const OrderNotificationModal = ({
                 <h2 className={`notification-title ${status}`}>{title}</h2>
                 <p className="notification-message">{message}</p>
 
+                {/* Additional detailed error information section */}
+                {!isSuccess && errorMessage && (
+                    <div className="notification-order-details error-details">
+                        <div className="order-detail-item">
+                            <span className="order-detail-label">Error Details:</span>
+                            <span className="order-detail-value error-value">{errorMessage}</span>
+                        </div>
+                    </div>
+                )}
+
                 {orderDetails && (
                     <div className="notification-order-details">
                         <div className="order-detail-item">
@@ -98,6 +123,10 @@ const OrderNotificationModal = ({
                                 <span className="order-detail-value">${parseFloat(orderDetails.limitPrice).toFixed(2)}</span>
                             </div>
                         )}
+                        <div className="order-detail-item">
+                            <span className="order-detail-label">Time Completed:</span>
+                            <span className="order-detail-value">{completedTime}</span>
+                        </div>
                     </div>
                 )}
 
