@@ -4,18 +4,20 @@
     flex-direction: column;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 15px;
     color: white;
+    gap: 15px;
+    min-height: calc(100vh - 60px); /* Use most of viewport height */
 }
 
 .stock-table-section {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .order-section {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
 }
 
 .order-error {
@@ -32,22 +34,57 @@
     font-size: 14px;
 }
 
-/* Responsive layout for larger screens */
-@media (min-width: 1200px) {
+/* Responsive layout for smaller screens */
+@media (min-width: 768px) {
     .stock-trading-container {
         flex-direction: row;
-        gap: 30px;
+        gap: 20px;
         align-items: flex-start;
     }
 
     .stock-table-section {
-        flex: 2;
+        flex: 3;
         margin-bottom: 0;
     }
 
     .order-section {
-        flex: 1;
+        flex: 2;
         position: sticky;
         top: 20px;
+        z-index: 5;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+        padding-bottom: 20px; /* Add space at bottom when scrolling */
     }
+}
+
+/* Adjustments for larger screens */
+@media (min-width: 1200px) {
+    .stock-trading-container {
+        gap: 30px;
+        padding: 20px;
+    }
+
+    .stock-table-section {
+        flex: 3.5;
+    }
+
+    .order-section {
+        flex: 2;
+    }
+}
+
+/* Add a background to the order section to make it stand out */
+.order-section {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid rgba(50, 50, 50, 0.8);
+}
+
+/* Adjust the buy order form to fit better within the order section */
+.buy-order-form-container {
+    margin: 0 !important; /* Override the default margin */
+    width: 100%;
+    max-width: none;
 }

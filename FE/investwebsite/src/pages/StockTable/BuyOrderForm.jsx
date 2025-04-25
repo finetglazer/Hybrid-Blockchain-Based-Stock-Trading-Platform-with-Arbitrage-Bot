@@ -173,24 +173,29 @@ const BuyOrderForm = ({ stockData, onSubmit, disabled = false }) => {
     // Add a reset key to trigger resets in child components
     const [resetKey, setResetKey] = useState(0);
 
+    const [accountOptions, setAccountOptions] = useState([]); // Store full account objects
+
     // Fetch accounts from API
     useEffect(() => {
         const fetchAccounts = async () => {
             try {
                 setAccountsLoading(true);
                 const token = localStorage.getItem("token");
-                const response = await axios.get('/accounts/api/v1/get-names', { // Use relative path
+                const response = await axios.get('/accounts/api/v1/get-names', {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json",
                     }
                 });
 
-                if (response.data && response.data.status === 1) {
-                    setAccounts(response.data.data || []);
-                    setAccountsError(null);
+                if (response.data.status === 1) {
+                    // Store full account objects
+                    setAccountOptions(response.data.data);
+                    // Extract just the names for display
+                    setAccounts(response.data.data.map(account => account.name));
                 } else {
-                    throw new Error(response.data?.msg || 'Failed to fetch accounts');
+                    setAccountsError(response.data.msg || 'Failed to load trading accounts');
+                    setAccounts([]);
                 }
             } catch (error) {
                 console.error('Error fetching accounts:', error);
@@ -254,7 +259,14 @@ const BuyOrderForm = ({ stockData, onSubmit, disabled = false }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (onSubmit && !disabled) {
-            onSubmit(formData);
+            // Find the selected account object by name
+            const selectedAccount = accountOptions.find(acc => acc.name === formData.account);
+
+            // Include the account ID in the form data
+            onSubmit({
+                ...formData,
+                accountId: selectedAccount?.id
+            });
         }
     };
 

@@ -9,6 +9,7 @@ import axios from 'axios';
 export const submitOrder = async (orderData) => {
     const token = localStorage.getItem("token");
     try {
+        // Use relative path without leading slash
         const response = await axios.post("/sagas/api/v1/orders/buy", orderData, {
             headers: {
                 "Authorization": `Bearer ${token}`,

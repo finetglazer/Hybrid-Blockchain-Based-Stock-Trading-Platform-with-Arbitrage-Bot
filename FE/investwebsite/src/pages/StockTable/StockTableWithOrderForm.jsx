@@ -5,6 +5,7 @@ import BuyOrderForm from './BuyOrderForm';
 import OrderProgressTracker from './OrderProgressTracker';
 import { submitOrder, getOrderStatus } from '../../services/orderService';
 import './StockTableWithOrderForm.css';
+import {getUserIdFromToken} from "../../utils/auth.js";
 
 const StockTableWithOrderForm = () => {
     // State for selected stock
@@ -23,7 +24,7 @@ const StockTableWithOrderForm = () => {
 
     // Hard-coded user and account IDs for demo purposes
     // In a real app, these would come from auth context or user selection
-    const userId = "67d3f1ac3bc6d448649314fa";
+    const userId = getUserIdFromToken();
     const accountId = "67f78822422684206f613a40";
 
     // Function to handle stock selection from the table
@@ -31,7 +32,6 @@ const StockTableWithOrderForm = () => {
         setSelectedStock(stock);
     };
 
-    // Function to handle order submission
     const handleSubmitOrder = async (formData) => {
         try {
             // Clear any previous errors
@@ -39,7 +39,7 @@ const StockTableWithOrderForm = () => {
 
             const orderData = {
                 userId: userId,
-                accountId: accountId,
+                accountId: formData.accountId, // From the form
                 stockSymbol: formData.symbol,
                 orderType: formData.orderType,
                 quantity: parseInt(formData.quantity),
