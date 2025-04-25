@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import StockTable from './StockeTable';
 import BuyOrderForm from './BuyOrderForm';
 import OrderProgressTracker from './OrderProgressTracker';
+import OrderNotificationModal from './OrderNotificationModal';
 import { submitOrder, getOrderStatus } from '../../services/orderService';
 import './StockTableWithOrderForm.css';
-import {getUserIdFromToken} from "../../utils/auth.js";
+import { getUserIdFromToken } from "../../utils/auth.js";
 
 const StockTableWithOrderForm = () => {
     // State for selected stock
@@ -15,6 +16,11 @@ const StockTableWithOrderForm = () => {
     const [activeOrderId, setActiveOrderId] = useState(null);
     const [orderStatus, setOrderStatus] = useState(null);
     const [orderError, setOrderError] = useState(null);
+
+    // State for notification modal
+    const [showNotification, setShowNotification] = useState(false);
+    const [orderComplete, setOrderComplete] = useState(false);
+    const [orderSuccess, setOrderSuccess] = useState(false);
 
     // Ref for polling interval
     const pollingInterval = useRef(null);
@@ -62,6 +68,23 @@ const StockTableWithOrderForm = () => {
         }
     };
 
+    // Handle "View Portfolio" button click
+    const handleViewPortfolio = () => {
+        // Navigate to portfolio page
+        navigate('/portfolio');
+    };
+
+    // Handle "Close" button click
+    const handleCloseNotification = () => {
+        setShowNotification(false);
+        // Reset order states if needed
+        if (orderComplete) {
+            setActiveOrderId(null);
+            setOrderStatus(null);
+            setOrderComplete(false);
+        }
+    };
+
     // Start polling for status updates
     const startStatusPolling = (sagaId) => {
         // Clear any existing interval
@@ -81,19 +104,22 @@ const StockTableWithOrderForm = () => {
                     statusData.status === 'COMPENSATION_COMPLETED') {
                     clearInterval(pollingInterval.current);
 
-                    // Navigate to portfolio if completed successfully
-                    if (statusData.status === 'COMPLETED') {
-                        setTimeout(() => {
-                            // In real app, navigate to portfolio or order history
-                            // navigate('/portfolio');
-                            console.log("Order completed successfully!");
-                        }, 3000); // Wait 3 seconds to show completion
-                    }
+                    // Set order completion states
+                    setOrderComplete(true);
+                    setOrderSuccess(statusData.status === 'COMPLETED');
+
+                    // Show notification modal
+                    setShowNotification(true);
                 }
             } catch (error) {
                 console.error("Error checking order status:", error);
                 setOrderError("Failed to get order status updates");
                 clearInterval(pollingInterval.current);
+
+                // Show failure notification
+                setOrderComplete(true);
+                setOrderSuccess(false);
+                setShowNotification(true);
             }
         }, 2000); // Check every 2 seconds
     };
@@ -123,7 +149,7 @@ const StockTableWithOrderForm = () => {
                 <h1 className="page-title">Stock Trading Dashboard</h1>
             </div>
 
-            <div className="stock-trading-container">
+            <div className={`stock-trading-container ${showNotification ? 'blurred' : ''}`}>
                 {/* Stock table section */}
                 <div className="stock-table-section">
                     <StockTable onSelectStock={handleStockSelect} />
@@ -152,6 +178,16 @@ const StockTableWithOrderForm = () => {
                     )}
                 </div>
             </div>
+
+            {/* Order notification modal */}
+            {showNotification && (
+                <OrderNotificationModal
+                    isSuccess={orderSuccess}
+                    orderDetails={orderStatus}
+                    onViewPortfolio={handleViewPortfolio}
+                    onClose={handleCloseNotification}
+                />
+            )}
         </>
     );
 };

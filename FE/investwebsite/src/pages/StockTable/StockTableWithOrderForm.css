@@ -17,6 +17,14 @@
     color: white;
     gap: 15px;
     min-height: calc(100vh - 120px); /* Adjusted for title */
+    transition: filter 0.3s ease;
+}
+
+/* Add blur effect when modal is shown */
+.stock-trading-container.blurred {
+    filter: blur(5px);
+    pointer-events: none;
+    user-select: none;
 }
 
 .stock-table-section {
