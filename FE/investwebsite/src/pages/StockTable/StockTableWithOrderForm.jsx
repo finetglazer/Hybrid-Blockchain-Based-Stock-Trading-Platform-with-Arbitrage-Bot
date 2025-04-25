@@ -28,10 +28,8 @@ const StockTableWithOrderForm = () => {
     // Navigation hook
     const navigate = useNavigate();
 
-    // Hard-coded user and account IDs for demo purposes
-    // In a real app, these would come from auth context or user selection
+    // Get userId from token
     const userId = getUserIdFromToken();
-    const accountId = "67f78822422684206f613a40";
 
     // Function to handle stock selection from the table
     const handleStockSelect = (stock) => {
@@ -179,11 +177,12 @@ const StockTableWithOrderForm = () => {
                 </div>
             </div>
 
-            {/* Order notification modal */}
+            {/* Order notification modal with failure reason */}
             {showNotification && (
                 <OrderNotificationModal
                     isSuccess={orderSuccess}
                     orderDetails={orderStatus}
+                    errorMessage={orderStatus?.failureReason || orderError}
                     onViewPortfolio={handleViewPortfolio}
                     onClose={handleCloseNotification}
                 />

@@ -8,7 +8,7 @@ import './OrderNotificationModal.css';
  * @param {Object} props - Component props
  * @param {boolean} props.isSuccess - Whether the order was successful
  * @param {Object} props.orderDetails - Details about the order
- * @param {string} props.errorMessage - Error message from backend when order fails
+ * @param {string} props.errorMessage - Error message from backend when order fails (optional)
  * @param {Function} props.onViewPortfolio - Callback for the "View Portfolio" button
  * @param {Function} props.onClose - Callback for the "Close" button
  * @returns {JSX.Element} - The notification modal
@@ -35,9 +35,14 @@ const OrderNotificationModal = ({
 
     const status = isSuccess ? 'success' : 'failed';
     const title = isSuccess ? 'Order Completed' : 'Order Failed';
+
+    // Extract failure reason from orderDetails if available
+    const failureReason = orderDetails?.failureReason;
+
+    // Use a generic message for the main notification area when we have detailed error info
     const message = isSuccess
         ? 'Your order has been executed successfully.'
-        : errorMessage || 'There was a problem processing your order.';
+        : failureReason ? 'Your order could not be processed.' : (errorMessage || 'There was a problem processing your order.');
 
     return (
         <div className="order-notification-overlay">
@@ -88,12 +93,18 @@ const OrderNotificationModal = ({
                 <p className="notification-message">{message}</p>
 
                 {/* Additional detailed error information section */}
-                {!isSuccess && errorMessage && (
+                {!isSuccess && failureReason && (
                     <div className="notification-order-details error-details">
                         <div className="order-detail-item">
                             <span className="order-detail-label">Error Details:</span>
-                            <span className="order-detail-value error-value">{errorMessage}</span>
+                            <span className="order-detail-value error-value">{failureReason}</span>
                         </div>
+                        {orderDetails?.currentStep && (
+                            <div className="order-detail-item">
+                                <span className="order-detail-label">Failed Step:</span>
+                                <span className="order-detail-value error-value">{orderDetails.currentStep}</span>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -127,6 +138,12 @@ const OrderNotificationModal = ({
                             <span className="order-detail-label">Time Completed:</span>
                             <span className="order-detail-value">{completedTime}</span>
                         </div>
+                        {!isSuccess && orderDetails.status && (
+                            <div className="order-detail-item">
+                                <span className="order-detail-label">Status:</span>
+                                <span className="order-detail-value">{orderDetails.status}</span>
+                            </div>
+                        )}
                     </div>
                 )}
 
