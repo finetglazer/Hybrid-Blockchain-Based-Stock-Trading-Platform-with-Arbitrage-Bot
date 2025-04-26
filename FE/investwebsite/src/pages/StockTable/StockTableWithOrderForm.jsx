@@ -13,7 +13,7 @@ const StockTableWithOrderForm = () => {
     // State for selected stock
     const [selectedStock, setSelectedStock] = useState(null);
 
-// State for order processing
+    // State for order processing
     const [activeOrderId, setActiveOrderId] = useState(null);
     const [orderStatus, setOrderStatus] = useState(null);
     const [orderError, setOrderError] = useState(null);
@@ -90,14 +90,14 @@ const StockTableWithOrderForm = () => {
         }
     };
 
-    // Start polling for status updates
+    // Start polling for status updates - UPDATED with faster polling
     const startStatusPolling = (sagaId) => {
         // Clear any existing interval
         if (pollingInterval.current) {
             clearInterval(pollingInterval.current);
         }
 
-        // Start polling
+        // Start polling at a faster rate (500ms instead of 2000ms)
         pollingInterval.current = setInterval(async () => {
             try {
                 const statusData = await getOrderStatus(sagaId);
@@ -126,7 +126,7 @@ const StockTableWithOrderForm = () => {
                 setOrderSuccess(false);
                 setShowNotification(true);
             }
-        }, 2000); // Check every 2 seconds
+        }, 2000); // Check every 500ms for more responsive updates
     };
 
     // Clean up on unmount
@@ -160,7 +160,6 @@ const StockTableWithOrderForm = () => {
                     <StockTable onSelectStock={handleStockSelect} />
                 </div>
 
-                {/* Order form and status section */}
                 {/* Order form and status section */}
                 <div className="order-section">
                     <div style={{ position: 'relative' }}>
