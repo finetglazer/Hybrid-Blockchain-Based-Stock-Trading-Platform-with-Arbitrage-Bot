@@ -92,10 +92,12 @@
         display: flex;
         margin: 40px 0 0 50px;
         align-items: center;
-        .performance-chart-container {
-            width: 800px;
-            height: 400px;
+        .comparison-chart-container {
             position: relative;
+            .chart-canvas {
+                width: 800px;
+                height: 400px;
+            }
             .comparison-object-container {
                 .comparison-object {
                     display: flex;
@@ -126,7 +128,8 @@
                         height: 35px;
                         background: #054d05;
                         border-radius: 10px;
-                        padding-left: 10px;
+                        padding-left: 5px;
+                        padding-right: 5px;
                         text-align: left;
                         p {
                             color: #88ec9f;
@@ -146,7 +149,7 @@
                         }
                     }
                     .remove-btn {
-                        width: 10%;
+                        width: 40%;
                         padding: 0;
                         background: none;
                         text-align: right;
@@ -177,13 +180,14 @@
             .comparison-objects-list-container {
                 position: absolute;
                 z-index: 99;
-                top: 142%;
+                top: 99%;
                 .search-bar {
                     display: flex;
                     input {
                         width: 730px;
                     }
                     .close-btn {
+                        margin-right: 20px;
                         background: none;
                         img {
                             width: 20px;
@@ -194,6 +198,7 @@
                 .comparison-objects-list {
                     background: #144f25;
                     width: 750px;
+                    margin-top: -12px;
                     .comparison-object {
                         display: flex;
                         font-weight: 600;
@@ -220,74 +225,114 @@
                             }
                         }
                         .value {
-                            width: 70%;
+                            width: 50%;
                             display: flex;
-                            .total-value {
+                            .total-gain-value {
                                 width: 50%;
-                            }
-                            .total-value {
                                 margin-top: 25px;
-                                text-align: right;
+                                text-align: left;
                             }
-                            .total-gain-percentage {
+                            .total-gain-percentage-wrapper {
+                                width: 50%;
+                                .total-gain-percentage {
+                                    display: flex;
+                                    align-items: center;
+                                    width: 70px;
+                                    background: #054d05;
+                                    border-radius: 10px;
+                                    padding: 5px 15px 5px 10px;
+                                    margin-top: 20px;
+                                    img {
+                                        width: 15px;
+                                        height: 15px;
+                                        margin-right: 3px;
+                                    }
+                                    p {
+                                        margin: 0;
+                                        color: #88ec9f;
+                                    }
+                                }
+                            }
+                        }
+                        .mini-chart-wrapper {
+                            width: 50%;
+                            background: black;
+                        }
+                    }
+                }
+            }
+        }
+        .glider-and-highlight-container {
+            margin-left: 150px;
+            .highlight-container {
+                text-align: left;
+                box-shadow: none;
+                margin-left: 0;
+                .title {
+                    font-size: 1.7rem;
+                    margin: -10px 0 0 -10px;
+                }
+
+                .categories {
+                    display: flex;
+                    margin: 10px 0 0 -10px;
+
+                    .category-wrapper {
+                        margin-right: 50px;
+
+                        .category-name {
+                            font-size: 0.9rem;
+                        }
+
+                        .value-wrapper {
+                            margin-top: -5px;
+                            border-radius: 10px;
+                            background-color: #670202;
+                            padding: 10px 40px 20px 10px;
+                            height: 75px;
+
+                            .value {
+                                margin-top: 0;
+                                color: #ff2343;
+                                font-weight: bold;
+                            }
+
+                            .percentage {
                                 display: flex;
                                 align-items: center;
-                                width: 70px;
-                                background: #054d05;
-                                border-radius: 10px;
-                                margin-left: 80px;
-                                padding: 2px 5px;
+                                margin-top: -20px;
+
                                 img {
-                                    width: 15px;
-                                    height: 15px;
-                                    margin-right: 3px;
+                                    width: 20px;
+                                    height: 20px;
                                 }
+
                                 p {
-                                    color: #88ec9f;
+                                    color: #ff2343;
+                                    font-weight: bold;
                                 }
                             }
                         }
                     }
                 }
             }
-        }
-        .highlight-container {
-            text-align: left;
-            box-shadow: none;
-            .title {
-                font-size: 1.7rem;
-                margin: -10px 0 0 -10px;
-            }
-            .categories {
-                display: flex;
-                margin: 10px 0 0 -10px;
-                .category-wrapper {
-                    margin-right: 50px;
-                    .category-name {
-                        font-size: 0.9rem;
-                    }
-                    .value-wrapper {
-                        margin-top: -10px;
-                        border-radius: 10px;
-                        background-color: #670202;
-                        padding: 10px 40px 10px 10px;
-                        height: 75px;
-                        .value {
-                            margin-top: 0;
-                            color: #ff2343;
-                            font-weight: bold;
-                        }
-                        .percentage {
-                            display: flex;
-                            align-items: center;
-                            img {
-                                width: 20px;
-                                height: 20px;
-                            }
-                            p {
-                                color: #ff2343;
-                                font-weight: bold;
-                            }
+            .glider-container {
+                .glider {
+                    display: flex;
+                    align-items: center;
+                    .comparison-object-wrapper {
+                        text-align: left;
+                        width: 150px;
+                        border: 1px solid rgba(0, 0, 0, 0.6);
+                        height: 140px;
+                        margin-right: 10px;
+                        border-radius: 7px;
+                        padding-left: 5px;
+                        padding-right: 5px;
+                        background-color: #348556;
+                        cursor: pointer;
+                        &:hover {
+                            background-color: #0b6e35;
                         }
                     }
                 }
@@ -297,7 +342,7 @@
 }
 
 .portfolio-container .investments-table {
-    margin-top: 250px;
+    margin-top: 50px;
     .table-btn {
         border-radius: 30px;
         height: 35px;

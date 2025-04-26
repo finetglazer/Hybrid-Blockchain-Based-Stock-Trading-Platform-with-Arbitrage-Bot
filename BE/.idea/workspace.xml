@@ -5,10 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/51eb0fed-776c-4607-93c8-39d068129895.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/51eb0fed-776c-4607-93c8-39d068129895.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/config/WebfluxSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/config/WebfluxSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/security/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/security/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API-gateway/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/resources/application-local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kafka-management-service/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/kafka-management-service/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kafka-management-service/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/kafka-management-service/src/main/resources/application-local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/gateway-2025-03-26.log" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/gateway.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/gateway.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/market-data-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/market-data-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/market-data-service/src/main/java/com/stocktrading/marketdata/service/MarketPricePublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/market-data-service/src/main/java/com/stocktrading/marketdata/service/MarketPricePublisher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/market-data-service/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/market-data-service/src/main/resources/application-local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application-local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,8 +34,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -85,13 +101,14 @@
     &quot;Spring Boot.AccountServiceApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.ApiGatewayApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.KafkaManagementServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.MarketDataServiceApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.MockPaymentServiceApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.UserServiceApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.WalletServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;hiep&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Code/Big Apps/Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot/FE&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Code/Big Apps/Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot/BE/market-data-service/src/main/java/com/stocktrading/marketdata&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -114,11 +131,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\market-data-service\src\main\java\com\stocktrading\marketdata" />
+      <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\market-data-service\src\main\java\com\stocktrading\marketdata\security" />
+      <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\market-data-service\src\main\java\com\stocktrading\marketdata\common" />
       <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\user-service\src\main\resources" />
       <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\trading-service\src\main\resources" />
-      <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\API-gateway\src\main\resources" />
-      <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\account-service\src\main\resources\aiven-kafka-certs" />
-      <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\account-service\src\main\resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\account-service\src\main\resources\aiven-kafka-certs" />
@@ -128,12 +145,13 @@
       <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\user-service\src\main\resources" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.stocktrading.marketdata.config" />
       <recent name="com.accountservice.payload.response.internal" />
       <recent name="com.accountservice.repository" />
       <recent name="com.accountservice.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.ApiGatewayApplication">
+  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
     <configuration name="console.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/consoles/db/386254c4-74ac-45e4-8c77-834a59e1ad94/console.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
@@ -181,6 +199,13 @@
     <configuration name="KafkaMessageModelsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="kafka-message-models" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.project.kafkamessagemodels.KafkaMessageModelsApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MarketDataServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="market-data-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.stocktrading.marketdata.MarketDataServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -281,6 +306,7 @@
       <item itemvalue="Docker.user-service/Dockerfile" />
       <item itemvalue="Docker.wallet-service/Dockerfile" />
       <item itemvalue="Node.js.console.js" />
+      <item itemvalue="Spring Boot.MarketDataServiceApplication" />
       <item itemvalue="Spring Boot.AccountServiceApplication" />
       <item itemvalue="Spring Boot.ApiGatewayApplication" />
       <item itemvalue="Spring Boot.KafkaManagementServiceApplication" />
@@ -347,6 +373,8 @@
       <workItem from="1745367390242" duration="43000" />
       <workItem from="1745367591162" duration="14000" />
       <workItem from="1745367766146" duration="94000" />
+      <workItem from="1745370287736" duration="40345000" />
+      <workItem from="1745576134930" duration="3593000" />
     </task>
     <servers />
   </component>

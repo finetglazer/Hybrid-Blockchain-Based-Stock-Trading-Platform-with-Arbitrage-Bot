@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,7 @@ import java.util.Collections;
 
 @Order(-100)  // Ensure it runs early in the chain
 @Component
+@Slf4j
 public class JwtAuthenticationFilter implements WebFilter {
 
     @Value("${jwt.secret}")
@@ -28,12 +30,15 @@ public class JwtAuthenticationFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
+
         if (path.equals("/users/api/v1/auth/login")
                 || path.equals("/users/api/v1/auth/register")
                 || path.equals("/users/api/v1/auth/forgot-password")
                 || path.equals("/users/api/v1/auth/reset-password")
                 || path.equals("/users/api/v1/auth/verify") // Add this line
-                || path.startsWith("/users/api/v1/auth/verify")) { // Also consider this for query params
+                || path.startsWith("/users/api/v1/auth/verify")
+                || path.startsWith("/market-data/ws/")
+        ) { // Also consider this for query params
             return chain.filter(exchange);
         }
 
