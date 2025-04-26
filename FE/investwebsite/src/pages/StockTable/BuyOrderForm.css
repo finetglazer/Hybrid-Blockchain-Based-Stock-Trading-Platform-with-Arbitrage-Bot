@@ -275,6 +275,13 @@ select.scrollable-select option {
     margin-left: 8px;
 }
 
+.input-error {
+    color: #ff4d4d;
+    font-size: 12px;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
 .required-funds {
     display: flex;
     margin: 20px 0;

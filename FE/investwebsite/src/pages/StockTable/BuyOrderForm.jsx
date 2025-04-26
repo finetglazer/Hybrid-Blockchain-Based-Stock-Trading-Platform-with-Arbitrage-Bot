@@ -345,12 +345,18 @@ const BuyOrderForm = ({ stockData, onSubmit, disabled = false }) => {
                             value={formData.quantity}
                             onChange={handleChange}
                             min="1"
+                            max="100000"
                             step="1"
                             required
-                            placeholder="Enter quantity"
+                            placeholder="Enter quantity (1-100,000)"
                             disabled={disabled}
                             className={disabled ? 'disabled' : ''}
                         />
+                        {formData.quantity > 100000 && (
+                            <div className="input-error">
+                                Maximum order size is 100,000 shares
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -427,7 +433,7 @@ const BuyOrderForm = ({ stockData, onSubmit, disabled = false }) => {
                     <button
                         type="submit"
                         className="submit-button"
-                        disabled={disabled || accountsLoading}
+                        disabled={disabled || accountsLoading || (formData.quantity > 100000)}
                     >
                         {disabled ? 'Processing...' : 'Place Order'}
                     </button>
