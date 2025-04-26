@@ -25,6 +25,7 @@ import PaymentMethodsManagement from "./pages/PaymentMethod/PaymentMethodsManage
 import TransactionHistory from "./pages/TransactionHistory/TransactionHistory.jsx";
 import TransactionDetails from "./pages/TransactionDetails/TransactionDetails.jsx";
 import GenerateRecoveryKeys from "./pages/SettingPage/GenerateRecoveryKeys/GenerateRecoveryKeys.jsx";
+import Portfolio from "./pages/Portfolio/Portfolio.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -55,6 +56,7 @@ const Layout = () => {
           <Route path="/two-factor-auth" element={<TwoFactorAuth />} /> {/* Add this route */}
           <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />
           <Route path="/profile/disable2FA" element={<Disable2FA />} />
+          <Route path="/:accountId/portfolio" element={<Portfolio />}/>
           <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </AppContextProvider>

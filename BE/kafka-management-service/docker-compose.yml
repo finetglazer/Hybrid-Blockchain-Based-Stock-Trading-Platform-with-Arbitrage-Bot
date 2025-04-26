@@ -75,6 +75,8 @@ services:
               kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic broker.events.order-buy --partitions 1 --replication-factor 1 && \
               kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.commands.order-buy --partitions 1 --replication-factor 1 && \
               kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.events.order-buy --partitions 1 --replication-factor 1 && \
+              # Market Data Topic
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic market.price.data --partitions 1 --replication-factor 1 && \
               echo 'All topics created successfully!' || echo 'Failed to create some topics.'
 
               # Keep the container running idly only if needed for debugging, otherwise it will exit
