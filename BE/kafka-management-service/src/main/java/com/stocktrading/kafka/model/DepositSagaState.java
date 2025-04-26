@@ -1,6 +1,8 @@
 package com.stocktrading.kafka.model;
 
-import com.stocktrading.kafka.model.enums.CommandType;
+
+import com.project.kafkamessagemodels.model.CommandMessage;
+import com.project.kafkamessagemodels.model.enums.CommandType;
 import com.stocktrading.kafka.model.enums.DepositSagaStep;
 import com.stocktrading.kafka.model.enums.SagaStatus;
 import lombok.AllArgsConstructor;
@@ -8,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
@@ -27,7 +30,11 @@ import java.util.Map;
 @AllArgsConstructor
 @Document(collection = "deposit_sagas")
 public class DepositSagaState {
-    @Id
+    @Id  // This should map to MongoDB's _id field
+    private String id; // Rename from sagaId to id
+
+    // Add a separate field if you want to maintain sagaId semantics
+    @Indexed(unique = true)
     private String sagaId;
     
     // Business data
@@ -63,8 +70,11 @@ public class DepositSagaState {
     public static DepositSagaState initiate(String sagaId, String userId, String accountId, 
                                         BigDecimal amount, String currency, 
                                         String paymentMethodId, int maxRetries) {
+
+
         return DepositSagaState.builder()
-                .sagaId(sagaId)
+                .id(sagaId)       // Set the MongoDB _id field
+                .sagaId(sagaId)   // Set the business sagaId field
                 .userId(userId)
                 .accountId(accountId)
                 .amount(amount)
@@ -117,33 +127,37 @@ public class DepositSagaState {
         addEvent("STEP_FAILED", "Step " + stepName + " failed: " + reason);
         lastUpdatedTime = Instant.now();
     }
-    
+
     /**
-     * Start compensation process
+     * Start compensation process with proper reverse order
      */
     public void startCompensation() {
         status = SagaStatus.COMPENSATING;
         addEvent("COMPENSATION_STARTED", "Starting compensation process");
-        
-        // Determine the first compensation step based on completed steps
-        if (completedSteps.contains(DepositSagaStep.UPDATE_BALANCE.name())) {
-            currentStep = DepositSagaStep.REVERSE_BALANCE_UPDATE;
-        } else if (completedSteps.contains(DepositSagaStep.UPDATE_TRANSACTION_STATUS.name()) || 
-                   completedSteps.contains(DepositSagaStep.PROCESS_PAYMENT.name())) {
-            currentStep = DepositSagaStep.REVERSE_PAYMENT;
-        } else {
-            currentStep = DepositSagaStep.MARK_TRANSACTION_FAILED;
-        }
-        
+
+        // Check which steps have been completed to determine correct compensation chain
+        boolean balanceUpdated = completedSteps.contains(DepositSagaStep.UPDATE_BALANCE.name());
+        boolean transactionUpdated = completedSteps.contains(DepositSagaStep.UPDATE_TRANSACTION_STATUS.name());
+        boolean paymentProcessed = completedSteps.contains(DepositSagaStep.PROCESS_PAYMENT.name());
+
+        // Use the helper method to determine first compensation step
+        currentStep = DepositSagaStep.determineFirstCompensationStep(
+                balanceUpdated,
+                transactionUpdated,
+                paymentProcessed
+        );
+
         currentStepStartTime = Instant.now();
         lastUpdatedTime = Instant.now();
+
+        addEvent("COMPENSATION_STEP", "Starting compensation with step: " + currentStep.getDescription());
     }
-    
     /**
      * Complete compensation process
      */
     public void completeCompensation() {
         status = SagaStatus.COMPENSATION_COMPLETED;
+        currentStep = DepositSagaStep.COMPLETE_SAGA; // Explicitly set current step to COMPLETE_SAGA
         endTime = Instant.now();
         addEvent("COMPENSATION_COMPLETED", "Compensation process completed");
         lastUpdatedTime = Instant.now();
@@ -230,6 +244,11 @@ public class DepositSagaState {
                 command.setPayloadValue("userId", userId);
                 command.setPayloadValue("verificationType", "BASIC");
                 break;
+
+            case ACCOUNT_VALIDATE: // Add this new case
+                command.setPayloadValue("accountId", accountId);
+                command.setPayloadValue("userId", userId);
+                break;
                 
             case PAYMENT_METHOD_VALIDATE:
                 command.setPayloadValue("paymentMethodId", paymentMethodId);
@@ -238,7 +257,7 @@ public class DepositSagaState {
                 command.setPayloadValue("currency", currency);
                 break;
                 
-            case ACCOUNT_CREATE_PENDING_TRANSACTION:
+            case ACCOUNT_CREATE_DEPOSIT_PENDING_TRANSACTION:
                 command.setPayloadValue("accountId", accountId);
                 command.setPayloadValue("amount", amount);
                 command.setPayloadValue("currency", currency);
@@ -260,13 +279,13 @@ public class DepositSagaState {
                 command.setPayloadValue("paymentReference", paymentProcessorTransactionId);
                 break;
                 
-            case ACCOUNT_UPDATE_BALANCE:
+            case ACCOUNT_DEPOSIT_UPDATE_BALANCE:
                 command.setPayloadValue("accountId", accountId);
                 command.setPayloadValue("amount", amount);
                 command.setPayloadValue("transactionId", transactionId);
                 break;
                 
-            case ACCOUNT_REVERSE_BALANCE_UPDATE:
+            case ACCOUNT_DEPOSIT_REVERSE_BALANCE_UPDATE:
                 command.setPayloadValue("accountId", accountId);
                 command.setPayloadValue("amount", amount);
                 command.setPayloadValue("transactionId", transactionId);

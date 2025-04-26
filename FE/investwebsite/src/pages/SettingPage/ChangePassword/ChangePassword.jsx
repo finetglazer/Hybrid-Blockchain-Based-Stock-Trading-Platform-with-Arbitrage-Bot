@@ -14,6 +14,9 @@ const ChangePassword = () => {
     const [passwordsMismatch, setPasswordsMismatch] = useState(false);
     const [changePasswordSucceeded, setChangePasswordSucceeded] = useState(undefined);
     const [changePasswordError, setChangePasswordError] = useState("");
+    const [showOldPassword, setShowOldPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const validateNewPassword = (password) => {
         /*
@@ -110,6 +113,7 @@ const ChangePassword = () => {
             if (response.data) {
                 if (response.data.status === 1) {
                     setChangePasswordSucceeded(true);
+                    setChangePasswordError(false);
                 }
                 else {
                     setChangePasswordSucceeded(false);
@@ -144,21 +148,33 @@ const ChangePassword = () => {
             <div className="body">
                 <div className="label-input-pair old-password-wrapper">
                     <p>Old password</p>
-                    <input
-                        className="input"
-                        type="password"
-                        required={true}
-                        onChange={onOldPasswordChange}
-                    />
+                    <div>
+                        <input
+                            className="input"
+                            type={showOldPassword ? "text" : "password"}
+                            required={true}
+                            onChange={onOldPasswordChange}
+                        />
+                    </div>
+                    {showOldPassword
+                        ? <button className="show-password-btn"><img src="../../../../src/assets/hide.png" alt="show password" onClick={() => setShowOldPassword(!showOldPassword)}/></button>
+                        : <button className="hide-password-btn"><img src="../../../../src/assets/view.png" alt="hide password" onClick={() => setShowOldPassword(!showOldPassword)}/></button>
+                    }
                 </div>
                 <div className="label-input-pair new-password-wrapper">
                     <p>New password</p>
-                    <input
-                        className="input"
-                        type="password"
-                        required={true}
-                        onChange={onNewPasswordChange}
-                    />
+                    <div>
+                        <input
+                            className="input"
+                            type={showNewPassword ? "text" : "password"}
+                            required={true}
+                            onChange={onNewPasswordChange}
+                        />
+                    </div>
+                    {showNewPassword
+                        ? <button className="show-password-btn"><img src="../../../../src/assets/hide.png" alt="show password" onClick={() => setShowNewPassword(!showNewPassword)}/></button>
+                        : <button className="hide-password-btn"><img src="../../../../src/assets/view.png" alt="hide password" onClick={() => setShowNewPassword(!showNewPassword)}/></button>
+                    }
                     {passwordError &&
                         <div className="password-error-wrapper">
                             <img src="../../../../src/assets/warning.png" alt="error" />
@@ -167,17 +183,23 @@ const ChangePassword = () => {
                     }
                 </div>
                 <div className="label-input-pair confirm-password-wrapper">
-                    <p>Confirm new password</p>
-                    <input
-                        className="input"
-                        type="password"
-                        required={true}
-                        onChange={onConfirmPasswordChange}
-                    />
-                    {passwordsMismatch &&
+                    <p>Confirm password</p>
+                    <div>
+                        <input
+                            className="input"
+                            type={showConfirmPassword ? "text" : "password"}
+                            required={true}
+                            onChange={onConfirmPasswordChange}
+                        />
+                    </div>
+                    {showConfirmPassword
+                        ? <button className="show-password-btn"><img src="../../../../src/assets/hide.png" alt="show password" onClick={() => setShowConfirmPassword(!showConfirmPassword)}/></button>
+                        : <button className="hide-password-btn"><img src="../../../../src/assets/view.png" alt="hide password" onClick={() => setShowConfirmPassword(!showConfirmPassword)}/></button>
+                    }
+                    {passwordError &&
                         <div className="password-error-wrapper">
-                            <img src="../../../../src/assets/warning.png" alt="error"/>
-                            <p className="description">Passwords mismatch</p>
+                            <img src="../../../../src/assets/warning.png" alt="error" />
+                            <p className="description">{passwordError}</p>
                         </div>
                     }
                 </div>

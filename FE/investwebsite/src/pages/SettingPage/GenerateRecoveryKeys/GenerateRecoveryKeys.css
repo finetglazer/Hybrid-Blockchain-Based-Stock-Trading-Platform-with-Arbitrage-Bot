@@ -1,0 +1,30 @@
+.generate-recovery-keys-container {
+    min-height: 50vh;
+}
+
+.generate-recovery-keys-container .title {
+    display: flex;
+    margin: -10px 0 0 -30px;
+    &:hover {
+      cursor: pointer;
+    }
+    button {
+        padding: 5px 15px 5px;
+        background: none;
+        border: none;
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
+    p {
+        font-size: 1.7rem;
+        margin: 7px 0 0 -5px;
+    }
+}
+
+.generate-recovery-keys-container .body {
+    .btn {
+        margin: 20px auto 30px;
+    }
+}

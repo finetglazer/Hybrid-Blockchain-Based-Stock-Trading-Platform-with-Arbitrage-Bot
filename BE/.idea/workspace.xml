@@ -6,12 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/config/WebfluxSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/config/WebfluxSecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/gateway.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/gateway.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/HeaderNavbar/HeaderNavbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/HeaderNavbar/HeaderNavbar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/PaymentMethod/PaymentMethodsManagement.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/PaymentMethod/PaymentMethodsManagement.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/2FASettings/2FASettings.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/2FASettings/2FASettings.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/ChangePassword/ChangePassword.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/ChangePassword/ChangePassword.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/Setting.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/Setting.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TwoFactorAuth/TwoFactorAuth.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TwoFactorAuth/TwoFactorAuth.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +22,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -86,6 +87,8 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;Spring Boot.AccountServiceApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.ApiGatewayApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.KafkaManagementServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.MockPaymentServiceApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.UserServiceApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.WalletServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;hiep&quot;,
@@ -133,7 +136,7 @@
       <recent name="com.accountservice.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.ApiGatewayApplication">
+  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
     <configuration name="console.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/consoles/db/386254c4-74ac-45e4-8c77-834a59e1ad94/console.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
@@ -174,6 +177,20 @@
     <configuration name="KafkaManagementServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="kafka-management-service" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.stocktrading.kafka.KafkaManagementServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="KafkaMessageModelsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="kafka-message-models" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.project.kafkamessagemodels.KafkaMessageModelsApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MockPaymentServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="mock-payment-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.stocktrading.payment.MockPaymentServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -267,9 +284,11 @@
       <item itemvalue="Docker.user-service/Dockerfile" />
       <item itemvalue="Docker.wallet-service/Dockerfile" />
       <item itemvalue="Node.js.console.js" />
-      <item itemvalue="Spring Boot.KafkaManagementServiceApplication" />
+      <item itemvalue="Spring Boot.KafkaMessageModelsApplication" />
+      <item itemvalue="Spring Boot.MockPaymentServiceApplication" />
       <item itemvalue="Spring Boot.AccountServiceApplication" />
       <item itemvalue="Spring Boot.ApiGatewayApplication" />
+      <item itemvalue="Spring Boot.KafkaManagementServiceApplication" />
       <item itemvalue="Spring Boot.TradingServiceApplication" />
       <item itemvalue="Spring Boot.UserServiceApplication" />
       <item itemvalue="Spring Boot.WalletServiceApplication" />
@@ -318,7 +337,15 @@
       <workItem from="1743834997011" duration="6052000" />
       <workItem from="1743863309389" duration="17000" />
       <workItem from="1743865046907" duration="426000" />
-      <workItem from="1743994401932" duration="41833000" />
+      <workItem from="1743994401932" duration="48607000" />
+      <workItem from="1744305288862" duration="2263000" />
+      <workItem from="1744427507923" duration="19989000" />
+      <workItem from="1744692353408" duration="1000" />
+      <workItem from="1744816328604" duration="64855000" />
+      <workItem from="1744995246927" duration="19521000" />
+      <workItem from="1745082469071" duration="36884000" />
+      <workItem from="1745205605406" duration="244000" />
+      <workItem from="1745205898184" duration="5105000" />
     </task>
     <servers />
   </component>
@@ -337,8 +364,17 @@
     </option>
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/account-service/src/main/java/com/accountservice/listener/KafkaCommandListener.java</url>
+          <line>37</line>
+          <option name="timeStamp" value="94" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/TradingAccountServiceImpl.java" line="150">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/TradingAccountServiceImpl.java" line="153">
         <watch expression="userId" language="JAVA" />
       </inline-watch>
     </watches-manager>

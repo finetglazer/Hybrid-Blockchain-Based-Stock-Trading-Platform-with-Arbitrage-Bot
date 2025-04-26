@@ -12,7 +12,7 @@ import com.accountservice.repository.BalanceRepository;
 import com.accountservice.repository.PaymentMethodRepository;
 import com.accountservice.repository.TradingAccountRepository;
 import com.accountservice.service.TradingAccountService;
-import com.accountservice.service.TransactionService;
+import com.accountservice.service.TransactionHistoryService;
 import com.accountservice.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +25,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -46,7 +47,7 @@ public class TradingAccountServiceImpl implements TradingAccountService {
 
     private final MongoTemplate mongoTemplate;
 
-    private final TransactionService transactionService;
+    private final TransactionHistoryService transactionHistoryService;
 
     @Override
     public BaseResponse<?> createTradingAccount(String userId, CreateTradingAccountRequest createTradingAccountRequest) {
@@ -61,9 +62,10 @@ public class TradingAccountServiceImpl implements TradingAccountService {
 
         Balance newBalance = new Balance();
         newBalance.setAccountId(savedTradingAccount.getId());
-        newBalance.setAvailable(0.00F);
-        newBalance.setReserved(0.00F);
-        newBalance.setTotal(0.00F);
+        // Changed from float to BigDecimal
+        newBalance.setAvailable(BigDecimal.ZERO);
+        newBalance.setReserved(BigDecimal.ZERO);
+        newBalance.setTotal(BigDecimal.ZERO);
         newBalance.setCurrency(createTradingAccountRequest.getCurrency());
 
         Balance savedBalance = balanceRepository.save(newBalance);
@@ -72,32 +74,33 @@ public class TradingAccountServiceImpl implements TradingAccountService {
         newBalanceHistory.setDate(DateUtils.getDate(0));
         newBalanceHistory.setAccountId(savedTradingAccount.getId());
         newBalanceHistory.setUserId(userId);
-        newBalanceHistory.setOpeningBalance(0.0f);
-        newBalanceHistory.setClosingBalance(0.0f);
-        newBalanceHistory.setDeposits(0.0f);
-        newBalanceHistory.setWithdrawals(0.0f);
-        newBalanceHistory.setTradesNet(0.0f);
-        newBalanceHistory.setFees(0.0f);
+        // Changed from float to BigDecimal
+        newBalanceHistory.setOpeningBalance(BigDecimal.ZERO);
+        newBalanceHistory.setClosingBalance(BigDecimal.ZERO);
+        newBalanceHistory.setDeposits(BigDecimal.ZERO);
+        newBalanceHistory.setWithdrawals(BigDecimal.ZERO);
+        newBalanceHistory.setTradesNet(BigDecimal.ZERO);
+        newBalanceHistory.setFees(BigDecimal.ZERO);
 
         balanceHistoryRepository.save(newBalanceHistory);
 
         return new BaseResponse<>(
-            Const.STATUS_RESPONSE.SUCCESS,
-            "Trading account created successfully",
-            new RetrieveAccountInfoResponse(
-                savedTradingAccount.getId(),
-                savedTradingAccount.getAccountNumber(),
-                savedTradingAccount.getNickname(),
-                savedTradingAccount.getStatus(),
-                savedTradingAccount.getCreatedAt(),
-                savedTradingAccount.getUpdatedAt(),
-                new RetrieveBalanceInfoResponse(
-                    savedBalance.getCurrency(),
-                    savedBalance.getAvailable(),
-                    savedBalance.getReserved(),
-                    savedBalance.getTotal()
+                Const.STATUS_RESPONSE.SUCCESS,
+                "Trading account created successfully",
+                new RetrieveAccountInfoResponse(
+                        savedTradingAccount.getId(),
+                        savedTradingAccount.getAccountNumber(),
+                        savedTradingAccount.getNickname(),
+                        savedTradingAccount.getStatus(),
+                        savedTradingAccount.getCreatedAt(),
+                        savedTradingAccount.getUpdatedAt(),
+                        new RetrieveBalanceInfoResponse(
+                                savedBalance.getCurrency(),
+                                savedBalance.getAvailable(),
+                                savedBalance.getReserved(),
+                                savedBalance.getTotal()
+                        )
                 )
-            )
         );
     }
 
@@ -106,43 +109,43 @@ public class TradingAccountServiceImpl implements TradingAccountService {
         TradingAccount tradingAccount = tradingAccountRepository.findTradingAccountById(accountId).orElse(null);
         if (tradingAccount == null) {
             return new BaseResponse<>(
-                Const.STATUS_RESPONSE.ERROR,
-                "Account not found with accountId: " + accountId,
-                ""
+                    Const.STATUS_RESPONSE.ERROR,
+                    "Account not found with accountId: " + accountId,
+                    ""
             );
         }
 
         Balance balance = balanceRepository.findBalanceByAccountId(accountId).orElse(null);
         if (balance == null) {
             return new BaseResponse<>(
-                Const.STATUS_RESPONSE.ERROR,
-                "Balance not found with accountId: " + accountId,
-                ""
+                    Const.STATUS_RESPONSE.ERROR,
+                    "Balance not found with accountId: " + accountId,
+                    ""
             );
         }
 
-        Transaction lastTransaction = transactionService.getLastTransaction(accountId);
+        Transaction lastTransaction = transactionHistoryService.getLastTransaction(accountId);
 
         return new BaseResponse<>(
-            Const.STATUS_RESPONSE.SUCCESS,
-            "Account details retrieved successfully",
-            new GetAccountDetailsResponse(
-                tradingAccount.getId(),
-                tradingAccount.getAccountNumber(),
-                tradingAccount.getNickname(),
-                tradingAccount.getStatus(),
-                tradingAccount.getCreatedAt(),
-                tradingAccount.getUpdatedAt(),
-                new RetrieveBalanceInfoResponse(
-                    balance.getCurrency(),
-                    balance.getAvailable(),
-                    balance.getReserved(),
-                    balance.getTotal()
-                ),
-                lastTransaction == null
-                    ? null
-                    : lastTransaction.getCompletedAt()
-            )
+                Const.STATUS_RESPONSE.SUCCESS,
+                "Account details retrieved successfully",
+                new GetAccountDetailsResponse(
+                        tradingAccount.getId(),
+                        tradingAccount.getAccountNumber(),
+                        tradingAccount.getNickname(),
+                        tradingAccount.getStatus(),
+                        tradingAccount.getCreatedAt(),
+                        tradingAccount.getUpdatedAt(),
+                        new RetrieveBalanceInfoResponse(
+                                balance.getCurrency(),
+                                balance.getAvailable(),
+                                balance.getReserved(),
+                                balance.getTotal()
+                        ),
+                        lastTransaction == null
+                                ? null
+                                : lastTransaction.getCompletedAt()
+                )
         );
     }
 
@@ -163,7 +166,7 @@ public class TradingAccountServiceImpl implements TradingAccountService {
 
         List<TradingAccount> tradingAccounts = result.getContent();
         List<Balance> balances = tradingAccounts.stream().map(tradingAccount ->
-            balanceRepository.findBalanceByAccountId(tradingAccount.getId()).orElse(null)
+                balanceRepository.findBalanceByAccountId(tradingAccount.getId()).orElse(null)
         ).toList();
         List<RetrieveAccountInfoResponse> retrieveAccountInfoResponses = new ArrayList<>();
         for (int i = 0; i < tradingAccounts.size(); i++) {
@@ -186,17 +189,17 @@ public class TradingAccountServiceImpl implements TradingAccountService {
         }
 
         return new BaseResponse<>(
-            Const.STATUS_RESPONSE.SUCCESS,
-            "Accounts retrieved successfully",
-            new GetUserAccountsResponse(
-                retrieveAccountInfoResponses,
-                new PagingResponse(
-                    page,
-                    size,
-                    result.getTotalElements(),
-                    result.getTotalPages()
+                Const.STATUS_RESPONSE.SUCCESS,
+                "Accounts retrieved successfully",
+                new GetUserAccountsResponse(
+                        retrieveAccountInfoResponses,
+                        new PagingResponse(
+                                page,
+                                size,
+                                result.getTotalElements(),
+                                result.getTotalPages()
+                        )
                 )
-            )
         );
     }
 
@@ -209,9 +212,9 @@ public class TradingAccountServiceImpl implements TradingAccountService {
         TradingAccount tradingAccount = tradingAccountRepository.findTradingAccountById(accountId).orElse(null);
         if (tradingAccount == null) {
             return new BaseResponse<>(
-                Const.STATUS_RESPONSE.ERROR,
-                "Account not found with accountId: " + accountId,
-                ""
+                    Const.STATUS_RESPONSE.ERROR,
+                    "Account not found with accountId: " + accountId,
+                    ""
             );
         }
 
@@ -222,15 +225,15 @@ public class TradingAccountServiceImpl implements TradingAccountService {
         tradingAccountRepository.save(tradingAccount);
 
         return new BaseResponse<>(
-            Const.STATUS_RESPONSE.SUCCESS,
-            "Account updated successfully",
-            new UpdateTradingAccountResponse(
-                accountId,
-                tradingAccount.getAccountNumber(),
-                nickname,
-                status,
-                tradingAccount.getUpdatedAt()
-            )
+                Const.STATUS_RESPONSE.SUCCESS,
+                "Account updated successfully",
+                new UpdateTradingAccountResponse(
+                        accountId,
+                        tradingAccount.getAccountNumber(),
+                        nickname,
+                        status,
+                        tradingAccount.getUpdatedAt()
+                )
         );
     }
 
@@ -246,24 +249,24 @@ public class TradingAccountServiceImpl implements TradingAccountService {
         LocalDate queryStartDate = LocalDate.parse(startDate, formatter);
         LocalDate queryEndDate = LocalDate.parse(endDate, formatter);
         Criteria criteria = Criteria.where("date").gte(queryStartDate).lte(queryEndDate)
-                                    .and("accountId").is(accountId);
+                .and("accountId").is(accountId);
 
         List<BalanceHistory> balanceHistoryList = mongoTemplate.find(new Query(criteria).with(PageRequest.of(page, size)), BalanceHistory.class);
         long totalItems = mongoTemplate.count(new Query(criteria), BalanceHistory.class);
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
         return new BaseResponse<>(
-            Const.STATUS_RESPONSE.SUCCESS,
-            "Retrieved balance history successfully",
-            new GetBalanceHistoryResponse(
-                balanceHistoryList,
-                new PagingResponse(
-                    page,
-                    size,
-                    totalItems,
-                    totalPages
+                Const.STATUS_RESPONSE.SUCCESS,
+                "Retrieved balance history successfully",
+                new GetBalanceHistoryResponse(
+                        balanceHistoryList,
+                        new PagingResponse(
+                                page,
+                                size,
+                                totalItems,
+                                totalPages
+                        )
                 )
-            )
         );
     }
 
@@ -271,10 +274,10 @@ public class TradingAccountServiceImpl implements TradingAccountService {
     public HasTradingAccountAndPaymentMethodResponse hasAccountAndPaymentMethod(String userId) {
         List<TradingAccount> tradingAccounts = tradingAccountRepository.findTradingAccountsByUserId(userId);
         List<PaymentMethod> paymentMethods = paymentMethodRepository.findPaymentMethodsByUserId(userId);
-        
+
         return new HasTradingAccountAndPaymentMethodResponse(
-            !tradingAccounts.isEmpty(),
-            !paymentMethods.isEmpty()
+                !tradingAccounts.isEmpty(),
+                !paymentMethods.isEmpty()
         );
     }
 

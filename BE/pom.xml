@@ -15,6 +15,12 @@
         <module>account-service</module>
         <module>trading-service</module>
         <module>kafka-management-service</module>
+        <module>kafka-message-models</module>
+        <module>mock-payment-service</module>
+        <module>order-service</module>
+        <module>market-data-service</module>
+        <module>mock-brokerage-service</module>
+        <module>portfolio-service</module>
     </modules>
 
     <dependencyManagement>

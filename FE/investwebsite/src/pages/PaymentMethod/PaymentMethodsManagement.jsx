@@ -1,9 +1,12 @@
-import { Alert, Breadcrumb } from "antd";
+import { Alert, Breadcrumb, notification } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
+import { InfoOutlined, WarningOutlined } from "@ant-design/icons";
 import "./PaymentMethodsManagement.css";
-import { useNavigate } from "react-router-dom";
+import AddPaymentMethod from "./forms/AddPaymentMethod.jsx";
+import VerifyPaymentMethod from "./forms/VerifyPaymentMethod.jsx";
+import UpdatePaymentMethod from "./forms/UpdatePaymentMethod.jsx";
 
 const PaymentMethodsManagement = () => {
   // {
@@ -24,13 +27,18 @@ const PaymentMethodsManagement = () => {
   //         verificationRequired: true,
   //         verifiedAt: null,
   // },
-  const nativigate = useNavigate();
+
   const [bankAccounts, setBankAccounts] = useState([]);
   const [creditCards, setCreditCards] = useState([]);
   const [debitCards, setDebitCards] = useState([]);
   const [digitalWallets, setDigitalWallets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [openAddForm, setOpenAddForm] = useState(false);
+  const [openVerifyForm, setOpenVerifyForm] = useState(false);
+  const [openUpdateForm, setOpenUpdateForm] = useState(false);
+  const [itemBeingVerified, setItemBeingVerified] = useState();
+  const [itemBeingUpdated, setItemBeingUpdated] = useState();
 
   const onClickCategorySummary = (
     className,
@@ -57,10 +65,16 @@ const PaymentMethodsManagement = () => {
           item={item}
           metadataClassNamePrefix={metadataClassNamePrefix}
           index={index}
+          onClickActivateBtn={onClickActivateBtn}
+          onClickDeactivateBtn={onClickDeactivateBtn}
+          onClickVerifyBtn={onClickVerifyBtn}
+          onClickUpdateBtn={onClickUpdateBtn}
+          onClickDeleteBtn={onClickDeleteBtn}
           onClickMetadata={onClickMetadata}
         />
       );
       categoryWrapper.appendChild(container);
+      console.log(container.innerHTML);
     }
   };
 
@@ -85,168 +99,196 @@ const PaymentMethodsManagement = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("render");
-
-    const fetchPaymentMethods = async () => {
-      const token = localStorage.getItem("token");
-      try {
-        const response = await axios.get(
-          "/accounts/payment-methods/api/v1/me/get",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              // "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-          }
-        );
-        console.log(response);
-        setLoading(false);
-        if (response.data && response.data.status === 1) {
-          const paymentMethods = response.data.data.items;
-          let fetchedBankAccounts = [];
-          let fetchedCreditCards = [];
-          let fetchedDebitCards = [];
-          let fetchedDigitalWallets = [];
-          paymentMethods.forEach((paymentMethod) => {
-            switch (paymentMethod.type) {
-              case "BANK_ACCOUNT":
-                fetchedBankAccounts.push(
-                  Object.assign(paymentMethod, {
-                    imageSrc: "../../../src/assets/atm-card.png",
-                  })
-                );
-                break;
-              case "CREDIT_CARD":
-                fetchedCreditCards.push(
-                  Object.assign(paymentMethod, {
-                    imageSrc: "../../../src/assets/credit-card.png",
-                  })
-                );
-                break;
-              case "DEBIT_CARD":
-                fetchedDebitCards.push(
-                  Object.assign(paymentMethod, {
-                    imageSrc: "../../../src/assets/debit-card.png",
-                  })
-                );
-                break;
-              case "DIGITAL_WALLET":
-                fetchedDigitalWallets.push(
-                  Object.assign(paymentMethod, {
-                    imageSrc: "../../../src/assets/digital-wallet.png",
-                  })
-                );
-                break;
-            }
-          });
-          setBankAccounts(fetchedBankAccounts);
-          setCreditCards(fetchedCreditCards);
-          setDebitCards(fetchedDebitCards);
-          setDigitalWallets(fetchedDigitalWallets);
-        } else {
-          setError(response.data);
+  const fetchPaymentMethods = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        "/accounts/payment-methods/api/v1/me/get",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // "Content-Type": "application/json",
+            Accept: "application/json",
+          },
         }
-      } catch (e) {
-        setLoading(false);
-        setError(e);
+      );
+      console.log(response);
+      setLoading(false);
+      if (response.data && response.data.status === 1) {
+        const paymentMethods = response.data.data.items;
+        let fetchedBankAccounts = [];
+        let fetchedCreditCards = [];
+        let fetchedDebitCards = [];
+        let fetchedDigitalWallets = [];
+        paymentMethods.forEach((paymentMethod) => {
+          switch (paymentMethod.type) {
+            case "BANK_ACCOUNT":
+              fetchedBankAccounts.push(
+                Object.assign(paymentMethod, {
+                  imageSrc: "../../../src/assets/atm-card.png",
+                })
+              );
+              break;
+            case "CREDIT_CARD":
+              fetchedCreditCards.push(
+                Object.assign(paymentMethod, {
+                  imageSrc: "../../../src/assets/credit-card.png",
+                })
+              );
+              break;
+            case "DEBIT_CARD":
+              fetchedDebitCards.push(
+                Object.assign(paymentMethod, {
+                  imageSrc: "../../../src/assets/debit-card.png",
+                })
+              );
+              break;
+            case "DIGITAL_WALLET":
+              fetchedDigitalWallets.push(
+                Object.assign(paymentMethod, {
+                  imageSrc: "../../../src/assets/digital-wallet.png",
+                })
+              );
+              break;
+          }
+        });
+        setBankAccounts(fetchedBankAccounts);
+        setCreditCards(fetchedCreditCards);
+        setDebitCards(fetchedDebitCards);
+        setDigitalWallets(fetchedDigitalWallets);
+      } else {
+        setError(response.data);
       }
-    };
+    } catch (e) {
+      setLoading(false);
+      setError(e);
+    }
+  };
 
+  useEffect(() => {
     fetchPaymentMethods().then(() => {});
   }, []);
 
   return (
-    <div className="container payment-method-management-container">
-      <Breadcrumb
-        className="breadcrumb"
-        separator=" "
-        items={[
-          {
-            title: (
-              <span
-                style={{ color: "rgba(255, 255, 255, 0.6)" }}
-                onClick={() => nativigate("/home")}
-              >
-                Account dashboard
-              </span>
-            ),
-          },
-          {
-            title: (
-              <span style={{ color: "rgba(255, 255, 255, 0.6)" }}> {">"} </span>
-            ),
-          },
-          {
-            title: (
-              <span style={{ color: "rgba(255, 255, 255, 1)" }}>
-                Payment methods
-              </span>
-            ),
-            href: "/account-dashboard/payment-methods",
-          },
-        ]}
-      />
-
-      <div className="title">
-        <p className="name">Payment methods</p>
-        <p className="description">
-          Display your payment methods, in summary and details, quickly add new
-          payment methods, as well as edit, verify, or remove them{" "}
-        </p>
-      </div>
-      {error && (
-        <Alert
-          message="Error"
-          description={error.message}
-          type="error"
-          showIcon
+    <>
+      {openVerifyForm && (
+        <VerifyPaymentMethod
+          onSuccess={onSuccessfullyVerify}
+          onCancel={onCancelVerify}
+          item={itemBeingVerified}
         />
       )}
-      <div className="body">
-        {loading && (
-          <div className="loading-wrapper">
-            <p>Fetching your payment methods </p>
-            <div className="spinner" />
-          </div>
-        )}
-        {!loading &&
-          !error &&
-          !bankAccounts.length &&
-          !creditCards.length &&
-          !debitCards.length &&
-          !digitalWallets.length && <p>No payment methods found</p>}
-        {!loading && !error && bankAccounts.length && (
-          <PaymentMethodCategory
-            name="Bank accounts"
-            items={bankAccounts}
-            onClick={onClickCategorySummary}
+      {openUpdateForm && (
+        <UpdatePaymentMethod
+          onSuccess={onSuccessfullyUpdate}
+          onCancel={onCancelUpdate}
+          item={itemBeingUpdated}
+        />
+      )}
+      {contextHolder}
+      <div className="container payment-method-management-container">
+        <Breadcrumb
+          className="breadcrumb"
+          separator=" "
+          items={[
+            {
+              title: (
+                <span
+                  style={{ color: "rgba(255, 255, 255, 0.6)" }}
+                  onClick={() => nativigate("/home")}
+                >
+                  Account dashboard
+                </span>
+              ),
+            },
+            {
+              title: (
+                <span style={{ color: "rgba(255, 255, 255, 0.6)" }}>
+                  {" "}
+                  {">"}{" "}
+                </span>
+              ),
+            },
+            {
+              title: (
+                <span style={{ color: "rgba(255, 255, 255, 1)" }}>
+                  Payment methods
+                </span>
+              ),
+              href: "/account-dashboard/payment-methods",
+            },
+          ]}
+        />
+
+        <div className="title">
+          <p className="name">Payment methods</p>
+          <p className="description">
+            Display your payment methods, in summary and details, quickly add
+            new payment methods, as well as edit, verify, or remove them{" "}
+          </p>
+        </div>
+        {error && (
+          <Alert
+            message="Error"
+            description={error.message}
+            type="error"
+            showIcon
           />
         )}
-        {!loading && !error && creditCards.length && (
-          <PaymentMethodCategory
-            name="Credit cards"
-            items={creditCards}
-            onClick={onClickCategorySummary}
+        {openAddForm && (
+          <AddPaymentMethod
+            onSuccess={onSuccessfullyAdd}
+            onCancel={onCancelAdd}
           />
         )}
-        {!loading && !error && debitCards.length && (
-          <PaymentMethodCategory
-            name="Debit cards"
-            items={debitCards}
-            onClick={onClickCategorySummary}
-          />
-        )}
-        {!loading && !error && digitalWallets.length && (
-          <PaymentMethodCategory
-            name="Digital wallets"
-            items={digitalWallets}
-            onClick={onClickCategorySummary}
-          />
-        )}
+
+        <div className="body">
+          <button className="add-payment-method-btn" onClick={onClickAddBtn}>
+            Add
+          </button>
+          {loading && (
+            <div className="loading-wrapper">
+              <p>Fetching your payment methods </p>
+              <div className="spinner" />
+            </div>
+          )}
+          {!loading &&
+            !error &&
+            !bankAccounts.length &&
+            !creditCards.length &&
+            !debitCards.length &&
+            !digitalWallets.length && <p>No payment methods found</p>}
+          {!loading && !error && bankAccounts.length ? (
+            <PaymentMethodCategory
+              name="Bank accounts"
+              items={bankAccounts}
+              onClick={onClickCategorySummary}
+            />
+          ) : null}
+          {!loading && !error && creditCards.length ? (
+            <PaymentMethodCategory
+              name="Credit cards"
+              items={creditCards}
+              onClick={onClickCategorySummary}
+            />
+          ) : null}
+          {!loading && !error && debitCards.length ? (
+            <PaymentMethodCategory
+              name="Debit cards"
+              items={debitCards}
+              onClick={onClickCategorySummary}
+            />
+          ) : null}
+          {!loading && !error && digitalWallets.length ? (
+            <PaymentMethodCategory
+              name="Digital wallets"
+              items={digitalWallets}
+              onClick={onClickCategorySummary}
+            />
+          ) : null}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -256,7 +298,7 @@ const PaymentMethodCategory = (props) => {
       <div className="pm-category-container">
         <p className="category-name">{props.name}</p>
         {props.items.map((item, index) => {
-          const t = props.name.toLowerCase().split("\\s+");
+          const t = props.name.toLowerCase().split(/\s+/);
           let prefix = "";
           t.map((str) => (prefix += str.charAt(0)));
           return (
@@ -321,6 +363,11 @@ const ItemDetails = ({
   item,
   metadataClassNamePrefix,
   index,
+  onClickActivateBtn,
+  onClickDeactivateBtn,
+  onClickVerifyBtn,
+  onClickUpdateBtn,
+  onClickDeleteBtn,
   onClickMetadata,
 }) => {
   return (
@@ -334,7 +381,7 @@ const ItemDetails = ({
           </div>
           <div className="property">
             <p className="label">Use as default</p>
-            <p className="description">{item.isDefault.toString()}</p>
+            <p className="description">{item.default.toString()}</p>
           </div>
           <div className="property">
             <p className="label">Added at</p>
@@ -371,25 +418,41 @@ const ItemDetails = ({
       <div className="crud-btns">
         <div className="btn btn-wrapper">
           <p className="description">Activate this payment method</p>
-          <button className="activate-btn">Activate</button>
+          <button
+            className="activate-btn"
+            onClick={() => onClickActivateBtn(item)}
+          >
+            Activate
+          </button>
         </div>
         <div className="btn-wrapper">
           <p className="description">Deactivate this payment method</p>
-          <button className="deactivate-btn">Deactivate</button>
+          <button
+            className="deactivate-btn"
+            onClick={() => onClickDeactivateBtn(item)}
+          >
+            Deactivate
+          </button>
         </div>
         <div className="btn-wrapper">
           <p className="description">Verify this payment method</p>
-          <button className="verify-btn">Verify</button>
+          <button className="verify-btn" onClick={() => onClickVerifyBtn(item)}>
+            Verify
+          </button>
         </div>
         <div className="btn-wrapper">
           <p className="description">
             Update information about this payment method
           </p>
-          <button className="update-btn">Update</button>
+          <button className="update-btn" onClick={() => onClickUpdateBtn(item)}>
+            Update
+          </button>
         </div>
         <div className="btn-wrapper">
           <p className="description warning-text">Remove this payment method</p>
-          <button className="delete-btn">Delete</button>
+          <button className="delete-btn" onClick={() => onClickDeleteBtn(item)}>
+            Delete
+          </button>
         </div>
       </div>
     </>

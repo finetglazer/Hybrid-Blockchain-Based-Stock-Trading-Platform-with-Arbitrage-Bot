@@ -52,7 +52,7 @@ const CreateAccount = ({ onSuccess }) => {
 
     try {
       const response = await axios.post(
-        "/api/accounts/api/v1/create",
+        "/accounts/api/v1/create",
         {
           currency,
           nickname,

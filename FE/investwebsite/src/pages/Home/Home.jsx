@@ -5,22 +5,18 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CreateAccount from "../CreateAccount";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Home = () => {
-  /*const [wallets, setWallets] = useState([
-    {
-      nickname: "MB Bank",
-      currency: "VND",
-    },
-  ]);*/
   const [tradingAccount, setTradingAccount] = useState([]);
   const [open, setOpen] = useState(false);
+  const walletListRef = useRef(null);
   const nativigate = useNavigate();
+
   const handleAccountCreated = () => {
     setOpen(false);
     fetchTradingAccounts();
@@ -29,24 +25,34 @@ const Home = () => {
   const fetchTradingAccounts = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.get(
-        "https://good-musical-joey.ngrok-free.app//accounts/api/v1/get",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get("/accounts/api/v1/get", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      const accounts = res.data.items;
-      console.log(res.data);
-      //console.log("Array.isArray?", Array.isArray(accounts));
+      const accounts = res.data.data.items;
+      console.log(accounts);
       setTradingAccount(accounts);
     } catch (error) {
       console.error(error);
     }
   };
+
   useEffect(() => {
     fetchTradingAccounts();
   }, []);
+
+  const scrollWallets = (direction) => {
+    const container = walletListRef.current;
+    const scrollAmount = 236;
+
+    if (container) {
+      container.scrollBy({
+        left: direction * scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <>
       <div className="main-background">
@@ -54,35 +60,60 @@ const Home = () => {
           {/* Wallets Section - BÊN TRÁI */}
           <div className="wallets-section">
             <div className="wallets-header">
-              <h1 style={{ color: "#ffffff" }}>Wallets</h1>
+              <h1 style={{ color: "#ffffff", marginLeft: "10px" }}>
+                Trading Accounts
+              </h1>
               <p
-                onClick={() => nativigate("/wallet")}
+                onClick={() => nativigate("/trading-accounts")}
                 style={{
                   color: "#ffffff",
                   fontWeight: "bold",
                   textDecoration: "none",
-                  left: 0,
+                  right: 0,
                 }}
               >
                 View all
               </p>
             </div>
 
-            <div className="wallets-list">
-              {Array.isArray(tradingAccount) &&
-                tradingAccount.map((account, index) => (
-                  <div key={index} className="wallet-card">
-                    <div className="wallet-info">
-                      <div className="wallet-icon" />
-                      <div className="wallet-name">{account.nickname}</div>
+            <div className="wallets-scroll-wrapper">
+              <button
+                className="scroll-btn left"
+                onClick={() => scrollWallets(-1)}
+              >
+                ←
+              </button>
+
+              <div className="wallets-list" ref={walletListRef}>
+                {Array.isArray(tradingAccount) &&
+                  tradingAccount.map((account, index) => (
+                    <div key={index} className="wallet-card">
+                      <div className="wallet-info">
+                        <div className="wallet-icon" />
+                        <div className="wallet-name">{account.nickname}</div>
+                      </div>
+                      <div className="wallet-subinfo">
+                        <div className="wallet-currency">
+                          {account.balance.currency}
+                        </div>
+                        <div className="wallet-balance">
+                          {account.balance.total}
+                        </div>
+                      </div>
+                      <div className="wallet-actions">
+                        <button className="wallet-btn">Deposit</button>
+                        <button className="wallet-btn">Withdraw</button>
+                      </div>
                     </div>
-                    <div className="wallet-currency">{account.currency}</div>
-                    <div className="wallet-actions">
-                      <button className="wallet-btn">Deposit</button>
-                      <button className="wallet-btn">Withdraw</button>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+              </div>
+
+              <button
+                className="scroll-btn right"
+                onClick={() => scrollWallets(1)}
+              >
+                →
+              </button>
             </div>
           </div>
 
@@ -102,6 +133,7 @@ const Home = () => {
               ))}
             </div>
           </div>
+
           <div className="create-trading-account">
             <Button
               variant="contained"
