@@ -432,7 +432,7 @@ const BuyOrderForm = ({ stockData, onSubmit, disabled = false }) => {
                     </button>
                     <button
                         type="submit"
-                        className="submit-button"
+                        className={`submit-button ${disabled ? 'loading' : ''}`}
                         disabled={disabled || accountsLoading || (formData.quantity > 100000)}
                     >
                         {disabled ? 'Processing...' : 'Place Order'}

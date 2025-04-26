@@ -4,6 +4,7 @@ import StockTable from './StockeTable';
 import BuyOrderForm from './BuyOrderForm';
 import OrderProgressTracker from './OrderProgressTracker';
 import OrderNotificationModal from './OrderNotificationModal';
+import LoadingOverlay from './LoadingOverlay';
 import { submitOrder, getOrderStatus } from '../../services/orderService';
 import './StockTableWithOrderForm.css';
 import { getUserIdFromToken } from "../../utils/auth.js";
@@ -12,10 +13,11 @@ const StockTableWithOrderForm = () => {
     // State for selected stock
     const [selectedStock, setSelectedStock] = useState(null);
 
-    // State for order processing
+// State for order processing
     const [activeOrderId, setActiveOrderId] = useState(null);
     const [orderStatus, setOrderStatus] = useState(null);
     const [orderError, setOrderError] = useState(null);
+    const [isOrderSubmitting, setIsOrderSubmitting] = useState(false);
 
     // State for notification modal
     const [showNotification, setShowNotification] = useState(false);
@@ -40,6 +42,8 @@ const StockTableWithOrderForm = () => {
         try {
             // Clear any previous errors
             setOrderError(null);
+            // Set submitting state to true to show loading indicator
+            setIsOrderSubmitting(true);
 
             const orderData = {
                 userId: userId,
@@ -63,6 +67,9 @@ const StockTableWithOrderForm = () => {
         } catch (error) {
             console.error("Failed to submit order:", error);
             setOrderError(error.response?.data?.message || "Failed to submit order. Please try again.");
+        } finally {
+            // Set submitting state back to false when the request completes
+            setIsOrderSubmitting(false);
         }
     };
 
@@ -154,12 +161,19 @@ const StockTableWithOrderForm = () => {
                 </div>
 
                 {/* Order form and status section */}
+                {/* Order form and status section */}
                 <div className="order-section">
-                    <BuyOrderForm
-                        stockData={selectedStock}
-                        onSubmit={handleSubmitOrder}
-                        disabled={!!activeOrderId}
-                    />
+                    <div style={{ position: 'relative' }}>
+                        <BuyOrderForm
+                            stockData={selectedStock}
+                            onSubmit={handleSubmitOrder}
+                            disabled={!!activeOrderId || isOrderSubmitting}
+                        />
+                        <LoadingOverlay
+                            visible={isOrderSubmitting}
+                            message="Preparing your order..."
+                        />
+                    </div>
 
                     {orderError && (
                         <div className="order-error">
