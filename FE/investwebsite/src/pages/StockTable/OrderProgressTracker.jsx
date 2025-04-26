@@ -12,18 +12,18 @@ import './OrderProgressTracker.css';
 const OrderProgressTracker = ({ currentStep, completedSteps = [], status }) => {
   // Define all possible steps in correct order
   const allSteps = [
+    { id: 'CREATE_ORDER', name: 'Create Order' },
     { id: 'VERIFY_TRADING_PERMISSION', name: 'Verify Permission' },
     { id: 'VERIFY_ACCOUNT_STATUS', name: 'Verify Account' },
     { id: 'VALIDATE_STOCK', name: 'Validate Stock' },
     { id: 'GET_MARKET_PRICE', name: 'Get Price' },
     { id: 'CALCULATE_REQUIRED_FUNDS', name: 'Calculate Funds' },
     { id: 'RESERVE_FUNDS', name: 'Reserve Funds' },
-    { id: 'CREATE_ORDER', name: 'Create Order' },
     { id: 'UPDATE_ORDER_VALIDATED', name: 'Validate Order' },
     { id: 'EXECUTE_ORDER', name: 'Execute Order' },
     { id: 'UPDATE_ORDER_EXECUTED', name: 'Update Order' },
-    { id: 'SETTLE_TRANSACTION', name: 'Settle Transaction' },
     { id: 'UPDATE_PORTFOLIO', name: 'Update Portfolio' },
+    { id: 'SETTLE_TRANSACTION', name: 'Settle Transaction' },
     { id: 'COMPLETE_SAGA', name: 'Complete' }
   ];
 
