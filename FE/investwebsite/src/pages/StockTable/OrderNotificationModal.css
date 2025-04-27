@@ -55,6 +55,11 @@
     border: 2px solid #ff4d4d;
 }
 
+.notification-icon.cancelled {
+    background-color: rgba(243, 156, 18, 0.2);
+    border: 2px solid #f39c12;
+}
+
 .notification-icon svg {
     width: 40px;
     height: 40px;
@@ -73,6 +78,10 @@
 
 .notification-title.failed {
     color: #ff4d4d;
+}
+
+.notification-title.cancelled {
+    color: #f39c12;
 }
 
 .notification-message {
@@ -108,6 +117,23 @@
 .order-detail-value {
     color: white;
     font-weight: 500;
+}
+
+/* Status values */
+.order-detail-value.status-completed {
+    color: #1ca443;
+}
+
+.order-detail-value.status-failed {
+    color: #ff4d4d;
+}
+
+.order-detail-value.status-cancelled_by_user {
+    color: #f39c12;
+}
+
+.order-detail-value.status-compensation_completed {
+    color: #ff4d4d;
 }
 
 .notification-actions {

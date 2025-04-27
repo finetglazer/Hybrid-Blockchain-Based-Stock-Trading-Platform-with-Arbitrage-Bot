@@ -5,7 +5,7 @@ import BuyOrderForm from './BuyOrderForm';
 import OrderProgressTracker from './OrderProgressTracker';
 import OrderNotificationModal from './OrderNotificationModal';
 import LoadingOverlay from './LoadingOverlay';
-import { submitOrder, getOrderStatus } from '../../services/orderService';
+import {submitOrder, getOrderStatus, cancelOrder} from '../../services/orderService';
 import './StockTableWithOrderForm.css';
 import { getUserIdFromToken } from "../../utils/auth.js";
 
@@ -21,6 +21,7 @@ const StockTableWithOrderForm = () => {
     const [orderStatus, setOrderStatus] = useState(null);
     const [orderError, setOrderError] = useState(null);
     const [isOrderSubmitting, setIsOrderSubmitting] = useState(false);
+    const [isCancellingOrder, setIsCancellingOrder] = useState(false);
 
     // State for notification modal
     const [showNotification, setShowNotification] = useState(false);
@@ -78,6 +79,31 @@ const StockTableWithOrderForm = () => {
         } finally {
             // Set submitting state back to false when the request completes
             setIsOrderSubmitting(false);
+        }
+    };
+
+    // Handle order cancellation
+    const handleCancelOrder = async (sagaId) => {
+        if (!sagaId || isCancellingOrder) {
+            return;
+        }
+
+        try {
+            setIsCancellingOrder(true);
+            setOrderError(null);
+
+            // Call the cancel API
+            const response = await cancelOrder(sagaId);
+
+            // Update the order status with the cancellation info
+            setOrderStatus(response);
+
+            // Continue polling to see the cancellation progress
+            // The poll function will detect completion of cancellation
+        } catch (error) {
+            console.error("Failed to cancel order:", error);
+            setOrderError(error.response?.data?.message || "Failed to cancel order. Please try again.");
+            setIsCancellingOrder(false);
         }
     };
 
@@ -228,12 +254,17 @@ const StockTableWithOrderForm = () => {
                         </div>
                     )}
 
+
                     {orderStatus && (
                         <OrderProgressTracker
                             currentStep={orderStatus.currentStep}
                             completedSteps={orderStatus.completedSteps || []}
                             status={orderStatus.status}
+                            sagaId={activeOrderId}
+                            onCancelOrder={handleCancelOrder}
+                            isCancelling={isCancellingOrder}
                             onAllStepsAnimated={() => setAllStepsAnimated(true)}
+                            isLimitOrder={orderStatus?.orderType === 'LIMIT'}
                         />
                     )}
                 </div>

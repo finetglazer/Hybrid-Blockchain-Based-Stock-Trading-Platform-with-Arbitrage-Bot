@@ -8,13 +8,19 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
+.status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(80, 80, 80, 0.5);
+}
+
 .status-title {
     color: #ccc;
-    margin-top: 0;
-    margin-bottom: 15px;
+    margin: 0;
     font-size: 18px;
-    border-bottom: 1px solid rgba(80, 80, 80, 0.5);
-    padding-bottom: 10px;
 }
 
 .status-completed {
@@ -22,7 +28,7 @@
     font-weight: bold;
 }
 
-.status-failed, .status-compensation_completed {
+.status-failed, .status-compensation_completed, .status-cancelled_by_user {
     color: #ff4d4d;
     font-weight: bold;
 }
@@ -40,6 +46,49 @@
 .status-limit_order_pending {
     color: #9b59b6;
     font-weight: bold;
+}
+
+/* Cancel button styles */
+.cancel-order-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-order-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.cancel-order-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.65;
+}
+
+/* Cancellation message */
+.cancellation-message {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    padding: 12px;
+    margin-top: 15px;
+    border-radius: 4px;
+    border-left: 3px solid #dc3545;
+    font-size: 14px;
+}
+
+.cancel-button-container {
+    margin-top: 20px;
+    text-align: center;
 }
 
 .steps-container {

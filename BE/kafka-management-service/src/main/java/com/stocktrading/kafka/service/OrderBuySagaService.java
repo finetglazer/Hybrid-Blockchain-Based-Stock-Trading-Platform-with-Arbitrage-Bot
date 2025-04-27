@@ -4,6 +4,7 @@ import com.project.kafkamessagemodels.model.CommandMessage;
 import com.project.kafkamessagemodels.model.EventMessage;
 import com.project.kafkamessagemodels.model.enums.CommandType;
 import com.project.kafkamessagemodels.model.enums.EventType;
+import com.stocktrading.kafka.exception.SagaNotFoundException;
 import com.stocktrading.kafka.model.OrderBuySagaState;
 import com.stocktrading.kafka.model.enums.OrderBuySagaStep;
 import com.stocktrading.kafka.model.enums.SagaStatus;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -769,5 +771,70 @@ public class OrderBuySagaService {
 
     public OrderBuySagaState findByOrderId(String orderId) {
         return orderBuySagaRepository.findByOrderId(orderId);
+    }
+
+    /**
+     * Cancel an order by user request
+     *
+     * @param sagaId The ID of the saga to cancel
+     * @return The updated saga state
+     * @throws SagaNotFoundException if the saga is not found
+     * @throws IllegalStateException if the saga cannot be cancelled in its current state
+     */
+    @Transactional
+    public OrderBuySagaState cancelOrderByUser(String sagaId) {
+        log.info("Processing cancellation request for saga: {}", sagaId);
+
+        // Find the saga and lock it to prevent concurrent modifications
+        Optional<OrderBuySagaState> optionalSaga = orderBuySagaRepository.findById(sagaId);
+        if (optionalSaga.isEmpty()) {
+            log.warn("Saga not found for cancellation: {}", sagaId);
+            throw new SagaNotFoundException(sagaId);
+        }
+
+        OrderBuySagaState saga = optionalSaga.get();
+
+        // Check if the saga can be cancelled in its current state
+        if (saga.getStatus() != SagaStatus.LIMIT_ORDER_PENDING &&
+                saga.getStatus() != SagaStatus.IN_PROGRESS) {
+            String errorMsg = String.format("Cannot cancel order in state %s: %s",
+                    saga.getStatus(), sagaId);
+            log.warn(errorMsg);
+            throw new IllegalStateException(errorMsg);
+        }
+
+        // If the saga is already in COMPLETED, FAILED, or COMPENSATION_COMPLETED state
+        if (saga.getStatus() == SagaStatus.COMPLETED ||
+                saga.getStatus() == SagaStatus.FAILED ||
+                saga.getStatus() == SagaStatus.COMPENSATION_COMPLETED) {
+            String errorMsg = String.format("Order is already in final state %s: %s",
+                    saga.getStatus(), sagaId);
+            log.warn(errorMsg);
+            throw new IllegalStateException(errorMsg);
+        }
+
+        // If already cancelling, return the current state
+        if (saga.getStatus() == SagaStatus.COMPENSATING ||
+                saga.getStatus() == SagaStatus.CANCELLED_BY_USER) {
+            log.info("Order is already being cancelled: {}", sagaId);
+            return saga;
+        }
+
+        // Mark as user-cancelled
+        saga.setStatus(SagaStatus.CANCELLED_BY_USER);
+        saga.setFailureReason("Cancelled by user request");
+        saga.addEvent("USER_CANCELLED", "Order cancellation requested by user");
+        saga.setLastUpdatedTime(Instant.now());
+
+        // Save the updated saga state
+        orderBuySagaRepository.save(saga);
+
+        log.info("Order marked as cancelled by user: {}", sagaId);
+
+        // Start compensation process
+        startCompensation(saga);
+
+        // Return updated saga
+        return saga;
     }
 }

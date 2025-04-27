@@ -9,13 +9,20 @@ import './OrderProgressTracker.css';
  * @param {Array<string>} props.completedSteps - Array of completed step IDs
  * @param {string} props.status - The current saga status
  * @param {Function} props.onAllStepsAnimated - Callback when all steps have been animated
+ * @param {string} props.sagaId - The ID of the current saga
+ * @param {Function} props.onCancelOrder - Function to handle order cancellation
+ * @param {boolean} props.isCancelling - Whether the order is currently being cancelled
  * @returns {JSX.Element} - The progress tracker component
  */
 const OrderProgressTracker = ({
                                 currentStep,
                                 completedSteps = [],
                                 status,
-                                onAllStepsAnimated
+                                onAllStepsAnimated,
+                                sagaId,
+                                onCancelOrder,
+                                isCancelling = false,
+                                isLimitOrder = false  // Add this new prop
                               }) => {
   // State to track which steps are visually shown as completed
   const [visibleCompletedSteps, setVisibleCompletedSteps] = useState([]);
@@ -54,6 +61,24 @@ const OrderProgressTracker = ({
     { id: 'CANCEL_BROKER_ORDER', name: 'Cancel Broker Order' },
     { id: 'RELEASE_FUNDS', name: 'Release Reserved Funds' },
     { id: 'CANCEL_ORDER', name: 'Cancel Order' }
+  ];
+
+  // Add this new constant after allSteps
+  const allLimitOrderSteps = [
+    { id: 'CREATE_ORDER', name: 'Create Order' },
+    { id: 'VERIFY_TRADING_PERMISSION', name: 'Verify Permission' },
+    { id: 'VERIFY_ACCOUNT_STATUS', name: 'Verify Account' },
+    { id: 'VALIDATE_STOCK', name: 'Validate Stock' },
+    // GET_MARKET_PRICE is omitted for limit orders
+    { id: 'CALCULATE_REQUIRED_FUNDS', name: 'Calculate Funds' },
+    { id: 'RESERVE_FUNDS', name: 'Reserve Funds' },
+    { id: 'UPDATE_ORDER_VALIDATED', name: 'Validate Order' },
+    { id: 'SUBMIT_ORDER', name: 'Execute Order' },
+    { id: 'UPDATE_ORDER_EXECUTED', name: 'Update Order' },
+    { id: 'UPDATE_PORTFOLIO', name: 'Update Portfolio' },
+    { id: 'SETTLE_TRANSACTION', name: 'Settle Transaction' },
+    { id: 'UPDATE_ORDER_COMPLETED', name: 'Complete Order' },
+    { id: 'COMPLETE_SAGA', name: 'Complete' }
   ];
 
   // Function to determine which compensation steps to show based on completed steps
@@ -99,7 +124,15 @@ const OrderProgressTracker = ({
 
   // Determine which steps to show based on status
   const isCompensating = status === 'COMPENSATING' || status === 'COMPENSATION_COMPLETED';
-  const stepsToShow = isCompensating ? getCompensationSteps() : allSteps;
+  let stepsToShow;
+
+  if (isCompensating) {
+    stepsToShow = getCompensationSteps();
+  } else if (isLimitOrder) {
+    stepsToShow = allLimitOrderSteps;
+  } else {
+    stepsToShow = allSteps;
+  }
 
   // Detect entering compensation mode and reset animation state
   useEffect(() => {
@@ -243,29 +276,78 @@ const OrderProgressTracker = ({
     }
   }, [animationsComplete, onAllStepsAnimated]);
 
+  // Determine if the cancel button should be shown
+  const showCancelButton = status === 'LIMIT_ORDER_PENDING' &&
+      sagaId &&
+      onCancelOrder &&
+      !isCancelling &&
+      status !== 'CANCELLED_BY_USER' &&
+      status !== 'COMPENSATING' &&
+      status !== 'COMPENSATION_COMPLETED' &&
+      status !== 'COMPLETED' &&
+      status !== 'FAILED';
+
+  console.log('Cancel button debug:', {
+    statusIsLimitOrderPending: status === 'LIMIT_ORDER_PENDING',
+    hasSagaId: !!sagaId,
+    hasOnCancelOrderFunction: !!onCancelOrder,
+    isNotCancelling: !isCancelling,
+    status,
+    finalResult: showCancelButton
+  });
+
+  // Handle cancel button click
+  const handleCancelClick = () => {
+    if (onCancelOrder && sagaId) {
+      onCancelOrder(sagaId);
+    }
+  };
+
   return (
       <div className="order-progress-tracker">
-        <h3 className="status-title">
-          Order Status: <span className={`status-${status?.toLowerCase()}`}>{status}</span>
-        </h3>
+        <div className="status-header">
+          <h3 className="status-title">
+            Order Status: <span className={`status-${status?.toLowerCase()}`}>{status}</span>
+          </h3>
+        </div>
+
         <div className="steps-container">
+          {/* Existing steps code */}
           {stepsToShow.map(step => (
               <div
                   key={step.id}
                   className={`step 
               ${currentStep === step.id ? 'active' : ''}
               ${visibleCompletedSteps.includes(step.id) ? 'completed' : ''}
-              ${status === 'FAILED' && currentStep === step.id ? 'failed' : ''}`
+              ${status === 'FAILED' || status === 'CANCELLED_BY_USER' && currentStep === step.id ? 'failed' : ''}`
                   }
               >
                 <div className="step-indicator">
                   {visibleCompletedSteps.includes(step.id) ? '✓' :
-                      status === 'FAILED' && currentStep === step.id ? '✗' : ''}
+                      (status === 'FAILED' || status === 'CANCELLED_BY_USER') && currentStep === step.id ? '✗' : ''}
                 </div>
                 <div className="step-name">{step.name}</div>
               </div>
           ))}
         </div>
+
+        {/* Add cancel button for LIMIT orders in pending state */}
+        {showCancelButton && (
+            <button
+                className="cancel-order-button"
+                onClick={handleCancelClick}
+                disabled={isCancelling}
+            >
+              {isCancelling ? 'Cancelling...' : 'Cancel Order'}
+            </button>
+        )}
+
+        {/* Show cancellation message when appropriate */}
+        {status === 'CANCELLED_BY_USER' && (
+            <div className="cancellation-message">
+              Your order has been cancelled and resources are being released.
+            </div>
+        )}
       </div>
   );
 };

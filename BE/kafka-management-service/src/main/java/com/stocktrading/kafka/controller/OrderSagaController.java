@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,36 @@ import java.util.stream.Collectors;
 public class OrderSagaController {
 
     private final OrderBuySagaService orderBuySagaService;
+
+    /**
+     * Cancel an order by user request
+     */
+    @PostMapping("/{sagaId}/cancel")
+    public ResponseEntity<?> cancelOrder(@PathVariable String sagaId) {
+        log.info("Received request to cancel order saga: {}", sagaId);
+
+        try {
+            OrderBuySagaState saga = orderBuySagaService.cancelOrderByUser(sagaId);
+            return ResponseEntity.ok(mapToDto(saga));
+        } catch (IllegalStateException e) {
+            // Order cannot be cancelled in current state
+            log.warn("Cannot cancel order: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(
+                    Map.of(
+                            "status", "error",
+                            "message", e.getMessage()
+                    )
+            );
+        } catch (Exception e) {
+            log.error("Error cancelling order saga: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    Map.of(
+                            "status", "error",
+                            "message", "Failed to cancel order: " + e.getMessage()
+                    )
+            );
+        }
+    }
 
     /**
      * Start a new order buy saga

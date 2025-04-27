@@ -42,3 +42,24 @@ export const getOrderStatus = async (sagaId) => {
         throw error;
     }
 };
+
+/**
+ * Cancel an order by user request
+ * @param {string} sagaId - The ID of the saga to cancel
+ * @returns {Promise<Object>} - The response from the saga service
+ */
+export const cancelOrder = async (sagaId) => {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await axios.post(`/sagas/api/v1/orders/${sagaId}/cancel`, {}, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error cancelling order:", error);
+        throw error;
+    }
+};
