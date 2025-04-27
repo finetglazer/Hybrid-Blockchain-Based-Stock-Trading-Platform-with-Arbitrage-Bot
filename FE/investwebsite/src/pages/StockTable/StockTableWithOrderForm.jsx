@@ -10,6 +10,7 @@ import './StockTableWithOrderForm.css';
 import { getUserIdFromToken } from "../../utils/auth.js";
 
 const StockTableWithOrderForm = () => {
+    const [allStepsAnimated, setAllStepsAnimated] = useState(false);
     // Add this near the top of your component
     const notifiedSagaIdsRef = useRef(new Set());
     // State for selected stock
@@ -87,7 +88,7 @@ const StockTableWithOrderForm = () => {
         navigate('/portfolio');
     };
 
-    // Handle "Close" button click
+    // In StockTableWithOrderForm.jsx, add to the handleCloseNotification function
     const handleCloseNotification = () => {
         setShowNotification(false);
         // Reset order states if needed
@@ -95,8 +96,7 @@ const StockTableWithOrderForm = () => {
             setActiveOrderId(null);
             setOrderStatus(null);
             setOrderComplete(false);
-            // Reset notification shown flag
-            notificationShownRef.current = false;
+            setAllStepsAnimated(false); // Reset animation state too
         }
     };
 
@@ -105,7 +105,6 @@ const StockTableWithOrderForm = () => {
         // Clear any existing interval
         if (pollingInterval.current) {
             clearInterval(pollingInterval.current);
-            pollingInterval.current = null;
         }
 
         // Start polling
@@ -118,44 +117,40 @@ const StockTableWithOrderForm = () => {
                 if (statusData.status === 'COMPLETED' ||
                     statusData.status === 'FAILED' ||
                     statusData.status === 'COMPENSATION_COMPLETED') {
-
-                    // Clear interval immediately
                     clearInterval(pollingInterval.current);
-                    pollingInterval.current = null;
 
-                    // Only show notification if not already shown for this specific saga ID
-                    if (!notifiedSagaIdsRef.current.has(sagaId)) {
-                        // Mark this saga ID as notified
-                        notifiedSagaIdsRef.current.add(sagaId);
+                    // Set order completion states
+                    setOrderComplete(true);
+                    setOrderSuccess(statusData.status === 'COMPLETED');
 
-                        // Set order completion states
-                        setOrderComplete(true);
-                        setOrderSuccess(statusData.status === 'COMPLETED');
-
-                        // Show notification modal
-                        setShowNotification(true);
-                    }
+                    // Don't show notification immediately
+                    // We'll handle showing it with useEffect below
                 }
             } catch (error) {
                 console.error("Error checking order status:", error);
                 setOrderError("Failed to get order status updates");
-
-                // Clear interval immediately
                 clearInterval(pollingInterval.current);
-                pollingInterval.current = null;
 
-                // Only show notification if not already shown for this specific saga ID
-                if (!notifiedSagaIdsRef.current.has(sagaId)) {
-                    notifiedSagaIdsRef.current.add(sagaId);
-
-                    // Show failure notification
-                    setOrderComplete(true);
-                    setOrderSuccess(false);
-                    setShowNotification(true);
-                }
+                // Show failure notification immediately for errors
+                setOrderComplete(true);
+                setOrderSuccess(false);
+                setShowNotification(true);
             }
         }, 1000);
     };
+
+    // In StockTableWithOrderForm.jsx, add this effect
+    useEffect(() => {
+        // Only show notification when both order is complete AND all steps have been animated
+        if (orderComplete && allStepsAnimated) {
+            // Add a small delay for visual polish
+            const timerId = setTimeout(() => {
+                setShowNotification(true);
+            }, 500);
+
+            return () => clearTimeout(timerId);
+        }
+    }, [orderComplete, allStepsAnimated]);
 
     // Clean up on unmount
     useEffect(() => {
@@ -171,6 +166,7 @@ const StockTableWithOrderForm = () => {
         if (selectedStock && activeOrderId) {
             setActiveOrderId(null);
             setOrderStatus(null);
+            setAllStepsAnimated(false); // Reset animation state
             clearInterval(pollingInterval.current);
         }
     }, [selectedStock]);
@@ -213,6 +209,7 @@ const StockTableWithOrderForm = () => {
                             currentStep={orderStatus.currentStep}
                             completedSteps={orderStatus.completedSteps || []}
                             status={orderStatus.status}
+                            onAllStepsAnimated={() => setAllStepsAnimated(true)}
                         />
                     )}
                 </div>

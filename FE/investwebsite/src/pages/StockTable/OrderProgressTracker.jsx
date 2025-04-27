@@ -10,7 +10,12 @@ import './OrderProgressTracker.css';
  * @param {string} props.status - The current saga status
  * @returns {JSX.Element} - The progress tracker component
  */
-const OrderProgressTracker = ({ currentStep, completedSteps = [], status }) => {
+const OrderProgressTracker = ({
+                                currentStep,
+                                completedSteps = [],
+                                status,
+                                onAllStepsAnimated
+                              }) => {
   // State to track which steps are visually shown as completed
   // This allows us to animate them sequentially even if they complete simultaneously
   const [visibleCompletedSteps, setVisibleCompletedSteps] = useState([]);
@@ -65,7 +70,19 @@ const OrderProgressTracker = ({ currentStep, completedSteps = [], status }) => {
     // Animate each step sequentially
     let timeoutId;
     const animateNextStep = (index) => {
-      if (index >= orderedNewSteps.length) return;
+      if (index >= orderedNewSteps.length) {
+        // All animations complete
+        // Check if all steps are complete based on status
+        const allComplete = status === 'COMPLETED' ||
+            status === 'FAILED' ||
+            status === 'COMPENSATION_COMPLETED';
+
+        if (allComplete && onAllStepsAnimated) {
+          // Call the callback when all steps are animated AND the saga is complete
+          onAllStepsAnimated();
+        }
+        return;
+      }
 
       timeoutId = setTimeout(() => {
         setVisibleCompletedSteps(prev => [...prev, orderedNewSteps[index]]);
@@ -79,7 +96,23 @@ const OrderProgressTracker = ({ currentStep, completedSteps = [], status }) => {
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [completedSteps, visibleCompletedSteps, stepsToShow]);
+  }, [completedSteps, visibleCompletedSteps, stepsToShow, status, onAllStepsAnimated]);
+
+  // Add this to OrderProgressTracker.jsx
+  useEffect(() => {
+    // Special case for the COMPLETE_SAGA step
+    if (status === 'COMPLETED' &&
+        visibleCompletedSteps.includes('COMPLETE_SAGA') &&
+        onAllStepsAnimated) {
+
+      // Add a small delay after the last step before triggering the notification
+      const finalTimer = setTimeout(() => {
+        onAllStepsAnimated();
+      }, 800); // Slightly longer delay for the last step
+
+      return () => clearTimeout(finalTimer);
+    }
+  }, [status, visibleCompletedSteps, onAllStepsAnimated]);
 
   // Reset visible completed steps when status changes between normal and compensation flow
   useEffect(() => {
