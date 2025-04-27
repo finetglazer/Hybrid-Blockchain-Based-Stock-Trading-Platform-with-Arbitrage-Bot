@@ -5,26 +5,28 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
+import { AppContextProvider } from "./AppContextProvider.jsx";
+import Deposit from "./pages/Deposit.jsx";
+import Disable2FA from "./pages/Disable2FA/Disable2FA.jsx";
 import ForgetPassword from "./pages/ForgetPassword";
-import ResetPassword from "./pages/ResetPassword/ResetPassword.jsx";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Home from "./pages/Home/Home";
-import Wallet from "./pages/Wallet";
-import NavbarSide from "./pages/NavbarSide/NavbarSide";
 import HeaderNavbar from "./pages/HeaderNavbar/HeaderNavbar";
-import Support from "./pages/Support";
+import Home from "./pages/Home/Home";
+import Login from "./pages/Login";
+import NavbarSide from "./pages/NavbarSide/NavbarSide";
+import PaymentMethodsManagement from "./pages/PaymentMethod/PaymentMethodsManagement.jsx";
+import Register from "./pages/Register";
+import ResetPassword from "./pages/ResetPassword/ResetPassword.jsx";
+import TwoFactorAuthenticationSettings from "./pages/SettingPage/2FASettings/2FASettings.jsx";
+import ChangePassword from "./pages/SettingPage/ChangePassword/ChangePassword.jsx";
+import GenerateRecoveryKeys from "./pages/SettingPage/GenerateRecoveryKeys/GenerateRecoveryKeys.jsx";
 import Setting from "./pages/SettingPage/Setting";
+import Support from "./pages/Support";
+import TransactionDetails from "./pages/TransactionDetails/TransactionDetails.jsx";
+import TransactionHistory from "./pages/TransactionHistory/TransactionHistory.jsx";
 import TwoFactorAuth from "./pages/TwoFactorAuth/TwoFactorAuth.jsx";
 import UpdatePhoneNumber from "./pages/UpdatePhoneNumber/UpdatePhoneNumber.jsx";
-import Disable2FA from "./pages/Disable2FA/Disable2FA.jsx";
-import TwoFactorAuthenticationSettings from "./pages/SettingPage/2FASettings/2FASettings.jsx";
-import {AppContextProvider} from "./AppContextProvider.jsx";
-import ChangePassword from "./pages/SettingPage/ChangePassword/ChangePassword.jsx";
-import PaymentMethodsManagement from "./pages/PaymentMethod/PaymentMethodsManagement.jsx";
-import TransactionHistory from "./pages/TransactionHistory/TransactionHistory.jsx";
-import TransactionDetails from "./pages/TransactionDetails/TransactionDetails.jsx";
-import GenerateRecoveryKeys from "./pages/SettingPage/GenerateRecoveryKeys/GenerateRecoveryKeys.jsx";
+import Wallet from "./pages/Wallet.jsx";
+import Withdraw from "./pages/Withdraw.jsx";
 import Portfolio from "./pages/Portfolio/Portfolio.jsx";
 
 const Layout = () => {
@@ -42,7 +44,10 @@ const Layout = () => {
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/withdraw" element={<Withdraw/>} />
+          <Route path="/deposit" element={<Deposit/>} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/support" element={<Support />} />
           <Route path="/setting" element={<Setting />} />
@@ -52,7 +57,6 @@ const Layout = () => {
           <Route path="/account-dashboard/payment-methods" element={<PaymentMethodsManagement />} />
           <Route path="/account-dashboard/transaction-history" element={<TransactionHistory />} />
           <Route path="/account-dashboard/transaction-history/:transactionId/details" element={<TransactionDetails />} />
-          <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/two-factor-auth" element={<TwoFactorAuth />} /> {/* Add this route */}
           <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />
           <Route path="/profile/disable2FA" element={<Disable2FA />} />

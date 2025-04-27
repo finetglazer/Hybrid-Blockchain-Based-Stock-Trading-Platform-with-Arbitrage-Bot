@@ -108,7 +108,7 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: #7b61ff;
+  background-color: #1ca443c5;
   color: white;
   font-size: 30px;
   display: flex;
@@ -138,7 +138,7 @@
 }
 
 .btn-add-account {
-  background-color: #7b61ff !important;
+  background-color: #1ca443c5 !important;
   color: white !important;
   font-size: 20px !important;
   border-radius: 50% !important;
