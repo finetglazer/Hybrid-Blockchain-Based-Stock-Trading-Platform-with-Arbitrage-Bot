@@ -11,19 +11,25 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class KafkaCommandHandlerService {
 
+    private final MarketPricePublisher marketPricePublisher;
+
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final Random random = new Random();
 
     @Value("${kafka.topics.market-events}")
     private String marketEventsTopic;
+
+    private final List<String> trackedSymbols = Arrays.asList(
+            "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA", "JPM", "V", "JNJ",
+            "ABBV", "WMT", "PG", "MA", "UNH"
+    );
 
     /**
      * Handle MARKET_VALIDATE_STOCK command
@@ -42,8 +48,8 @@ public class KafkaCommandHandlerService {
         event.setTimestamp(Instant.now());
 
         try {
-            // Simple validation - 90% chance of success
-            boolean stockExists = random.nextInt(100) < 90;
+            // check exist in trackedSymbols
+            boolean stockExists = trackedSymbols.contains(stockSymbol);
 
             if (stockExists) {
                 // Success case
@@ -91,12 +97,11 @@ public class KafkaCommandHandlerService {
         event.setTimestamp(Instant.now());
 
         try {
-            // 90% chance of success in getting price
-            if (random.nextInt(100) < 90) {
-                // Generate a random price between $10 and $500
-                BigDecimal price = new BigDecimal(10 + random.nextInt(490) + random.nextDouble());
-                // Round to 2 decimal places
-                price = price.setScale(2, BigDecimal.ROUND_HALF_UP);
+            // Get current stock data from the market price publisher
+            Map<String, Object> stockData = marketPricePublisher.getCurrentStockData(stockSymbol);
+
+            if (stockData != null && stockData.containsKey("price")) {
+                BigDecimal price = (BigDecimal) stockData.get("price");
 
                 event.setType("PRICE_PROVIDED");
                 event.setSuccess(true);

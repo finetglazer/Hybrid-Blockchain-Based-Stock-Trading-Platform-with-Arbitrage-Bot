@@ -1,3 +1,4 @@
+// OrderProgressTracker.jsx - Updated version
 import React, { useState, useEffect } from 'react';
 import './OrderProgressTracker.css';
 
@@ -24,7 +25,8 @@ const OrderProgressTracker = ({ currentStep, completedSteps = [], status }) => {
     { id: 'CALCULATE_REQUIRED_FUNDS', name: 'Calculate Funds' },
     { id: 'RESERVE_FUNDS', name: 'Reserve Funds' },
     { id: 'UPDATE_ORDER_VALIDATED', name: 'Validate Order' },
-    { id: 'EXECUTE_ORDER', name: 'Execute Order' },
+    // Updated this step ID to match what's being sent from the backend
+    { id: 'SUBMIT_ORDER', name: 'Execute Order' },
     { id: 'UPDATE_ORDER_EXECUTED', name: 'Update Order' },
     { id: 'UPDATE_PORTFOLIO', name: 'Update Portfolio' },
     { id: 'SETTLE_TRANSACTION', name: 'Settle Transaction' },
@@ -89,6 +91,11 @@ const OrderProgressTracker = ({ currentStep, completedSteps = [], status }) => {
     const isCompFlow = status === 'COMPENSATING' || status === 'COMPENSATION_COMPLETED';
     setVisibleCompletedSteps(prev => isCompFlow ? [] : prev);
   }, [status, completedSteps]);
+
+  // Add debugging log to help identify issues with step IDs
+  console.log('Current step:', currentStep);
+  console.log('Completed steps:', completedSteps);
+  console.log('Visible completed steps:', visibleCompletedSteps);
 
   return (
       <div className="order-progress-tracker">

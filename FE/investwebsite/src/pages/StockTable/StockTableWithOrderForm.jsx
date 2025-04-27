@@ -10,6 +10,8 @@ import './StockTableWithOrderForm.css';
 import { getUserIdFromToken } from "../../utils/auth.js";
 
 const StockTableWithOrderForm = () => {
+    // Add this near the top of your component
+    const notifiedSagaIdsRef = useRef(new Set());
     // State for selected stock
     const [selectedStock, setSelectedStock] = useState(null);
 
@@ -29,6 +31,8 @@ const StockTableWithOrderForm = () => {
 
     // Navigation hook
     const navigate = useNavigate();
+    // Add this new ref to track if notification was shown
+    const notificationShownRef = useRef(false);
 
     // Get userId from token
     const userId = getUserIdFromToken();
@@ -47,7 +51,7 @@ const StockTableWithOrderForm = () => {
 
             const orderData = {
                 userId: userId,
-                accountId: formData.accountId, // From the form
+                accountId: formData.accountId,
                 stockSymbol: formData.symbol,
                 orderType: formData.orderType,
                 quantity: parseInt(formData.quantity),
@@ -58,12 +62,16 @@ const StockTableWithOrderForm = () => {
             const response = await submitOrder(orderData);
 
             if (response && response.sagaId) {
+                // Clear previous order notifications when starting a new order
+                notifiedSagaIdsRef.current.clear();
+
                 setActiveOrderId(response.sagaId);
                 setOrderStatus(response);
                 startStatusPolling(response.sagaId);
             } else {
                 setOrderError("Received invalid response from server");
             }
+
         } catch (error) {
             console.error("Failed to submit order:", error);
             setOrderError(error.response?.data?.message || "Failed to submit order. Please try again.");
@@ -87,17 +95,20 @@ const StockTableWithOrderForm = () => {
             setActiveOrderId(null);
             setOrderStatus(null);
             setOrderComplete(false);
+            // Reset notification shown flag
+            notificationShownRef.current = false;
         }
     };
 
-    // Start polling for status updates - UPDATED with faster polling
+    // Then update the startStatusPolling function
     const startStatusPolling = (sagaId) => {
         // Clear any existing interval
         if (pollingInterval.current) {
             clearInterval(pollingInterval.current);
+            pollingInterval.current = null;
         }
 
-        // Start polling at a faster rate (500ms instead of 2000ms)
+        // Start polling
         pollingInterval.current = setInterval(async () => {
             try {
                 const statusData = await getOrderStatus(sagaId);
@@ -107,26 +118,43 @@ const StockTableWithOrderForm = () => {
                 if (statusData.status === 'COMPLETED' ||
                     statusData.status === 'FAILED' ||
                     statusData.status === 'COMPENSATION_COMPLETED') {
+
+                    // Clear interval immediately
                     clearInterval(pollingInterval.current);
+                    pollingInterval.current = null;
 
-                    // Set order completion states
-                    setOrderComplete(true);
-                    setOrderSuccess(statusData.status === 'COMPLETED');
+                    // Only show notification if not already shown for this specific saga ID
+                    if (!notifiedSagaIdsRef.current.has(sagaId)) {
+                        // Mark this saga ID as notified
+                        notifiedSagaIdsRef.current.add(sagaId);
 
-                    // Show notification modal
-                    setShowNotification(true);
+                        // Set order completion states
+                        setOrderComplete(true);
+                        setOrderSuccess(statusData.status === 'COMPLETED');
+
+                        // Show notification modal
+                        setShowNotification(true);
+                    }
                 }
             } catch (error) {
                 console.error("Error checking order status:", error);
                 setOrderError("Failed to get order status updates");
-                clearInterval(pollingInterval.current);
 
-                // Show failure notification
-                setOrderComplete(true);
-                setOrderSuccess(false);
-                setShowNotification(true);
+                // Clear interval immediately
+                clearInterval(pollingInterval.current);
+                pollingInterval.current = null;
+
+                // Only show notification if not already shown for this specific saga ID
+                if (!notifiedSagaIdsRef.current.has(sagaId)) {
+                    notifiedSagaIdsRef.current.add(sagaId);
+
+                    // Show failure notification
+                    setOrderComplete(true);
+                    setOrderSuccess(false);
+                    setShowNotification(true);
+                }
             }
-        }, 2000); // Check every 500ms for more responsive updates
+        }, 1000);
     };
 
     // Clean up on unmount
