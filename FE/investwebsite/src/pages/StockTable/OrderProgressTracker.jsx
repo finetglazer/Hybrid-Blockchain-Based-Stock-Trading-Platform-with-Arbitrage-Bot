@@ -40,8 +40,11 @@ const OrderProgressTracker = ({
 
   // Define compensation steps (shown when status is COMPENSATING or COMPENSATION_COMPLETED)
   const compensationSteps = [
-    { id: 'RELEASE_FUNDS', name: 'Release Funds' },
+    { id: 'RELEASE_FUNDS', name: 'Release Reserved Funds' },
     { id: 'CANCEL_ORDER', name: 'Cancel Order' },
+    { id: 'CANCEL_BROKER_ORDER', name: 'Cancel Broker Order'},
+    { id: 'REMOVE_POSITIONS', name: 'Remove Positions From Portfolio' },
+    { id: 'REVERSE_SETTLEMENT', name: 'Reverse Settlement' }
     // Add other compensation steps as needed
   ];
 

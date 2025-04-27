@@ -1521,123 +1521,126 @@ public class KafkaCommandHandlerService {
         event.setSourceService("ACCOUNT_SERVICE");
         event.setTimestamp(Instant.now());
 
-        try {
-            // Find the account
-            Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
-            if (accountOpt.isEmpty()) {
-                handleSettlementFailure(event, "ACCOUNT_NOT_FOUND",
-                        "Account not found: " + accountId);
-                return;
-            }
-            TradingAccount account = accountOpt.get();
+        handleSettlementFailure(event, "SETTLEMENT_ERROR",
+                "Error settling transaction: ");
 
-            // Find the reservation
-            Optional<ReservationRecord> reservationOpt = reservationRecordRepository.findById(reservationId);
-            if (reservationOpt.isEmpty()) {
-                handleSettlementFailure(event, "RESERVATION_NOT_FOUND",
-                        "Fund reservation not found: " + reservationId);
-                return;
-            }
-            ReservationRecord reservation = reservationOpt.get();
-
-            // Validate reservation status
-            if (!reservation.getStatus().equals(ReservationRecord.ReservationStatus.ACTIVE.toString())) {
-                handleSettlementFailure(event, "INVALID_RESERVATION_STATUS",
-                        "Reservation is not active: " + reservation.getStatus());
-                return;
-            }
-
-            // Get balance
-            Balance balance = balanceRepository.findByAccountId(accountId);
-            if (balance == null) {
-                handleSettlementFailure(event, "BALANCE_NOT_FOUND",
-                        "Balance record not found for account: " + accountId);
-                return;
-            }
-
-            // Store original values (for potential compensation)
-            BigDecimal originalReserved = balance.getReserved();
-            BigDecimal originalTotal = balance.getTotal();
-
-            // Calculate the difference between reserved and final amount
-            // This handles cases where execution price was different than estimated
-            BigDecimal reservedAmount = reservation.getAmount();
-            BigDecimal refundAmount = BigDecimal.ZERO;
-
-            if (reservedAmount.compareTo(finalAmount) > 0) {
-                // We reserved more than needed, calculate refund
-                refundAmount = reservedAmount.subtract(finalAmount);
-            }
-
-            // Update the balance:
-            // 1. Remove from reserved
-            // 2. Decrease total by finalAmount
-            // 3. Add refund to available if applicable
-            balance.setReserved(balance.getReserved().subtract(reservedAmount));
-            balance.setTotal(balance.getTotal().subtract(finalAmount));
-
-            if (refundAmount.compareTo(BigDecimal.ZERO) > 0) {
-                balance.setAvailable(balance.getAvailable().add(refundAmount));
-            }
-
-            balance.setUpdatedAt(Instant.now());
-
-            // Mark reservation as settled
-            reservation.setStatus(ReservationRecord.ReservationStatus.SETTLED.toString());
-            reservation.setUpdatedAt(Instant.now());
-
-            // Create a transaction record
-            Transaction transaction = new Transaction();
-            transaction.setId(UUID.randomUUID().toString());
-            transaction.setAccountId(accountId);
-            transaction.setType("ORDER_PAYMENT");
-            transaction.setStatus("COMPLETED");
-            transaction.setAmount(finalAmount.negate()); // Negative amount for payment
-            transaction.setCurrency(balance.getCurrency());
-            transaction.setFee(BigDecimal.ZERO); // Set fee as needed
-            transaction.setDescription("Payment for order " + orderId);
-            transaction.setCreatedAt(Instant.now());
-            transaction.setUpdatedAt(Instant.now());
-            transaction.setCompletedAt(Instant.now());
-            transaction.setExternalReferenceId(orderId);
-
-            // Save all updates
-            balanceRepository.save(balance);
-            reservationRecordRepository.save(reservation);
-            transactionRepository.save(transaction);
-
-            // Set success response
-            event.setType("TRANSACTION_SETTLED");
-            event.setSuccess(true);
-            event.setPayloadValue("transactionId", transaction.getId());
-            event.setPayloadValue("accountId", accountId);
-            event.setPayloadValue("reservationId", reservationId);
-            event.setPayloadValue("orderId", orderId);
-            event.setPayloadValue("amount", finalAmount);
-            event.setPayloadValue("newTotalBalance", balance.getTotal());
-            event.setPayloadValue("refundAmount", refundAmount);
-
-            // Save original values for potential compensation
-            event.setPayloadValue("originalReserved", originalReserved);
-            event.setPayloadValue("originalTotal", originalTotal);
-            event.setPayloadValue("settlementTime", transaction.getCompletedAt().toString());
-
-            log.info("Transaction settled successfully for account: {}, order: {}", accountId, orderId);
-
-        } catch (Exception e) {
-            log.error("Error settling transaction", e);
-            handleSettlementFailure(event, "SETTLEMENT_ERROR",
-                    "Error settling transaction: " + e.getMessage());
-            return;
-        }
-
-        // Send the response event
-        try {
-            kafkaTemplate.send("account.events.order-buy", command.getSagaId(), event);
-            log.info("Sent TRANSACTION_SETTLED response for saga: {}", command.getSagaId());
-        } catch (Exception e) {
-            log.error("Error sending event", e);
-        }
+//        try {
+//            // Find the account
+//            Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
+//            if (accountOpt.isEmpty()) {
+//                handleSettlementFailure(event, "ACCOUNT_NOT_FOUND",
+//                        "Account not found: " + accountId);
+//                return;
+//            }
+//            TradingAccount account = accountOpt.get();
+//
+//            // Find the reservation
+//            Optional<ReservationRecord> reservationOpt = reservationRecordRepository.findById(reservationId);
+//            if (reservationOpt.isEmpty()) {
+//                handleSettlementFailure(event, "RESERVATION_NOT_FOUND",
+//                        "Fund reservation not found: " + reservationId);
+//                return;
+//            }
+//            ReservationRecord reservation = reservationOpt.get();
+//
+//            // Validate reservation status
+//            if (!reservation.getStatus().equals(ReservationRecord.ReservationStatus.ACTIVE.toString())) {
+//                handleSettlementFailure(event, "INVALID_RESERVATION_STATUS",
+//                        "Reservation is not active: " + reservation.getStatus());
+//                return;
+//            }
+//
+//            // Get balance
+//            Balance balance = balanceRepository.findByAccountId(accountId);
+//            if (balance == null) {
+//                handleSettlementFailure(event, "BALANCE_NOT_FOUND",
+//                        "Balance record not found for account: " + accountId);
+//                return;
+//            }
+//
+//            // Store original values (for potential compensation)
+//            BigDecimal originalReserved = balance.getReserved();
+//            BigDecimal originalTotal = balance.getTotal();
+//
+//            // Calculate the difference between reserved and final amount
+//            // This handles cases where execution price was different than estimated
+//            BigDecimal reservedAmount = reservation.getAmount();
+//            BigDecimal refundAmount = BigDecimal.ZERO;
+//
+//            if (reservedAmount.compareTo(finalAmount) > 0) {
+//                // We reserved more than needed, calculate refund
+//                refundAmount = reservedAmount.subtract(finalAmount);
+//            }
+//
+//            // Update the balance:
+//            // 1. Remove from reserved
+//            // 2. Decrease total by finalAmount
+//            // 3. Add refund to available if applicable
+//            balance.setReserved(balance.getReserved().subtract(reservedAmount));
+//            balance.setTotal(balance.getTotal().subtract(finalAmount));
+//
+//            if (refundAmount.compareTo(BigDecimal.ZERO) > 0) {
+//                balance.setAvailable(balance.getAvailable().add(refundAmount));
+//            }
+//
+//            balance.setUpdatedAt(Instant.now());
+//
+//            // Mark reservation as settled
+//            reservation.setStatus(ReservationRecord.ReservationStatus.SETTLED.toString());
+//            reservation.setUpdatedAt(Instant.now());
+//
+//            // Create a transaction record
+//            Transaction transaction = new Transaction();
+//            transaction.setId(UUID.randomUUID().toString());
+//            transaction.setAccountId(accountId);
+//            transaction.setType("ORDER_PAYMENT");
+//            transaction.setStatus("COMPLETED");
+//            transaction.setAmount(finalAmount.negate()); // Negative amount for payment
+//            transaction.setCurrency(balance.getCurrency());
+//            transaction.setFee(BigDecimal.ZERO); // Set fee as needed
+//            transaction.setDescription("Payment for order " + orderId);
+//            transaction.setCreatedAt(Instant.now());
+//            transaction.setUpdatedAt(Instant.now());
+//            transaction.setCompletedAt(Instant.now());
+//            transaction.setExternalReferenceId(orderId);
+//
+//            // Save all updates
+//            balanceRepository.save(balance);
+//            reservationRecordRepository.save(reservation);
+//            transactionRepository.save(transaction);
+//
+//            // Set success response
+//            event.setType("TRANSACTION_SETTLED");
+//            event.setSuccess(true);
+//            event.setPayloadValue("transactionId", transaction.getId());
+//            event.setPayloadValue("accountId", accountId);
+//            event.setPayloadValue("reservationId", reservationId);
+//            event.setPayloadValue("orderId", orderId);
+//            event.setPayloadValue("amount", finalAmount);
+//            event.setPayloadValue("newTotalBalance", balance.getTotal());
+//            event.setPayloadValue("refundAmount", refundAmount);
+//
+//            // Save original values for potential compensation
+//            event.setPayloadValue("originalReserved", originalReserved);
+//            event.setPayloadValue("originalTotal", originalTotal);
+//            event.setPayloadValue("settlementTime", transaction.getCompletedAt().toString());
+//
+//            log.info("Transaction settled successfully for account: {}, order: {}", accountId, orderId);
+//
+//        } catch (Exception e) {
+//            log.error("Error settling transaction", e);
+//            handleSettlementFailure(event, "SETTLEMENT_ERROR",
+//                    "Error settling transaction: " + e.getMessage());
+//            return;
+//        }
+//
+//        // Send the response event
+//        try {
+//            kafkaTemplate.send("account.events.order-buy", command.getSagaId(), event);
+//            log.info("Sent TRANSACTION_SETTLED response for saga: {}", command.getSagaId());
+//        } catch (Exception e) {
+//            log.error("Error sending event", e);
+//        }
     }
 
     /**

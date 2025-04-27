@@ -11,7 +11,7 @@ import { getUserIdFromToken } from "../../utils/auth.js";
 
 const StockTableWithOrderForm = () => {
     const [allStepsAnimated, setAllStepsAnimated] = useState(false);
-    // Add this near the top of your component
+    // Set to keep track of which saga IDs have already been processed
     const notifiedSagaIdsRef = useRef(new Set());
     // State for selected stock
     const [selectedStock, setSelectedStock] = useState(null);
@@ -32,8 +32,6 @@ const StockTableWithOrderForm = () => {
 
     // Navigation hook
     const navigate = useNavigate();
-    // Add this new ref to track if notification was shown
-    const notificationShownRef = useRef(false);
 
     // Get userId from token
     const userId = getUserIdFromToken();
@@ -65,6 +63,7 @@ const StockTableWithOrderForm = () => {
             if (response && response.sagaId) {
                 // Clear previous order notifications when starting a new order
                 notifiedSagaIdsRef.current.clear();
+                setAllStepsAnimated(false);
 
                 setActiveOrderId(response.sagaId);
                 setOrderStatus(response);
@@ -88,7 +87,6 @@ const StockTableWithOrderForm = () => {
         navigate('/portfolio');
     };
 
-    // In StockTableWithOrderForm.jsx, add to the handleCloseNotification function
     const handleCloseNotification = () => {
         setShowNotification(false);
         // Reset order states if needed
@@ -100,7 +98,6 @@ const StockTableWithOrderForm = () => {
         }
     };
 
-    // Then update the startStatusPolling function
     const startStatusPolling = (sagaId) => {
         // Clear any existing interval
         if (pollingInterval.current) {
@@ -110,39 +107,65 @@ const StockTableWithOrderForm = () => {
         // Start polling
         pollingInterval.current = setInterval(async () => {
             try {
+                // Skip polling if this saga ID is already processed as complete
+                if (notifiedSagaIdsRef.current.has(sagaId)) {
+                    clearInterval(pollingInterval.current);
+                    return;
+                }
+
                 const statusData = await getOrderStatus(sagaId);
+
+                // Skip updating if this saga ID has been marked as complete
+                // (to prevent race conditions from multiple in-flight requests)
+                if (notifiedSagaIdsRef.current.has(sagaId)) {
+                    return;
+                }
+
                 setOrderStatus(statusData);
 
-                // Stop polling if the saga is complete
-                if (statusData.status === 'COMPLETED' ||
+                // Check if the saga is complete
+                const isComplete = statusData.status === 'COMPLETED' ||
                     statusData.status === 'FAILED' ||
-                    statusData.status === 'COMPENSATION_COMPLETED') {
+                    statusData.status === 'COMPENSATION_COMPLETED';
+
+                if (isComplete) {
+                    // Mark this saga ID as processed
+                    notifiedSagaIdsRef.current.add(sagaId);
+
                     clearInterval(pollingInterval.current);
 
                     // Set order completion states
                     setOrderComplete(true);
                     setOrderSuccess(statusData.status === 'COMPLETED');
 
-                    // Don't show notification immediately
-                    // We'll handle showing it with useEffect below
+                    // We'll handle showing the notification with useEffect below
                 }
             } catch (error) {
                 console.error("Error checking order status:", error);
-                setOrderError("Failed to get order status updates");
-                clearInterval(pollingInterval.current);
 
-                // Show failure notification immediately for errors
-                setOrderComplete(true);
-                setOrderSuccess(false);
-                setShowNotification(true);
+                // Only show error notification if we haven't processed this saga yet
+                if (!notifiedSagaIdsRef.current.has(sagaId)) {
+                    notifiedSagaIdsRef.current.add(sagaId);
+                    setOrderError("Failed to get order status updates");
+                    clearInterval(pollingInterval.current);
+
+                    // Show failure notification immediately for errors
+                    setOrderComplete(true);
+                    setOrderSuccess(false);
+                    setShowNotification(true);
+                }
             }
         }, 1000);
     };
 
-    // In StockTableWithOrderForm.jsx, add this effect
+    // Only show notification when both order is complete AND all steps have been animated
     useEffect(() => {
-        // Only show notification when both order is complete AND all steps have been animated
-        if (orderComplete && allStepsAnimated) {
+        if (orderComplete && allStepsAnimated && activeOrderId) {
+            // Don't show notification if we've already shown one for this saga
+            if (notifiedSagaIdsRef.current.has(activeOrderId) && showNotification) {
+                return;
+            }
+
             // Add a small delay for visual polish
             const timerId = setTimeout(() => {
                 setShowNotification(true);
@@ -150,7 +173,7 @@ const StockTableWithOrderForm = () => {
 
             return () => clearTimeout(timerId);
         }
-    }, [orderComplete, allStepsAnimated]);
+    }, [orderComplete, allStepsAnimated, activeOrderId, showNotification]);
 
     // Clean up on unmount
     useEffect(() => {
@@ -167,6 +190,7 @@ const StockTableWithOrderForm = () => {
             setActiveOrderId(null);
             setOrderStatus(null);
             setAllStepsAnimated(false); // Reset animation state
+            notifiedSagaIdsRef.current.clear(); // Clear notification tracking
             clearInterval(pollingInterval.current);
         }
     }, [selectedStock]);
