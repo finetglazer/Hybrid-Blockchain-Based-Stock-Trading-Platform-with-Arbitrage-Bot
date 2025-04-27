@@ -1,4 +1,4 @@
-// OrderProgressTracker.jsx - Updated version
+// OrderProgressTracker.jsx - Improved version with dynamic compensation steps
 import React, { useState, useEffect } from 'react';
 import './OrderProgressTracker.css';
 
@@ -8,6 +8,7 @@ import './OrderProgressTracker.css';
  * @param {string} props.currentStep - The current step ID
  * @param {Array<string>} props.completedSteps - Array of completed step IDs
  * @param {string} props.status - The current saga status
+ * @param {Function} props.onAllStepsAnimated - Callback when all steps have been animated
  * @returns {JSX.Element} - The progress tracker component
  */
 const OrderProgressTracker = ({
@@ -30,27 +31,68 @@ const OrderProgressTracker = ({
     { id: 'CALCULATE_REQUIRED_FUNDS', name: 'Calculate Funds' },
     { id: 'RESERVE_FUNDS', name: 'Reserve Funds' },
     { id: 'UPDATE_ORDER_VALIDATED', name: 'Validate Order' },
-    // Updated this step ID to match what's being sent from the backend
     { id: 'SUBMIT_ORDER', name: 'Execute Order' },
     { id: 'UPDATE_ORDER_EXECUTED', name: 'Update Order' },
     { id: 'UPDATE_PORTFOLIO', name: 'Update Portfolio' },
     { id: 'SETTLE_TRANSACTION', name: 'Settle Transaction' },
+    { id: 'UPDATE_ORDER_COMPLETED', name: 'Complete Order' },
     { id: 'COMPLETE_SAGA', name: 'Complete' }
   ];
 
-  // Define compensation steps (shown when status is COMPENSATING or COMPENSATION_COMPLETED)
-  const compensationSteps = [
+  // Define all compensation steps
+  const allCompensationSteps = [
+    { id: 'REVERSE_SETTLEMENT', name: 'Reverse Settlement' },
+    { id: 'REMOVE_POSITIONS', name: 'Remove Positions' },
+    { id: 'CANCEL_BROKER_ORDER', name: 'Cancel Broker Order' },
     { id: 'RELEASE_FUNDS', name: 'Release Reserved Funds' },
-    { id: 'CANCEL_ORDER', name: 'Cancel Order' },
-    { id: 'CANCEL_BROKER_ORDER', name: 'Cancel Broker Order'},
-    { id: 'REMOVE_POSITIONS', name: 'Remove Positions From Portfolio' },
-    { id: 'REVERSE_SETTLEMENT', name: 'Reverse Settlement' }
-    // Add other compensation steps as needed
+    { id: 'CANCEL_ORDER', name: 'Cancel Order' }
   ];
+
+  // Function to determine which compensation steps to show based on completed steps
+  // This mirrors the backend's determineFirstCompensationStep logic
+  const getCompensationSteps = () => {
+    // Determine which significant steps have been completed
+    const transactionSettled = completedSteps.includes('SETTLE_TRANSACTION');
+    const portfolioUpdated = completedSteps.includes('UPDATE_PORTFOLIO');
+    const orderExecuted = completedSteps.includes('UPDATE_ORDER_EXECUTED');
+    const orderValidated = completedSteps.includes('UPDATE_ORDER_VALIDATED');
+    const fundsReserved = completedSteps.includes('RESERVE_FUNDS');
+
+    const compensationSteps = [];
+
+    // Build the compensation chain in the correct order
+    if (transactionSettled) {
+      compensationSteps.push('REVERSE_SETTLEMENT');
+      compensationSteps.push('REMOVE_POSITIONS');
+      compensationSteps.push('CANCEL_BROKER_ORDER');
+      compensationSteps.push('RELEASE_FUNDS');
+      compensationSteps.push('CANCEL_ORDER');
+    } else if (portfolioUpdated) {
+      compensationSteps.push('REMOVE_POSITIONS');
+      compensationSteps.push('CANCEL_BROKER_ORDER');
+      compensationSteps.push('RELEASE_FUNDS');
+      compensationSteps.push('CANCEL_ORDER');
+    } else if (orderExecuted || orderValidated) {
+      compensationSteps.push('CANCEL_BROKER_ORDER');
+      compensationSteps.push('RELEASE_FUNDS');
+      compensationSteps.push('CANCEL_ORDER');
+    } else if (fundsReserved) {
+      compensationSteps.push('RELEASE_FUNDS');
+      compensationSteps.push('CANCEL_ORDER');
+    } else {
+      compensationSteps.push('CANCEL_ORDER');
+    }
+
+    // Return only the compensation steps that are in our allCompensationSteps list
+    // and map them to full step objects
+    return compensationSteps.map(stepId =>
+        allCompensationSteps.find(step => step.id === stepId)
+    ).filter(Boolean);
+  };
 
   // Determine which steps to show based on status
   const stepsToShow = status === 'COMPENSATING' || status === 'COMPENSATION_COMPLETED'
-      ? compensationSteps
+      ? getCompensationSteps()
       : allSteps;
 
   // Effect to animate the completion of steps sequentially
@@ -101,9 +143,8 @@ const OrderProgressTracker = ({
     };
   }, [completedSteps, visibleCompletedSteps, stepsToShow, status, onAllStepsAnimated]);
 
-  // Add this to OrderProgressTracker.jsx
+  // Special case for the COMPLETE_SAGA step
   useEffect(() => {
-    // Special case for the COMPLETE_SAGA step
     if (status === 'COMPLETED' &&
         visibleCompletedSteps.includes('COMPLETE_SAGA') &&
         onAllStepsAnimated) {
@@ -117,25 +158,19 @@ const OrderProgressTracker = ({
     }
   }, [status, visibleCompletedSteps, onAllStepsAnimated]);
 
-  // Reset visible completed steps when status changes between normal and compensation flow
+  // Reset visible completed steps when switching between normal and compensation flows
   useEffect(() => {
-    if (completedSteps.length === 0) {
-      // Reset when going back to initial state
+    if (status === 'COMPENSATING' && visibleCompletedSteps.length > 0) {
+      // Only reset when entering compensation mode
       setVisibleCompletedSteps([]);
     }
-    // Reset when switching between normal and compensation flows
-    const isCompFlow = status === 'COMPENSATING' || status === 'COMPENSATION_COMPLETED';
-    setVisibleCompletedSteps(prev => isCompFlow ? [] : prev);
-  }, [status, completedSteps]);
-
-  // Add debugging log to help identify issues with step IDs
-  console.log('Current step:', currentStep);
-  console.log('Completed steps:', completedSteps);
-  console.log('Visible completed steps:', visibleCompletedSteps);
+  }, [status, visibleCompletedSteps]);
 
   return (
       <div className="order-progress-tracker">
-        <h3 className="status-title">Order Status: <span className={`status-${status?.toLowerCase()}`}>{status}</span></h3>
+        <h3 className="status-title">
+          Order Status: <span className={`status-${status?.toLowerCase()}`}>{status}</span>
+        </h3>
         <div className="steps-container">
           {stepsToShow.map(step => (
               <div
