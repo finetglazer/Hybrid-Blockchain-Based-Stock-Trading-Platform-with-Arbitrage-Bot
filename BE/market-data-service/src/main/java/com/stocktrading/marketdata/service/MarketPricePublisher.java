@@ -35,7 +35,7 @@ public class MarketPricePublisher {
             "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA", "JPM", "V", "JNJ"
     );
 
-    @Value("${kafka.topics.market-price-updates:market.price.updates}")
+    @Value("${kafka.topics.market-price-data:market.price.data}")
     private String marketPriceUpdatesTopic;
 
     /**

@@ -27,6 +27,7 @@ import TwoFactorAuth from "./pages/TwoFactorAuth/TwoFactorAuth.jsx";
 import UpdatePhoneNumber from "./pages/UpdatePhoneNumber/UpdatePhoneNumber.jsx";
 import Wallet from "./pages/Wallet.jsx";
 import Withdraw from "./pages/Withdraw.jsx";
+import Portfolio from "./pages/Portfolio/Portfolio.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -59,6 +60,8 @@ const Layout = () => {
           <Route path="/two-factor-auth" element={<TwoFactorAuth />} /> {/* Add this route */}
           <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />
           <Route path="/profile/disable2FA" element={<Disable2FA />} />
+          <Route path="/:accountId/portfolio" element={<Portfolio />}/>
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </AppContextProvider>
     </>
