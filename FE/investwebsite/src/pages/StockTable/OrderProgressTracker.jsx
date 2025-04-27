@@ -1,5 +1,5 @@
-// OrderProgressTracker.jsx - Improved version with dynamic compensation steps
-import React, { useState, useEffect } from 'react';
+// OrderProgressTracker.jsx - With enhanced compensation animation
+import React, { useState, useEffect, useRef } from 'react';
 import './OrderProgressTracker.css';
 
 /**
@@ -18,8 +18,16 @@ const OrderProgressTracker = ({
                                 onAllStepsAnimated
                               }) => {
   // State to track which steps are visually shown as completed
-  // This allows us to animate them sequentially even if they complete simultaneously
   const [visibleCompletedSteps, setVisibleCompletedSteps] = useState([]);
+
+  // Add a ref to track the previous status to detect transitions
+  const prevStatusRef = useRef(null);
+
+  // Track whether all animations are complete
+  const [animationsComplete, setAnimationsComplete] = useState(false);
+
+  // Animation timer ref
+  const animationTimerRef = useRef(null);
 
   // Define all possible steps in correct order
   const allSteps = [
@@ -49,7 +57,6 @@ const OrderProgressTracker = ({
   ];
 
   // Function to determine which compensation steps to show based on completed steps
-  // This mirrors the backend's determineFirstCompensationStep logic
   const getCompensationSteps = () => {
     // Determine which significant steps have been completed
     const transactionSettled = completedSteps.includes('SETTLE_TRANSACTION');
@@ -91,12 +98,64 @@ const OrderProgressTracker = ({
   };
 
   // Determine which steps to show based on status
-  const stepsToShow = status === 'COMPENSATING' || status === 'COMPENSATION_COMPLETED'
-      ? getCompensationSteps()
-      : allSteps;
+  const isCompensating = status === 'COMPENSATING' || status === 'COMPENSATION_COMPLETED';
+  const stepsToShow = isCompensating ? getCompensationSteps() : allSteps;
 
-  // Effect to animate the completion of steps sequentially
+  // Detect entering compensation mode and reset animation state
   useEffect(() => {
+    const isCurrentlyCompensating = status === 'COMPENSATING' || status === 'COMPENSATION_COMPLETED';
+    const wasPreviouslyCompensating = prevStatusRef.current === 'COMPENSATING' ||
+        prevStatusRef.current === 'COMPENSATION_COMPLETED';
+
+    // If we're entering compensation mode
+    if (isCurrentlyCompensating && !wasPreviouslyCompensating) {
+      // Clear any existing animations and reset states
+      if (animationTimerRef.current) {
+        clearTimeout(animationTimerRef.current);
+      }
+      setVisibleCompletedSteps([]);
+      setAnimationsComplete(false);
+
+      // For COMPENSATION_COMPLETED status, we'll start animating all steps immediately
+      if (status === 'COMPENSATION_COMPLETED') {
+        startCompensationAnimation();
+      }
+    }
+
+    // Update previous status
+    prevStatusRef.current = status;
+  }, [status]);
+
+  // Start animation for all compensation steps in sequence
+  const startCompensationAnimation = () => {
+    const compensationSteps = getCompensationSteps();
+
+    // Function to animate each step in sequence
+    const animateSteps = (stepIndex) => {
+      if (stepIndex >= compensationSteps.length) {
+        // All steps animated
+        setAnimationsComplete(true);
+        return;
+      }
+
+      // Add current step to visible completed steps
+      const stepId = compensationSteps[stepIndex].id;
+      animationTimerRef.current = setTimeout(() => {
+        setVisibleCompletedSteps(prev => [...prev, stepId]);
+        // Continue with next step
+        animateSteps(stepIndex + 1);
+      }, 300); // Animation delay between steps
+    };
+
+    // Start animation sequence
+    animateSteps(0);
+  };
+
+  // Effect to animate normal flow steps sequentially
+  useEffect(() => {
+    // Skip for compensation flow - it has its own animation
+    if (isCompensating) return;
+
     // Find steps that are newly completed but not yet visible
     const newCompletedSteps = completedSteps.filter(
         step => !visibleCompletedSteps.includes(step)
@@ -108,28 +167,29 @@ const OrderProgressTracker = ({
     const stepOrder = stepsToShow.map(step => step.id);
 
     // Sort new completed steps by their order in the flow
-    const orderedNewSteps = newCompletedSteps.sort((a, b) => {
-      return stepOrder.indexOf(a) - stepOrder.indexOf(b);
-    });
+    const orderedNewSteps = [...newCompletedSteps].sort((a, b) => {
+      const aIndex = stepOrder.indexOf(a);
+      const bIndex = stepOrder.indexOf(b);
+
+      // If the step isn't in our current flow, put it at the end
+      if (aIndex === -1) return 1;
+      if (bIndex === -1) return -1;
+
+      return aIndex - bIndex;
+    }).filter(step => stepOrder.includes(step)); // Only include steps in the current flow
 
     // Animate each step sequentially
-    let timeoutId;
     const animateNextStep = (index) => {
       if (index >= orderedNewSteps.length) {
         // All animations complete
-        // Check if all steps are complete based on status
-        const allComplete = status === 'COMPLETED' ||
-            status === 'FAILED' ||
-            status === 'COMPENSATION_COMPLETED';
-
-        if (allComplete && onAllStepsAnimated) {
-          // Call the callback when all steps are animated AND the saga is complete
-          onAllStepsAnimated();
+        const allComplete = status === 'COMPLETED' || status === 'FAILED';
+        if (allComplete) {
+          setAnimationsComplete(true);
         }
         return;
       }
 
-      timeoutId = setTimeout(() => {
+      animationTimerRef.current = setTimeout(() => {
         setVisibleCompletedSteps(prev => [...prev, orderedNewSteps[index]]);
         animateNextStep(index + 1);
       }, 250); // 250ms delay between each step animation
@@ -139,32 +199,49 @@ const OrderProgressTracker = ({
 
     // Clean up timeouts if component unmounts during animation
     return () => {
-      if (timeoutId) clearTimeout(timeoutId);
+      if (animationTimerRef.current) {
+        clearTimeout(animationTimerRef.current);
+      }
     };
-  }, [completedSteps, visibleCompletedSteps, stepsToShow, status, onAllStepsAnimated]);
+  }, [completedSteps, visibleCompletedSteps, stepsToShow, status, isCompensating]);
 
-  // Special case for the COMPLETE_SAGA step
+  // For COMPENSATING status, we need to animate the first step when it becomes active
   useEffect(() => {
-    if (status === 'COMPLETED' &&
-        visibleCompletedSteps.includes('COMPLETE_SAGA') &&
-        onAllStepsAnimated) {
+    if (status === 'COMPENSATING' && currentStep && stepsToShow.length > 0) {
+      // Animate the current step as active, and all previous steps as completed
+      const currentStepIndex = stepsToShow.findIndex(step => step.id === currentStep);
 
-      // Add a small delay after the last step before triggering the notification
+      // If we find the step, animate it and all previous steps
+      if (currentStepIndex !== -1) {
+        // Calculate which steps should be shown as completed
+        const stepsToComplete = stepsToShow
+            .slice(0, currentStepIndex)
+            .map(step => step.id);
+
+        // Update visible steps if needed
+        if (stepsToComplete.length > 0 &&
+            !stepsToComplete.every(step => visibleCompletedSteps.includes(step))) {
+          setVisibleCompletedSteps(prev => {
+            // Only add steps that aren't already there
+            const newSteps = stepsToComplete.filter(step => !prev.includes(step));
+            return [...prev, ...newSteps];
+          });
+        }
+      }
+    }
+  }, [currentStep, status, stepsToShow, visibleCompletedSteps]);
+
+  // Trigger the callback when animations are complete
+  useEffect(() => {
+    if (animationsComplete && onAllStepsAnimated) {
+      // Add a final delay before notification
       const finalTimer = setTimeout(() => {
         onAllStepsAnimated();
-      }, 800); // Slightly longer delay for the last step
+      }, 500);
 
       return () => clearTimeout(finalTimer);
     }
-  }, [status, visibleCompletedSteps, onAllStepsAnimated]);
-
-  // Reset visible completed steps when switching between normal and compensation flows
-  useEffect(() => {
-    if (status === 'COMPENSATING' && visibleCompletedSteps.length > 0) {
-      // Only reset when entering compensation mode
-      setVisibleCompletedSteps([]);
-    }
-  }, [status, visibleCompletedSteps]);
+  }, [animationsComplete, onAllStepsAnimated]);
 
   return (
       <div className="order-progress-tracker">
