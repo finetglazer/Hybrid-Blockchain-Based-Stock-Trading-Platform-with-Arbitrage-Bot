@@ -140,23 +140,33 @@ const OrderProgressTracker = ({
 
   // Detect entering compensation mode and reset animation state
   useEffect(() => {
-    const isCurrentlyCompensating = status === 'COMPENSATING' || status === 'COMPENSATION_COMPLETED';
+    // Check if we just entered a compensation state
+    const isCurrentlyCompensating = status === 'COMPENSATING' ||
+        status === 'COMPENSATION_COMPLETED' ||
+        status === 'CANCELLED_BY_USER';
     const wasPreviouslyCompensating = prevStatusRef.current === 'COMPENSATING' ||
-        prevStatusRef.current === 'COMPENSATION_COMPLETED';
+        prevStatusRef.current === 'COMPENSATION_COMPLETED' ||
+        prevStatusRef.current === 'CANCELLED_BY_USER';
 
-    // If we're entering compensation mode
+    // 1. Reset animation when first entering compensation mode
     if (isCurrentlyCompensating && !wasPreviouslyCompensating) {
-      // Clear any existing animations and reset states
       if (animationTimerRef.current) {
         clearTimeout(animationTimerRef.current);
       }
       setVisibleCompletedSteps([]);
       setAnimationsComplete(false);
+    }
 
-      // For COMPENSATION_COMPLETED status, we'll start animating all steps immediately
-      if (status === 'COMPENSATION_COMPLETED') {
-        startCompensationAnimation();
-      }
+    // 2. Specifically check for transition to COMPENSATION_COMPLETED
+    if (status === 'COMPENSATION_COMPLETED' && prevStatusRef.current === 'COMPENSATING') {
+      console.log("Starting compensation completion animation");
+      startCompensationAnimation();
+    }
+
+    // 3. Also handle case where we directly get COMPENSATION_COMPLETED
+    if (status === 'COMPENSATION_COMPLETED' && !wasPreviouslyCompensating) {
+      console.log("Direct compensation completion animation");
+      startCompensationAnimation();
     }
 
     // Update previous status

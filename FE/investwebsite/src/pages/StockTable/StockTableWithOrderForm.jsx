@@ -28,6 +28,11 @@ const StockTableWithOrderForm = () => {
     const [orderComplete, setOrderComplete] = useState(false);
     const [orderSuccess, setOrderSuccess] = useState(false);
 
+    // Add these new state variables after your existing state declarations
+    const [statusHistory, setStatusHistory] = useState([]);
+    const [showDebugPanel, setShowDebugPanel] = useState(true);
+    const lastPollingTimeRef = useRef(null);
+
     // Ref for polling interval
     const pollingInterval = useRef(null);
 
@@ -130,8 +135,11 @@ const StockTableWithOrderForm = () => {
             clearInterval(pollingInterval.current);
         }
 
+
         // Start polling
         pollingInterval.current = setInterval(async () => {
+            lastPollingTimeRef.current = new Date().toISOString();
+
             try {
                 // Skip polling if this saga ID is already processed as complete
                 if (notifiedSagaIdsRef.current.has(sagaId)) {
@@ -139,12 +147,23 @@ const StockTableWithOrderForm = () => {
                     return;
                 }
 
+                console.log(`Polling for order status: ${sagaId}`);
                 const statusData = await getOrderStatus(sagaId);
+                console.log(`Received status: ${statusData.status}`, statusData);
 
                 // Skip updating if this saga ID has been marked as complete
-                // (to prevent race conditions from multiple in-flight requests)
                 if (notifiedSagaIdsRef.current.has(sagaId)) {
                     return;
+                }
+
+                // Track status history for debugging
+                if (!orderStatus || statusData.status !== orderStatus.status) {
+                    setStatusHistory(prev => [...prev, {
+                        timestamp: new Date().toISOString(),
+                        status: statusData.status,
+                        currentStep: statusData.currentStep
+                    }]);
+                    console.log(`Status changed to: ${statusData.status}`);
                 }
 
                 setOrderStatus(statusData);
@@ -279,6 +298,62 @@ const StockTableWithOrderForm = () => {
                     onViewPortfolio={handleViewPortfolio}
                     onClose={handleCloseNotification}
                 />
+            )}
+
+            {/* Debug Panel */}
+            {showDebugPanel && orderStatus && (
+                <div className="debug-panel">
+                    <div className="debug-header">
+                        <h3>Debug Information</h3>
+                        <button onClick={() => setShowDebugPanel(false)}>Hide</button>
+                    </div>
+                    <div className="debug-content">
+                        <div className="debug-section">
+                            <h4>Current Status</h4>
+                            <pre>{JSON.stringify(orderStatus, null, 2)}</pre>
+                        </div>
+                        <div className="debug-section">
+                            <h4>Status History ({statusHistory.length})</h4>
+                            <table className="debug-table">
+                                <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                    <th>Current Step</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {statusHistory.map((entry, index) => (
+                                    <tr key={index}>
+                                        <td>{new Date(entry.timestamp).toLocaleTimeString()}</td>
+                                        <td className={`status-${entry.status?.toLowerCase()}`}>
+                                            {entry.status}
+                                        </td>
+                                        <td>{entry.currentStep}</td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="debug-section">
+                            <h4>Polling Information</h4>
+                            <p>Active Order ID: {activeOrderId || 'None'}</p>
+                            <p>Is Cancelling: {isCancellingOrder ? 'Yes' : 'No'}</p>
+                            <p>Last Poll: {lastPollingTimeRef.current ?
+                                new Date(lastPollingTimeRef.current).toLocaleTimeString() : 'N/A'}</p>
+                            <p>All Steps Animated: {allStepsAnimated ? 'Yes' : 'No'}</p>
+                            <p>Show Notification: {showNotification ? 'Yes' : 'No'}</p>
+                            <p>Order Complete: {orderComplete ? 'Yes' : 'No'}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Toggle button to show debug panel if it's hidden */}
+            {!showDebugPanel && (
+                <button className="show-debug-button" onClick={() => setShowDebugPanel(true)}>
+                    Show Debug Panel
+                </button>
             )}
         </>
     );

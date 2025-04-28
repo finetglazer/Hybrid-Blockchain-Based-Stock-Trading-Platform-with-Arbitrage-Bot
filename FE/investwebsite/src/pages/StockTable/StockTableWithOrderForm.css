@@ -122,3 +122,75 @@
     color: white;
     margin-bottom: 0;
 }
+
+/* Debug Panel Styling */
+.debug-panel {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 500px;
+    max-height: 400px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ddd;
+    border-top-left-radius: 8px;
+    overflow-y: auto;
+    font-family: monospace;
+    z-index: 1000;
+    padding: 10px;
+    font-size: 12px;
+}
+
+.debug-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #555;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.debug-section {
+    margin-bottom: 15px;
+}
+
+.debug-section h4 {
+    margin: 5px 0;
+    color: #66b3ff;
+}
+
+.debug-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.debug-table th, .debug-table td {
+    border: 1px solid #555;
+    padding: 4px 8px;
+    text-align: left;
+}
+
+pre {
+    white-space: pre-wrap;
+    overflow-x: auto;
+    max-height: 150px;
+}
+
+.show-debug-button {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Status colors in the debug table */
+.status-compensating { color: #ffcc00; }
+.status-compensation_completed { color: #ff6666; }
+.status-completed { color: #66cc66; }
+.status-failed { color: #ff6666; }
+.status-cancelled_by_user { color: #ff9966; }
