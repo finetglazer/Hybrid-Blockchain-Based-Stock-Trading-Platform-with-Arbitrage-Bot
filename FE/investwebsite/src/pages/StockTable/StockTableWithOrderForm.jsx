@@ -10,6 +10,10 @@ import './StockTableWithOrderForm.css';
 import { getUserIdFromToken } from "../../utils/auth.js";
 
 const StockTableWithOrderForm = () => {
+    // Add this ref to track the saga ID we're currently polling for
+    const currentlyPollingForRef = useRef(null);
+
+
     const [allStepsAnimated, setAllStepsAnimated] = useState(false);
     // Set to keep track of which saga IDs have already been processed
     const notifiedSagaIdsRef = useRef(new Set());
@@ -49,11 +53,22 @@ const StockTableWithOrderForm = () => {
 
     const handleSubmitOrder = async (formData) => {
         try {
+            // First check if there's already an active order or notification
+            if (showNotification || orderComplete || activeOrderId) {
+                // If so, reset everything before starting new order
+                resetOrderState();
+
+                // Add a small delay to ensure state is cleared
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
             // Clear any previous errors
             setOrderError(null);
+
             // Set submitting state to true to show loading indicator
             setIsOrderSubmitting(true);
 
+            // Rest of your submission code remains the same...
             const orderData = {
                 userId: userId,
                 accountId: formData.accountId,
@@ -67,22 +82,16 @@ const StockTableWithOrderForm = () => {
             const response = await submitOrder(orderData);
 
             if (response && response.sagaId) {
-                // Clear previous order notifications when starting a new order
-                notifiedSagaIdsRef.current.clear();
-                setAllStepsAnimated(false);
-
                 setActiveOrderId(response.sagaId);
                 setOrderStatus(response);
                 startStatusPolling(response.sagaId);
             } else {
                 setOrderError("Received invalid response from server");
             }
-
         } catch (error) {
             console.error("Failed to submit order:", error);
             setOrderError(error.response?.data?.message || "Failed to submit order. Please try again.");
         } finally {
-            // Set submitting state back to false when the request completes
             setIsOrderSubmitting(false);
         }
     };
@@ -119,42 +128,84 @@ const StockTableWithOrderForm = () => {
     };
 
     const handleCloseNotification = () => {
+        // First hide the notification immediately for better UX
         setShowNotification(false);
-        // Reset order states if needed
-        if (orderComplete) {
-            setActiveOrderId(null);
-            setOrderStatus(null);
-            setOrderComplete(false);
-            setAllStepsAnimated(false); // Reset animation state too
-        }
+
+        // Then use setTimeout to ensure UI updates before resetting state
+        setTimeout(() => {
+            resetOrderState();
+        }, 100);
     };
+
+    // Also modify resetOrderState to clear the polling ref
+    const resetOrderState = () => {
+        // Clear all order-related state
+        setActiveOrderId(null);
+        setOrderStatus(null);
+        setOrderError(null);
+        setOrderComplete(false);
+        setOrderSuccess(false);
+        setAllStepsAnimated(false);
+        setShowNotification(false);
+        setIsOrderSubmitting(false);
+        setIsCancellingOrder(false);
+
+        // Clear the polling ref
+        currentlyPollingForRef.current = null;
+
+        // Explicitly clear status history
+        setStatusHistory([]);
+
+        // Clear notification tracking set
+        notifiedSagaIdsRef.current.clear();
+
+        // Make sure to clear any existing polling interval
+        if (pollingInterval.current) {
+            clearInterval(pollingInterval.current);
+            pollingInterval.current = null;
+        }
+
+        // Log the reset for debugging
+        console.log("Order state completely reset", new Date().toISOString());
+    };
+
 
     const startStatusPolling = (sagaId) => {
         // Clear any existing interval
         if (pollingInterval.current) {
             clearInterval(pollingInterval.current);
+            pollingInterval.current = null;
         }
 
+        // Reset status history when starting a new polling cycle
+        setStatusHistory([]);
+
+        // Set the polling ref to track what we're polling for
+        currentlyPollingForRef.current = sagaId;
 
         // Start polling
         pollingInterval.current = setInterval(async () => {
             lastPollingTimeRef.current = new Date().toISOString();
+            const pollingSagaId = currentlyPollingForRef.current; // Use local variable for consistency
 
             try {
                 // Skip polling if this saga ID is already processed as complete
-                if (notifiedSagaIdsRef.current.has(sagaId)) {
+                if (notifiedSagaIdsRef.current.has(pollingSagaId)) {
                     clearInterval(pollingInterval.current);
                     return;
                 }
 
-                console.log(`Polling for order status: ${sagaId}`);
-                const statusData = await getOrderStatus(sagaId);
-                console.log(`Received status: ${statusData.status}`, statusData);
+                console.log(`Polling for order status: ${pollingSagaId}`);
+                const statusData = await getOrderStatus(pollingSagaId);
 
-                // Skip updating if this saga ID has been marked as complete
-                if (notifiedSagaIdsRef.current.has(sagaId)) {
+                // Check if we're still interested in this order
+                // Changed to use our polling ref instead of activeOrderId state
+                if (currentlyPollingForRef.current !== pollingSagaId) {
+                    console.log("Ignoring poll response - polling has been redirected to a different order");
                     return;
                 }
+
+                console.log(`Received status: ${statusData.status}`, statusData);
 
                 // Track status history for debugging
                 if (!orderStatus || statusData.status !== orderStatus.status) {
@@ -175,24 +226,24 @@ const StockTableWithOrderForm = () => {
 
                 if (isComplete) {
                     // Mark this saga ID as processed
-                    notifiedSagaIdsRef.current.add(sagaId);
+                    notifiedSagaIdsRef.current.add(pollingSagaId);
 
                     clearInterval(pollingInterval.current);
+                    pollingInterval.current = null;
 
                     // Set order completion states
                     setOrderComplete(true);
                     setOrderSuccess(statusData.status === 'COMPLETED');
-
-                    // We'll handle showing the notification with useEffect below
                 }
             } catch (error) {
                 console.error("Error checking order status:", error);
 
                 // Only show error notification if we haven't processed this saga yet
-                if (!notifiedSagaIdsRef.current.has(sagaId)) {
-                    notifiedSagaIdsRef.current.add(sagaId);
+                if (!notifiedSagaIdsRef.current.has(pollingSagaId)) {
+                    notifiedSagaIdsRef.current.add(pollingSagaId);
                     setOrderError("Failed to get order status updates");
                     clearInterval(pollingInterval.current);
+                    pollingInterval.current = null;
 
                     // Show failure notification immediately for errors
                     setOrderComplete(true);
@@ -202,6 +253,7 @@ const StockTableWithOrderForm = () => {
             }
         }, 1000);
     };
+
 
     // Only show notification when both order is complete AND all steps have been animated
     useEffect(() => {
