@@ -1,6 +1,7 @@
-// OrderProgressTracker.jsx - With enhanced compensation animation
+// OrderProgressTracker.jsx - With enhanced compensation animation and cancel confirmation
 import React, { useState, useEffect, useRef } from 'react';
 import './OrderProgressTracker.css';
+import CancelConfirmationModal from './CancelConfirmationModal';
 
 /**
  * Component to display the current status of an order saga with animated step transitions
@@ -35,6 +36,9 @@ const OrderProgressTracker = ({
 
   // Animation timer ref
   const animationTimerRef = useRef(null);
+
+  // State to control the cancellation confirmation modal
+  const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
 
   // Define all possible steps in correct order
   const allSteps = [
@@ -287,68 +291,80 @@ const OrderProgressTracker = ({
       status !== 'COMPLETED' &&
       status !== 'FAILED';
 
-  console.log('Cancel button debug:', {
-    statusIsLimitOrderPending: status === 'LIMIT_ORDER_PENDING',
-    hasSagaId: !!sagaId,
-    hasOnCancelOrderFunction: !!onCancelOrder,
-    isNotCancelling: !isCancelling,
-    status,
-    finalResult: showCancelButton
-  });
-
-  // Handle cancel button click
+  // Updated handler to show confirmation modal instead of immediately cancelling
   const handleCancelClick = () => {
+    setShowCancelConfirmation(true);
+  };
+
+  // Handle confirmation of cancellation
+  const handleConfirmCancel = () => {
+    setShowCancelConfirmation(false);
     if (onCancelOrder && sagaId) {
       onCancelOrder(sagaId);
     }
   };
 
+  // Handle cancellation of cancellation
+  const handleCancelCancellation = () => {
+    setShowCancelConfirmation(false);
+  };
+
   return (
-      <div className="order-progress-tracker">
-        <div className="status-header">
-          <h3 className="status-title">
-            Order Status: <span className={`status-${status?.toLowerCase()}`}>{status}</span>
-          </h3>
-        </div>
+      <>
+        <div className={`order-progress-tracker ${showCancelConfirmation ? 'blurred' : ''}`}>
+          <div className="status-header">
+            <h3 className="status-title">
+              Order Status: <span className={`status-${status?.toLowerCase()}`}>{status}</span>
+            </h3>
+          </div>
 
-        <div className="steps-container">
-          {/* Existing steps code */}
-          {stepsToShow.map(step => (
-              <div
-                  key={step.id}
-                  className={`step 
-              ${currentStep === step.id ? 'active' : ''}
-              ${visibleCompletedSteps.includes(step.id) ? 'completed' : ''}
-              ${status === 'FAILED' || status === 'CANCELLED_BY_USER' && currentStep === step.id ? 'failed' : ''}`
-                  }
-              >
-                <div className="step-indicator">
-                  {visibleCompletedSteps.includes(step.id) ? '✓' :
-                      (status === 'FAILED' || status === 'CANCELLED_BY_USER') && currentStep === step.id ? '✗' : ''}
+          <div className="steps-container">
+            {/* Existing steps code */}
+            {stepsToShow.map(step => (
+                <div
+                    key={step.id}
+                    className={`step 
+                ${currentStep === step.id ? 'active' : ''}
+                ${visibleCompletedSteps.includes(step.id) ? 'completed' : ''}
+                ${status === 'FAILED' || status === 'CANCELLED_BY_USER' && currentStep === step.id ? 'failed' : ''}`
+                    }
+                >
+                  <div className="step-indicator">
+                    {visibleCompletedSteps.includes(step.id) ? '✓' :
+                        (status === 'FAILED' || status === 'CANCELLED_BY_USER') && currentStep === step.id ? '✗' : ''}
+                  </div>
+                  <div className="step-name">{step.name}</div>
                 </div>
-                <div className="step-name">{step.name}</div>
+            ))}
+          </div>
+
+          {/* Add cancel button for LIMIT orders in pending state */}
+          {showCancelButton && (
+              <button
+                  className="cancel-order-button"
+                  onClick={handleCancelClick}
+                  disabled={isCancelling}
+              >
+                {isCancelling ? 'Cancelling...' : 'Cancel Order'}
+              </button>
+          )}
+
+          {/* Show cancellation message when appropriate */}
+          {status === 'CANCELLED_BY_USER' && (
+              <div className="cancellation-message">
+                Your order has been cancelled and resources are being released.
               </div>
-          ))}
+          )}
         </div>
 
-        {/* Add cancel button for LIMIT orders in pending state */}
-        {showCancelButton && (
-            <button
-                className="cancel-order-button"
-                onClick={handleCancelClick}
-                disabled={isCancelling}
-            >
-              {isCancelling ? 'Cancelling...' : 'Cancel Order'}
-            </button>
+        {/* Cancel Confirmation Modal - Rendered OUTSIDE the blurred container */}
+        {showCancelConfirmation && (
+            <CancelConfirmationModal
+                onConfirm={handleConfirmCancel}
+                onCancel={handleCancelCancellation}
+            />
         )}
-
-        {/* Show cancellation message when appropriate */}
-        {status === 'CANCELLED_BY_USER' && (
-            <div className="cancellation-message">
-              Your order has been cancelled and resources are being released.
-            </div>
-        )}
-      </div>
+      </>
   );
 };
 
