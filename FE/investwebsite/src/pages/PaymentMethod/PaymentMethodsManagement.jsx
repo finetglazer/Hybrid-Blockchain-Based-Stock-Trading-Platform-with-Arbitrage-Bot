@@ -58,7 +58,6 @@ const PaymentMethodsManagement = () => {
         />
       );
       categoryWrapper.appendChild(container);
-      console.log(container.innerHTML);
     }
   };
 
@@ -67,6 +66,7 @@ const PaymentMethodsManagement = () => {
       .querySelector(`.${className}`)
       .querySelector(".expand-icon");
     expandIcon.classList.toggle("metadata-expand");
+
     const metadataWrapper = document.querySelector(`.${className}`);
     metadataWrapper.classList.toggle("details-show");
 
@@ -327,10 +327,10 @@ const PaymentMethodsManagement = () => {
           {
             title: (
               <span style={{ color: "rgba(255, 255, 255, 0.6)" }}>
-                Account dashboard
+                Home
               </span>
             ),
-            href: "/account-dashboard",
+            href: "/home",
           },
           {
             title: (
@@ -343,7 +343,7 @@ const PaymentMethodsManagement = () => {
                 Payment methods
               </span>
             ),
-            href: "/account-dashboard/payment-methods",
+            href: "/home/payment-methods",
           },
         ]}
       />
@@ -529,8 +529,9 @@ const ItemDetails = ({
               }
             >
               <span className="label">Metadata</span>
-              <button className="expand-icon">
+              <button>
                 <img
+                  className="expand-icon"
                   src="../../../src/assets/right-arrow.png"
                   alt="expand icon"
                 />

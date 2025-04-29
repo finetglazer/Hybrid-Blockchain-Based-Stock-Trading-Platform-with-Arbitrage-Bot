@@ -24,16 +24,11 @@ const Portfolio = () => {
     const [initialTotalValue, setInitialTotalValue] = useState(0);
     const [symbolChanges, setSymbolChanges] = useState({});
     const [sortedSymbolChanges, setSortedSymbolChanges] = useState([]);
-    const [wsLoading, setWsLoading] = useState(false);
-    const [wsError, setWsError] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
     const [openComparisonDataList, setOpenComparisonDataList] = useState(false);
     const [comparisonData, setComparisonData] = useState([]);
     const [comparisonDataList, setComparisonDataList] = useState([]);
     const [tableData, setTableData] = useState([]);
     const [chartDatasets, setChartDatasets] = useState([]);
-    const [isFlipping, setIsFlipping] = useState(false);
     const [gliderIndex, setGliderIndex] = useState(3);
 
     const onClickBackBtn = () => {
@@ -260,7 +255,7 @@ const Portfolio = () => {
                     borderRadius: 5,
                     textAlign: "left",
                     display: "flex",
-                    alignItems: "center",
+                    marginTop: 10
                 }}>
                     <p>{record.company}</p>
                     <div style={{
@@ -276,7 +271,8 @@ const Portfolio = () => {
                               alt="trend icon"
                               style={{
                                   width: 20,
-                                  height: 20
+                                  height: 20,
+                                  textAlign: "center"
                               }}
                             />
                         )}
@@ -284,8 +280,9 @@ const Portfolio = () => {
                             <img src="../../../src/assets/upward.png"
                                  alt="trend icon"
                                  style={{
-                                     width: 20,
-                                     height: 20
+                                     width: 25,
+                                     height: 25,
+                                     marginTop: -5
                                  }}
                             />
                         )}
@@ -353,14 +350,14 @@ const Portfolio = () => {
                     padding: 5,
                     justifyContent: "space-between"
                 }}>
-                    <p>{record.dayGainValue}</p>
+                    <p style={{marginTop: 12}}>{record.dayGainValue}</p>
                     {record.dayGainValue[0] === "-" && (
                         <div
                             style={{
                                 height: 30,
+                                width: 90,
                                 backgroundColor: "#670202",
                                 display: "flex",
-                                alignItems: "center",
                                 borderRadius: 10,
                                 padding: 5,
                             }}
@@ -368,19 +365,19 @@ const Portfolio = () => {
                             <img
                                 src="../../../src/assets/arrow-down.png"
                                 alt="direction icon"
-                                width={15}
-                                height={15}
+                                width={20}
+                                height={10}
                             />
-                            <p style={{color: "#ff2343", marginLeft: 3}}>{record.dayGainPercentage}%</p>
+                            <p style={{color: "#ff2343", marginLeft: 3, marginTop: -2}}>{record.dayGainPercentage}%</p>
                         </div>
                     )}
                     {record.dayGainValue[0] !== "-" && (
                         <div
                             style={{
                                 height: 30,
+                                width: 90,
                                 backgroundColor: "#054d05",
                                 display: "flex",
-                                alignItems: "center",
                                 borderRadius: 10,
                                 padding: 5,
                             }}
@@ -389,9 +386,9 @@ const Portfolio = () => {
                                 src="../../../src/assets/up-arrow.png"
                                 alt="direction icon"
                                 width={15}
-                                height={15}
+                                style={{height: 15, marginTop: 2}}
                             />
-                            <p style={{color: "#88ec9f", marginLeft: 3}}>{record.dayGainPercentage}%</p>
+                            <p style={{color: "#88ec9f", marginLeft: 3, marginTop: -2}}>{record.dayGainPercentage}%</p>
                         </div>
                     )}
                 </div>
@@ -403,10 +400,9 @@ const Portfolio = () => {
             key: 'acquisitionDate',
             sorter: (a, b) => a.acquisitionDate.localeCompare(b.acquisitionDate),
             sortDirection: ['ascend', 'descend'],
-            width: 170,
+            width: 220,
             render: (value, record) => (
                 <div style={{
-                    fontWeight: "bold",
                 }}>
                     {record.acquisitionDate}
                 </div>
@@ -418,10 +414,9 @@ const Portfolio = () => {
             key: 'lastUpdated',
             sorter: (a, b) => a.lastUpdated.localeCompare(b.lastUpdated),
             sortDirection: ['ascend', 'descend'],
-            width: 170,
+            width: 220,
             render: (value, record) => (
                 <div style={{
-                    fontWeight: "bold",
                 }}>
                     {record.lastUpdated}
                 </div>
@@ -446,7 +441,6 @@ const Portfolio = () => {
 
     const {
         lastJsonMessage, // Automatically parses incoming JSON
-        readyState,      // Connection status enum
     } = useWebSocket(SOCKET_URL + `?token=${localStorage.getItem("token")}`, {
         onOpen: () => {
             console.log('WebSocket Connected');
@@ -454,7 +448,6 @@ const Portfolio = () => {
         onClose: (event) => console.log('WebSocket Disconnected', event.reason),
         onError: (event) => {
             console.error('WebSocket Error: ', event);
-            setWsError(event.toString());
         },
         shouldReconnect: () => true, // Automatically attempt to reconnect
         reconnectInterval: 3000, // Reconnect attempt interval
@@ -462,13 +455,6 @@ const Portfolio = () => {
         // filter: (message) => message.data.startsWith('{'),
     });
 
-    const connectionStatus = {
-        [ReadyState.CONNECTING]: 'Connecting...',
-        [ReadyState.OPEN]: 'Connected',
-        [ReadyState.CLOSING]: 'Closing...',
-        [ReadyState.CLOSED]: 'Disconnected',
-        [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-    }[readyState];
 
 
     // --- Handle incoming messages ---
@@ -504,25 +490,21 @@ const Portfolio = () => {
         const token = localStorage.getItem("token");
         const fetchPortfolio = async () => {
             try {
-                setLoading(true);
                 const response = await axios.get(`/market-data/api/v1/me/${accountId}/portfolio`, {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json"
                     }
                 });
-                setLoading(false);
                 if (response.data && response.data.status === 1) {
-                    setError("");
                     const portfolio = response.data.data;
                     setPortfolio(portfolio);
                 }
                 else {
-                    setError(response.data.msg);
+                    console.log(response.data.msg);
                 }
             } catch (e) {
-                setLoading(false);
-                setError(e.message);
+                console.log(e.message);
             }
         }
 
@@ -820,16 +802,18 @@ const Portfolio = () => {
                                                 </div>
                                             </>
                                         )}
-                                        <button className="remove-btn" onClick={() => {
-                                            const updatedComparisonData = comparisonData;
-                                            updatedComparisonData.splice(comparisonData.findIndex(symbolData => symbolData === symbol), 1);
-                                            setComparisonData(updatedComparisonData);
-                                            setComparisonDataList([...comparisonDataList, symbol]);
-                                            comparisonChart.current.data.datasets[comparisonChart.current.data.datasets.findIndex(dataset => dataset.label === symbol)].hidden = true;
-                                            comparisonChart.current.update('none');
-                                        }}>
-                                            <img src="../../../src/assets/x-white.png" alt="remove icon" />
-                                        </button>
+                                        <div className="remove-btn-wrapper">
+                                            <button className="remove-btn" onClick={() => {
+                                                const updatedComparisonData = comparisonData;
+                                                updatedComparisonData.splice(comparisonData.findIndex(symbolData => symbolData === symbol), 1);
+                                                setComparisonData(updatedComparisonData);
+                                                setComparisonDataList([...comparisonDataList, symbol]);
+                                                comparisonChart.current.data.datasets[comparisonChart.current.data.datasets.findIndex(dataset => dataset.label === symbol)].hidden = true;
+                                                comparisonChart.current.update('none');
+                                            }}>
+                                                <img src="../../../src/assets/x-white.png" alt="remove icon" />
+                                            </button>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

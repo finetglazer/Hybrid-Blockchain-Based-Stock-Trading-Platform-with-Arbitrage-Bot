@@ -26,13 +26,16 @@
 }
 
 .portfolio-container .body {
+    margin-left: 50px;
+    margin-top: 20px;
     .portfolio-info {
         .prop {
-            display: flex;
             align-items: center;
+            display: flex;
             img {
                 width: 20px;
                 height: 20px;
+                margin-top: -20px;
             }
             p {
                 margin-left: 10px;
@@ -42,7 +45,7 @@
         }
         .value-info {
             text-align: left;
-            margin-top: -20px;
+            margin-top: 10px;
             .portfolio-name {
                 font-size: 3rem;
             }
@@ -60,18 +63,17 @@
             display: flex;
             align-items: center;
             font-weight: bold;
-            margin-top: -40px;
+            margin-top: -10px;
             .total-value {
                 font-size: 3.2rem;
             }
             .gain-percentage-wrapper {
                 display: flex;
-                align-items: center;
                 background-color: #670202;
                 border-radius: 8px;
                 height: 33px;
-                padding: 2px 5px;
-                margin: 30px 0 0 20px;
+                padding: 7px 5px 2px;
+                margin: -10px 0 0 20px;
                 img {
                     width: 20px;
                     height: 20px;
@@ -83,8 +85,8 @@
             }
             .gain-value {
                 color: #e01937;
-                font-size: 1.1rem;
-                margin: 30px 0 0 10px;
+                font-size: 1.3rem;
+                margin: -10px 0 0 20px;
             }
         }
     }
@@ -112,47 +114,45 @@
                     }
                     .name {
                         width: 30%;
+                        margin-top: 15px;
                         text-align: left;
                     }
                     .total-value {
                         width: 25%;
+                        padding-top: 25px;
                         text-align: left;
                     }
                     .total-gain-value {
                         width: 20%;
+                        margin-top: 17px;
                         color: #88ec9f;
                         text-align: left;
                     }
                     .total-gain-percentage {
-                        width: 10%;
+                        display: flex;
+                        padding: 5px 10px 2px;
+                        width: 12%;
                         height: 35px;
                         background: #054d05;
                         border-radius: 10px;
-                        padding-left: 5px;
-                        padding-right: 5px;
-                        text-align: left;
-                        p {
-                            color: #88ec9f;
-                        }
-                    }
-                    .total-gain-percentage {
-                        display: flex;
-                        align-items: center;
-
                         img {
                             width: 15px;
                             height: 15px;
+                            margin-top: 5px;
                         }
                         p {
                             font-weight: 600;
                             margin-left: 3px;
                         }
                     }
-                    .remove-btn {
+                    .remove-btn-wrapper {
                         width: 40%;
                         padding: 0;
                         background: none;
                         text-align: right;
+                        button {
+                            background: none;
+                        }
                         img {
                             width: 15px;
                             height: 15px;
@@ -174,6 +174,10 @@
                         width: 15px;
                         height: 15px;
                         margin: -3px 5px 0 0;
+                    }
+                    p {
+                        margin-top: 12px;
+                        margin-left: 5px;
                     }
                 }
             }
@@ -275,11 +279,10 @@
 
                 .categories {
                     display: flex;
-                    margin: 10px 0 0 -10px;
+                    margin: 20px 0 0 -10px;
 
                     .category-wrapper {
                         margin-right: 50px;
-
                         .category-name {
                             font-size: 0.9rem;
                         }
@@ -289,24 +292,20 @@
                             border-radius: 10px;
                             background-color: #670202;
                             padding: 10px 40px 20px 10px;
-                            height: 75px;
-
+                            height: 105px;
                             .value {
                                 margin-top: 0;
                                 color: #ff2343;
                                 font-weight: bold;
                             }
-
                             .percentage {
                                 display: flex;
-                                align-items: center;
-                                margin-top: -20px;
-
+                                margin-top: -10px;
                                 img {
                                     width: 20px;
                                     height: 20px;
+                                    margin-top: 4px;
                                 }
-
                                 p {
                                     color: #ff2343;
                                     font-weight: bold;
@@ -324,7 +323,7 @@
                         text-align: left;
                         width: 150px;
                         border: 1px solid rgba(0, 0, 0, 0.6);
-                        height: 140px;
+                        height: 120px;
                         margin-right: 10px;
                         border-radius: 7px;
                         padding-left: 5px;
@@ -333,6 +332,24 @@
                         cursor: pointer;
                         &:hover {
                             background-color: #0b6e35;
+                        }
+                    }
+                    .symbol-name {
+                        margin-top: 15px;
+                    }
+                    .percentage {
+                        display: flex;
+                        align-items: center;
+                        margin-top: -5px;
+                        img {
+                            width: 20px;
+                            height: 20px;
+                            margin-top: 4px;
+                        }
+                        p {
+                            color: #ff2343;
+                            font-weight: bold;
+                            margin-top: 20px;
                         }
                     }
                 }
@@ -349,11 +366,15 @@
     }
     .buttons {
         display: flex;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         .left-buttons, .right-buttons {
             display: flex;
             align-items: center;
             width: 50%;
+            height: 35px;
+            button {
+                padding-top: 6px;
+            }
         }
         .right-buttons {
             width: 50%;
@@ -361,12 +382,15 @@
                 display: flex;
                 background: #0864ee;
                 align-items: center;
-                padding: 0 10px;
+                padding: 5px 10px 0;
                 img {
                     width: 12px;
                     height: 12px;
                     margin-right: 5px;
-                    margin-top: -2px;
+                    margin-top: -5px;
+                }
+                p {
+                    margin-top: 10px;
                 }
             }
         }

@@ -1,9 +1,11 @@
 .payment-method-management-container {
     width: 100vw;
     margin-top: -150px;
+    font-family: 'Open Sans', sans-serif;
     .breadcrumb {
         color: white;
     }
+
     padding-bottom: 20px;
     min-height: 100vh;
 }
@@ -16,10 +18,12 @@
 .payment-method-management-container .title {
     text-align: left;
     margin: 20px 0 0 0;
+
     .name {
         font-weight: bold;
         font-size: 2rem;
     }
+
     .description {
         font-size: 0.9rem;
         color: rgba(255, 255, 255, 0.7);
@@ -46,45 +50,54 @@
 .pm-category-container .category-wrapper {
     padding: 20px 60px 20px 0;
     margin: 20px 0 10px 0;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.51);
 }
 
 .pm-category-container .summary {
     display: flex;
+
     .expand-icon {
         width: 15px;
         height: 15px;
         margin-top: 10px;
     }
-    .expand {       /* This class would be conditionally added using JS */
+
+    .expand { /* This class would be conditionally added using JS */
         transform: rotate(90deg);
     }
+
     .item-icon {
         width: 50px;
         height: 50px;
         margin: -5px 0 0 20px;
     }
+
     .item-info {
-        margin: -19px 0 0 20px;
+        margin: -10px 0 0 20px;
         text-align: left;
         width: 140%;
+
         .item-name {
             font-weight: bold;
             font-size: 1.1rem;
         }
+
         .item-id {
             font-size: 0.85rem;
             margin-top: -5px;
         }
     }
+
     .item-status {
         display: flex;
         width: 20%;
+
         img {
             width: 25px;
             height: 25px;
             margin-top: 10px;
         }
+
         .status {
             font-size: 0.9rem;
             font-weight: bold;
@@ -114,6 +127,7 @@
 
 .details-info .properties {
     font-size: 0.9rem;
+
     p, span {
         color: rgba(255, 255, 255, 0.8);
     }
@@ -121,10 +135,12 @@
 
 .item-details .property {
     display: flex;
-    margin-top: -10px;
+    margin-top: 5px;
+
     .label {
         width: 30%;
     }
+
     .description {
         width: 50%;
         text-align: left;
@@ -133,22 +149,26 @@
 
 .item-details .properties .metadata {
     display: block;
+    margin-top: -35px;
     button {
         width: 43%;
         height: 40px;
         background: none;
     }
+
     img {
+        margin-top: 10px;
         width: 10px;
         height: 10px;
     }
+
     .metadata-property-wrapper {
         margin-left: 50px;
     }
 }
 
 .item-details .properties .metadata .title {
-    .metadata-expand {      /* This class would be conditionally added using JS */
+    .metadata-expand { /* This class would be conditionally added using JS */
         transform: rotate(90deg);
     }
 }
@@ -162,10 +182,13 @@
     margin-top: 20px;
     .btn-wrapper {
         display: flex;
+        height: 60px;
         .description {
+            margin-top: 10px;
             width: 50%;
             text-align: left;
         }
+
         button {
             width: 20%;
             margin-left: 50px;
@@ -177,15 +200,19 @@
     .activate-btn {
         background: green none;
     }
+
     .deactivate-btn {
         background: rebeccapurple none;
     }
+
     .update-btn {
         background: #3498db none;
     }
+
     .delete-btn {
         background: red none;
     }
+
     .warning-text {
         font-size: 1.2rem;
         font-weight: bold;
@@ -196,12 +223,14 @@
 .loading-wrapper {
     display: flex;
     margin-top: 50px;
+
     p {
         font-size: 1.2rem;
     }
+
     .spinner {
         width: 20px;
         height: 20px;
-        margin: 14px 0 0 10px;
+        margin: 5px 0 0 10px;
     }
 }

@@ -58,6 +58,7 @@
   color: white; /* Nếu có chữ bên trong */
   font-weight: bold;
   font-size: 20px;
+  margin-top: 12px;
 }
 
 .user {

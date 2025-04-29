@@ -159,7 +159,7 @@ const AddPaymentMethod = ({onSuccess, onCancel}) => {
                 control={
                     <Checkbox
                         checked={formData.setAsDefault}
-                        style={{marginLeft: "-80%"}}
+                        style={{marginLeft: "-60%"}}
                         onChange={(e) => onChange({setAsDefault: e.target.checked})} />
                 }
                 label="Set as default"

@@ -5,25 +5,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/51eb0fed-776c-4607-93c8-39d068129895.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/51eb0fed-776c-4607-93c8-39d068129895.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/config/WebfluxSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/config/WebfluxSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/security/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/security/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API-gateway/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/resources/application-local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kafka-management-service/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/kafka-management-service/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kafka-management-service/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/kafka-management-service/src/main/resources/application-local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/gateway-2025-03-26.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/listener/KafkaCommandListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/listener/KafkaCommandListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/payload/response/client/GetAccountDetailsResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/payload/response/client/GetAccountDetailsResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/TradingAccountServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/TradingAccountServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/gateway.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/gateway.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/market-data-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/market-data-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/market-data-service/src/main/java/com/stocktrading/marketdata/service/MarketPricePublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/market-data-service/src/main/java/com/stocktrading/marketdata/service/MarketPricePublisher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/market-data-service/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/market-data-service/src/main/resources/application-local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application-local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/package-lock.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../FE/investwebsite/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Deposit.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Deposit/Deposit.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/HeaderNavbar/HeaderNavbar.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/HeaderNavbar/HeaderNavbar.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/NavbarSide/NavbarSide.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/NavbarSide/NavbarSide.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/NavbarSide/NavbarSide.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/NavbarSide/NavbarSide.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/PaymentMethod/PaymentMethodsManagement.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/PaymentMethod/PaymentMethodsManagement.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/PaymentMethod/PaymentMethodsManagement.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/PaymentMethod/PaymentMethodsManagement.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/PaymentMethod/forms/AddPaymentMethod.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/PaymentMethod/forms/AddPaymentMethod.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/2FASettings/2FASettings.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/2FASettings/2FASettings.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/ChangePassword/ChangePassword.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/ChangePassword/ChangePassword.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/GenerateRecoveryKeys/GenerateRecoveryKeys.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/GenerateRecoveryKeys/GenerateRecoveryKeys.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/Setting.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/SettingPage/Setting.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Support.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Support.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionDetails/TransactionDetails.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionDetails/TransactionDetails.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionHistory/TransactionHistory.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionHistory/TransactionHistory.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionHistory/TransactionHistory.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionHistory/TransactionHistory.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -98,12 +105,12 @@
     &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Spring Boot.AccountServiceApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.ApiGatewayApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.KafkaManagementServiceApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.MarketDataServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.AccountServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ApiGatewayApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.KafkaManagementServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.MarketDataServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;Spring Boot.MockPaymentServiceApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.UserServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.UserServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;Spring Boot.WalletServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;hiep&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
@@ -151,7 +158,7 @@
       <recent name="com.accountservice.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
+  <component name="RunManager" selected="Spring Boot.ApiGatewayApplication">
     <configuration name="console.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/consoles/db/386254c4-74ac-45e4-8c77-834a59e1ad94/console.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
@@ -375,6 +382,9 @@
       <workItem from="1745367766146" duration="94000" />
       <workItem from="1745370287736" duration="40345000" />
       <workItem from="1745576134930" duration="3593000" />
+      <workItem from="1745807275035" duration="1172000" />
+      <workItem from="1745827510817" duration="7786000" />
+      <workItem from="1745887266760" duration="5676000" />
     </task>
     <servers />
   </component>
@@ -403,7 +413,7 @@
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/TradingAccountServiceImpl.java" line="153">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/TradingAccountServiceImpl.java" line="154">
         <watch expression="userId" language="JAVA" />
       </inline-watch>
     </watches-manager>
