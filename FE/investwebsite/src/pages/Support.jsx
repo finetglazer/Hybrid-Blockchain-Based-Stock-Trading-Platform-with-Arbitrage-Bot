@@ -1,5 +1,5 @@
 import React from "react";
 const Support = () => {
-  return <p1>Support</p1>;
+  return <p>Support</p>;
 };
 export default Support;

@@ -1,3 +1,6 @@
+.two-fa-settings-container {
+    width: 50vw;
+}
 .two-fa-settings-container:hover {
     transform: translateY(0);
 }
@@ -5,8 +8,11 @@
 .two-fa-settings-container > .title {
     display: flex;
     align-items: center;
-    margin: -20px 0 65px -30px;
+    margin: -20px 0 0 -30px;
     font-size: 1.3rem;
+    p {
+        margin-top: 25px;
+    }
 }
 
 .two-fa-settings-container > .title p, .two-fa-settings-container > .title img {
@@ -30,6 +36,7 @@
 }
 
 .two-fa-settings-container .body {
+    margin-top: 20px;
     width: 100%;
     align-items: center;
 }

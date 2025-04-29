@@ -2,7 +2,7 @@
     position: fixed; /* Cố định vị trí */
     top: 0;
     left: 0;
-    width: 150px;
+    width: 200px;
     height: 100vh; /* Full màn hình */
     background: rgba(28, 27, 26, 0.999);  /* Nền trong suốt */
     padding: 20px;

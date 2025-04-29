@@ -131,6 +131,7 @@ public class TradingAccountServiceImpl implements TradingAccountService {
                 "Account details retrieved successfully",
                 new GetAccountDetailsResponse(
                         tradingAccount.getId(),
+                        tradingAccount.getUserId(),
                         tradingAccount.getAccountNumber(),
                         tradingAccount.getNickname(),
                         tradingAccount.getStatus(),

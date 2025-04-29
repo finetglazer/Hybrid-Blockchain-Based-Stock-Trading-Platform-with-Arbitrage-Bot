@@ -2,6 +2,7 @@
     width: 70vw;
     min-height: 70vh;
     margin-top: -100px;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .transaction-details-container:hover {

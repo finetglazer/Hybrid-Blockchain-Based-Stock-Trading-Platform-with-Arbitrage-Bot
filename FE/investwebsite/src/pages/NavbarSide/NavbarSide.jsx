@@ -12,7 +12,7 @@ const NavbarSide = () => {
           <button onClick={() => navigate("/home")}>Home</button>
         </ol>
         <ol className="nav-item">
-          <button onClick={() => navigate("/account-dashboard/payment-methods")}>Payment method</button>
+          <button onClick={() => navigate("/payment-methods")}>Payment method</button>
         </ol>
         <ol className="nav-item">
           <button onClick={() => navigate("/support")}>Support</button>

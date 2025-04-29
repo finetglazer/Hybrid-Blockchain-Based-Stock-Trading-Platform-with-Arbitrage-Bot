@@ -11,6 +11,7 @@ import java.time.Instant;
 @NoArgsConstructor
 public class GetAccountDetailsResponse {
     private String id;
+    private String userId;
     private String accountNumber;
     private String nickname;
     private String status;
