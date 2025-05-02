@@ -197,6 +197,10 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
         ).getData().getItems();
 
         Instant lastUsedAt = transactions.isEmpty() ? null : transactions.get(0).getCreatedAt();
+        String accountHolderName = paymentMethod.getMetadata().get("accountHolderName") == null ? "" : paymentMethod.getMetadata().get("accountHolderName").toString();
+        String bankName = paymentMethod.getMetadata().get("bankName") == null ? "" : paymentMethod.getMetadata().get("bankName").toString();
+        Date verifiedAt = paymentMethod.getMetadata().get("verifiedAt") == null ? null : (Date) paymentMethod.getMetadata().get("verifiedAt");
+        String verificationMethod = paymentMethod.getMetadata().get("verificationMethod") == null ? "" : paymentMethod.getMetadata().get("verificationMethod").toString();
 
         GetPaymentMethodDetailsResponse getPaymentMethodDetailsResponse = new GetPaymentMethodDetailsResponse();
         getPaymentMethodDetailsResponse.setId(paymentMethod.getId());
@@ -206,8 +210,8 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
         getPaymentMethodDetailsResponse.setStatus(paymentMethod.getStatus());
         getPaymentMethodDetailsResponse.setAddedAt(paymentMethod.getAddedAt());
         getPaymentMethodDetailsResponse.setLastUsedAt(lastUsedAt);
-        getPaymentMethodDetailsResponse.setMetadata(new PaymentMethodMetadataResponse(paymentMethod.getMetadata().get("accountHolderName").toString(), paymentMethod.getMetadata().get("bankName").toString()));
-        getPaymentMethodDetailsResponse.setVerificationDetails(new PaymentMethodVerificationDetailsResponse((Date) paymentMethod.getMetadata().get("verifiedAt"), paymentMethod.getMetadata().get("verificationMethod").toString()));
+        getPaymentMethodDetailsResponse.setMetadata(new PaymentMethodMetadataResponse(accountHolderName, bankName));
+        getPaymentMethodDetailsResponse.setVerificationDetails(new PaymentMethodVerificationDetailsResponse(verifiedAt, verificationMethod));
 
         return new BaseResponse<>(
             Const.STATUS_RESPONSE.SUCCESS,

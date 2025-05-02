@@ -23,4 +23,6 @@ public interface UserProfileService {
      * @return A response indicating success or failure
      */
     BaseResponse<?> verifyPhoneNumberUpdate(String userId, PhoneNumberVerifyRequest request);
+
+    BaseResponse<?> getPhoneNumber(String userId);
 }

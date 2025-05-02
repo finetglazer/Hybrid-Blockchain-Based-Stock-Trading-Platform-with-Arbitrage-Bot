@@ -23,6 +23,11 @@ public class TwoFactorAuthController {
         return ResponseEntity.ok(twoFactorAuthService.enable2FA(principal.getName(), request));
     }
 
+    @GetMapping("/create")
+    public ResponseEntity<?> create2FA(Principal principal) {
+        return ResponseEntity.ok(twoFactorAuthService.create2FA(principal.getName()));
+    }
+
     @PostMapping("/verify")
     public ResponseEntity<?> verify2FA(@RequestBody Verify2FARequest request) {
         return ResponseEntity.ok(twoFactorAuthService.verify2FA(request));
