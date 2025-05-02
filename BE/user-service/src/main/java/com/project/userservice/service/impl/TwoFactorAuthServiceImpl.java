@@ -297,6 +297,50 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
         );
     }
 
+    @Override
+    public BaseResponse<?> create2FA(String userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.ERROR,
+                    "User not found with userId: " + userId,
+                    ""
+            );
+        }
+        try {
+            String sessionInfo = smsService.generatePhoneVerificationToken(user.getPhoneNumber());
+
+            SecurityVerification verification = new SecurityVerification();
+            verification.setUserId(userId);
+            verification.setType(SecurityVerification.VerificationType.valueOf("SMS_CODE").name());
+            verification.setStatus(SecurityVerification.VerificationStatus.PENDING.name());
+            verification.setCreatedAt(Instant.now());
+            verification.setExpiresAt(Instant.now().plus(10, ChronoUnit.MINUTES));
+            verification.setSessionInfo(sessionInfo);
+
+            SecurityVerification savedVerification = securityVerificationRepository.save(verification);
+
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("verificationId", savedVerification.getId());
+            responseData.put("type", verification.getType());
+            responseData.put("expiresAt", savedVerification.getExpiresAt());
+
+            return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.SUCCESS,
+                    "Verification code sent to phone number",
+                    responseData
+            );
+
+        } catch (Exception e) {
+            logger.error("Error creating 2FA: ", e);
+            return new BaseResponse<>(
+                    Const.STATUS_RESPONSE.ERROR,
+                    "Failed to create 2FA: " + e.getMessage(),
+                    ""
+            );
+        }
+    }
+
     // Helper method to generate and store recovery keys
     private List<String> generateAndStoreRecoveryKeys(String userId) {
         // 1. Generate recovery keys (random alphanumeric strings)

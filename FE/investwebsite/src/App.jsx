@@ -23,12 +23,14 @@ import Setting from "./pages/SettingPage/Setting";
 import Support from "./pages/Support";
 import TransactionDetails from "./pages/TransactionDetails/TransactionDetails.jsx";
 import TransactionHistory from "./pages/TransactionHistory/TransactionHistory.jsx";
-import TwoFactorAuth from "./pages/TwoFactorAuth/TwoFactorAuth.jsx";
+import Enable2FA from "./pages/Enable2FA/Enable2FA.jsx";
 import UpdatePhoneNumber from "./pages/UpdatePhoneNumber/UpdatePhoneNumber.jsx";
 import Wallet from "./pages/Wallet.jsx";
-import Withdraw from "./pages/Withdraw.jsx";
+import Withdraw from "./pages/Withdraw/Withdraw.jsx";
 import Portfolio from "./pages/Portfolio/Portfolio.jsx";
-import ChoosePaymentMethod from "./pages/Deposit/ChoosePaymentMethod.jsx";
+import DepositChoosePaymentMethod from "./pages/Deposit/DepositChoosePaymentMethod.jsx";
+import WithdrawChoosePaymentMethod from "./pages/Withdraw/WithdrawChoosePaymentMethod.jsx";
+import TwoFaVerification from "./pages/2FaVerification/TwoFaVerification.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -47,8 +49,9 @@ const Layout = () => {
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/withdraw" element={<Withdraw/>} />
-          <Route path=":accountId/deposit/choose-payment-method" element={<ChoosePaymentMethod />} />
+          <Route path=":accountId/withdraw/choose-payment-method" element={<WithdrawChoosePaymentMethod />} />
+          <Route path=":accountId/withdraw/:paymentMethodId" element={<Withdraw/>} />
+          <Route path=":accountId/deposit/choose-payment-method" element={<DepositChoosePaymentMethod />} />
           <Route path=":accountId/deposit/:paymentMethodId" element={<Deposit/>} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/support" element={<Support />} />
@@ -59,7 +62,8 @@ const Layout = () => {
           <Route path="/payment-methods" element={<PaymentMethodsManagement />} />
           <Route path="/transaction-history" element={<TransactionHistory />} />
           <Route path="/transaction-history/:transactionId/details" element={<TransactionDetails />} />
-          <Route path="/two-factor-auth" element={<TwoFactorAuth />} /> {/* Add this route */}
+          <Route path="/two-factor-auth" element={<Enable2FA />} /> {/* Add this route */}
+          <Route path="/2fa-verify" element={<TwoFaVerification />} />
           <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />
           <Route path="/profile/disable2FA" element={<Disable2FA />} />
           <Route path="/:accountId/portfolio" element={<Portfolio />}/>

@@ -2,9 +2,9 @@ import {useParams} from "react-router-dom";
 import {Alert, Tag} from "antd";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import "./ChoosePaymentMethod.css";
+import "./DepositChoosePaymentMethod.css";
 
-const ChoosePaymentMethod = () => {
+const DepositChoosePaymentMethod = () => {
     const accountId = useParams().accountId;
 
     const [account, setAccount] = useState();
@@ -148,7 +148,7 @@ const ChoosePaymentMethod = () => {
                             display: "flex"
                         }}>
                             <img src="../../../src/assets/dollar.png" alt="account icon"
-                                style={{
+                                 style={{
                                     width: 60,
                                     height: 60,
                                     margin: "10px 0 0 5px"
@@ -174,7 +174,7 @@ const ChoosePaymentMethod = () => {
                                                 return "black";
                                         }
                                     })()}>{account.status ?? "UNDEFINED"}</Tag>
-                                    <p>{account.nickname}</p>
+                                    <p className="mt-2.5">{account.nickname}</p>
                                 </div>
                                 <p style={{
                                     marginTop: -5,
@@ -230,25 +230,25 @@ const ChoosePaymentMethod = () => {
                     }
                     {!fetchPaymentMethodError && !fetchPaymentMethodError &&
                         <>
-                            <div style={{textAlign: "right"}}>
-                                <button style={{height: 50, background: "#56f5ff", fontSize: "1.1rem"}} onClick={onClickAddNewPaymentMethodBtn}>
-                                    <img src="../../../src/assets/add.png" width={15} height={15} alt="add icon"/>
-                                    <span style={{marginLeft: 10}}>Add new payment method</span>
+                            <div style={{marginTop: 40, textAlign: "right"}}>
+                                <button style={{background: "#56f5ff", fontSize: "1.1rem", display: "flex", height: 40}} onClick={onClickAddNewPaymentMethodBtn}>
+                                    <img src="../../../src/assets/add.png" width={15} height={10} alt="add icon"/>
+                                    <p style={{marginLeft: 10, marginTop: -5}}>Add new payment method</p>
                                 </button>
                             </div>
                             <div style={{
                                 display: "grid",
-                                gridTemplateColumns: `repeat(${Math.ceil(paymentMethods.length / 2)}, 50%)`,
+                                gridTemplateColumns: `repeat(${Math.ceil(paymentMethods.length / 2)}, 45%)`,
                                 marginTop: 10,
                             }}>
                                 {!displayedPaymentMethods.length &&
                                     <div style={{
                                         display: "flex",
                                         alignItems: "center",
-                                        marginTop: "30%",
-                                        marginLeft: "80%"
+                                        marginTop: "45%",
+                                        marginLeft: "80%",
                                     }}>
-                                        <img src="../../../src/assets/empty.png" width={60} height={60} alt="not found icon"/>
+                                        <img src="../../assets/empty.png" width={60} height={60} alt="not found icon"/>
                                         <p style={{fontSize: "2.2rem", marginTop: 10, marginLeft: 20}}>Empty</p>
                                     </div>
                                 }
@@ -266,10 +266,11 @@ const ChoosePaymentMethod = () => {
                                             display: "flex",
                                             justifyContent: "space-between",
                                             alignItems: "center",
-                                            marginTop: -20
+                                            marginTop: -10,
+                                            textAlign: "left"
                                         }}>
                                             <p style={{
-                                                fontSize: "1.3rem"
+                                                fontSize: "1.1rem"
                                             }}>
                                                 {paymentMethod.nickname}
                                             </p>
@@ -281,10 +282,11 @@ const ChoosePaymentMethod = () => {
                                                  style={{
                                                      width: 50,
                                                      height: 50,
+                                                     marginTop: -10
                                                  }}
                                                  alt="payment method icon" />
                                         </div>
-                                        <div style={{textAlign: "left"}}>
+                                        <div style={{textAlign: "left", marginTop: -5}}>
                                             <Tag bordered={false}
                                                  color={(() => {
                                                      switch (paymentMethod.status) {
@@ -304,48 +306,51 @@ const ChoosePaymentMethod = () => {
                                             marginTop: 20
                                         }}>
                                             <p style={{
-                                                width: "50%",
+                                                width: "45%",
                                                 textAlign: "left",
-                                                color: "#d7d6d6"
+                                                color: "#d7d6d6",
+                                                fontSize: "0.9rem"
                                             }}>
                                                 Commission
                                             </p>
                                             <p style={{
-
+                                                fontSize: "0.9rem"
                                             }}>
                                                 0%
                                             </p>
                                         </div>
                                         <div style={{
                                             display: "flex",
-                                            marginTop: -20
+                                            marginTop: -10
                                         }}>
                                             <p style={{
-                                                width: "50%",
+                                                width: "45%",
                                                 textAlign: "left",
-                                                color: "#d7d6d6"
+                                                color: "#d7d6d6",
+                                                fontSize: "0.9rem"
                                             }}>
                                                 Average time
                                             </p>
                                             <p style={{
-
+                                                fontSize: "0.9rem"
                                             }}>
                                                 15-20 min
                                             </p>
                                         </div>
                                         <div style={{
                                             display: "flex",
-                                            marginTop: -20
+                                            marginTop: -10,
                                         }}>
                                             <p style={{
-                                                width: "50%",
+                                                width: "45%",
                                                 textAlign: "left",
-                                                color: "#d7d6d6"
+                                                color: "#d7d6d6",
+                                                fontSize: "0.9rem"
                                             }}>
-                                                Payment system limit
+                                                Payment limit
                                             </p>
                                             <p style={{
-
+                                                fontSize: "0.9rem"
                                             }}>
                                                 {convert(1000.0.toFixed(2)) + " - " + convert(3000000.0.toFixed(2))}$
                                             </p>
@@ -361,4 +366,4 @@ const ChoosePaymentMethod = () => {
     );
 };
 
-export default ChoosePaymentMethod;
+export default DepositChoosePaymentMethod;

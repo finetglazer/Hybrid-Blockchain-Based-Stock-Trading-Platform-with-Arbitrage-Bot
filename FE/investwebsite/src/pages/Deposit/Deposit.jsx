@@ -110,7 +110,7 @@ const Deposit = () => {
         setFetchAccountLoading(false);
         setFetchAccountError(e.message);
       }
-    }
+    };
 
     fetchAccount().then(() => {});
   }, [accountId]);
@@ -137,7 +137,7 @@ const Deposit = () => {
         setFetchPaymentMethodLoading(false);
         setFetchPaymentMethodError(e.message);
       }
-    }
+    };
 
     fetchPaymentMethod().then(() => {});
   }, [paymentMethodId]);
