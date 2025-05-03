@@ -270,73 +270,6 @@ const TransactionHistory = () => {
         },
     ];
 
-    // const transactions = [
-    //     {
-    //         key: 1,
-    //         id: "67e6ac805916dc16cad32fba",
-    //         accountId: "account001",
-    //         amount: 1000.5,
-    //         completedAt: "2025-03-20T07:25:00.000Z",
-    //         createdAt: "2025-03-20T07:15:00.000Z",
-    //         currency: "USD",
-    //         description: "Deposit into savings account",
-    //         externalReferenceId: "extRef001",
-    //         fee: 10.5,
-    //         paymentMethodId: "paymentMethod001",
-    //         status: "COMPLETED",
-    //         type: "DEPOSIT",
-    //         updatedAt: "2025-03-20T07:20:00.000Z",
-    //     },
-    //     {
-    //         key: 2,
-    //         id: "67e6ac805916dc16cad32fba",
-    //         accountId: "account001",
-    //         amount: 1000.5,
-    //         completedAt: "2025-03-20T07:25:00.000Z",
-    //         createdAt: "2025-03-20T07:15:00.000Z",
-    //         currency: "USD",
-    //         description: "Deposit into savings account",
-    //         externalReferenceId: "extRef001",
-    //         fee: 10.5,
-    //         paymentMethodId: "paymentMethod001",
-    //         status: "PENDING",
-    //         type: "WITHDRAWAL",
-    //         updatedAt: "2025-03-20T07:20:00.000Z",
-    //     },
-    //     {
-    //         key: 3,
-    //         id: "67e6ac805916dc16cad32fba",
-    //         accountId: "account001",
-    //         amount: 1000.5,
-    //         completedAt: "2025-03-20T07:25:00.000Z",
-    //         createdAt: "2025-03-20T07:15:00.000Z",
-    //         currency: "USD",
-    //         description: "Deposit into savings account",
-    //         externalReferenceId: "extRef001",
-    //         fee: 10.5,
-    //         paymentMethodId: "paymentMethod002",
-    //         status: "FAILED",
-    //         type: "TRANSFER",
-    //         updatedAt: "2025-03-20T07:20:00.000Z",
-    //     },
-    //     {
-    //         key: 4,
-    //         id: "67e6ac805916dc16cad32fba",
-    //         accountId: "account001",
-    //         amount: 1000.5,
-    //         completedAt: "2025-03-20T07:25:00.000Z",
-    //         createdAt: "2025-03-20T07:15:00.000Z",
-    //         currency: "USD",
-    //         description: "Deposit into savings account",
-    //         externalReferenceId: "extRef001",
-    //         fee: 10.5,
-    //         paymentMethodId: "paymentMethod001",
-    //         status: "CANCELLED",
-    //         type: "ORDER_PAYMENT",
-    //         updatedAt: "2025-03-20T07:20:00.000Z",
-    //     },
-    // ];
-
     return (
     <>
         {openFilterForm &&
@@ -353,10 +286,10 @@ const TransactionHistory = () => {
                     {
                         title: (
                             <span style={{ color: "rgba(255, 255, 255, 0.6)" }}>
-                                Account dashboard
+                                Home
                             </span>
                         ),
-                        href: "/account-dashboard",
+                        href: "/home",
                     },
                     {
                         title: (
@@ -369,7 +302,7 @@ const TransactionHistory = () => {
                                 Transaction history
                             </span>
                         ),
-                        href: "/account-dashboard/transaction-history",
+                        href: "/home/transaction-history",
                     },
                 ]}
             />
@@ -404,7 +337,7 @@ const TransactionHistory = () => {
                             cursor: "pointer",
                         },
                         onClick: () => {
-                            navigate(`/account-dashboard/transaction-history/${record.id}/details`);
+                            navigate(`/transaction-history/${record.id}/details`);
                         }
                     })}
                     pagination={{

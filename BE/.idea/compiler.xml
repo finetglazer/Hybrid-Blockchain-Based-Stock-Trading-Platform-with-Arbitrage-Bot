@@ -7,19 +7,21 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="mockbrokerage-service" />
+        <module name="market-data-service" />
+        <module name="API-gateway" />
         <module name="user-service" />
+        <module name="order-service" />
         <module name="kafka-management-service" />
         <module name="kafka-message-models" />
-        <module name="API-gateway" />
         <module name="mock-payment-service" />
+        <module name="portfolio-service" />
       </profile>
       <profile name="Annotation profile for trading-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-configuration-processor/3.4.3/spring-boot-configuration-processor-3.4.3.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-configuration-processor/3.4.3/spring-boot-configuration-processor-3.4.3.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
         </processorPath>
@@ -44,7 +46,11 @@
       <module name="account-service" options="-parameters" />
       <module name="kafka-management-service" options="-parameters" />
       <module name="kafka-message-models" options="-parameters" />
+      <module name="market-data-service" options="-parameters" />
       <module name="mock-payment-service" options="-parameters" />
+      <module name="mockbrokerage-service" options="-parameters" />
+      <module name="order-service" options="-parameters" />
+      <module name="portfolio-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
   </component>

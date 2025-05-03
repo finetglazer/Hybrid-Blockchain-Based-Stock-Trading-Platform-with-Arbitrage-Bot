@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
   });
@@ -14,7 +14,7 @@ const Register = () => {
   const validate = () => {
     let newErrors = {};
 
-    if (!formData.name.trim()) newErrors.name = "⚠ Name is required!";
+    if (!formData.username.trim()) newErrors.username = "⚠ Name is required!";
     if (!formData.email.includes("@gmail.com"))
       newErrors.email = "⚠ Invalid Email!";
     if (formData.password.length < 6)
@@ -51,11 +51,11 @@ const Register = () => {
         <div className="register-input">
           <input
             type="text"
-            placeholder="Name"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="Username"
+            value={formData.username}
+            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
           />
-          {errors.name && <p className="error-text">{errors.name}</p>}
+          {errors.username && <p className="error-text">{errors.username}</p>}
         </div>
 
         <div className="register-input">

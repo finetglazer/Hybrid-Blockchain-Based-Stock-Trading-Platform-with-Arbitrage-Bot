@@ -1,17 +1,17 @@
-// FE/investwebsite/src/pages/TwoFactorAuth.jsx
+// FE/investwebsite/src/pages/Enable2FA.jsx
 import React, { useState, useEffect } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase/firebaseConfig";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./TwoFactorAuth.css";
+import "./Enable2FA.css";
 import {useAppContext} from "../../AppContextProvider.jsx"; // Import the CSS file
 
-const TwoFactorAuth = () => {
+const Enable2FA = () => {
     const navigate = useNavigate();
     const [phoneNumber, setPhoneNumber] = useState("");
     const [verificationId, setVerificationId] = useState("");
-    const [verificationCode, setVerificationCode] = useState("");
+    const [verificationCode, setverificationCode] = useState("");
     const [step, setStep] = useState("phone"); // "phone", "code", "success"
     const [recoveryKeys, setRecoveryKeys] = useState([]);
     const [error, setError] = useState("");
@@ -299,7 +299,7 @@ const TwoFactorAuth = () => {
     const handleResendCode = () => {
         // Reset verification state and go back to phone step
         setStep("phone");
-        setVerificationCode("");
+        setverificationCode("");
         setError("");
         setRecaptchaReady(false);
 
@@ -358,7 +358,7 @@ const TwoFactorAuth = () => {
                         type="text"
                         placeholder="Verification Code"
                         value={verificationCode}
-                        onChange={(e) => setVerificationCode(e.target.value)}
+                        onChange={(e) => setverificationCode(e.target.value)}
                     />
                     <div className="button-group">
                         <button
@@ -411,4 +411,4 @@ const TwoFactorAuth = () => {
     );
 };
 
-export default TwoFactorAuth;
+export default Enable2FA;

@@ -6,16 +6,16 @@ const NavbarSide = () => {
 
   return (
     <div className="sidebar">
-      <h3>App name</h3>
+      <img src="/symbol.png"/>
       <ul className="nav flex-column">
         <ol className="nav-item">
-          <button onClick={() => navigate("/home")}>HOME</button>
+          <button onClick={() => navigate("/home")}>Home</button>
         </ol>
         <ol className="nav-item">
-          <button onClick={() => navigate("/wallet")}>WALLET</button>
+          <button onClick={() => navigate("/payment-methods")}>Payment method</button>
         </ol>
         <ol className="nav-item">
-          <button onClick={() => navigate("/support")}>SUPPORT</button>
+          <button onClick={() => navigate("/support")}>Support</button>
         </ol>
       </ul>
     </div>

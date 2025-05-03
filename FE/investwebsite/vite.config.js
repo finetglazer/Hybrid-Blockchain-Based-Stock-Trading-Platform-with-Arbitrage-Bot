@@ -10,7 +10,8 @@ export default defineConfig({
     proxy: {
       "/api": {
         // target: "https://good-musical-joey.ngrok-free.app",
-        target: 'https://2d909f2ebd6a96.lhr.life',
+        // target: 'https://2d909f2ebd6a96.lhr.life',
+        target: "https://good-musical-joey.ngrok-free.app",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
         logLevel: 'debug',
@@ -29,7 +30,18 @@ export default defineConfig({
         }
       },
       '/accounts': {
-        // target: 'https://2d909f2ebd6a96.lhr.life',
+        target: 'https://good-musical-joey.ngrok-free.app',
+        changeOrigin: true,
+        logLevel: 'debug',
+        configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
+          proxy.on('proxyReq', (proxyReq) => {
+            // Set the header Ngrok uses to skip the interstitial page
+            proxyReq.setHeader('ngrok-skip-browser-warning', 'true'); // Value can be anything, 'true' is clear
+            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header');
+          });
+        }
+      },
+      '/market-data': {
         target: 'https://good-musical-joey.ngrok-free.app',
         changeOrigin: true,
         logLevel: 'debug',
@@ -42,7 +54,6 @@ export default defineConfig({
         }
       },
       '/sagas': {
-        // target: 'https://2d909f2ebd6a96.lhr.life',
         target: 'https://good-musical-joey.ngrok-free.app',
         changeOrigin: true,
         logLevel: 'debug',

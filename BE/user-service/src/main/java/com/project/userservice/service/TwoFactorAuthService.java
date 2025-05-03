@@ -11,7 +11,7 @@ public interface TwoFactorAuthService {
     BaseResponse<?> verify2FA(Verify2FARequest request);
     BaseResponse<?> generateRecoveryKeys(String userId);
     BaseResponse<?> verifyWithRecoveryKey(String userId, RecoveryKeyVerifyRequest request);
-
+    BaseResponse<?> create2FA(String userId);
 
     /**
      * Get 2FA information for the current user and prepare for disabling

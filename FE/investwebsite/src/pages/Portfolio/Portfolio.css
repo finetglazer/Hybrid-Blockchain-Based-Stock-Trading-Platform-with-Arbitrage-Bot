@@ -1,0 +1,398 @@
+.portfolio-container {
+    position: relative;
+    font-family: 'Open Sans', serif;
+    min-width: 100vw;
+    min-height: 100vh;
+    padding-left: 30px;
+}
+
+.portfolio-container .title {
+    display: flex;
+    align-items: center;
+    margin: -30px 0 10px -20px;
+    button {
+        background: none;
+        width: 20px;
+        height: 20px;
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
+    p {
+        margin: 22px 0 0 10px;
+        font-size: 2rem;
+    }
+}
+
+.portfolio-container .body {
+    margin-left: 50px;
+    margin-top: 20px;
+    .portfolio-info {
+        .prop {
+            align-items: center;
+            display: flex;
+            img {
+                width: 20px;
+                height: 20px;
+                margin-top: -20px;
+            }
+            p {
+                margin-left: 10px;
+                color: #77b78a;
+                font-size: 0.9rem;
+            }
+        }
+        .value-info {
+            text-align: left;
+            margin-top: 10px;
+            .portfolio-name {
+                font-size: 3rem;
+            }
+            .portfolio-id {
+                margin-top: -10px;
+                color: #b9dcc3;
+                font-size: 0.9rem;
+            }
+            .date {
+                margin-top: -10px;
+                color: #9af1b6;
+            }
+        }
+        .total-value-info {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            margin-top: -10px;
+            .total-value {
+                font-size: 3.2rem;
+            }
+            .gain-percentage-wrapper {
+                display: flex;
+                background-color: #670202;
+                border-radius: 8px;
+                height: 33px;
+                padding: 7px 5px 2px;
+                margin: -10px 0 0 20px;
+                img {
+                    width: 20px;
+                    height: 20px;
+                }
+                .gain-percentage {
+                    color: #ff0044;
+                    font-size: 0.8rem;
+                }
+            }
+            .gain-value {
+                color: #e01937;
+                font-size: 1.3rem;
+                margin: -10px 0 0 20px;
+            }
+        }
+    }
+    .chart-and-highlight-container {
+        display: flex;
+        margin: 40px 0 0 50px;
+        align-items: center;
+        .comparison-chart-container {
+            position: relative;
+            .chart-canvas {
+                width: 800px;
+                height: 400px;
+            }
+            .comparison-object-container {
+                .comparison-object {
+                    display: flex;
+                    align-items: center;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.38);
+                    font-weight: 600;
+                    .color-streak {
+                        width: 3px;
+                        border-radius: 15px;
+                        height: 20px;
+                        margin-right: 5px;
+                    }
+                    .name {
+                        width: 30%;
+                        margin-top: 15px;
+                        text-align: left;
+                    }
+                    .total-value {
+                        width: 25%;
+                        padding-top: 25px;
+                        text-align: left;
+                    }
+                    .total-gain-value {
+                        width: 20%;
+                        margin-top: 17px;
+                        color: #88ec9f;
+                        text-align: left;
+                    }
+                    .total-gain-percentage {
+                        display: flex;
+                        padding: 5px 10px 2px;
+                        width: 12%;
+                        height: 35px;
+                        background: #054d05;
+                        border-radius: 10px;
+                        img {
+                            width: 15px;
+                            height: 15px;
+                            margin-top: 5px;
+                        }
+                        p {
+                            font-weight: 600;
+                            margin-left: 3px;
+                        }
+                    }
+                    .remove-btn-wrapper {
+                        width: 40%;
+                        padding: 0;
+                        background: none;
+                        text-align: right;
+                        button {
+                            background: none;
+                        }
+                        img {
+                            width: 15px;
+                            height: 15px;
+                        }
+                    }
+                }
+            }
+            .chart-buttons {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-top: 15px;
+                .add-comparison-btn {
+                    display: flex;
+                    align-items: center;
+                    height: 30px;
+                    background: tomato;
+                    img {
+                        width: 15px;
+                        height: 15px;
+                        margin: -3px 5px 0 0;
+                    }
+                    p {
+                        margin-top: 12px;
+                        margin-left: 5px;
+                    }
+                }
+            }
+            .comparison-objects-list-container {
+                position: absolute;
+                z-index: 99;
+                top: 99%;
+                .search-bar {
+                    display: flex;
+                    input {
+                        width: 730px;
+                    }
+                    .close-btn {
+                        margin-right: 20px;
+                        background: none;
+                        img {
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+                }
+                .comparison-objects-list {
+                    background: #144f25;
+                    width: 750px;
+                    margin-top: -12px;
+                    .comparison-object {
+                        display: flex;
+                        font-weight: 600;
+                        height: 70px;
+                        padding-left: 15px;
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.38);
+                        &:hover {
+                            cursor: pointer;
+                            background: #39804f;
+                        }
+                        .comparison-object-info {
+                            width: 50%;
+                            margin-top: 12px;
+                            p {
+                                margin: 0;
+                                text-align: left;
+                            }
+                            .name {
+                                margin-bottom: 5px;
+                            }
+                            .symbol {
+                                font-size: 0.8rem;
+                                font-weight: 400;
+                            }
+                        }
+                        .value {
+                            width: 50%;
+                            display: flex;
+                            .total-gain-value {
+                                width: 50%;
+                                margin-top: 25px;
+                                text-align: left;
+                            }
+                            .total-gain-percentage-wrapper {
+                                width: 50%;
+                                .total-gain-percentage {
+                                    display: flex;
+                                    align-items: center;
+                                    width: 70px;
+                                    background: #054d05;
+                                    border-radius: 10px;
+                                    padding: 5px 15px 5px 10px;
+                                    margin-top: 20px;
+                                    img {
+                                        width: 15px;
+                                        height: 15px;
+                                        margin-right: 3px;
+                                    }
+                                    p {
+                                        margin: 0;
+                                        color: #88ec9f;
+                                    }
+                                }
+                            }
+                        }
+                        .mini-chart-wrapper {
+                            width: 50%;
+                            background: black;
+                        }
+                    }
+                }
+            }
+        }
+        .glider-and-highlight-container {
+            margin-left: 150px;
+            .highlight-container {
+                text-align: left;
+                box-shadow: none;
+                margin-left: 0;
+                .title {
+                    font-size: 1.7rem;
+                    margin: -10px 0 0 -10px;
+                }
+
+                .categories {
+                    display: flex;
+                    margin: 20px 0 0 -10px;
+
+                    .category-wrapper {
+                        margin-right: 50px;
+                        .category-name {
+                            font-size: 0.9rem;
+                        }
+
+                        .value-wrapper {
+                            margin-top: -5px;
+                            border-radius: 10px;
+                            background-color: #670202;
+                            padding: 10px 40px 20px 10px;
+                            height: 105px;
+                            .value {
+                                margin-top: 0;
+                                color: #ff2343;
+                                font-weight: bold;
+                            }
+                            .percentage {
+                                display: flex;
+                                margin-top: -10px;
+                                img {
+                                    width: 20px;
+                                    height: 20px;
+                                    margin-top: 4px;
+                                }
+                                p {
+                                    color: #ff2343;
+                                    font-weight: bold;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .glider-container {
+                .glider {
+                    display: flex;
+                    align-items: center;
+                    .comparison-object-wrapper {
+                        text-align: left;
+                        width: 150px;
+                        border: 1px solid rgba(0, 0, 0, 0.6);
+                        height: 120px;
+                        margin-right: 10px;
+                        border-radius: 7px;
+                        padding-left: 5px;
+                        padding-right: 5px;
+                        background-color: #348556;
+                        cursor: pointer;
+                        &:hover {
+                            background-color: #0b6e35;
+                        }
+                    }
+                    .symbol-name {
+                        margin-top: 15px;
+                    }
+                    .percentage {
+                        display: flex;
+                        align-items: center;
+                        margin-top: -5px;
+                        img {
+                            width: 20px;
+                            height: 20px;
+                            margin-top: 4px;
+                        }
+                        p {
+                            color: #ff2343;
+                            font-weight: bold;
+                            margin-top: 20px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.portfolio-container .investments-table {
+    margin-top: 50px;
+    .table-btn {
+        border-radius: 30px;
+        height: 35px;
+    }
+    .buttons {
+        display: flex;
+        margin-bottom: 20px;
+        .left-buttons, .right-buttons {
+            display: flex;
+            align-items: center;
+            width: 50%;
+            height: 35px;
+            button {
+                padding-top: 6px;
+            }
+        }
+        .right-buttons {
+            width: 50%;
+            .add-investment-btn {
+                display: flex;
+                background: #0864ee;
+                align-items: center;
+                padding: 5px 10px 0;
+                img {
+                    width: 12px;
+                    height: 12px;
+                    margin-right: 5px;
+                    margin-top: -5px;
+                }
+                p {
+                    margin-top: 10px;
+                }
+            }
+        }
+    }
+}

@@ -4,7 +4,7 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase/firebaseConfig";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./UpdatePhoneNumber.css"; // Create a matching CSS file based on TwoFactorAuth.css
+import "./UpdatePhoneNumber.css"; // Create a matching CSS file based on Enable2FA.css
 
 const UpdatePhoneNumber = () => {
     const navigate = useNavigate();

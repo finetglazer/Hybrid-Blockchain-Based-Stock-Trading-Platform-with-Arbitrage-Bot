@@ -1,11 +1,11 @@
-import React, { useState } from "react";
 import {
   Button,
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
+import React, { useState } from "react";
 import CreateAccount from "../CreateAccount";
 import "./Home.css";
 
@@ -68,13 +68,14 @@ const Home = () => {
           <h1 style={{ color: "#ffffff" }}>Trade</h1>
           <div className="trade-options">
             {[
-              { label: "Buy", icon: "+" },
-              { label: "Sell", icon: "-" },
-              { label: "Swap", icon: "⇄" },
+              { label: "Withdraw", icon: "+" },
+              { label: "Deposit", icon: "-" },
             ].map((action, idx) => (
               <div key={idx} className="trade-item">
                 <div className="trade-icon">{action.icon}</div>
                 <div className="trade-label">{action.label}</div>
+
+                
               </div>
             ))}
           </div>

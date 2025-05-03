@@ -52,19 +52,19 @@ public class StockController {
     /**
      * Add a new stock to track
      */
-    @PostMapping
-    public ResponseEntity<Map<String, String>> addStock(@RequestBody Map<String, String> request) {
-        String symbol = request.get("symbol");
-
-        if (symbol == null || symbol.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Symbol is required"));
-        }
-
-        // Normalize symbol
-        symbol = symbol.trim().toUpperCase();
-
-        marketPricePublisher.addSymbol(symbol);
-
-        return ResponseEntity.ok(Map.of("message", "Stock added successfully", "symbol", symbol));
-    }
+//    @PostMapping
+//    public ResponseEntity<Map<String, String>> addStock(@RequestBody Map<String, String> request) {
+//        String symbol = request.get("symbol");
+//
+//        if (symbol == null || symbol.trim().isEmpty()) {
+//            return ResponseEntity.badRequest().body(Map.of("error", "Symbol is required"));
+//        }
+//
+//        // Normalize symbol
+//        symbol = symbol.trim().toUpperCase();
+//
+//        marketPricePublisher.addSymbol(symbol);
+//
+//        return ResponseEntity.ok(Map.of("message", "Stock added successfully", "symbol", symbol));
+//    }
 }

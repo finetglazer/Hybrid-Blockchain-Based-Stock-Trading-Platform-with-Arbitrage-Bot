@@ -201,4 +201,22 @@ public class UserProfileServiceImpl implements UserProfileService {
             );
         }
     }
+
+    @Override
+    public BaseResponse<?> getPhoneNumber(String userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "User not found with userId: " + userId,
+                ""
+            );
+        }
+
+        return new BaseResponse<>(
+            Const.STATUS_RESPONSE.SUCCESS,
+            "Retrieve user phone number successfully",
+            user.getPhoneNumber()
+        );
+    }
 }

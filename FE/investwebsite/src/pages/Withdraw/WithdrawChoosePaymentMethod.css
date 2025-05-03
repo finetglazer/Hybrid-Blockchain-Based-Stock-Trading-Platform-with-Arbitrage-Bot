@@ -1,0 +1,8 @@
+.payment-method-list-btn {
+    background: #46ad46;
+    border-radius: 15px;
+}
+
+.payment-method-list-btn:hover {
+    background: #057905;
+}

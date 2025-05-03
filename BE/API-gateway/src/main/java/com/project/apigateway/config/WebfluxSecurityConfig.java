@@ -32,6 +32,7 @@ public class WebfluxSecurityConfig {
                         .pathMatchers(HttpMethod.GET, "/users/api/v1/auth/verify").permitAll()
                         .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/reset-password").permitAll()
                         .pathMatchers("/ws/**").permitAll()  // Add this line for WebSockets
+                        .pathMatchers("/market-data/ws/**").permitAll()
                         .anyExchange().authenticated()
                 )
                 .build();

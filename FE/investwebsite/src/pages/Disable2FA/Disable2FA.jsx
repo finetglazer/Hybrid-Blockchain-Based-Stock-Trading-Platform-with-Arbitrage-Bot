@@ -70,7 +70,7 @@ const Disable2FA = () => {
         }
     }, []);
 
-    // Phone number formatter for Firebase (taken from TwoFactorAuth.jsx)
+    // Phone number formatter for Firebase (taken from Enable2FA.jsx)
     const formatPhoneNumber = (input) => {
         // Remove all non-digit characters
         const digits = input.replace(/\D/g, '');

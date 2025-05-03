@@ -41,11 +41,21 @@ public class UserController {
         return ResponseEntity.ok(userService.getEnhancedProfile(principal.getName()));
     }
 
+    @GetMapping("/me/verification-status")
+    public ResponseEntity<?> getVerificationStatus(Principal principal) {
+        return ResponseEntity.ok(userService.getVerificationStatus(principal.getName()));
+    }
+
     @PostMapping("/me/phone-number/verify")
     public ResponseEntity<?> verifyPhoneNumberUpdate(
             Principal principal,
             @RequestBody PhoneNumberVerifyRequest request) {
         return ResponseEntity.ok(userProfileService.verifyPhoneNumberUpdate(principal.getName(), request));
+    }
+
+    @GetMapping("/me/phone-number/get")
+    public ResponseEntity<?> getPhoneNumber(Principal principal) {
+        return ResponseEntity.ok(userProfileService.getPhoneNumber(principal.getName()));
     }
 
 //    @PostMapping("/me/phone-number/verify")
@@ -63,8 +73,4 @@ public class UserController {
         return ResponseEntity.ok(userService.validateTradingPermission(userId, validateTradingPermissionRequest));
     }
 
-    @GetMapping("/internal/users/{userId}/verification-status")
-    public ResponseEntity<?> getVerificationStatus(@PathVariable String userId, @RequestParam String requestingService) {
-        return ResponseEntity.ok(userService.getVerificationStatus(userId));
-    }
 }
