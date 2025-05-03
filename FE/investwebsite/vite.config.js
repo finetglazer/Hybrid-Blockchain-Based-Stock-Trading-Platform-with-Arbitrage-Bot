@@ -9,6 +9,8 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/api": {
+        // target: "https://good-musical-joey.ngrok-free.app",
+        // target: 'https://2d909f2ebd6a96.lhr.life',
         target: "https://good-musical-joey.ngrok-free.app",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
@@ -16,6 +18,7 @@ export default defineConfig({
       },
       '/users': {
         target: 'https://good-musical-joey.ngrok-free.app',
+        // target: 'https://2d909f2ebd6a96.lhr.life',
         changeOrigin: true,
         logLevel: 'debug',
         configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
@@ -62,6 +65,8 @@ export default defineConfig({
           });
         }
       }
+
+
     },
   },
 });

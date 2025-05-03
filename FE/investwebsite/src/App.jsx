@@ -31,6 +31,9 @@ import Portfolio from "./pages/Portfolio/Portfolio.jsx";
 import DepositChoosePaymentMethod from "./pages/Deposit/DepositChoosePaymentMethod.jsx";
 import WithdrawChoosePaymentMethod from "./pages/Withdraw/WithdrawChoosePaymentMethod.jsx";
 import TwoFaVerification from "./pages/2FaVerification/TwoFaVerification.jsx";
+import StockTable from "./pages/StockTable/StockeTable.jsx";
+import StockTableWithOrderForm from "./pages/StockTable/StockTableWithOrderForm.jsx";
+
 
 const Layout = () => {
   const location = useLocation();
@@ -68,6 +71,7 @@ const Layout = () => {
           <Route path="/profile/disable2FA" element={<Disable2FA />} />
           <Route path="/:accountId/portfolio" element={<Portfolio />}/>
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/market" element={<StockTableWithOrderForm />} />
         </Routes>
       </AppContextProvider>
     </>

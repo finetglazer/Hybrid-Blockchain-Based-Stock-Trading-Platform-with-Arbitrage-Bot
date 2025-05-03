@@ -30,10 +30,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @Transactional
@@ -289,5 +286,24 @@ public class TradingAccountServiceImpl implements TradingAccountService {
         Random rand = new Random();
         int randomNumber = 10000 + rand.nextInt(90000);
         return prefix + "-" + date + "-" + randomNumber;
+    }
+
+
+    // get the list of account names and IDs of all active trading accounts for a user
+    @Override
+    public BaseResponse<?> getUserAccountNames(String userId) {
+        List<TradingAccount> tradingAccounts = tradingAccountRepository.findAllByUserIdAndStatus(userId, TradingAccount.AccountStatus.ACTIVE.name());
+        List<Map<String, String>> accountDetails = new ArrayList<>();
+        for (TradingAccount tradingAccount : tradingAccounts) {
+            Map<String, String> accountInfo = new HashMap<>();
+            accountInfo.put("name", tradingAccount.getNickname());
+            accountInfo.put("id", tradingAccount.getId());
+            accountDetails.add(accountInfo);
+        }
+        return new BaseResponse<>(
+                Const.STATUS_RESPONSE.SUCCESS,
+                "Retrieved account names and IDs successfully",
+                accountDetails
+        );
     }
 }

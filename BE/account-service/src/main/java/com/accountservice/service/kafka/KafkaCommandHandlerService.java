@@ -1521,6 +1521,9 @@ public class KafkaCommandHandlerService {
         event.setSourceService("ACCOUNT_SERVICE");
         event.setTimestamp(Instant.now());
 
+//        handleSettlementFailure(event, "SETTLEMENT_ERROR",
+//                "Error settling transaction: ");
+
         try {
             // Find the account
             Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);

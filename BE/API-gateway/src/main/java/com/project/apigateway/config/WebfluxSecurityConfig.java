@@ -29,8 +29,9 @@ public class WebfluxSecurityConfig {
                         .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/forgot-password").permitAll()
                         .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/register").permitAll()
                         .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/2fa/**").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/users/api/v1/auth/verify").permitAll() // Add this line
+                        .pathMatchers(HttpMethod.GET, "/users/api/v1/auth/verify").permitAll()
                         .pathMatchers(HttpMethod.POST, "/users/api/v1/auth/reset-password").permitAll()
+                        .pathMatchers("/ws/**").permitAll()  // Add this line for WebSockets
                         .pathMatchers("/market-data/ws/**").permitAll()
                         .anyExchange().authenticated()
                 )
@@ -42,10 +43,21 @@ public class WebfluxSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://127.0.0.1:5173", "http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
-        configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setAllowedHeaders(Arrays.asList(
+                "Authorization",
+                "Content-Type",
+                "X-Requested-With",
+                "Accept",
+                "Origin",
+                "Sec-WebSocket-Key",
+                "Sec-WebSocket-Version",
+                "Sec-WebSocket-Extensions",
+                "Upgrade",
+                "Connection"
+        ));
+        configuration.setExposedHeaders(List.of("Authorization", "Sec-WebSocket-Accept"));
         configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L); // 1 hour in seconds
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

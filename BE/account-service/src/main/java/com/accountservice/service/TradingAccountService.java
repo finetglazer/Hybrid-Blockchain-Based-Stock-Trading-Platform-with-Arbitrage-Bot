@@ -14,4 +14,5 @@ public interface TradingAccountService {
     BaseResponse<?> updateTradingAccount(UpdateTradingAccountRequest updateTradingAccountRequest);
     BaseResponse<?> getBalanceHistory(GetBalanceHistoryRequest getBalanceHistoryRequest);
     HasTradingAccountAndPaymentMethodResponse hasAccountAndPaymentMethod(String userId);
+    BaseResponse<?> getUserAccountNames(String userId);
 }

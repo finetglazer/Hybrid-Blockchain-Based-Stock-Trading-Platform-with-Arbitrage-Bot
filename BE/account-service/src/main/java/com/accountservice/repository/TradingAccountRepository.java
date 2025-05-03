@@ -14,6 +14,6 @@ public interface TradingAccountRepository extends MongoRepository<TradingAccount
     Optional<TradingAccount> findTradingAccountById(String id);
     Page<TradingAccount> findTradingAccountsByUserIdAndStatus(String userId, String status, Pageable pageable);
     Page<TradingAccount> findAllByUserId(String userId, Pageable pageable);
-
+    List<TradingAccount> findAllByUserIdAndStatus(String userId, String status);
     List<TradingAccount> findTradingAccountsByUserId(String userId);
 }

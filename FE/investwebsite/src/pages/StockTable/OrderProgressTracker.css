@@ -1,0 +1,272 @@
+/* OrderProgressTracker.css */
+.order-progress-tracker {
+    background: #1c1b1a;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid rgba(50, 50, 50, 0.8);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+    z-index: 1;
+}
+
+/* Blur effect when the cancellation confirmation is shown */
+.order-progress-tracker.blurred {
+    filter: blur(3px);
+    pointer-events: none;
+    opacity: 0.7;
+    user-select: none;
+}
+
+.status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(80, 80, 80, 0.5);
+}
+
+.status-title {
+    color: #ccc;
+    margin: 0;
+    font-size: 18px;
+}
+
+.status-completed {
+    color: #1ca443;
+    font-weight: bold;
+}
+
+.status-failed, .status-compensation_completed, .status-cancelled_by_user {
+    color: #ff4d4d;
+    font-weight: bold;
+}
+
+.status-in_progress, .status-started {
+    color: #3498db;
+    font-weight: bold;
+}
+
+.status-compensating {
+    color: #f39c12;
+    font-weight: bold;
+}
+
+.status-limit_order_pending {
+    color: #9b59b6;
+    font-weight: bold;
+}
+
+/* Cancel button styles */
+.cancel-order-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-order-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.cancel-order-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.65;
+}
+
+/* Cancellation message */
+.cancellation-message {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    padding: 12px;
+    margin-top: 15px;
+    border-radius: 4px;
+    border-left: 3px solid #dc3545;
+    font-size: 14px;
+}
+
+.cancel-button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.steps-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.steps-container::-webkit-scrollbar-track {
+    background: #333;
+    border-radius: 10px;
+}
+
+.steps-container::-webkit-scrollbar-thumb {
+    background-color: #1ca443c5;
+    border-radius: 10px;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 4px;
+    background: #2a2a2a;
+    color: #888;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border-left: 0px solid transparent;
+}
+
+.step.active {
+    background: rgba(28, 164, 67, 0.2);
+    color: white;
+    border-left: 4px solid #1ca443c5;
+    padding-left: 11px;
+}
+
+.step.completed {
+    border-left: 4px solid #1ca443c5;
+    padding-left: 11px;
+    color: white;
+    background: rgba(28, 164, 67, 0.1);
+    animation: completeStep 0.5s ease forwards;
+}
+
+.step.failed {
+    background: rgba(145, 0, 0, 0.3);
+    color: white;
+    border-left: 4px solid #910000;
+    padding-left: 11px;
+    animation: failStep 0.5s ease forwards;
+}
+
+.step-indicator {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.step.completed .step-indicator {
+    color: #1ca443;
+    animation: fadeInCheck 0.3s ease forwards;
+}
+
+.step.failed .step-indicator {
+    color: #ff4d4d;
+    animation: fadeInX 0.3s ease forwards;
+}
+
+.step-name {
+    flex: 1;
+    font-size: 14px;
+}
+
+/* Animation for completing a step */
+@keyframes completeStep {
+    0% {
+        background: rgba(28, 164, 67, 0);
+        border-left-color: rgba(28, 164, 67, 0);
+    }
+    20% {
+        background: rgba(28, 164, 67, 0.3);
+    }
+    100% {
+        background: rgba(28, 164, 67, 0.1);
+        border-left-color: #1ca443c5;
+    }
+}
+
+/* Animation for step indicator checkmark */
+@keyframes fadeInCheck {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Animation for failing a step */
+@keyframes failStep {
+    0% {
+        background: rgba(145, 0, 0, 0);
+        border-left-color: rgba(145, 0, 0, 0);
+    }
+    20% {
+        background: rgba(145, 0, 0, 0.5);
+    }
+    100% {
+        background: rgba(145, 0, 0, 0.3);
+        border-left-color: #910000;
+    }
+}
+
+/* Animation for step indicator X mark */
+@keyframes fadeInX {
+    0% {
+        opacity: 0;
+        transform: rotate(-90deg);
+    }
+    100% {
+        opacity: 1;
+        transform: rotate(0deg);
+    }
+}
+
+/* Ripple effect for active step */
+.step.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(28, 164, 67, 0.3);
+    opacity: 0;
+    border-radius: 4px;
+    animation: ripple 1.5s ease-out infinite;
+}
+
+@keyframes ripple {
+    0% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+}

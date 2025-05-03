@@ -1,0 +1,196 @@
+/* StockTableWithOrderForm.css */
+.page-title {
+    color: #1ca443c5;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+    font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.stock-trading-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+    color: white;
+    gap: 15px;
+    min-height: calc(100vh - 120px); /* Adjusted for title */
+    transition: filter 0.3s ease;
+}
+
+/* Add blur effect when modal is shown */
+.stock-trading-container.blurred {
+    filter: blur(5px);
+    pointer-events: none;
+    user-select: none;
+}
+
+.stock-table-section {
+    margin-bottom: 20px;
+    width: 100%; /* Ensure it takes full width */
+}
+
+.order-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* Add background to make it stand out */
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid rgba(50, 50, 50, 0.8);
+}
+
+.order-error {
+    background-color: rgba(200, 0, 0, 0.2);
+    border-left: 4px solid #ff4d4d;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 4px;
+    color: #ff8080;
+}
+
+.order-error p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Responsive layout for tablets and up */
+@media (min-width: 768px) {
+    .stock-trading-container {
+        flex-direction: row;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .stock-table-section {
+        flex: 3; /* Decreased from 5 to 3 to shrink the table */
+        margin-bottom: 0;
+    }
+
+    .order-section {
+        flex: 3; /* Increased from 2 to 3 to expand the order form */
+        position: sticky;
+        top: 20px;
+        z-index: 5;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+        padding-bottom: 20px;
+        max-width: 380px; /* Increased from 320px to give more width */
+    }
+}
+
+/* Adjustments for larger screens */
+@media (min-width: 1200px) {
+    .stock-trading-container {
+        gap: 30px;
+        padding: 20px;
+    }
+
+    .stock-table-section {
+        flex: 4; /* Decreased from 5.5 to 4 */
+    }
+
+    .order-section {
+        flex: 3; /* Increased from 2 to 3 */
+        max-width: 400px; /* Further increased for larger screens */
+    }
+}
+
+/* Adjust the buy order form to fit better within the order section */
+.buy-order-form-container {
+    margin: 0 !important; /* Override the default margin */
+    width: 100%;
+    max-width: none;
+}
+
+/* Full-width container for title */
+/* Professional page header with white text */
+.page-header {
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(50, 50, 50, 0.8);
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.page-header .page-title {
+    color: white;
+    margin-bottom: 0;
+}
+
+/* Debug Panel Styling */
+.debug-panel {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 500px;
+    max-height: 400px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ddd;
+    border-top-left-radius: 8px;
+    overflow-y: auto;
+    font-family: monospace;
+    z-index: 1000;
+    padding: 10px;
+    font-size: 12px;
+}
+
+.debug-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #555;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.debug-section {
+    margin-bottom: 15px;
+}
+
+.debug-section h4 {
+    margin: 5px 0;
+    color: #66b3ff;
+}
+
+.debug-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.debug-table th, .debug-table td {
+    border: 1px solid #555;
+    padding: 4px 8px;
+    text-align: left;
+}
+
+pre {
+    white-space: pre-wrap;
+    overflow-x: auto;
+    max-height: 150px;
+}
+
+.show-debug-button {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Status colors in the debug table */
+.status-compensating { color: #ffcc00; }
+.status-compensation_completed { color: #ff6666; }
+.status-completed { color: #66cc66; }
+.status-failed { color: #ff6666; }
+.status-cancelled_by_user { color: #ff9966; }

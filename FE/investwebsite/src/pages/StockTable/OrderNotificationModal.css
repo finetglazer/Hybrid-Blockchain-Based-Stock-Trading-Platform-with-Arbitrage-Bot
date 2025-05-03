@@ -1,0 +1,187 @@
+/* OrderNotificationModal.css */
+.order-notification-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.order-notification-modal {
+    background-color: #1c1b1a;
+    border-radius: 12px;
+    padding: 30px;
+    width: 420px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    animation: modalAppear 0.3s ease;
+    border: 1px solid rgba(80, 80, 80, 0.5);
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notification-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-icon.success {
+    background-color: rgba(28, 164, 67, 0.2);
+    border: 2px solid #1ca443c5;
+}
+
+.notification-icon.failed {
+    background-color: rgba(255, 77, 77, 0.2);
+    border: 2px solid #ff4d4d;
+}
+
+.notification-icon.cancelled {
+    background-color: rgba(243, 156, 18, 0.2);
+    border: 2px solid #f39c12;
+}
+
+.notification-icon svg {
+    width: 40px;
+    height: 40px;
+}
+
+.notification-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.notification-title.success {
+    color: #1ca443c5;
+}
+
+.notification-title.failed {
+    color: #ff4d4d;
+}
+
+.notification-title.cancelled {
+    color: #f39c12;
+}
+
+.notification-message {
+    font-size: 16px;
+    margin-bottom: 25px;
+    color: #cccccc;
+    line-height: 1.5;
+}
+
+.notification-order-details {
+    background-color: rgba(50, 50, 50, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.order-detail-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.order-detail-item:last-child {
+    margin-bottom: 0;
+}
+
+.order-detail-label {
+    color: #999999;
+}
+
+.order-detail-value {
+    color: white;
+    font-weight: 500;
+}
+
+/* Status values */
+.order-detail-value.status-completed {
+    color: #1ca443;
+}
+
+.order-detail-value.status-failed {
+    color: #ff4d4d;
+}
+
+.order-detail-value.status-cancelled_by_user {
+    color: #f39c12;
+}
+
+.order-detail-value.status-compensation_completed {
+    color: #ff4d4d;
+}
+
+.notification-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.notification-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    min-width: 120px;
+}
+
+.view-portfolio-btn {
+    background-color: #1ca443c5;
+    color: white;
+}
+
+.view-portfolio-btn:hover {
+    background-color: #24c653;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn {
+    background-color: rgba(80, 80, 80, 0.3);
+    color: white;
+    border: 1px solid rgba(120, 120, 120, 0.5);
+}
+
+.close-btn:hover {
+    background-color: rgba(100, 100, 100, 0.4);
+}
+
+.error-details {
+    border-left: 3px solid #ff4d4d;
+    background-color: rgba(255, 77, 77, 0.08);
+    margin-top: -15px;
+    margin-bottom: 20px;
+}
+
+.error-value {
+    color: #ff4d4d;
+    word-break: break-word;
+}
