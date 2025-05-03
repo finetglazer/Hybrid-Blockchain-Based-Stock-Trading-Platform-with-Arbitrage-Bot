@@ -189,7 +189,7 @@ public class MarketPricePublisher {
     /**
      * Publish price updates for all tracked stocks every 5 seconds
      */
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 15000)
     public void publishPriceUpdates() {
         // Check if market is open (simplified for simulation)
 //        LocalDateTime now = LocalDateTime.now();

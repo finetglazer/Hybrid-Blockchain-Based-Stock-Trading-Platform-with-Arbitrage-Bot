@@ -505,6 +505,7 @@ public class OrderBuySagaService {
         saga.handleFailure(failureReason, saga.getCurrentStep().name());
 
         // Start compensation based on the saga status
+
         if (saga.getStatus() == SagaStatus.LIMIT_ORDER_PENDING) {
             // For a limit order waiting in the order book
             saga.setBrokerOrderId(null); // Ensure this is null since order wasn't executed
