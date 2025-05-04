@@ -1,10 +1,12 @@
 package com.stocktrading.kafka.model.enums;
 
 import com.project.kafkamessagemodels.model.enums.CommandType;
+import lombok.Getter;
 
 /**
  * Enum defining all steps in the order buy saga
  */
+@Getter
 public enum OrderBuySagaStep {
     // Normal flow steps based on sequence diagram
     CREATE_ORDER(1, "Create order", CommandType.ORDER_CREATE),
@@ -37,18 +39,6 @@ public enum OrderBuySagaStep {
         this.stepNumber = stepNumber;
         this.description = description;
         this.commandType = commandType;
-    }
-
-    public int getStepNumber() {
-        return stepNumber;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public CommandType getCommandType() {
-        return commandType;
     }
 
     /**
