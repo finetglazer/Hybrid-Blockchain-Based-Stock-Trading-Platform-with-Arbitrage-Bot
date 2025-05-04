@@ -297,7 +297,7 @@ public class MarketPricePublisher {
         // Publish with symbol as key for partitioning
         kafkaTemplate.send(marketPriceUpdatesTopic, symbol, event);
 
-        log.debug("Published price update for {}: {} (bid: {}, ask: {})",
+        log.info("Published price update for {}: {} (bid: {}, ask: {})",
                 symbol, newPrice, bidPrice, askPrice);
     }
 

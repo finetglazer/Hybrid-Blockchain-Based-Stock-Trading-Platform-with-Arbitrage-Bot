@@ -29,7 +29,7 @@ public class SwaggerConfig {
                 .license(new License()
                     .name("Private")))
             .servers(List.of(
-                new Server().url("http://localhost:8083").description("Local Development Server")
+                new Server().url("http://localhost:8085").description("Local Development Server")
             ));
     }
 }
