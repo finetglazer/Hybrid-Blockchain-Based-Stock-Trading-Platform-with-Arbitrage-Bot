@@ -10,15 +10,14 @@ export default defineConfig({
     proxy: {
       "/api": {
         // target: "https://good-musical-joey.ngrok-free.app",
-        // target: 'https://2d909f2ebd6a96.lhr.life',
-        target: "https://good-musical-joey.ngrok-free.app",
+        target: 'https://f18c2e98154f83.lhr.life',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
         logLevel: 'debug',
       },
       '/users': {
-        target: 'https://good-musical-joey.ngrok-free.app',
-        // target: 'https://2d909f2ebd6a96.lhr.life',
+        // target: 'https://good-musical-joey.ngrok-free.app',
+        target: 'https://f18c2e98154f83.lhr.life',
         changeOrigin: true,
         logLevel: 'debug',
         configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
@@ -30,7 +29,9 @@ export default defineConfig({
         }
       },
       '/accounts': {
-        target: 'https://good-musical-joey.ngrok-free.app',
+        // target: 'https://good-musical-joey.ngrok-free.app',
+        target: 'https://f18c2e98154f83.lhr.life',
+
         changeOrigin: true,
         logLevel: 'debug',
         configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
@@ -42,7 +43,9 @@ export default defineConfig({
         }
       },
       '/market-data': {
-        target: 'https://good-musical-joey.ngrok-free.app',
+        // target: 'https://good-musical-joey.ngrok-free.app',
+        target: 'https://f18c2e98154f83.lhr.life',
+
         changeOrigin: true,
         logLevel: 'debug',
         configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
@@ -54,7 +57,8 @@ export default defineConfig({
         }
       },
       '/sagas': {
-        target: 'https://good-musical-joey.ngrok-free.app',
+        // target: 'https://good-musical-joey.ngrok-free.app',
+        target: 'https://f18c2e98154f83.lhr.life',
         changeOrigin: true,
         logLevel: 'debug',
         configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE

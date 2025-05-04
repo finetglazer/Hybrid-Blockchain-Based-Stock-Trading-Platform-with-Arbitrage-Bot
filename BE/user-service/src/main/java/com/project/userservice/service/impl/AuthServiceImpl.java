@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -134,6 +135,7 @@ public class AuthServiceImpl implements AuthService {
         user.setPasswordHash(verificationToken.getPasswordHash());
         user.setCreatedAt(Instant.now());
         user.setUpdatedAt(Instant.now());
+        user.setPermissions(Set.of("VIEW_ONLY")); // Default permission
         userRepository.save(user);
 
         // 4) Delete (or rely on TTL) the verification token doc
