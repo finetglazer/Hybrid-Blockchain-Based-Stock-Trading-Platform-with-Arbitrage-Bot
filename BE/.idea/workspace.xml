@@ -5,29 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Withdraw/Withdraw.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/51eb0fed-776c-4607-93c8-39d068129895.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/51eb0fed-776c-4607-93c8-39d068129895.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/PaymentMethodServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/PaymentMethodServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API-gateway/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/resources/application-local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kafka-management-service/src/main/java/com/stocktrading/kafka/model/enums/OrderBuySagaStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/kafka-management-service/src/main/java/com/stocktrading/kafka/model/enums/OrderBuySagaStep.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/gateway.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/gateway.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/controller/TwoFactorAuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/controller/TwoFactorAuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/listener/KafkaCommandListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/listener/KafkaCommandListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/service/TwoFactorAuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/service/TwoFactorAuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/service/UserProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/service/UserProfileService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/service/impl/TwoFactorAuthServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/service/impl/TwoFactorAuthServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/service/impl/UserProfileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/project/userservice/service/impl/UserProfileServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mock-brokerage-service/src/main/java/com/stocktrading/brokerage/scheduler/OrderExecutionScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/mock-brokerage-service/src/main/java/com/stocktrading/brokerage/scheduler/OrderExecutionScheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/service/KafkaCommandHandlerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/service/KafkaCommandHandlerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application-local.yml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application-local.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/AppContextProvider.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/AppContextProvider.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Deposit/ChoosePaymentMethod.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Deposit/DepositChoosePaymentMethod.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Deposit/ChoosePaymentMethod.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Deposit/DepositChoosePaymentMethod.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Deposit/Deposit.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Deposit/Deposit.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Disable2FA/Disable2FA.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Disable2FA/Disable2FA.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TwoFactorAuth/TwoFactorAuth.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Enable2FA/Enable2FA.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TwoFactorAuth/TwoFactorAuth.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Enable2FA/Enable2FA.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/UpdatePhoneNumber/UpdatePhoneNumber.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/UpdatePhoneNumber/UpdatePhoneNumber.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/UpdatePhoneNumber/UpdatePhoneNumber.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/UpdatePhoneNumber/UpdatePhoneNumber.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Withdraw.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Withdraw/Withdraw.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Withdraw/Withdraw.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,13 +93,16 @@
     "Spring Boot.ApiGatewayApplication.executor": "Run",
     "Spring Boot.KafkaManagementServiceApplication.executor": "Run",
     "Spring Boot.MarketDataServiceApplication.executor": "Run",
+    "Spring Boot.MockBrokerageServiceApplication.executor": "Run",
     "Spring Boot.MockPaymentServiceApplication.executor": "Run",
+    "Spring Boot.OrderServiceApplication.executor": "Run",
+    "Spring Boot.PortfolioServiceApplication.executor": "Run",
     "Spring Boot.UserServiceApplication.executor": "Run",
     "Spring Boot.WalletServiceApplication.executor": "Run",
     "git-widget-placeholder": "hiep",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Code/Big Apps/Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot/BE/market-data-service/src/main/java/com/stocktrading/marketdata",
+    "last_opened_file_path": "D:/Code/Big Apps/Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot/BE/order-service/src/main/java/com/stocktrading/orderservice",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -134,11 +125,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\order-service\src\main\java\com\stocktrading\orderservice" />
+      <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\order-service\src\main\java\com\stocktrading\orderservice\config" />
       <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\market-data-service\src\main\java\com\stocktrading\marketdata" />
       <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\market-data-service\src\main\java\com\stocktrading\marketdata\security" />
       <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\market-data-service\src\main\java\com\stocktrading\marketdata\common" />
-      <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\user-service\src\main\resources" />
-      <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\trading-service\src\main\resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\account-service\src\main\resources\aiven-kafka-certs" />
@@ -148,13 +139,14 @@
       <recent name="D:\Code\Big Apps\Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot\BE\user-service\src\main\resources" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.stocktrading.orderservice.common" />
       <recent name="com.stocktrading.marketdata.config" />
       <recent name="com.accountservice.payload.response.internal" />
       <recent name="com.accountservice.repository" />
       <recent name="com.accountservice.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.MockPaymentServiceApplication">
+  <component name="RunManager" selected="Spring Boot.OrderServiceApplication">
     <configuration name="console.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/consoles/db/386254c4-74ac-45e4-8c77-834a59e1ad94/console.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
@@ -275,23 +267,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="WalletServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="wallet-service" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.project.walletservice.WalletServiceApplication" />
-      <extension name="net.ashald.envfile">
-        <option name="IS_ENABLED" value="false" />
-        <option name="IS_SUBST" value="false" />
-        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
-        <option name="IS_IGNORE_MISSING_FILES" value="false" />
-        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
-        <ENTRIES>
-          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
-        </ENTRIES>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="API-gateway/Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
       <deployment type="dockerfile">
         <settings>
@@ -341,7 +316,6 @@
       <item itemvalue="Spring Boot.MockPaymentServiceApplication" />
       <item itemvalue="Spring Boot.TradingServiceApplication" />
       <item itemvalue="Spring Boot.UserServiceApplication" />
-      <item itemvalue="Spring Boot.WalletServiceApplication" />
     </list>
     <recent_temporary>
       <list>
@@ -406,7 +380,7 @@
       <workItem from="1745827510817" duration="7786000" />
       <workItem from="1745887266760" duration="5676000" />
       <workItem from="1746030552434" duration="8214000" />
-      <workItem from="1746110229049" duration="10749000" />
+      <workItem from="1746110229049" duration="68905000" />
     </task>
     <servers />
   </component>
@@ -426,7 +400,7 @@
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/TradingAccountServiceImpl.java" line="154">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/TradingAccountServiceImpl.java" line="151">
         <watch expression="userId" language="JAVA" />
       </inline-watch>
     </watches-manager>

@@ -1,7 +1,7 @@
 server:
   port: 8087
-  servlet:
-    context-path: /order-service
+#  servlet:
+#    context-path: /order-service
 
 spring:
   application:
@@ -37,7 +37,7 @@ kafka:
     order-commands: order.commands.order-buy
     order-events: order.events.order-buy
     broker-commands: broker.commands
-    broker-events: broker.events
+    broker-events: broker.events.order-buy
 
 # Logging Configuration
 logging:
@@ -47,3 +47,6 @@ logging:
     org.springframework.data.mongodb: INFO
     org.springframework.kafka: INFO
 
+jwt:
+  secret: mysuperduperlongsecretkeythatismorethan32bytes
+  expirationMillis: 86400000

@@ -93,6 +93,7 @@ public class KafkaCommandHandlerService {
             event.setPayloadValue("orderId", savedOrder.getId());
             event.setPayloadValue("status", savedOrder.getStatus().name());
             event.setPayloadValue("createdAt", savedOrder.getCreatedAt().toString());
+            event.setPayloadValue("order", savedOrder);
 
             log.info("Order created successfully with ID: {}", savedOrder.getId());
 
@@ -131,12 +132,13 @@ public class KafkaCommandHandlerService {
         event.setSourceService("ORDER_SERVICE");
         event.setTimestamp(Instant.now());
 
+        Order orderForFailure = orderRepository.findById(orderId).orElse(null);
         try {
             // Find order
             Optional<Order> orderOpt = orderRepository.findById(orderId);
             if (orderOpt.isEmpty()) {
                 handleOrderValidationFailure(event, "ORDER_NOT_FOUND",
-                        "Order not found with ID: " + orderId);
+                        "Order not found with ID: " + orderId, null);
                 return;
             }
 
@@ -144,8 +146,10 @@ public class KafkaCommandHandlerService {
 
             // Verify order can be validated (initial state check)
             if (order.getStatus() != Order.OrderStatus.CREATED) {
+                order.setStatus(Order.OrderStatus.FAILED);
+                orderRepository.save(order);
                 handleOrderValidationFailure(event, "INVALID_ORDER_STATE",
-                        "Order is not in CREATED state: " + order.getStatus());
+                        "Order is not in CREATED state: " + order.getStatus(), order);
                 return;
             }
 
@@ -167,14 +171,19 @@ public class KafkaCommandHandlerService {
             event.setPayloadValue("status", updatedOrder.getStatus().name());
             event.setPayloadValue("reservationId", updatedOrder.getReservationId());
             event.setPayloadValue("accountId", updatedOrder.getAccountId());
+            event.setPayloadValue("order", updatedOrder);
             if (updatedOrder.getExecutionPrice() != null) {
                 event.setPayloadValue("executionPrice", updatedOrder.getExecutionPrice());
             }
 
         } catch (Exception e) {
             log.error("Error validating order", e);
+            if (orderForFailure != null) {
+                orderForFailure.setStatus(Order.OrderStatus.FAILED);
+                orderRepository.save(orderForFailure);
+            }
             handleOrderValidationFailure(event, "ORDER_VALIDATION_ERROR",
-                    "Error validating order: " + e.getMessage());
+                    "Error validating order: " + e.getMessage(), orderForFailure);
             return;
         }
 
@@ -208,9 +217,10 @@ public class KafkaCommandHandlerService {
     /**
      * Helper method to handle order validation failures
      */
-    private void handleOrderValidationFailure(EventMessage event, String errorCode, String errorMessage) {
+    private void handleOrderValidationFailure(EventMessage event, String errorCode, String errorMessage, Order order) {
         event.setType("ORDER_VALIDATION_FAILED");
         event.setSuccess(false);
+        event.setPayloadValue("order", order);
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);
 
@@ -259,12 +269,13 @@ public class KafkaCommandHandlerService {
         event.setSourceService("ORDER_SERVICE");
         event.setTimestamp(Instant.now());
 
+        Order orderForFailure = orderRepository.findById(orderId).orElse(null);
         try {
             // Find order
             Optional<Order> orderOpt = orderRepository.findById(orderId);
             if (orderOpt.isEmpty()) {
                 handleOrderExecutionUpdateFailure(event, "ORDER_NOT_FOUND",
-                        "Order not found with ID: " + orderId);
+                        "Order not found with ID: " + orderId, null);
                 return;
             }
 
@@ -273,8 +284,10 @@ public class KafkaCommandHandlerService {
             // Verify order can be updated (state check)
             if (order.getStatus() != Order.OrderStatus.VALIDATED &&
                     order.getStatus() != Order.OrderStatus.EXECUTING) {
+                order.setStatus(Order.OrderStatus.FAILED);
+                orderRepository.save(order);
                 handleOrderExecutionUpdateFailure(event, "INVALID_ORDER_STATE",
-                        "Order is not in a valid state for execution update: " + order.getStatus());
+                        "Order is not in a valid state for execution update: " + order.getStatus(), order);
                 return;
             }
 
@@ -298,13 +311,18 @@ public class KafkaCommandHandlerService {
             event.setPayloadValue("executedQuantity", updatedOrder.getExecutedQuantity());
             event.setPayloadValue("brokerOrderId", updatedOrder.getBrokerOrderId());
             event.setPayloadValue("executedAt", updatedOrder.getExecutedAt().toString());
+            event.setPayloadValue("order", updatedOrder);
 
             log.info("Order execution updated successfully with ID: {}", updatedOrder.getId());
 
         } catch (Exception e) {
             log.error("Error updating order execution", e);
+            if (orderForFailure != null) {
+                orderForFailure.setStatus(Order.OrderStatus.FAILED);
+                orderRepository.save(orderForFailure);
+            }
             handleOrderExecutionUpdateFailure(event, "ORDER_EXECUTION_UPDATE_ERROR",
-                    "Error updating order execution: " + e.getMessage());
+                    "Error updating order execution: " + e.getMessage(), orderForFailure);
             return;
         }
 
@@ -320,9 +338,10 @@ public class KafkaCommandHandlerService {
     /**
      * Helper method to handle order execution update failures
      */
-    private void handleOrderExecutionUpdateFailure(EventMessage event, String errorCode, String errorMessage) {
+    private void handleOrderExecutionUpdateFailure(EventMessage event, String errorCode, String errorMessage, Order order) {
         event.setType("ORDER_EXECUTION_UPDATE_FAILED");
         event.setSuccess(false);
+        event.setPayloadValue("order", order);
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);
 
@@ -352,12 +371,14 @@ public class KafkaCommandHandlerService {
         event.setSourceService("ORDER_SERVICE");
         event.setTimestamp(Instant.now());
 
+        Order orderForFailure = orderRepository.findById(orderId).orElse(null);
         try {
             // Find order
             Optional<Order> orderOpt = orderRepository.findById(orderId);
             if (orderOpt.isEmpty()) {
                 // If order doesn't exist, still return success for saga continuation
                 log.warn("Order not found with ID: {} during cancellation", orderId);
+
                 event.setType("ORDER_CANCELLED");
                 event.setSuccess(true);
                 event.setPayloadValue("orderId", orderId);
@@ -374,10 +395,13 @@ public class KafkaCommandHandlerService {
             if (!order.canBeCancelled()) {
                 log.warn("Order cannot be cancelled. Current status: {}", order.getStatus());
 
+                order.setStatus(Order.OrderStatus.FAILED);
+                orderRepository.save(order);
                 // For compensation, we still want to continue the saga, so respond with success
                 event.setType("ORDER_CANCELLED");
                 event.setSuccess(true);
                 event.setPayloadValue("orderId", orderId);
+                event.setPayloadValue("order", order);
                 event.setPayloadValue("status", order.getStatus().name());
                 event.setPayloadValue("note", "Order already in terminal state: " + order.getStatus());
 
@@ -405,14 +429,20 @@ public class KafkaCommandHandlerService {
             event.setPayloadValue("orderId", updatedOrder.getId());
             event.setPayloadValue("status", updatedOrder.getStatus().name());
             event.setPayloadValue("cancelledAt", updatedOrder.getCancelledAt().toString());
+            event.setPayloadValue("order", updatedOrder);
 
             log.info("Order cancelled successfully with ID: {}", updatedOrder.getId());
 
         } catch (Exception e) {
             log.error("Error cancelling order", e);
+            if (orderForFailure != null) {
+                orderForFailure.setStatus(Order.OrderStatus.FAILED);
+                orderRepository.save(orderForFailure);
+            }
             event.setType("ORDER_CANCELLATION_FAILED");
             event.setSuccess(false);
             event.setErrorCode("CANCELLATION_ERROR");
+            event.setPayloadValue("order", orderForFailure);
             event.setErrorMessage("Error cancelling order: " + e.getMessage());
         }
 
@@ -441,65 +471,72 @@ public class KafkaCommandHandlerService {
         event.setSourceService("ORDER_SERVICE");
         event.setTimestamp(Instant.now());
 
-        handleOrderCompletionFailure(event, "ORDER_COMPLETION_ERROR",
-                "Error completing order: ");
+        Order orderForFailure = orderRepository.findById(orderId).orElse(null);
 
-//       try {
-//           // Find order
-//           Optional<Order> orderOpt = orderRepository.findById(orderId);
-//           if (orderOpt.isEmpty()) {
-//               handleOrderCompletionFailure(event, "ORDER_NOT_FOUND",
-//                       "Order not found with ID: " + orderId);
-//               return;
-//           }
-//
-//           Order order = orderOpt.get();
-//
-//           // Verify order can be completed (state check)
-//           if (order.getStatus() != Order.OrderStatus.FILLED) {
-//               handleOrderCompletionFailure(event, "INVALID_ORDER_STATE",
-//                       "Order is not in FILLED state: " + order.getStatus());
-//               return;
-//           }
-//
-//           // Update order to COMPLETED status
-//           order.setStatus(Order.OrderStatus.COMPLETED);
-//           order.setUpdatedAt(Instant.now());
-//
-//           // Save updated order
-//           Order updatedOrder = orderRepository.save(order);
-//
-//           // Set success response
-//           event.setType("ORDER_COMPLETED");
-//           event.setSuccess(true);
-//           event.setPayloadValue("orderId", updatedOrder.getId());
-//           event.setPayloadValue("status", updatedOrder.getStatus().name());
-//           event.setPayloadValue("completedAt", updatedOrder.getUpdatedAt().toString());
-//
-//           log.info("Order completed successfully with ID: {}", updatedOrder.getId());
-//
-//       } catch (Exception e) {
-//           log.error("Error completing order", e);
-//           handleOrderCompletionFailure(event, "ORDER_COMPLETION_ERROR",
-//                   "Error completing order: " + e.getMessage());
-//           return;
-//       }
-//
-//       // Send the response event
-//       try {
-//           kafkaTemplate.send(orderEventsTopic, command.getSagaId(), event);
-//           log.info("Sent ORDER_COMPLETED response for saga: {}", command.getSagaId());
-//       } catch (Exception e) {
-//           log.error("Error sending event", e);
-//       }
+       try {
+           // Find order
+           Optional<Order> orderOpt = orderRepository.findById(orderId);
+           if (orderOpt.isEmpty()) {
+               handleOrderCompletionFailure(event, "ORDER_NOT_FOUND",
+                       "Order not found with ID: " + orderId, null);
+               return;
+           }
+
+           Order order = orderOpt.get();
+
+           // Verify order can be completed (state check)
+           if (order.getStatus() != Order.OrderStatus.FILLED) {
+               order.setStatus(Order.OrderStatus.FAILED);
+               orderRepository.save(order);
+               handleOrderCompletionFailure(event, "INVALID_ORDER_STATE",
+                       "Order is not in FILLED state: " + order.getStatus(), order);
+               return;
+           }
+
+           // Update order to COMPLETED status
+           order.setStatus(Order.OrderStatus.COMPLETED);
+           order.setUpdatedAt(Instant.now());
+
+           // Save updated order
+           Order updatedOrder = orderRepository.save(order);
+
+           // Set success response
+           event.setType("ORDER_COMPLETED");
+           event.setSuccess(true);
+           event.setPayloadValue("orderId", updatedOrder.getId());
+           event.setPayloadValue("status", updatedOrder.getStatus().name());
+           event.setPayloadValue("completedAt", updatedOrder.getUpdatedAt().toString());
+           event.setPayloadValue("order", updatedOrder);
+
+           log.info("Order completed successfully with ID: {}", updatedOrder.getId());
+
+       } catch (Exception e) {
+           log.error("Error completing order", e);
+            if (orderForFailure != null) {
+                orderForFailure.setStatus(Order.OrderStatus.FAILED);
+                orderRepository.save(orderForFailure);
+            }
+           handleOrderCompletionFailure(event, "ORDER_COMPLETION_ERROR",
+                   "Error completing order: " + e.getMessage(), orderForFailure);
+           return;
+       }
+
+       // Send the response event
+       try {
+           kafkaTemplate.send(orderEventsTopic, command.getSagaId(), event);
+           log.info("Sent ORDER_COMPLETED response for saga: {}", command.getSagaId());
+       } catch (Exception e) {
+           log.error("Error sending event", e);
+       }
     }
 
     /**
      * Helper method to handle order completion failures
      */
-    private void handleOrderCompletionFailure(EventMessage event, String errorCode, String errorMessage) {
+    private void handleOrderCompletionFailure(EventMessage event, String errorCode, String errorMessage, Order order) {
         event.setType("ORDER_COMPLETION_FAILED");
         event.setSuccess(false);
+        event.setPayloadValue("order", order);
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);
 

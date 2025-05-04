@@ -237,7 +237,7 @@ const Withdraw = () => {
 
           {balance && (
             <p className="text-center text-sm text-zinc-300">
-              Available balance: <span className="text-emerald-400 font-medium">${balance.available}</span>
+              Available balance: <span className="text-emerald-400 font-medium">${convert(balance.available.toFixed(2))}</span>
             </p>
           )}
 

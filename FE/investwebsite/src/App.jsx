@@ -33,6 +33,7 @@ import WithdrawChoosePaymentMethod from "./pages/Withdraw/WithdrawChoosePaymentM
 import TwoFaVerification from "./pages/2FaVerification/TwoFaVerification.jsx";
 import StockTable from "./pages/StockTable/StockeTable.jsx";
 import StockTableWithOrderForm from "./pages/StockTable/StockTableWithOrderForm.jsx";
+import OrderViewHistory from "./pages/OrderViewHistory/OrderViewHistory.jsx";
 
 
 const Layout = () => {
@@ -64,6 +65,7 @@ const Layout = () => {
           <Route path="/setting/generate-recovery-keys" element={<GenerateRecoveryKeys />} />
           <Route path="/payment-methods" element={<PaymentMethodsManagement />} />
           <Route path="/transaction-history" element={<TransactionHistory />} />
+          <Route path="/order-history" element={<OrderViewHistory />} />
           <Route path="/transaction-history/:transactionId/details" element={<TransactionDetails />} />
           <Route path="/two-factor-auth" element={<Enable2FA />} /> {/* Add this route */}
           <Route path="/2fa-verify" element={<TwoFaVerification />} />
