@@ -2375,3 +2375,4 @@ java.net.SocketException: Connection reset
 2025-05-05 09:46:23 | DEBUG | /sagas/api/v1/orders/buy
 2025-05-05 09:46:27 | DEBUG | /orders/api/v1/get
 2025-05-05 09:46:27 | DEBUG | /orders/api/v1/get
+2025-05-05 09:58:36 | DEBUG | /orders/api/v1/get
