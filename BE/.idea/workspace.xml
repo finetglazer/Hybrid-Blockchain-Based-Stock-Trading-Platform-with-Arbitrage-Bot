@@ -5,17 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/51eb0fed-776c-4607-93c8-39d068129895.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/51eb0fed-776c-4607-93c8-39d068129895.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/API-gateway/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/resources/application-local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kafka-management-service/src/main/java/com/stocktrading/kafka/model/enums/OrderBuySagaStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/kafka-management-service/src/main/java/com/stocktrading/kafka/model/enums/OrderBuySagaStep.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/gateway.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/gateway.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mock-brokerage-service/src/main/java/com/stocktrading/brokerage/scheduler/OrderExecutionScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/mock-brokerage-service/src/main/java/com/stocktrading/brokerage/scheduler/OrderExecutionScheduler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/service/KafkaCommandHandlerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/service/KafkaCommandHandlerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application-local.yml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application-local.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Withdraw/Withdraw.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Withdraw/Withdraw.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/handler/OrderWebSocketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/handler/OrderWebSocketHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,60 +60,61 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Docker.API-gateway/Dockerfile.executor": "Run",
-    "Docker.user-service/Dockerfile.executor": "Run",
-    "Docker.wallet-service/Dockerfile.executor": "Run",
-    "Maven.API-gateway [clean].executor": "Run",
-    "Maven.API-gateway [package].executor": "Run",
-    "Maven.microservices-parent [clean].executor": "Run",
-    "Maven.microservices-parent [install].executor": "Run",
-    "Maven.microservices-parent [package].executor": "Run",
-    "Maven.user-service [clean].executor": "Run",
-    "Maven.user-service [compile].executor": "Run",
-    "Maven.user-service [install].executor": "Run",
-    "Maven.user-service [package].executor": "Run",
-    "Maven.user-service [validate].executor": "Run",
-    "Maven.wallet-service [clean].executor": "Run",
-    "Maven.wallet-service [package].executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.AccountServiceApplication.executor": "Run",
-    "Spring Boot.ApiGatewayApplication.executor": "Run",
-    "Spring Boot.KafkaManagementServiceApplication.executor": "Run",
-    "Spring Boot.MarketDataServiceApplication.executor": "Run",
-    "Spring Boot.MockBrokerageServiceApplication.executor": "Run",
-    "Spring Boot.MockPaymentServiceApplication.executor": "Run",
-    "Spring Boot.OrderServiceApplication.executor": "Run",
-    "Spring Boot.PortfolioServiceApplication.executor": "Run",
-    "Spring Boot.UserServiceApplication.executor": "Run",
-    "Spring Boot.WalletServiceApplication.executor": "Run",
-    "git-widget-placeholder": "hiep",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Code/Big Apps/Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot/BE/order-service/src/main/java/com/stocktrading/orderservice",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.configurations.included.in.services": "true",
-    "settings.build.tools.auto.reload": "ALL",
-    "settings.editor.selected.configurable": "settings.sync",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Docker.API-gateway/Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.user-service/Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.wallet-service/Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.API-gateway [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.API-gateway [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.microservices-parent [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.microservices-parent [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.microservices-parent [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.user-service [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.user-service [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.user-service [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.user-service [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.user-service [validate].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.wallet-service [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.wallet-service [package].executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.AccountServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ApiGatewayApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.KafkaManagementServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.MarketDataServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.MockBrokerageServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.MockPaymentServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.OrderServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.PortfolioServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.TradingServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.UserServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.WalletServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Code/Big Apps/Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot/BE/order-service/src/main/java/com/stocktrading/orderservice&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;settings.build.tools.auto.reload&quot;: &quot;ALL&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "redis",
-      "mongo"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;redis&quot;,
+      &quot;mongo&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
@@ -146,7 +141,7 @@
       <recent name="com.accountservice.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.OrderServiceApplication">
+  <component name="RunManager" selected="Spring Boot.ApiGatewayApplication">
     <configuration name="console.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/consoles/db/386254c4-74ac-45e4-8c77-834a59e1ad94/console.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
@@ -381,6 +376,7 @@
       <workItem from="1745887266760" duration="5676000" />
       <workItem from="1746030552434" duration="8214000" />
       <workItem from="1746110229049" duration="68905000" />
+      <workItem from="1746390776391" duration="6887000" />
     </task>
     <servers />
   </component>

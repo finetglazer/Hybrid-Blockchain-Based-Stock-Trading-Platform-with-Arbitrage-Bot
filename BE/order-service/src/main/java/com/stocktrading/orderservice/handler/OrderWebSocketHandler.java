@@ -2,8 +2,10 @@ package com.stocktrading.orderservice.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.project.kafkamessagemodels.model.EventMessage;
 import com.stocktrading.orderservice.model.Order;
+import com.stocktrading.orderservice.model.OrderStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -14,7 +16,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -62,74 +63,102 @@ public class OrderWebSocketHandler extends TextWebSocketHandler {
     }
 
     @KafkaListener(
-            topics = "${kafka.topics.order-events}", // Topic for general order updates
-            containerFactory = "kafkaListenerContainerFactory"
+        topics = "${kafka.topics.order-events}", // Topic for general order updates
+        containerFactory = "kafkaListenerContainerFactory"
     )
     // Renamed method to accurately reflect its purpose
-    public void broadcastOrderUpdate(EventMessage event) {
-        if (event.getPayloadValue("order") == null) {
-            logger.error("11111111111");
-            return;
-        }
-        logger.error("Order: {}", Optional.ofNullable(event.getPayloadValue("order")));
-
-        ObjectMapper mapper = new ObjectMapper();
+    public void broadcastOrderStatusUpdate(EventMessage event) {
+        // ... inside broadcastOrderStatusUpdate method ...
 
         Object rawOrder = event.getPayloadValue("order");
+        if (rawOrder == null) {
+            logger.warn("Received event with null 'order' payload. Skipping.");
+            return;
+        }
 
-        Order order = mapper.convertValue(rawOrder, Order.class);
+// --- DIAGNOSTIC LOGGING ---
+        if (rawOrder instanceof java.util.Map) {
+            @SuppressWarnings("unchecked") // Be careful with raw types if possible
+            java.util.Map<String, Object> orderMap = (java.util.Map<String, Object>) rawOrder;
+            Object createdAtValue = orderMap.get("createdAt");
+            if (createdAtValue != null) {
+                logger.info("Diagnosing 'createdAt': Value = [{}], Type = [{}]",
+                        createdAtValue, createdAtValue.getClass().getName());
+            } else {
+                logger.warn("Diagnosing 'createdAt': Field is null in rawOrder map.");
+            }
+        } else {
+            logger.warn("Diagnosing 'createdAt': rawOrder is not a Map. Type = [{}]", rawOrder.getClass().getName());
+            // Log rawOrder itself if it's small enough and not sensitive
+            // logger.info("Raw order object: {}", rawOrder);
+        }
+// --- END DIAGNOSTIC LOGGING ---
 
-        String orderId = order.getId();
+
+        ObjectMapper localMapper = new ObjectMapper(); // Use a local mapper for this specific task
+        localMapper.registerModule(new JavaTimeModule());
+// Optional: If you expect ISO strings and NOT numeric timestamps, add this:
+// localMapper.disable(com.fasterxml.jackson.databind.DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
+
+        OrderStatus orderStatus;
+        try {
+            // This is the line causing the error (around line 80)
+            orderStatus = localMapper.convertValue(rawOrder, OrderStatus.class);
+        } catch (IllegalArgumentException e) {
+            // Log the specific error during conversion
+            logger.error("Failed to convert raw payload to OrderStatus. Error: {}", e.getMessage(), e);
+            // Log rawOrder again here for context if debugging
+            // logger.error("Problematic rawOrder payload: {}", rawOrder);
+            return; // Stop processing if conversion fails
+        } catch (Exception e) { // Catch broader exceptions during conversion just in case
+            logger.error("Unexpected error during OrderStatus conversion. Error: {}", e.getMessage(), e);
+            return;
+        }
+
+// --- The rest of your code (serialization and broadcasting) ---
+// You should still use a properly configured ObjectMapper for serialization too.
+// Either use the 'localMapper' created above, or ensure your shared 'objectMapper'
+// (if used later) is also configured with JavaTimeModule.
+
+        String orderId = orderStatus.getId();
         TextMessage message;
 
         try {
-            // Convert the Order object to a JSON string
-            message = new TextMessage(objectMapper.writeValueAsString(order));
+            // Use the SAME localMapper OR a correctly configured shared objectMapper
+            message = new TextMessage(localMapper.writeValueAsString(orderStatus));
+            // If using a shared/injected objectMapper:
+            // message = new TextMessage(objectMapper.writeValueAsString(orderStatus));
+            // Make SURE that shared objectMapper also has JavaTimeModule registered globally!
         } catch (JsonProcessingException e) {
-            // Updated log message
-            logger.error("Failed to serialize Order for orderId {}: {}", orderId, e.getMessage(), e);
+            logger.error("Failed to serialize OrderStatus for orderId {}: {}", orderId, e.getMessage(), e);
             return;
         }
 
-        // Iterate over a snapshot of the sessions using a thread-safe iterator
+        // --- WebSocket Broadcasting Logic (Same as before) ---
         int sentCount = 0;
-        // Use local copy to avoid potential issues if sessions set is modified elsewhere during broadcast
-        // CopyOnWriteArraySet's iterator is already safe against concurrent modification during iteration itself.
-
         for (WebSocketSession session : sessions) {
-            // Double-check if session is still open before sending
             if (session.isOpen()) {
                 try {
-                    // Send the JSON message to the client
                     session.sendMessage(message);
                     sentCount++;
                 } catch (IOException e) {
                     logger.error("Failed to send OrderStatus update for orderId {} to session {}. Error: {}",
                             orderId, session.getId(), e.getMessage());
-                    // Consider removing the session only if errors persist,
-                    // relying primarily on afterConnectionClosed callback.
-                    // Removing here might be premature if it's a temporary network issue.
-                    // If you *do* remove here, ensure 'sessions' is thread-safe.
-                    // sessions.remove(session); // Use with caution, CopyOnWriteArraySet remove is safe but potentially slow if frequent.
                 } catch (IllegalStateException e) {
-                    // Handle cases where session might close between isOpen() check and sendMessage()
-                    logger.warn("Session {} closed before message could be sent for orderId {}. Error: {}",
+                    logger.warn("Session {} closed unexpectedly before message could be sent for orderId {}. Error: {}",
                             session.getId(), orderId, e.getMessage());
-                    // Clean up session if needed (though afterConnectionClosed should handle it)
-                    sessions.remove(session); // Safe with CopyOnWriteArraySet
+                    sessions.remove(session);
                 }
             } else {
-                // Optional: Proactively remove sessions found closed during broadcast
                 logger.debug("Removing closed session found during broadcast: {}", session.getId());
-                sessions.remove(session); // Safe with CopyOnWriteArraySet
+                sessions.remove(session);
             }
         }
 
         if (sentCount > 0) {
-            // Updated log message
             logger.trace("Broadcasted OrderStatus update for orderId {} to {} sessions", orderId, sentCount);
         } else {
-            logger.trace("No active sessions to broadcast OrderStatus update for orderId {} to.", orderId);
+            logger.trace("No active sessions found to broadcast OrderStatus update for orderId {} to.", orderId);
         }
     }
 }
