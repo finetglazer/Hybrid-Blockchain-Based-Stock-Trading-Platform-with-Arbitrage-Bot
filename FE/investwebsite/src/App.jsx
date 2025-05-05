@@ -8,11 +8,13 @@ import {
 import { AppContextProvider } from "./AppContextProvider.jsx";
 import Deposit from "./pages/Deposit.jsx";
 import Disable2FA from "./pages/Disable2FA/Disable2FA.jsx";
-import ForgetPassword from "./pages/ForgetPassword";
+import ForgetPassword from "./pages/ForgetPassword.jsx";
 import ResetPassword from "./pages/ResetPassword/ResetPassword.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import Withdraw from "./pages/Withdraw.jsx";
 import Home from "./pages/Home/Home.jsx";
+import Wallet from "./pages/Wallet/Wallet.jsx";
 import NavbarSide from "./pages/NavbarSide/NavbarSide.jsx";
 import PaymentMethodsManagement from "./pages/PaymentMethod/PaymentMethodsManagement.jsx";
 import TwoFactorAuthenticationSettings from "./pages/SettingPage/2FASettings/2FASettings.jsx";
@@ -21,9 +23,10 @@ import Setting from "./pages/SettingPage/Setting.jsx";
 import Support from "./pages/Support.jsx";
 import TwoFactorAuth from "./pages/TwoFactorAuth/TwoFactorAuth.jsx";
 import UpdatePhoneNumber from "./pages/UpdatePhoneNumber/UpdatePhoneNumber.jsx";
-import Withdraw from "./pages/Withdraw.jsx";
-import Wallet from "./pages/Wallet/Wallet.jsx";
-import HeaderBar from "./pages/HeaderNavbar/HeaderNavbar.jsx";
+import TransactionHistory from "./pages/TransactionHistory/TransactionHistory.jsx";
+import TransactionDetails from "./pages/TransactionDetails/TransactionDetails.jsx";
+import GenerateRecoveryKeys from "./pages/SettingPage/GenerateRecoveryKeys/GenerateRecoveryKeys.jsx";
+import HeaderNavbar from "./pages/HeaderNavbar/HeaderNavbar.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -37,12 +40,13 @@ const Layout = () => {
   return (
     <>
       {showNavbar && <NavbarSide />}
-      {showNavbar && <HeaderBar />}
+      {showNavbar && <HeaderNavbar />}
       <AppContextProvider>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/home" element={<Home />} />
           <Route path="/withdraw" element={<Withdraw />} />
           <Route path="/deposit" element={<Deposit />} />
@@ -55,15 +59,24 @@ const Layout = () => {
           />
           <Route path="/setting/change-password" element={<ChangePassword />} />
           <Route
+            path="/setting/generate-recovery-keys"
+            element={<GenerateRecoveryKeys />}
+          />
+          <Route
             path="/account-dashboard/payment-methods"
             element={<PaymentMethodsManagement />}
           />
-          <Route path="/forget-password" element={<ForgetPassword />} />
-          <Route path="/two-factor-auth" element={<TwoFactorAuth />} />{" "}
-          {/* Add this route */}
+          <Route
+            path="/account-dashboard/transaction-history"
+            element={<TransactionHistory />}
+          />
+          <Route
+            path="/account-dashboard/transaction-history/:transactionId/details"
+            element={<TransactionDetails />}
+          />
+          <Route path="/two-factor-auth" element={<TwoFactorAuth />} />
           <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />
           <Route path="/profile/disable2FA" element={<Disable2FA />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </AppContextProvider>
     </>

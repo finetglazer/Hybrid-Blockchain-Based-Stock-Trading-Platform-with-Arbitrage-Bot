@@ -50,6 +50,24 @@
   border-radius: 50%;
   background-color: #0000ff;
 }
+.color-1 {
+  background-color: #ff6b6b;
+}
+.color-2 {
+  background-color: #4ecdc4;
+}
+.color-3 {
+  background-color: #ffd93d;
+}
+.color-4 {
+  background-color: #1a535c;
+}
+.color-5 {
+  background-color: #ff9f1c;
+}
+.color-6 {
+  background-color: #6a4c93;
+}
 
 .wallet-name {
   margin-left: 10px;

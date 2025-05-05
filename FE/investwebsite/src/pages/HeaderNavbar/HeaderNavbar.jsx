@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./HeaderNavbar.css";
+import TransactionHistory from "./TransactionHistoryHeader/TransactionHistoryHeader";
 
 const HeaderNavbar = () => {
   const location = useLocation();
@@ -17,33 +18,8 @@ const HeaderNavbar = () => {
   const [username, setUsername] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [transactionHistoryOpen, setTransactionHistoryOpen] = useState(false); // Trạng thái để hiển thị lịch sử giao dịch
-  const [transactionHistory, setTransactionHistory] = useState([]); // Trạng thái lưu trữ lịch sử giao dịch
+  //const [transactionHistory, setTransactionHistory] = useState([]); // Trạng thái lưu trữ lịch sử giao dịch
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const name = localStorage.getItem("username");
-    if (name) {
-      setUsername(name);
-    }
-
-    // Giả lập lấy lịch sử giao dịch từ API
-    const getTransactionHistory = async () => {
-      // Giả lập lịch sử giao dịch từ API
-      const history = [
-        { id: 1, date: "2025-03-20", description: "Deposit", amount: "$1000" },
-        {
-          id: 2,
-          date: "2025-03-19",
-          description: "Withdrawal",
-          amount: "$200",
-        },
-        { id: 3, date: "2025-03-18", description: "Deposit", amount: "$500" },
-      ];
-      setTransactionHistory(history);
-    };
-
-    getTransactionHistory();
-  }, []);
 
   const showMenu = () => {
     setMenuOpen(!menuOpen);
@@ -114,27 +90,7 @@ const HeaderNavbar = () => {
       </div>
 
       {/* Hiển thị lịch sử giao dịch */}
-      {transactionHistoryOpen && (
-        <div className="transaction-history">
-          <h3>Transaction History</h3>
-          <ul>
-            {transactionHistory.map((transaction) => (
-              <li key={transaction.id}>
-                <p>
-                  <strong>Date:</strong> {transaction.date}
-                </p>
-                <p>
-                  <strong>Description:</strong> {transaction.description}
-                </p>
-                <p>
-                  <strong>Amount:</strong> {transaction.amount}
-                </p>
-              </li>
-            ))}
-          </ul>
-          <button onClick={toggleTransactionHistory}>Close</button>
-        </div>
-      )}
+      {transactionHistoryOpen && <TransactionHistory />}
     </div>
   );
 };

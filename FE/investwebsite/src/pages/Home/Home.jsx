@@ -36,6 +36,10 @@ const Home = () => {
       console.error(error);
     }
   };
+  const getRandomColorClass = () => {
+    const colorIndex = Math.floor(Math.random() * 6) + 1; // 1 đến 6
+    return `color-${colorIndex}`;
+  };
 
   useEffect(() => {
     fetchTradingAccounts();
@@ -77,19 +81,23 @@ const Home = () => {
             </div>
 
             <div className="wallets-scroll-wrapper">
-              <button
-                className="scroll-btn left"
-                onClick={() => scrollWallets(-1)}
-              >
-                ←
-              </button>
+              {Array.isArray(tradingAccount) && tradingAccount.length > 0 && (
+                <button
+                  className="scroll-btn left"
+                  onClick={() => scrollWallets(-1)}
+                >
+                  ←
+                </button>
+              )}
 
               <div className="wallets-list" ref={walletListRef}>
                 {Array.isArray(tradingAccount) &&
                   tradingAccount.map((account, index) => (
                     <div key={index} className="wallet-card">
                       <div className="wallet-info">
-                        <div className="wallet-icon" />
+                        <div
+                          className={`wallet-icon ${getRandomColorClass()}`}
+                        />
                         <div className="wallet-name">{account.nickname}</div>
                       </div>
                       <div className="wallet-subinfo">
@@ -107,13 +115,14 @@ const Home = () => {
                     </div>
                   ))}
               </div>
-
-              <button
-                className="scroll-btn right"
-                onClick={() => scrollWallets(1)}
-              >
-                →
-              </button>
+              {Array.isArray(tradingAccount) && tradingAccount.length > 0 && (
+                <button
+                  className="scroll-btn right"
+                  onClick={() => scrollWallets(1)}
+                >
+                  →
+                </button>
+              )}
             </div>
           </div>
 
