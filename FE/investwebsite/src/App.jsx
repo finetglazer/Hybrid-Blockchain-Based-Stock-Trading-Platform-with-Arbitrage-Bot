@@ -22,11 +22,10 @@ import GenerateRecoveryKeys from "./pages/SettingPage/GenerateRecoveryKeys/Gener
 import Setting from "./pages/SettingPage/Setting";
 import Support from "./pages/Support";
 import TransactionDetails from "./pages/TransactionDetails/TransactionDetails.jsx";
+import Withdraw from "./pages/Withdraw/Withdraw.jsx";
+import UpdatePhoneNumber from "./pages/UpdatePhoneNumber/UpdatePhoneNumber.jsx";
 import TransactionHistory from "./pages/TransactionHistory/TransactionHistory.jsx";
 import Enable2FA from "./pages/Enable2FA/Enable2FA.jsx";
-import UpdatePhoneNumber from "./pages/UpdatePhoneNumber/UpdatePhoneNumber.jsx";
-import Wallet from "./pages/Wallet.jsx";
-import Withdraw from "./pages/Withdraw/Withdraw.jsx";
 import Portfolio from "./pages/Portfolio/Portfolio.jsx";
 import DepositChoosePaymentMethod from "./pages/Deposit/DepositChoosePaymentMethod.jsx";
 import WithdrawChoosePaymentMethod from "./pages/Withdraw/WithdrawChoosePaymentMethod.jsx";
@@ -34,13 +33,16 @@ import TwoFaVerification from "./pages/2FaVerification/TwoFaVerification.jsx";
 import StockTable from "./pages/StockTable/StockeTable.jsx";
 import StockTableWithOrderForm from "./pages/StockTable/StockTableWithOrderForm.jsx";
 import OrderViewHistory from "./pages/OrderViewHistory/OrderViewHistory.jsx";
-
+import Wallet from "./pages/Wallet/Wallet.jsx";
 
 const Layout = () => {
   const location = useLocation();
-  const showNavbar = ["/home", "/wallet", "/support", "/setting"].includes(
-    location.pathname
-  );
+  const showNavbar = [
+    "/home",
+    "/trading-accounts",
+    "/support",
+    "/setting",
+  ].includes(location.pathname);
 
   return (
     <>
@@ -53,14 +55,20 @@ const Layout = () => {
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/home" element={<Home />} />
-          <Route path=":accountId/withdraw/choose-payment-method" element={<WithdrawChoosePaymentMethod />} />
-          <Route path=":accountId/withdraw/:paymentMethodId" element={<Withdraw/>} />
-          <Route path=":accountId/deposit/choose-payment-method" element={<DepositChoosePaymentMethod />} />
-          <Route path=":accountId/deposit/:paymentMethodId" element={<Deposit/>} />
+          <Route path="/withdraw" element={<Withdraw />} />
+          <Route path="/deposit" element={<Deposit />} />
+          <Route path="/trading-accounts" element={<Wallet />} />
+          <Route path="/:accountId/withdraw/choose-payment-method" element={<WithdrawChoosePaymentMethod />} />
+          <Route path="/:accountId/withdraw/:paymentMethodId" element={<Withdraw/>} />
+          <Route path="/:accountId/deposit/choose-payment-method" element={<DepositChoosePaymentMethod />} />
+          <Route path="/:accountId/deposit/:paymentMethodId" element={<Deposit/>} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/support" element={<Support />} />
           <Route path="/setting" element={<Setting />} />
-          <Route path="/setting/2fa-settings" element={<TwoFactorAuthenticationSettings />} />
+          <Route
+            path="/setting/2fa-settings"
+            element={<TwoFactorAuthenticationSettings />}
+          />
           <Route path="/setting/change-password" element={<ChangePassword />} />
           <Route path="/setting/generate-recovery-keys" element={<GenerateRecoveryKeys />} />
           <Route path="/payment-methods" element={<PaymentMethodsManagement />} />
@@ -69,11 +77,27 @@ const Layout = () => {
           <Route path="/transaction-history/:transactionId/details" element={<TransactionDetails />} />
           <Route path="/two-factor-auth" element={<Enable2FA />} /> {/* Add this route */}
           <Route path="/2fa-verify" element={<TwoFaVerification />} />
+          <Route
+            path="/setting/generate-recovery-keys"
+            element={<GenerateRecoveryKeys />}
+          />
+          <Route
+            path="/home/payment-methods"
+            element={<PaymentMethodsManagement />}
+          />
+          <Route
+            path="/home/transaction-history"
+            element={<TransactionHistory />}
+          />
+          <Route
+            path="/home/transaction-history/:transactionId/details"
+            element={<TransactionDetails />}
+          />
+          <Route path="/two-factor-auth" element={<Enable2FA />} />
           <Route path="/profile/update-phone" element={<UpdatePhoneNumber />} />
           <Route path="/profile/disable2FA" element={<Disable2FA />} />
-          <Route path="/:accountId/portfolio" element={<Portfolio />}/>
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/market" element={<StockTableWithOrderForm />} />
+          <Route path="/:accountId/portfolio" element={<Portfolio />} />
+          <Route path="/market" element={<StockTableWithOrderForm/>} />
         </Routes>
       </AppContextProvider>
     </>
@@ -82,9 +106,9 @@ const Layout = () => {
 
 const App = () => {
   return (
-    <Router>
-      <Layout />
-    </Router>
+      <Router>
+        <Layout />
+      </Router>
   );
 };
 

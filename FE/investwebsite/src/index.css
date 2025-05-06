@@ -242,3 +242,15 @@ h3 {
     transform: rotate(360deg);
   } /* Complete rotation */
 }
+.main-background {
+  position: fixed;
+  top: 100px;
+  left: 210px;
+  width: 1165px;
+  height: calc(100% - 100px);
+  background: rgba(28, 27, 26, 0.999);
+  padding: 20px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 5px 0;
+}

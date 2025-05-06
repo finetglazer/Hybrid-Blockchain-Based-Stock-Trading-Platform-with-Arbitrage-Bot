@@ -5,7 +5,7 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: '127.0.0.1',
+    host: "127.0.0.1",
     port: 5173,
     proxy: {
       "/api": {
@@ -13,7 +13,7 @@ export default defineConfig({
         // target: 'https://f18c2e98154f83.lhr.life',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
-        logLevel: 'debug',
+        logLevel: "debug",
       },
       '/users': {
         target: 'https://good-musical-joey.ngrok-free.app',
@@ -98,14 +98,17 @@ export default defineConfig({
         target: 'https://good-musical-joey.ngrok-free.app',
         // target: 'https://f18c2e98154f83.lhr.life',
         changeOrigin: true,
-        logLevel: 'debug',
-        configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
-          proxy.on('proxyReq', (proxyReq) => {
+        logLevel: "debug",
+        configure: (proxy) => {
+          // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
+          proxy.on("proxyReq", (proxyReq) => {
             // Set the header Ngrok uses to skip the interstitial page
-            proxyReq.setHeader('ngrok-skip-browser-warning', 'true'); // Value can be anything, 'true' is clear
-            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header');
+            proxyReq.setHeader("ngrok-skip-browser-warning", "true"); // Value can be anything, 'true' is clear
+            console.log(
+              "[vite:proxy:configure] Added ngrok-skip-browser-warning header"
+            );
           });
-        }
+        },
       },
     },
   },
