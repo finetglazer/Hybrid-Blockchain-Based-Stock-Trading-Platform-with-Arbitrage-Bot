@@ -13,7 +13,7 @@ const Login = () => {
   // Hàm xử lý đăng nhập
   const handleLogin = async () => {
     try {
-      const response = await axios.post("/users/api/v1/auth/login", {
+      const response = await axios.post("api/users/api/v1/auth/login", {
         usernameOrEmail,
         password,
       });

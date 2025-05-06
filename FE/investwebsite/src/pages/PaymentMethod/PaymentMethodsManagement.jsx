@@ -1,8 +1,8 @@
-import {Alert, Breadcrumb, notification} from "antd";
+import { Alert, Breadcrumb, notification } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-import {InfoOutlined, WarningOutlined} from '@ant-design/icons';
+import { InfoOutlined, WarningOutlined } from "@ant-design/icons";
 import "./PaymentMethodsManagement.css";
 import AddPaymentMethod from "./forms/AddPaymentMethod.jsx";
 import VerifyPaymentMethod from "./forms/VerifyPaymentMethod.jsx";
@@ -58,6 +58,7 @@ const PaymentMethodsManagement = () => {
         />
       );
       categoryWrapper.appendChild(container);
+      console.log(container.innerHTML);
     }
   };
 
@@ -66,7 +67,6 @@ const PaymentMethodsManagement = () => {
       .querySelector(`.${className}`)
       .querySelector(".expand-icon");
     expandIcon.classList.toggle("metadata-expand");
-
     const metadataWrapper = document.querySelector(`.${className}`);
     metadataWrapper.classList.toggle("details-show");
 
@@ -529,9 +529,8 @@ const ItemDetails = ({
               }
             >
               <span className="label">Metadata</span>
-              <button>
+              <button className="expand-icon">
                 <img
-                  className="expand-icon"
                   src="../../../src/assets/right-arrow.png"
                   alt="expand icon"
                 />
@@ -544,25 +543,41 @@ const ItemDetails = ({
       <div className="crud-btns">
         <div className="btn btn-wrapper">
           <p className="description">Activate this payment method</p>
-          <button className="activate-btn" onClick={() => onClickActivateBtn(item)}>Activate</button>
+          <button
+            className="activate-btn"
+            onClick={() => onClickActivateBtn(item)}
+          >
+            Activate
+          </button>
         </div>
         <div className="btn-wrapper">
           <p className="description">Deactivate this payment method</p>
-          <button className="deactivate-btn" onClick={() => onClickDeactivateBtn(item)}>Deactivate</button>
+          <button
+            className="deactivate-btn"
+            onClick={() => onClickDeactivateBtn(item)}
+          >
+            Deactivate
+          </button>
         </div>
         <div className="btn-wrapper">
           <p className="description">Verify this payment method</p>
-          <button className="verify-btn" onClick={() => onClickVerifyBtn(item)}>Verify</button>
+          <button className="verify-btn" onClick={() => onClickVerifyBtn(item)}>
+            Verify
+          </button>
         </div>
         <div className="btn-wrapper">
           <p className="description">
             Update information about this payment method
           </p>
-          <button className="update-btn" onClick={() => onClickUpdateBtn(item)}>Update</button>
+          <button className="update-btn" onClick={() => onClickUpdateBtn(item)}>
+            Update
+          </button>
         </div>
         <div className="btn-wrapper">
           <p className="description warning-text">Remove this payment method</p>
-          <button className="delete-btn" onClick={() => onClickDeleteBtn(item)}>Delete</button>
+          <button className="delete-btn" onClick={() => onClickDeleteBtn(item)}>
+            Delete
+          </button>
         </div>
       </div>
     </>

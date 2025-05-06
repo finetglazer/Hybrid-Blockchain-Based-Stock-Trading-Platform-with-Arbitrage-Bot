@@ -5,85 +5,145 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CreateAccount from "../CreateAccount";
 import "./Home.css";
-
-const wallets = [
-  {
-    name: "MB Bank",
-    balance: "$100.000",
-    icon: "ETH",
-    symbol: "ETH",
-  },
-];
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Home = () => {
+  const [tradingAccount, setTradingAccount] = useState([]);
   const [open, setOpen] = useState(false);
-  const [numOfAccount, setNumOfAccount] = useState(0);
+  const walletListRef = useRef(null);
+  const nativigate = useNavigate();
 
   const handleAccountCreated = () => {
-    setNumOfAccount((prev) => prev + 1);
     setOpen(false);
+    fetchTradingAccounts();
+  };
+
+  const fetchTradingAccounts = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.get("/accounts/api/v1/get", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const accounts = res.data.data.items;
+      console.log(accounts);
+      setTradingAccount(accounts);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const getRandomColorClass = () => {
+    const colorIndex = Math.floor(Math.random() * 6) + 1; // 1 đến 6
+    return `color-${colorIndex}`;
+  };
+
+  useEffect(() => {
+    fetchTradingAccounts();
+  }, []);
+
+  const scrollWallets = (direction) => {
+    const container = walletListRef.current;
+    const scrollAmount = 236;
+
+    if (container) {
+      container.scrollBy({
+        left: direction * scrollAmount,
+        behavior: "smooth",
+      });
+    }
   };
 
   return (
     <>
-      <div className="main-content-row">
-        {/* Wallets Section - BÊN TRÁI */}
-        <div className="wallets-section">
-          <div className="wallets-header">
-            <h1 style={{ color: "#ffffff" }}>Wallets</h1>
-            <a
-              href="#"
-              style={{
-                color: "#ffffff",
-                fontWeight: "bold",
-                textDecoration: "none",
-              }}
-            >
-              View all
-            </a>
+      <div className="main-background">
+        <div className="main-content-row">
+          {/* Wallets Section - BÊN TRÁI */}
+          <div className="wallets-section">
+            <div className="wallets-header">
+              <h1 style={{ color: "#ffffff", marginLeft: "10px" }}>
+                Trading Accounts
+              </h1>
+              <p
+                onClick={() => nativigate("/trading-accounts")}
+                style={{
+                  color: "#ffffff",
+                  fontWeight: "bold",
+                  textDecoration: "none",
+                  right: 0,
+                }}
+              >
+                View all
+              </p>
+            </div>
+
+            <div className="wallets-scroll-wrapper">
+              {Array.isArray(tradingAccount) && tradingAccount.length > 0 && (
+                <button
+                  className="scroll-btn left"
+                  onClick={() => scrollWallets(-1)}
+                >
+                  ←
+                </button>
+              )}
+
+              <div className="wallets-list" ref={walletListRef}>
+                {Array.isArray(tradingAccount) &&
+                  tradingAccount.map((account, index) => (
+                    <div key={index} className="wallet-card">
+                      <div className="wallet-info">
+                        <div
+                          className={`wallet-icon ${getRandomColorClass()}`}
+                        />
+                        <div className="wallet-name">{account.nickname}</div>
+                      </div>
+                      <div className="wallet-subinfo">
+                        <div className="wallet-currency">
+                          {account.balance.currency}
+                        </div>
+                        <div className="wallet-balance">
+                          {account.balance.total}
+                        </div>
+                      </div>
+                      <div className="wallet-actions">
+                        <button className="wallet-btn">Deposit</button>
+                        <button className="wallet-btn">Withdraw</button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+              {Array.isArray(tradingAccount) && tradingAccount.length > 0 && (
+                <button
+                  className="scroll-btn right"
+                  onClick={() => scrollWallets(1)}
+                >
+                  →
+                </button>
+              )}
+            </div>
           </div>
 
-          <div className="wallets-list">
-            {wallets.map((wallet, index) => (
-              <div key={index} className="wallet-card">
-                <div className="wallet-info">
-                  <div className="wallet-icon" />
-                  <div className="wallet-name">{wallet.name}</div>
+          {/* Trade Section - BÊN PHẢI */}
+          <div className="trade-section">
+            <h1 style={{ color: "#ffffff" }}>Trade</h1>
+            <div className="trade-options">
+              {[
+                { label: "Buy", icon: "+" },
+                { label: "Sell", icon: "-" },
+                { label: "Swap", icon: "⇄" },
+              ].map((action, idx) => (
+                <div key={idx} className="trade-item">
+                  <div className="trade-icon">{action.icon}</div>
+                  <div className="trade-label">{action.label}</div>
                 </div>
-                <div className="wallet-balance">{wallet.balance}</div>
-                <div className="wallet-actions">
-                  <button className="wallet-btn">Deposit</button>
-                  <button className="wallet-btn">Withdraw</button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Trade Section - BÊN PHẢI */}
-        <div className="trade-section">
-          <h1 style={{ color: "#ffffff" }}>Trade</h1>
-          <div className="trade-options">
-            {[
-              { label: "Withdraw", icon: "+" },
-              { label: "Deposit", icon: "-" },
-            ].map((action, idx) => (
-              <div key={idx} className="trade-item">
-                <div className="trade-icon">{action.icon}</div>
-                <div className="trade-label">{action.label}</div>
-
-                
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
           <div className="create-trading-account">
-            <p className="account-question">
-              {numOfAccount === 0 ? "Do you have any account?" : ""}
-            </p>
             <Button
               variant="contained"
               color="primary"
@@ -92,29 +152,28 @@ const Home = () => {
             >
               +
             </Button>
+            {/* Dialog tạo tài khoản */}
+            <Dialog
+              open={open}
+              onClose={() => setOpen(false)}
+              maxWidth="sm"
+              fullWidth
+            >
+              <DialogTitle style={{ color: "black", paddingBottom: "10px" }}>
+                Create a Trading Account
+              </DialogTitle>
+              <DialogContent>
+                <CreateAccount onSuccess={handleAccountCreated} />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setOpen(false)} color="secondary">
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
           </div>
         </div>
       </div>
-      {/* Dialog tạo tài khoản */}
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Create a Trading Account</DialogTitle>
-        <DialogContent>
-          <CreateAccount
-            numOfAccount={numOfAccount}
-            onSuccess={handleAccountCreated}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} color="secondary">
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };

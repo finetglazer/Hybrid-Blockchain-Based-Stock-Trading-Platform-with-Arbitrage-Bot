@@ -19,12 +19,12 @@
 
 .info {
   position: absolute;
-  right: 30px; /* Cách lề phải */
+  right: 30px;
   top: 50%;
-  transform: translateY(-50%); /* Căn giữa theo chiều dọc */
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
- /* Màu nền */
+  /* Màu nền */
   border-radius: 50px;
   padding-left: 10px;
   height: 50px;
@@ -67,6 +67,7 @@
 }
 .dropdown-menu {
   position: absolute;
+  z-index: 9999;
   top: 40px;
   right: 10px;
   background-color: #1dab45c5; /* Hiệu ứng hover */
@@ -98,7 +99,6 @@
   position: relative;
   cursor: pointer;
   margin-left: 20px;
-
 }
 
 /* Định dạng cho cửa sổ lịch sử giao dịch */
