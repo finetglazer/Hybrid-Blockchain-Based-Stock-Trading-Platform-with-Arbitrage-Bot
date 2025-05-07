@@ -8,9 +8,7 @@ const TransactionHistory = ({ transactionHistory }) => {
       <ul>
         {transactionHistory.map((transaction) => (
           <li key={transaction.id}>
-            <p>
-              <strong>Date:</strong> {transaction.date}
-            </p>
+            <p>{/*<strong>Date:</strong> {transaction.date}*/}</p>
             <p>
               <strong>Description:</strong> {transaction.description}
             </p>
