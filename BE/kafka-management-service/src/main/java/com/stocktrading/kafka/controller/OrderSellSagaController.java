@@ -40,10 +40,7 @@ public class OrderSellSagaController {
                 request.getUserId(),
                 request.getAccountId(),
                 request.getStockSymbol(),
-                request.getOrderType(),
-                request.getQuantity(),
-                request.getLimitPrice(),
-                request.getTimeInForce()
+                request.getQuantity()
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(mapToDto(saga));

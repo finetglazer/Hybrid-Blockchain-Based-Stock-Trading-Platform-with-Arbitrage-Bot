@@ -29,6 +29,9 @@ public class KafkaCommandHandlerService {
     @Value("${kafka.topics.order-events}")
     private String orderEventsTopic;
 
+    @Value("${kafka.topics.order-events-sell}")
+    private String orderEventsSellTopic;
+
     /**
      * Handle ORDER_CREATE command
      */
@@ -546,6 +549,91 @@ public class KafkaCommandHandlerService {
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
             log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Handle ORDER_CREATE command for sell orders
+     */
+    public void handleCreateSellOrder(CommandMessage command) {
+        log.info("Handling ORDER_CREATE command for sell saga: {}", command.getSagaId());
+
+        String userId = command.getPayloadValue("userId");
+        String accountId = command.getPayloadValue("accountId");
+        String stockSymbol = command.getPayloadValue("stockSymbol");
+        String orderType = command.getPayloadValue("orderType");
+        Integer quantity = command.getPayloadValue("quantity");
+
+        // Safe conversion for limitPrice - handle various number formats
+        BigDecimal limitPrice = null;
+        Object limitPriceObj = command.getPayloadValue("limitPrice");
+        if (limitPriceObj != null) {
+            if (limitPriceObj instanceof BigDecimal) {
+                limitPrice = (BigDecimal) limitPriceObj;
+            } else if (limitPriceObj instanceof Double) {
+                limitPrice = BigDecimal.valueOf((Double) limitPriceObj);
+            } else if (limitPriceObj instanceof Number) {
+                limitPrice = BigDecimal.valueOf(((Number) limitPriceObj).doubleValue());
+            } else if (limitPriceObj instanceof String) {
+                limitPrice = new BigDecimal((String) limitPriceObj);
+            }
+        }
+
+        String timeInForce = command.getPayloadValue("timeInForce");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ORDER_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Create new sell order
+            Order order = Order.builder()
+                    .id(UUID.randomUUID().toString())
+                    .userId(userId)
+                    .accountId(accountId)
+                    .stockSymbol(stockSymbol)
+                    .orderType(orderType)
+                    .side(Order.OrderSide.SELL) // This is a SELL order
+                    .quantity(quantity)
+                    .limitPrice(limitPrice)
+                    .timeInForce(timeInForce != null ? timeInForce : "DAY")
+                    .status(Order.OrderStatus.CREATED)
+                    .createdAt(Instant.now())
+                    .updatedAt(Instant.now())
+                    .sagaId(command.getSagaId())
+                    .build();
+
+            // Save the order
+            Order savedOrder = orderRepository.save(order);
+
+            // Set success response
+            event.setType("ORDER_CREATED");
+            event.setSuccess(true);
+            event.setPayloadValue("orderId", savedOrder.getId());
+            event.setPayloadValue("status", savedOrder.getStatus().name());
+            event.setPayloadValue("createdAt", savedOrder.getCreatedAt().toString());
+            event.setPayloadValue("order", savedOrder);
+
+            log.info("Sell order created successfully with ID: {}", savedOrder.getId());
+
+        } catch (Exception e) {
+            log.error("Error creating sell order", e);
+            handleOrderCreationFailure(event, "ORDER_CREATION_ERROR",
+                    "Error creating sell order: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event to the sell events topic
+        try {
+            // Use specific topic for sell orders
+            kafkaTemplate.send(orderEventsSellTopic, command.getSagaId(), event);
+            log.info("Sent ORDER_CREATED response for sell saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending sell event", e);
         }
     }
 }

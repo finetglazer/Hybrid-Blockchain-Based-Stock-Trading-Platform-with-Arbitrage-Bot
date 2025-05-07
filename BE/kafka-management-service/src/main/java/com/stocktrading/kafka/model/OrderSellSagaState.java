@@ -29,6 +29,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Document(collection = "order_sell_sagas")
 public class OrderSellSagaState {
+    // All existing fields remain unchanged
     @Id
     private String id;
 
@@ -39,17 +40,17 @@ public class OrderSellSagaState {
     private String userId;
     private String accountId;
     private String stockSymbol;
-    private String orderType; // MARKET, LIMIT, etc.
+    private String orderType; // Always set to "MARKET" in the simplified version
     private Integer quantity;
-    private BigDecimal limitPrice; // null for market orders
-    private String timeInForce; // DAY, GTC, etc.
-    private String orderId; // ID in OrderService
-    private BigDecimal executionPrice; // Filled when executed
-    private String reservationId; // Share reservation ID
-    private Integer reservedQuantity; // Quantity of shares reserved
-    private Integer executedQuantity; // For partial fills
-    private String brokerOrderId; // ID from broker
-    private BigDecimal settlementAmount; // Amount to credit to account after selling
+    private BigDecimal limitPrice; // Always null in the simplified version
+    private String timeInForce; // Always set to "DAY" in the simplified version
+    private String orderId;
+    private BigDecimal executionPrice;
+    private String reservationId;
+    private Integer reservedQuantity;
+    private Integer executedQuantity;
+    private String brokerOrderId;
+    private BigDecimal settlementAmount;
 
     // Saga execution state
     private OrderSellSagaStep currentStep;
@@ -71,6 +72,8 @@ public class OrderSellSagaState {
 
     /**
      * Initialize a new order sell saga
+     * This method remains unchanged but will always be called with hardcoded default values
+     * for orderType, limitPrice, and timeInForce
      */
     public static OrderSellSagaState initiate(
             String sagaId, String userId, String accountId,

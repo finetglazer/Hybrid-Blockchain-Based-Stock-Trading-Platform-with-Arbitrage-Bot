@@ -39,22 +39,16 @@ public class OrderSellSagaService {
     private long defaultTimeout;
 
     /**
-     * Start a new order sell saga
+     * Start a new order sell saga - simplified version with default values
      */
     public OrderSellSagaState startSaga(String userId, String accountId,
-                                        String stockSymbol, String orderType,
-                                        Integer quantity, BigDecimal limitPrice,
-                                        String timeInForce) {
+                                        String stockSymbol, Integer quantity) {
         String sagaId = UUID.randomUUID().toString();
 
-        // Validate order type and required fields
-        if ("LIMIT".equals(orderType) && limitPrice == null) {
-            throw new IllegalArgumentException("Limit price is required for LIMIT orders");
-        }
-
-        if (timeInForce == null) {
-            timeInForce = "DAY"; // Default time in force
-        }
+        // Use default values for the simplified version
+        String orderType = "MARKET"; // Default to MARKET order
+        BigDecimal limitPrice = null; // No limit price for MARKET orders
+        String timeInForce = "DAY"; // Default time in force
 
         OrderSellSagaState saga = OrderSellSagaState.initiate(
                 sagaId, userId, accountId, stockSymbol, orderType,
@@ -109,7 +103,6 @@ public class OrderSellSagaService {
         log.info("Published command [{}] for saga [{}] to topic: {}",
                 command.getType(), saga.getSagaId(), targetTopic);
     }
-
     /**
      * Handle the CALCULATE_SETTLEMENT_AMOUNT step
      * This step is executed in the orchestrator without sending a command
@@ -714,11 +707,6 @@ public class OrderSellSagaService {
 
     /**
      * Cancel an order by user request
-     *
-     * @param sagaId The ID of the saga to cancel
-     * @return The updated saga state
-     * @throws SagaNotFoundException if the saga is not found
-     * @throws IllegalStateException if the saga cannot be cancelled in its current state
      */
     @Transactional
     public OrderSellSagaState cancelOrderByUser(String sagaId) {

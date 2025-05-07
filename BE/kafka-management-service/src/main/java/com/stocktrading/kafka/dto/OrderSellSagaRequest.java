@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 
 /**
  * Request DTO for starting an order sell saga
+ * Simplified version with only essential fields
  */
 @Data
 @NoArgsConstructor
@@ -25,14 +26,12 @@ public class OrderSellSagaRequest {
     @NotBlank(message = "Stock symbol cannot be blank")
     private String stockSymbol;
 
-    @NotBlank(message = "Order type cannot be blank")
-    private String orderType; // MARKET, LIMIT, etc.
-
     @NotNull(message = "Quantity cannot be null")
     @Positive(message = "Quantity must be positive")
     private Integer quantity;
 
-    private BigDecimal limitPrice; // Required for LIMIT orders
-
-    private String timeInForce = "DAY"; // Optional, defaults to DAY
+    // The following fields have been removed as per simplified scope:
+    // private String orderType; // MARKET, LIMIT, etc.
+    // private BigDecimal limitPrice; // Required for LIMIT orders
+    // private String timeInForce = "DAY"; // Optional, defaults to DAY
 }
