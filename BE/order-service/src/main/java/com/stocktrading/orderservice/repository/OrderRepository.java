@@ -70,4 +70,6 @@ public interface OrderRepository extends MongoRepository<Order, String> {
      */
     @Query("{ 'createdAt' : { $lt : ?0 }, 'status' : { $nin : ['COMPLETED', 'CANCELLED', 'REJECTED', 'FAILED', 'EXPIRED'] } }")
     List<Order> findPotentiallyStaleOrders(Instant cutoffTime);
+
+    Optional<Order> getById(String id);
 }

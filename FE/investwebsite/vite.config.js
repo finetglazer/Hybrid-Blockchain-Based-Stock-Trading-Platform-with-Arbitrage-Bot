@@ -85,6 +85,7 @@ export default defineConfig({
         target: 'https://good-musical-joey.ngrok-free.app',
         // target: 'https://f18c2e98154f83.lhr.life',
         changeOrigin: true,
+        ws: true,
         logLevel: 'debug',
         configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
           proxy.on('proxyReq', (proxyReq) => {
@@ -98,6 +99,7 @@ export default defineConfig({
         target: 'https://good-musical-joey.ngrok-free.app',
         // target: 'https://f18c2e98154f83.lhr.life',
         changeOrigin: true,
+        ws: true,
         logLevel: "debug",
         configure: (proxy) => {
           // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE

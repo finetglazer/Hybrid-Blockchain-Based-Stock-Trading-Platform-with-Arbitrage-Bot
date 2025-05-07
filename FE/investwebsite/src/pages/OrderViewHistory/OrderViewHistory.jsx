@@ -1,3 +1,4 @@
+// Import Space for button layout
 import {
     Breadcrumb,
     Table,
@@ -9,10 +10,11 @@ import {
     Select, // Import Select
     DatePicker, // Import DatePicker
     Button, // Import Button
-    Space, // Import Space for button layout
+    Space,
 } from "antd";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import dayjs from 'dayjs'; // Antd v5 uses dayjs for DatePicker
+import dayjs from 'dayjs';
+import {useNavigate} from "react-router-dom"; // Antd v5 uses dayjs for DatePicker
 
 // --- Constants for Filter Options ---
 const TIME_IN_FORCES = ["DAY", "GTC"];
@@ -38,7 +40,7 @@ const formatDate = (dateString) => {
         // Let's format as YYYY-MM-DD HH:mm:ss for clarity in the table
         return date.toLocaleString('sv-SE'); // Swedish locale often gives YYYY-MM-DD HH:MM:SS
     } catch (e) {
-        return dateString;
+        return e.message;
     }
 };
 const formatPrice = (price) => {
@@ -56,6 +58,8 @@ const formatApiDate = (date) => {
 };
 
 const OrderViewHistory = () => {
+    const navigate = useNavigate();
+
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -135,11 +139,7 @@ const OrderViewHistory = () => {
             return;
         }
 
-        // const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const wsProtocol = window.location.protocol === 'https:';
-        const wsHost = window.location.host;
-        // Ensure path matches proxy config
-        const wsUrl = `${wsProtocol}//${wsHost}/ws/orders?token=${token}`;
+        const wsUrl = `https://good-musical-joey.ngrok-free.app/ws/orders?token=${token}`;
 
         console.log("Attempting to connect WebSocket:", wsUrl);
         ws.current = new WebSocket(wsUrl);
@@ -399,6 +399,21 @@ const OrderViewHistory = () => {
                                 pageSizeOptions: ['10', '20', '50', '100'],
                                 showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} orders`,
                             }}
+                            onRow={(record) => {
+                                return {
+                                    onClick: () => {
+                                        console.log(`Row clicked: ${record.id}`);
+                                        if (record && record.id) {
+                                            navigate(`/${record.id}/order-details`);
+                                        } else {
+                                            console.error("Clicked row is missing record or record.id", record);
+                                        }
+                                    },
+                                    // Optional: Add visual feedback on hover
+                                    style: { cursor: 'pointer' }
+                                };
+                            }}
+                            // --- END onRow PROP ---
                             // Note: Antd Table's built-in filters (filters/onFilter in columns)
                             // work *client-side* on the currently loaded `dataSource`.
                             // Since we are re-fetching data from the API based on filters,

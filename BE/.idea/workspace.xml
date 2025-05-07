@@ -5,8 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/security/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/security/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/gateway.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/gateway.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/controller/OrderHistoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/controller/OrderHistoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/repository/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/repository/OrderRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/service/OrderHistoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/service/OrderHistoryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/service/impl/OrderHistoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/service/impl/OrderHistoryServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Withdraw.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Deposit.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/OrderViewHistory/OrderViewHistory.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/OrderViewHistory/OrderViewHistory.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +105,7 @@
     &quot;git-widget-placeholder&quot;: &quot;hiep&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Code/Big Apps/Hybrid-Blockchain-Based-Stock-Trading-Platform-with-Arbitrage-Bot/BE/order-service/src/main/java/com/stocktrading/orderservice&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Code/Java/Projects/Final/Ecommerce-website/backend&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -138,7 +149,7 @@
       <recent name="com.accountservice.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.MockBrokerageServiceApplication">
+  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
     <configuration name="console.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/consoles/db/386254c4-74ac-45e4-8c77-834a59e1ad94/console.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
@@ -297,15 +308,15 @@
       <item itemvalue="Docker.user-service/Dockerfile" />
       <item itemvalue="Docker.wallet-service/Dockerfile" />
       <item itemvalue="Node.js.console.js" />
-      <item itemvalue="Spring Boot.MockBrokerageServiceApplication" />
-      <item itemvalue="Spring Boot.OrderServiceApplication" />
-      <item itemvalue="Spring Boot.PortfolioServiceApplication" />
-      <item itemvalue="Spring Boot.MarketDataServiceApplication" />
       <item itemvalue="Spring Boot.AccountServiceApplication" />
       <item itemvalue="Spring Boot.ApiGatewayApplication" />
       <item itemvalue="Spring Boot.KafkaManagementServiceApplication" />
       <item itemvalue="Spring Boot.KafkaMessageModelsApplication" />
+      <item itemvalue="Spring Boot.MarketDataServiceApplication" />
+      <item itemvalue="Spring Boot.MockBrokerageServiceApplication" />
       <item itemvalue="Spring Boot.MockPaymentServiceApplication" />
+      <item itemvalue="Spring Boot.OrderServiceApplication" />
+      <item itemvalue="Spring Boot.PortfolioServiceApplication" />
       <item itemvalue="Spring Boot.TradingServiceApplication" />
       <item itemvalue="Spring Boot.UserServiceApplication" />
     </list>
@@ -379,7 +390,15 @@
       <workItem from="1746425906741" duration="2029000" />
       <workItem from="1746450672054" duration="2208000" />
       <workItem from="1746466097521" duration="4883000" />
-      <workItem from="1746498596893" duration="301000" />
+      <workItem from="1746498596893" duration="1526000" />
+      <workItem from="1746500738810" duration="3248000" />
+      <workItem from="1746505833511" duration="5932000" />
+      <workItem from="1746575791962" duration="71000" />
+      <workItem from="1746576014013" duration="18000" />
+      <workItem from="1746576314528" duration="47000" />
+      <workItem from="1746576509855" duration="21000" />
+      <workItem from="1746576703299" duration="41000" />
+      <workItem from="1746581118328" duration="1366000" />
     </task>
     <servers />
   </component>
