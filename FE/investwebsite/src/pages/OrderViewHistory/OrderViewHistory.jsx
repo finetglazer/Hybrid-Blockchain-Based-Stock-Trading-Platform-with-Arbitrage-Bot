@@ -270,7 +270,7 @@ const OrderViewHistory = () => {
     return (
         <>
             {/* Ensure container has padding */}
-            <div className="container font-opensans min-w-[100vw] min-h-[100vh] p-4 md:p-8 bg-gray-900 text-white"> {/* Added bg/text for contrast */}
+            <div className="container font-opensans min-w-[90vw] min-h-[100vh] p-4 md:p-8 bg-gray-900 text-white"> {/* Added bg/text for contrast */}
                 <Breadcrumb
                     className="mb-4"
                     separator=" "

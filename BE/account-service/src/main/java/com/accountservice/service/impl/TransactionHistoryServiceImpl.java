@@ -31,7 +31,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -67,25 +66,16 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         int page = getTransactionsRequest.getPage() == null ? 0 : getTransactionsRequest.getPage();
         int size = getTransactionsRequest.getSize() == null ? 10000 : getTransactionsRequest.getSize();
 
-        Criteria statusCriteria = Criteria.where("status").in(
-                Arrays.stream(Transaction.TransactionStatus.values())
-                        .toList().stream().map(Transaction.TransactionStatus::name).toList()
-        );
-        Criteria typeCriteria = Criteria.where("type").in(
-                Arrays.stream(Transaction.TransactionType.values())
-                        .toList().stream().map(Transaction.TransactionType::name).toList()
-        );
-        for (String status : statuses) {
-            Criteria subStatusCriteria = Criteria.where("status").is(status);
-            statusCriteria.orOperator(subStatusCriteria);
-        }
-        for (String type : types) {
-            Criteria subTypeCriteria = Criteria.where("type").is(type);
-            typeCriteria.orOperator(subTypeCriteria);
-        }
-        Criteria timeCriteria = Criteria.where("createdAt").gte(startDateTime).lte(endDateTime);
+        Query query = new Query(Criteria.where("createdAt").gte(startDateTime).lte(endDateTime));
 
-        Query query = new Query(timeCriteria);
+        if (!statuses.isEmpty()) {
+            query.addCriteria(Criteria.where("status").in(statuses));
+        }
+
+        if (!types.isEmpty()) {
+            query.addCriteria(Criteria.where("type").in(types));
+        }
+
         if (!accountIds.isEmpty()) {
             query.addCriteria(Criteria.where("accountId").in(accountIds));
         }
@@ -93,12 +83,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
             List<TradingAccount> tradingAccounts = mongoTemplate.find(new Query(Criteria.where("userId").is(userId)), TradingAccount.class);
             query.addCriteria(Criteria.where("accountId").in(tradingAccounts.stream().map(TradingAccount::getId).toList()));
         }
-        if (!statuses.isEmpty()) {
-            query.addCriteria(statusCriteria);
-        }
-        if (!types.isEmpty()) {
-            query.addCriteria(typeCriteria);
-        }
+
         if (!paymentMethodIds.isEmpty()) {
             query.addCriteria(Criteria.where("paymentMethodId").in(paymentMethodIds));
         }

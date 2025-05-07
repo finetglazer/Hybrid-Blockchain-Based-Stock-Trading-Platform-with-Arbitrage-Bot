@@ -528,13 +528,11 @@ const ItemDetails = ({
                 )
               }
             >
-              <span className="label">Metadata</span>
-              <button className="expand-icon">
-                <img
-                  src="../../../src/assets/right-arrow.png"
-                  alt="expand icon"
-                />
-              </button>
+              <span className="label expand-icon">Metadata</span>
+            <img className="expand-icon"
+                src="../../../src/assets/right-arrow.png"
+                alt="expand icon"
+            />
             </div>
             {/* This is the position of metadata details and would be inserted using JS */}
           </div>

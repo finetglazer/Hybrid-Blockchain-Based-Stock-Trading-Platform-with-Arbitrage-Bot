@@ -1,6 +1,7 @@
 .payment-method-management-container {
     width: 100vw;
-    margin-top: -150px;
+    margin-top: 0;
+    margin-left: 55px;
     font-family: 'Open Sans', sans-serif;
     .breadcrumb {
         color: white;

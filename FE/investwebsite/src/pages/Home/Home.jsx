@@ -15,7 +15,7 @@ const Home = () => {
   const [tradingAccount, setTradingAccount] = useState([]);
   const [open, setOpen] = useState(false);
   const walletListRef = useRef(null);
-  const nativigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleAccountCreated = () => {
     setOpen(false);
@@ -30,7 +30,6 @@ const Home = () => {
       });
 
       const accounts = res.data.data.items;
-      console.log(accounts);
       setTradingAccount(accounts);
     } catch (error) {
       console.error(error);
@@ -109,8 +108,8 @@ const Home = () => {
                         </div>
                       </div>
                       <div className="wallet-actions">
-                        <button className="wallet-btn">Deposit</button>
-                        <button className="wallet-btn">Withdraw</button>
+                        <button className="wallet-btn" onClick={() => navigate(`/${account.id}/deposit/choose-payment-method`)}>Deposit</button>
+                        <button className="wallet-btn" onClick={() => navigate(`/${account.id}/withdraw/choose-payment-method`)}>Withdraw</button>
                       </div>
                     </div>
                   ))}
