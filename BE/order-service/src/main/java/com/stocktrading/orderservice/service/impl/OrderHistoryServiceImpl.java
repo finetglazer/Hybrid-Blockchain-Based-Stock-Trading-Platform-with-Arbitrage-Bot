@@ -6,6 +6,7 @@ import com.stocktrading.orderservice.common.PagingResponse;
 import com.stocktrading.orderservice.model.Order;
 import com.stocktrading.orderservice.payload.request.GetOrderRequest;
 import com.stocktrading.orderservice.payload.response.GetOrdersResponse;
+import com.stocktrading.orderservice.repository.OrderRepository;
 import com.stocktrading.orderservice.service.OrderHistoryService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,8 @@ import java.util.List;
 @Slf4j
 public class OrderHistoryServiceImpl implements OrderHistoryService {
     private final MongoTemplate mongoTemplate;
+
+    private final OrderRepository orderRepository;
 
     @Override
     public BaseResponse<?> getOrders(GetOrderRequest request) {
@@ -91,6 +94,23 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
                         page, size, totalOrders, (int) Math.ceil((double) totalOrders / orders.size())
                 )
             )
+        );
+    }
+
+    @Override
+    public BaseResponse<?> getOrderDetails(String orderId) {
+        Order order = orderRepository.getById(orderId).orElse(null);
+        if (order == null) {
+            return new BaseResponse<>(
+                Const.STATUS_RESPONSE.ERROR,
+                "Order not found with orderId: " + orderId,
+                ""
+            );
+        }
+        return new BaseResponse<>(
+            Const.STATUS_RESPONSE.SUCCESS,
+            "Order retrieve successfully",
+            order
         );
     }
 }

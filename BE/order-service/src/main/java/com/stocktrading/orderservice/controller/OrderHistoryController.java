@@ -4,10 +4,7 @@ import com.stocktrading.orderservice.payload.request.GetOrderRequest;
 import com.stocktrading.orderservice.service.OrderHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -21,5 +18,10 @@ public class OrderHistoryController {
     public ResponseEntity<?> getOrders(Principal principal, @RequestBody GetOrderRequest getOrderRequest) {
         getOrderRequest.setUserId(principal.getName());
         return ResponseEntity.ok(orderHistoryService.getOrders(getOrderRequest));
+    }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<?> getOrderDetails(@PathVariable String orderId) {
+        return ResponseEntity.ok(orderHistoryService.getOrderDetails(orderId));
     }
 }
