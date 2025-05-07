@@ -261,8 +261,8 @@ const Portfolio = () => {
                     <div style={{
                         borderRadius: "50%",
                         backgroundColor: "darkblue",
-                        width: 20,
-                        height: 20,
+                        width: 30,
+                        height: 30,
                         padding: 3,
                         marginLeft: 10
                     }}>
@@ -748,7 +748,7 @@ const Portfolio = () => {
                                     </div>
                                 )}
 
-                                <p className="gain-value" style={{color: totalValue - initialTotalValue >= 0 ? "#88ec9f" : "#670202"}}>{convert((totalValue - initialTotalValue).toFixed(2))}$</p>
+                                <p className="gain-value" style={{color: totalValue - initialTotalValue >= 0 ? "#88ec9f" : "#ff0044"}}>{convert((totalValue - initialTotalValue).toFixed(2))}$</p>
                             </div>
                             <p className="date">{(new Date()).toLocaleString('en-US', {
                                     month: 'short',
@@ -785,7 +785,7 @@ const Portfolio = () => {
                                                 <p className="total-gain-value">{convert((symbolChanges[symbol] ?? {valueChange: 0}).valueChange.toFixed(2))}$</p>
                                                 <div className="total-gain-percentage">
                                                     <img src="../../../src/assets/up-arrow.png" alt="direction icon" style={{width: 12, height: 12, marginRight: 3}}/>
-                                                    <p>{convert((symbolChanges[symbol] ?? {percentageChange: 0}).percentageChange.toFixed(2))}%</p>
+                                                    <p style={{color: "#9af1b6"}}>{convert((symbolChanges[symbol] ?? {percentageChange: 0}).percentageChange.toFixed(2))}%</p>
                                                 </div>
                                             </>
                                         )}

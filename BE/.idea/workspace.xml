@@ -6,18 +6,20 @@
   <component name="ChangeListManager">
     <list default="true" id="f9e950b5-7a4d-4d18-a22a-5cd2c6bc5cbd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/security/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/java/com/project/apigateway/security/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/TransactionHistoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/account-service/src/main/java/com/accountservice/service/impl/TransactionHistoryServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/gateway.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/gateway.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/controller/OrderHistoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/controller/OrderHistoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/repository/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/repository/OrderRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/service/OrderHistoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/service/OrderHistoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/service/impl/OrderHistoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/stocktrading/orderservice/service/impl/OrderHistoryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/market-data-service/src/main/java/com/stocktrading/marketdata/handler/StockDataWebSocketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/market-data-service/src/main/java/com/stocktrading/marketdata/handler/StockDataWebSocketHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Deposit.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/ChooseAccount/ChooseAccount.jsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/OrderViewHistory/OrderViewHistory.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/OrderViewHistory/OrderViewHistory.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/vite.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/Portfolio/Portfolio.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/StockTable/StockTableWithOrderForm.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/StockTable/StockTableWithOrderForm.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/StockTable/StockTableWithOrderForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/StockTable/StockTableWithOrderForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionDetails/TransactionDetails.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionDetails/TransactionDetails.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionDetails/TransactionDetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionDetails/TransactionDetails.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionHistory/TransactionHistory.css" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionHistory/TransactionHistory.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionHistory/forms/FilterForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FE/investwebsite/src/pages/TransactionHistory/forms/FilterForm.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,7 +151,7 @@
       <recent name="com.accountservice.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
+  <component name="RunManager" selected="Spring Boot.AccountServiceApplication">
     <configuration name="console.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$APPLICATION_CONFIG_DIR$/consoles/db/386254c4-74ac-45e4-8c77-834a59e1ad94/console.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
@@ -398,7 +400,7 @@
       <workItem from="1746576314528" duration="47000" />
       <workItem from="1746576509855" duration="21000" />
       <workItem from="1746576703299" duration="41000" />
-      <workItem from="1746581118328" duration="1366000" />
+      <workItem from="1746581118328" duration="6935000" />
     </task>
     <servers />
   </component>

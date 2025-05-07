@@ -1,7 +1,6 @@
 .transaction-details-container {
     width: 70vw;
     min-height: 70vh;
-    margin-top: -100px;
     font-family: 'Open Sans', sans-serif;
 }
 
@@ -25,7 +24,7 @@
 .transaction-details-container .summary-section .amount-and-status-wrapper {
     display: flex;
     align-items: center;
-    margin-top: -10px;
+    margin-top: 10px;
     border-bottom: 1px solid white;
     .amount {
         font-weight: bold;
@@ -39,7 +38,7 @@
     }
     .badge-wrapper {
         border-radius: 25px;
-        margin: 10px 0 0 20px;
+        margin: -15px 0 0 20px;
         padding: 2px 15px;
         background: rgba(102, 154, 102, 0.66);
     }
@@ -71,7 +70,7 @@
             background: none;
             border-radius: 0;
             box-shadow: none;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #f35b0a;
             text-align: left;
         }
@@ -102,6 +101,9 @@
             }
             .ant-tag {
                 height: 25px;
+                display: flex;
+                align-items: center;
+                margin-top: -5px;
             }
         }
     }
