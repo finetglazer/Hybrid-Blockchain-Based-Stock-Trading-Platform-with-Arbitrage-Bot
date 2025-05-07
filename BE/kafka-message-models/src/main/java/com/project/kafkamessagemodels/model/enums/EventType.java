@@ -57,6 +57,15 @@ public enum EventType {
     POSITIONS_UPDATE_FAILED("Portfolio positions update failed"),
     POSITIONS_REMOVED("Positions removed from portfolio"),
     POSITIONS_REMOVAL_FAILED("Positions removal failed"),
+    SHARES_VALIDATED("Sufficient shares validated"),
+    SHARES_VALIDATION_FAILED("Shares validation failed"),
+    SHARES_RESERVED("Shares reserved for order"),
+    SHARES_RESERVATION_FAILED("Shares reservation failed"),
+    SHARES_RELEASED("Reserved shares released"),
+    SHARES_RELEASE_FAILED("Shares release failed"),
+    PORTFOLIO_POSITIONS_RESTORED("Portfolio positions restored"),
+    PORTFOLIO_POSITIONS_RESTORE_FAILED("Portfolio positions restore failed"),
+
 
     // Mock Brokerage Service Events
     ORDER_EXECUTED_BY_BROKER("Order executed by broker"),
@@ -166,6 +175,10 @@ public enum EventType {
                     CommandType.BROKER_CANCEL_ORDER;
             case SETTLEMENT_REVERSED, SETTLEMENT_REVERSAL_FAILED ->
                     CommandType.ACCOUNT_REVERSE_SETTLEMENT;
+            case SHARES_VALIDATED, SHARES_VALIDATION_FAILED -> CommandType.PORTFOLIO_VERIFY_SHARES;
+            case SHARES_RESERVED, SHARES_RESERVATION_FAILED -> CommandType.PORTFOLIO_RESERVE_SHARES;
+            case SHARES_RELEASED, SHARES_RELEASE_FAILED -> CommandType.PORTFOLIO_RELEASE_SHARES;
+            case PORTFOLIO_POSITIONS_RESTORED, PORTFOLIO_POSITIONS_RESTORE_FAILED -> CommandType.PORTFOLIO_RESTORE_POSITIONS;
             default -> null; // Return null for any unhandled event types
         };
     }

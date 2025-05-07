@@ -95,6 +95,44 @@ public class KafkaConfig {
     @Value("${kafka.topics.dlq:saga.dlq}")
     private String dlqTopic;
 
+    // Order sell saga topics
+    @Value("${kafka.topics.user-commands.order-sell:user.commands.order-sell}")
+    private String userCommandsOrderSellTopic;
+
+    @Value("${kafka.topics.user-events.order-sell:user.events.order-sell}")
+    private String userEventsOrderSellTopic;
+
+    @Value("${kafka.topics.account-commands.order-sell:account.commands.order-sell}")
+    private String accountCommandsOrderSellTopic;
+
+    @Value("${kafka.topics.account-events.order-sell:account.events.order-sell}")
+    private String accountEventsOrderSellTopic;
+
+    @Value("${kafka.topics.order-commands.sell:order.commands.order-sell}")
+    private String orderCommandsSellTopic;
+
+    @Value("${kafka.topics.order-events.sell:order.events.order-sell}")
+    private String orderEventsSellTopic;
+
+    @Value("${kafka.topics.market-commands.sell:market.commands.order-sell}")
+    private String marketCommandsSellTopic;
+
+    @Value("${kafka.topics.market-events.sell:market.events.order-sell}")
+    private String marketEventsSellTopic;
+
+    @Value("${kafka.topics.broker-commands.sell:broker.commands.order-sell}")
+    private String brokerCommandsSellTopic;
+
+    @Value("${kafka.topics.broker-events.sell:broker.events.order-sell}")
+    private String brokerEventsSellTopic;
+
+    @Value("${kafka.topics.portfolio-commands.order-sell:portfolio.commands.order-sell}")
+    private String portfolioCommandsOrderSellTopic;
+
+    @Value("${kafka.topics.portfolio-events.order-sell:portfolio.events.order-sell}")
+    private String portfolioEventsOrderSellTopic;
+
+
     // Kafka Admin Configuration
     @Bean
     public KafkaAdmin kafkaAdmin() {
@@ -198,6 +236,67 @@ public class KafkaConfig {
     @Bean
     public NewTopic portfolioEventsTopic() {
         return new NewTopic(portfolioEventsTopic, 3, (short) 1);
+    }
+
+    // Topic Configurations - Order Sell Saga
+    @Bean
+    public NewTopic userCommandsOrderSellTopic() {
+        return new NewTopic(userCommandsOrderSellTopic, 3, (short) 1);
+    }
+
+    @Bean
+    public NewTopic userEventsOrderSellTopic() {
+        return new NewTopic(userEventsOrderSellTopic, 3, (short) 1);
+    }
+
+    @Bean
+    public NewTopic accountCommandsOrderSellTopic() {
+        return new NewTopic(accountCommandsOrderSellTopic, 3, (short) 1);
+    }
+
+    @Bean
+    public NewTopic accountEventsOrderSellTopic() {
+        return new NewTopic(accountEventsOrderSellTopic, 3, (short) 1);
+    }
+
+    @Bean
+    public NewTopic orderCommandsSellTopic() {
+        return new NewTopic(orderCommandsSellTopic, 3, (short) 1);
+    }
+
+    @Bean
+    public NewTopic orderEventsSellTopic() {
+        return new NewTopic(orderEventsSellTopic, 3, (short) 1);
+    }
+
+    @Bean
+    public NewTopic marketCommandsSellTopic() {
+        return new NewTopic(marketCommandsSellTopic, 3, (short) 1);
+    }
+
+    @Bean
+    public NewTopic marketEventsSellTopic() {
+        return new NewTopic(marketEventsSellTopic, 3, (short) 1);
+    }
+
+    @Bean
+    public NewTopic brokerCommandsSellTopic() {
+        return new NewTopic(brokerCommandsSellTopic, 3, (short) 1);
+    }
+
+    @Bean
+    public NewTopic brokerEventsSellTopic() {
+        return new NewTopic(brokerEventsSellTopic, 3, (short) 1);
+    }
+
+    @Bean
+    public NewTopic portfolioCommandsOrderSellTopic() {
+        return new NewTopic(portfolioCommandsOrderSellTopic, 3, (short) 1);
+    }
+
+    @Bean
+    public NewTopic portfolioEventsOrderSellTopic() {
+        return new NewTopic(portfolioEventsOrderSellTopic, 3, (short) 1);
     }
 
     // Producer Configuration for CommandMessage
@@ -324,5 +423,29 @@ public class KafkaConfig {
         );
 
         return handler;
+    }
+
+    // Consumer Configuration for EventMessage - Order Sell Saga
+    @Bean
+    public ConsumerFactory<String, EventMessage> orderSellEventConsumerFactory() {
+        return createEventConsumerFactory(defaultGroupId + "-order-sell");
+    }
+
+    // Order Sell saga specific container factory
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, EventMessage> orderSellEventKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, EventMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(orderSellEventConsumerFactory());
+        factory.setConcurrency(3);
+        factory.getContainerProperties().setAckMode(org.springframework.kafka.listener.ContainerProperties.AckMode.MANUAL_IMMEDIATE);
+
+        // Configure error handling with dead letter topic
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(
+                new DeadLetterPublishingRecoverer(eventKafkaTemplate(), (rec, ex) -> new org.apache.kafka.common.TopicPartition(dlqTopic, 0)),
+                new ExponentialBackOff(1000, 2)
+        );
+        factory.setCommonErrorHandler(errorHandler);
+
+        return factory;
     }
 }

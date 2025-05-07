@@ -1,10 +1,7 @@
 package com.stocktrading.kafka.listener;
 
 import com.project.kafkamessagemodels.model.EventMessage;
-import com.stocktrading.kafka.service.DepositSagaService;
-import com.stocktrading.kafka.service.IdempotencyService;
-import com.stocktrading.kafka.service.OrderBuySagaService;
-import com.stocktrading.kafka.service.WithdrawalSagaService;
+import com.stocktrading.kafka.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -23,6 +20,7 @@ public class KafkaEventListener {
     private final DepositSagaService depositSagaService;
     private final WithdrawalSagaService withdrawalSagaService;
     private final OrderBuySagaService orderBuySagaService;
+    private final OrderSellSagaService orderSellSagaService;
     private final IdempotencyService idempotencyService;
 
     // ====== DEPOSIT SAGA EVENT LISTENERS ======
@@ -224,6 +222,107 @@ public class KafkaEventListener {
             ack.acknowledge();
         } catch (Exception e) {
             log.error("Error processing portfolio event: {}", e.getMessage(), e);
+            throw new RuntimeException("Event processing failed", e);
+        }
+    }
+
+    // These methods should be added to the existing KafkaEventListener.java class
+
+// ====== ORDER SELL SAGA EVENT LISTENERS ======
+
+    @KafkaListener(
+            topics = "${kafka.topics.user-events.order-sell}",
+            containerFactory = "orderSellEventKafkaListenerContainerFactory",
+            groupId = "${spring.kafka.consumer.group-id}-order-sell-user"
+    )
+    public void consumeUserOrderSellEvents(@Payload EventMessage event, Acknowledgment ack) {
+        try {
+            log.debug("Received user order-sell event: {}", event.getType());
+            orderSellSagaService.handleEventMessage(event);
+            ack.acknowledge();
+            log.debug("Successfully processed and acknowledged user order-sell event: {}", event.getType());
+        } catch (Exception e) {
+            log.error("Error processing user order-sell event: {}", event.getType(), e);
+            throw new RuntimeException("Event processing failed", e);
+        }
+    }
+
+    @KafkaListener(
+            topics = "${kafka.topics.account-events.order-sell}",
+            containerFactory = "orderSellEventKafkaListenerContainerFactory",
+            groupId = "${spring.kafka.consumer.group-id}-order-sell-account"
+    )
+    public void consumeAccountOrderSellEvents(@Payload EventMessage event, Acknowledgment ack) {
+        try {
+            log.debug("Received account order-sell event: {}", event.getType());
+            orderSellSagaService.handleEventMessage(event);
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("Error processing account order-sell event: {}", e.getMessage(), e);
+            throw new RuntimeException("Event processing failed", e);
+        }
+    }
+
+    @KafkaListener(
+            topics = "${kafka.topics.order-events.sell}",
+            containerFactory = "orderSellEventKafkaListenerContainerFactory",
+            groupId = "${spring.kafka.consumer.group-id}-order-sell-order"
+    )
+    public void consumeOrderSellEvents(@Payload EventMessage event, Acknowledgment ack) {
+        try {
+            log.debug("Received order sell event: {}", event.getType());
+            orderSellSagaService.handleEventMessage(event);
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("Error processing order sell event: {}", e.getMessage(), e);
+            throw new RuntimeException("Event processing failed", e);
+        }
+    }
+
+    @KafkaListener(
+            topics = "${kafka.topics.market-events.sell}",
+            containerFactory = "orderSellEventKafkaListenerContainerFactory",
+            groupId = "${spring.kafka.consumer.group-id}-order-sell-market"
+    )
+    public void consumeMarketSellEvents(@Payload EventMessage event, Acknowledgment ack) {
+        try {
+            log.debug("Received market sell event: {}", event.getType());
+            orderSellSagaService.handleEventMessage(event);
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("Error processing market sell event: {}", e.getMessage(), e);
+            throw new RuntimeException("Event processing failed", e);
+        }
+    }
+
+    @KafkaListener(
+            topics = "${kafka.topics.broker-events.sell}",
+            containerFactory = "orderSellEventKafkaListenerContainerFactory",
+            groupId = "${spring.kafka.consumer.group-id}-order-sell-broker"
+    )
+    public void consumeBrokerSellEvents(@Payload EventMessage event, Acknowledgment ack) {
+        try {
+            log.debug("Received broker sell event: {}", event.getType());
+            orderSellSagaService.handleEventMessage(event);
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("Error processing broker sell event: {}", e.getMessage(), e);
+            throw new RuntimeException("Event processing failed", e);
+        }
+    }
+
+    @KafkaListener(
+            topics = "${kafka.topics.portfolio-events.order-sell}",
+            containerFactory = "orderSellEventKafkaListenerContainerFactory",
+            groupId = "${spring.kafka.consumer.group-id}-order-sell-portfolio"
+    )
+    public void consumePortfolioSellEvents(@Payload EventMessage event, Acknowledgment ack) {
+        try {
+            log.debug("Received portfolio sell event: {}", event.getType());
+            orderSellSagaService.handleEventMessage(event);
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("Error processing portfolio sell event: {}", e.getMessage(), e);
             throw new RuntimeException("Event processing failed", e);
         }
     }
