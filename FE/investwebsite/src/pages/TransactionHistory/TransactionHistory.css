@@ -1,9 +1,9 @@
 .transaction-history-container {
     position: relative;
     min-height: 400vh;
-    min-width: 100vw;
+    min-width: 90vw;
     overflow-x: auto;
-    margin: -150px 0 0 -20px;
+    margin: -50px 0 0 20px;
 }
 
 .transaction-history-container .ant-table-thead > tr > th.ant-table-cell {

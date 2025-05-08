@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stocktrading.marketdata.model.StockUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -62,6 +63,10 @@ public class StockDataWebSocketHandler extends TextWebSocketHandler {
      *
      * @param update The StockUpdate data to send.
      */
+    @KafkaListener(
+        topics = "${kafka.topics.market-price-updates}",
+        containerFactory = "kafkaListenerContainerFactory"
+    )
     public void broadcastStockUpdate(StockUpdate update) {
         if (update == null) return;
 

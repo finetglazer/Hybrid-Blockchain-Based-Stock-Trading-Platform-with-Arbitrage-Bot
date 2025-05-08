@@ -1,6 +1,6 @@
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import {Alert, Badge, Tag} from "antd";
+import {Alert, Badge, Breadcrumb, Tag} from "antd";
 import axios from "axios";
 import "./TransactionDetails.css";
 
@@ -111,6 +111,15 @@ const TransactionDetails = () => {
             {error &&
                 <Alert type="error" showIcon message={error} />
             }
+            <Breadcrumb
+                className="mb-4"
+                separator=">"
+                items={[
+                    { title: <Link to="/home" style={{ color: "rgba(255, 255, 255, 0.6)" }}>Home</Link> },
+                    { title: <Link to="/transaction-history" style={{ color: "rgba(255, 255, 255, 0.6)" }}>Transaction History</Link> },
+                    { title: <span style={{ color: "rgba(255, 255, 255, 1)" }}>Transaction Details</span> },
+                ]}
+            />
             <div className="summary-section">
                 <div className="icon">
                     <img src="../../../src/assets/coin.png" alt="amount icon" />

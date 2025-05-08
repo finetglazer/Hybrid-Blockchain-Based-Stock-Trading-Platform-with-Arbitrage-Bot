@@ -9,15 +9,15 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/api": {
-        target: "https://good-musical-joey.ngrok-free.app",
-        // target: 'https://f18c2e98154f83.lhr.life',
+        // target: "https://good-musical-joey.ngrok-free.app",
+        target: 'http://localhost:8080',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
         logLevel: "debug",
       },
       '/users': {
-        target: 'https://good-musical-joey.ngrok-free.app',
-        // target: 'https://f18c2e98154f83.lhr.life',
+        // target: 'https://good-musical-joey.ngrok-free.app',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         logLevel: 'debug',
         configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
@@ -29,8 +29,8 @@ export default defineConfig({
         }
       },
       '/accounts': {
-        target: 'https://good-musical-joey.ngrok-free.app',
-        // target: 'https://f18c2e98154f83.lhr.life',
+        // target: 'https://good-musical-joey.ngrok-free.app',
+        target: 'http://localhost:8080',
 
         changeOrigin: true,
         logLevel: 'debug',
@@ -43,8 +43,8 @@ export default defineConfig({
         }
       },
       '/market-data': {
-        target: 'https://good-musical-joey.ngrok-free.app',
-        // target: 'https://f18c2e98154f83.lhr.life',
+        // target: 'https://good-musical-joey.ngrok-free.app',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         logLevel: 'debug',
         configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
@@ -56,8 +56,8 @@ export default defineConfig({
         }
       },
       '/sagas': {
-        target: 'https://good-musical-joey.ngrok-free.app',
-        // target: 'https://f18c2e98154f83.lhr.life',
+        // target: 'https://good-musical-joey.ngrok-free.app',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         logLevel: 'debug',
         configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
@@ -69,8 +69,8 @@ export default defineConfig({
         }
       },
       '/orders': {
-        target: 'https://good-musical-joey.ngrok-free.app',
-        // target: 'https://f18c2e98154f83.lhr.life',
+        // target: 'https://good-musical-joey.ngrok-free.app',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         logLevel: 'debug',
         configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
@@ -82,8 +82,8 @@ export default defineConfig({
         }
       },
       '/ws/market-data': {
-        target: 'https://good-musical-joey.ngrok-free.app',
-        // target: 'https://f18c2e98154f83.lhr.life',
+        // target: 'https://good-musical-joey.ngrok-free.app',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         ws: true,
         logLevel: 'debug',
@@ -96,8 +96,8 @@ export default defineConfig({
         }
       },
       '/ws/orders': {
-        target: 'https://good-musical-joey.ngrok-free.app',
-        // target: 'https://f18c2e98154f83.lhr.life',
+        // target: 'https://good-musical-joey.ngrok-free.app',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         ws: true,
         logLevel: "debug",
