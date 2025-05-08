@@ -43,6 +43,9 @@ public class KafkaCommandHandlerService {
     @Value("${kafka.topics.account-events.withdrawal}")
     private String withdrawalEventsTopic;
 
+    @Value("${kafka.topics.account-events.order-sell}")
+    private String orderSellEventsTopic;
+
     /**
      * Handle ACCOUNT_VALIDATE command
      */
@@ -1247,6 +1250,90 @@ public class KafkaCommandHandlerService {
             log.info("Sent ACCOUNT_STATUS_VERIFIED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
+        }
+    }
+
+    /**
+     * Handle ACCOUNT_VERIFY_STATUS command for sell orders
+     */
+    public void handleVerifyAccountStatusSell(CommandMessage command) {
+        log.info("Handling ACCOUNT_VERIFY_STATUS command for sell saga: {}", command.getSagaId());
+
+        String userId = command.getPayloadValue("userId");
+        String accountId = command.getPayloadValue("accountId");
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Validate account exists and belongs to the user
+            Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
+
+            if (accountOpt.isEmpty()) {
+                handleAccountVerificationFailureSell(event, "ACCOUNT_NOT_FOUND",
+                        "Account not found: " + accountId);
+                return;
+            }
+
+            TradingAccount account = accountOpt.get();
+
+            // Verify ownership
+            if (!account.getUserId().equals(userId)) {
+                handleAccountVerificationFailureSell(event, "ACCOUNT_NOT_AUTHORIZED",
+                        "Account does not belong to user");
+                return;
+            }
+
+            // Verify account status
+            if (!account.getStatus().equals("ACTIVE")) {
+                handleAccountVerificationFailureSell(event, "ACCOUNT_NOT_ACTIVE",
+                        "Account is not active: " + account.getStatus());
+                return;
+            }
+
+            // All validations passed
+            event.setType("ACCOUNT_STATUS_VERIFIED");
+            event.setSuccess(true);
+            event.setPayloadValue("accountId", accountId);
+            event.setPayloadValue("accountStatus", account.getStatus());
+            event.setPayloadValue("userId", userId);
+
+        } catch (Exception e) {
+            log.error("Error verifying account status for sell order", e);
+            handleAccountVerificationFailureSell(event, "VERIFICATION_ERROR",
+                    "Error verifying account status: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send(orderSellEventsTopic, command.getSagaId(), event);
+            log.info("Sent ACCOUNT_STATUS_VERIFIED response for sell saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
+    /**
+     * Helper method to handle account verification failures for sell orders
+     */
+    private void handleAccountVerificationFailureSell(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("ACCOUNT_STATUS_INVALID");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        try {
+            kafkaTemplate.send(orderSellEventsTopic, event.getSagaId(), event);
+            log.info("Sent ACCOUNT_STATUS_INVALID response for sell saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
         }
     }
 

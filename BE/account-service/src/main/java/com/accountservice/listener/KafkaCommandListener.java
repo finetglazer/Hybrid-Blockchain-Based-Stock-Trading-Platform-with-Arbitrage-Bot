@@ -168,4 +168,33 @@ public class KafkaCommandListener {
             throw new RuntimeException("Command processing failed", e);
         }
     }
+
+    @KafkaListener(
+            id = "accountOrderSellCommandsListener",
+            topics = "${kafka.topics.account-commands.order-sell}",
+            containerFactory = "kafkaListenerContainerFactory"
+    )
+    public void consumeAccountOrderSellCommands(@Payload CommandMessage command, Acknowledgment ack) {
+        try {
+            log.info("Processing account sell command type: {} for saga: {}", command.getType(), command.getSagaId());
+
+            switch (command.getType()) {
+                case "ACCOUNT_VERIFY_STATUS":
+                    commandHandlerService.handleVerifyAccountStatusSell(command);
+                    break;
+                // Add other sell-specific command handlers as needed
+                default:
+                    log.warn("Unknown account sell command type: {}", command.getType());
+                    break;
+            }
+
+            // Acknowledge the message
+            ack.acknowledge();
+
+        } catch (Exception e) {
+            log.error("Error processing account sell command: {}", e.getMessage(), e);
+            // Don't acknowledge - will be retried or sent to DLQ
+            throw new RuntimeException("Command processing failed", e);
+        }
+    }
 }
