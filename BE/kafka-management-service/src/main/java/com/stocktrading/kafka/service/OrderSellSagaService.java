@@ -66,7 +66,7 @@ public class OrderSellSagaService {
      * Process the next step in the saga
      */
     public void processNextStep(OrderSellSagaState saga) {
-        glog.debug("Processing step [{}] for saga: {}", saga.getCurrentStep(), saga.getSagaId());
+        log.debug("Processing step [{}] for saga: {}", saga.getCurrentStep(), saga.getSagaId());
 
         // Special handling for CALCULATE_SETTLEMENT_AMOUNT step
         if (saga.getCurrentStep() == OrderSellSagaStep.CALCULATE_SETTLEMENT_AMOUNT) {
