@@ -18,10 +18,10 @@ const Login = () => {
         password,
       });
 
-      console.log("Login success:", response.data.data);
       const token = response.data.data; // Đảm bảo đây là chuỗi token thực sự
       if (token) {
         localStorage.setItem("token", token);
+        console.log("Login success:", response.data.data);
       }
       // Chuyển hướng sau khi đăng nhập thành công
       if (response.data.status === 1) {
