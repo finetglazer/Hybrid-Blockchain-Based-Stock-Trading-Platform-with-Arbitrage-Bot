@@ -41,6 +41,10 @@ public enum CommandType {
     // Portfolio Service Commands
     PORTFOLIO_UPDATE_POSITIONS("Update portfolio positions"),
     PORTFOLIO_REMOVE_POSITIONS("Remove positions from portfolio"),
+    PORTFOLIO_VERIFY_SHARES("Verify sufficient shares in portfolio"),
+    PORTFOLIO_RESERVE_SHARES("Reserve shares for sale"),
+    PORTFOLIO_RELEASE_SHARES("Release reserved shares"),
+    PORTFOLIO_RESTORE_POSITIONS("Restore shares to portfolio"),
 
     // Mock Brokerage Service Commands
     BROKER_EXECUTE_ORDER("Execute order in market"),

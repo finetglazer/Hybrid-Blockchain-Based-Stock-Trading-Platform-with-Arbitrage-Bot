@@ -31,21 +31,33 @@ public class KafkaCommandHandlerService {
     @Value("${kafka.topics.broker-events}")
     private String brokerEventsTopic;
 
+    @Value("${kafka.topics.broker-events.sell}")
+    private String brokerSellEventsTopic;
+
     @Value("${market.simulation.order-execution-success-rate:90}")
     private int orderExecutionSuccessRate;
 
     /**
      * Handle BROKER_EXECUTE_ORDER command
-     * Enhanced to support LIMIT orders
+     * Enhanced to support both BUY and SELL orders
+     * @param command The Kafka command message
+     * @param isSellOrder Flag indicating if this is a sell order (true) or buy order (false)
      */
-    public void handleExecuteOrder(CommandMessage command) {
-        log.info("Handling BROKER_EXECUTE_ORDER command for saga: {}", command.getSagaId());
+    public void handleExecuteOrder(CommandMessage command, boolean isSellOrder) {
+        log.info("Handling BROKER_EXECUTE_ORDER command for {} saga: {}",
+                isSellOrder ? "SELL" : "BUY", command.getSagaId());
 
         String orderId = command.getPayloadValue("orderId");
         String stockSymbol = command.getPayloadValue("stockSymbol");
         String orderType = command.getPayloadValue("orderType");
         Integer quantity = command.getPayloadValue("quantity");
         String timeInForce = command.getPayloadValue("timeInForce");
+
+        // Get the side (BUY or SELL) from the command or use default based on isSellOrder
+        String side = command.getPayloadValue("side");
+        if (side == null) {
+            side = isSellOrder ? "SELL" : "BUY";
+        }
 
         // Convert limit price to BigDecimal, handling different formats
         BigDecimal limitPrice = null;
@@ -77,21 +89,22 @@ public class KafkaCommandHandlerService {
 
             if (!orderExecutionSucceeds) {
                 handleOrderExecutionFailure(event, "EXECUTION_ERROR",
-                        "Failed to execute order: market conditions not met");
+                        "Failed to execute order: market conditions not met", isSellOrder);
                 return;
             }
 
             // Handle based on order type
             if ("LIMIT".equals(orderType)) {
-                handleLimitOrder(command, event, orderId, stockSymbol, orderType, quantity, limitPrice, timeInForce);
+                handleLimitOrder(command, event, orderId, stockSymbol, orderType, quantity,
+                        limitPrice, timeInForce, side, isSellOrder);
             } else {
                 // Standard MARKET order execution - immediate execution
-                handleMarketOrder(event, orderId, stockSymbol, quantity);
+                handleMarketOrder(event, orderId, stockSymbol, quantity, side, isSellOrder);
             }
         } catch (Exception e) {
             log.error("Error executing order", e);
             handleOrderExecutionFailure(event, "BROKER_SYSTEM_ERROR",
-                    "System error while executing order: " + e.getMessage());
+                    "System error while executing order: " + e.getMessage(), isSellOrder);
         }
     }
 
@@ -100,10 +113,8 @@ public class KafkaCommandHandlerService {
      */
     private void handleLimitOrder(CommandMessage command, EventMessage event, String orderId,
                                   String stockSymbol, String orderType, Integer quantity,
-                                  BigDecimal limitPrice, String timeInForce) {
-        // For this example, we're assuming all orders are BUY orders
-        String side = "BUY";
-
+                                  BigDecimal limitPrice, String timeInForce, String side,
+                                  boolean isSellOrder) {
         // Check if the limit price meets current market conditions for immediate execution
         boolean canExecuteImmediately = mockOrderBook.canExecuteImmediately(stockSymbol, side, limitPrice);
 
@@ -123,9 +134,10 @@ public class KafkaCommandHandlerService {
             event.setPayloadValue("executedQuantity", quantity);
             event.setPayloadValue("executedAt", Instant.now().toString());
             event.setPayloadValue("status", "FILLED");
+            event.setPayloadValue("side", side);
 
-            log.info("Limit order executed immediately: {} for {} shares of {} at ${}",
-                    brokerOrderId, quantity, stockSymbol, executionPrice);
+            log.info("Limit {} order executed immediately: {} for {} shares of {} at ${}",
+                    side, brokerOrderId, quantity, stockSymbol, executionPrice);
         } else {
             // Add to order book for later execution
             PendingOrder pendingOrder = mockOrderBook.addPendingOrder(
@@ -141,24 +153,26 @@ public class KafkaCommandHandlerService {
             event.setPayloadValue("currentPrice", mockOrderBook.getCurrentPrice(stockSymbol));
             event.setPayloadValue("queuedAt", Instant.now().toString());
             event.setPayloadValue("status", "QUEUED");
+            event.setPayloadValue("side", side);
 
             if (pendingOrder.getExpirationTime() != null) {
                 event.setPayloadValue("expiresAt", pendingOrder.getExpirationTime().toString());
             }
 
-            log.info("Limit order queued in order book: {} for {} shares of {} at limit ${}",
-                    orderId, quantity, stockSymbol, limitPrice);
+            log.info("Limit {} order queued in order book: {} for {} shares of {} at limit ${}",
+                    side, orderId, quantity, stockSymbol, limitPrice);
         }
 
         // Publish the event
-        publishEvent(event);
+        publishEvent(event, isSellOrder);
     }
 
     /**
      * Handle MARKET order execution (immediate execution)
      */
     private void handleMarketOrder(EventMessage event, String orderId,
-                                   String stockSymbol, Integer quantity) {
+                                   String stockSymbol, Integer quantity,
+                                   String side, boolean isSellOrder) {
         // Get current market price
         BigDecimal executionPrice = mockOrderBook.getCurrentPrice(stockSymbol);
 
@@ -175,20 +189,22 @@ public class KafkaCommandHandlerService {
         event.setPayloadValue("executedQuantity", quantity);
         event.setPayloadValue("executedAt", Instant.now().toString());
         event.setPayloadValue("status", "FILLED");
+        event.setPayloadValue("side", side);
 
-        log.info("Market order executed: {} for {} shares of {} at ${}",
-                brokerOrderId, quantity, stockSymbol, executionPrice);
+        log.info("Market {} order executed: {} for {} shares of {} at ${}",
+                side, brokerOrderId, quantity, stockSymbol, executionPrice);
 
         // Publish the event
-        publishEvent(event);
+        publishEvent(event, isSellOrder);
     }
 
     /**
      * Handle BROKER_CANCEL_ORDER command
-     * Updated to handle LIMIT orders in order book
+     * Updated to handle both BUY and SELL orders
      */
-    public void handleCancelOrder(CommandMessage command) {
-        log.info("Handling BROKER_CANCEL_ORDER command for saga: {}", command.getSagaId());
+    public void handleCancelOrder(CommandMessage command, boolean isSellOrder) {
+        log.info("Handling BROKER_CANCEL_ORDER command for {} saga: {}",
+                isSellOrder ? "SELL" : "BUY", command.getSagaId());
 
         String orderId = command.getPayloadValue("orderId");
         String brokerOrderId = command.getPayloadValue("brokerOrderId");
@@ -254,13 +270,14 @@ public class KafkaCommandHandlerService {
         }
 
         // Send the response event
-        publishEvent(event);
+        publishEvent(event, isSellOrder);
     }
 
     /**
      * Helper method to handle order execution failures
      */
-    private void handleOrderExecutionFailure(EventMessage event, String errorCode, String errorMessage) {
+    private void handleOrderExecutionFailure(EventMessage event, String errorCode,
+                                             String errorMessage, boolean isSellOrder) {
         event.setType("ORDER_EXECUTION_FAILED");
         event.setSuccess(false);
         event.setErrorCode(errorCode);
@@ -269,16 +286,22 @@ public class KafkaCommandHandlerService {
         log.warn("Order execution failed: {} - {}", errorCode, errorMessage);
 
         // Publish the event
-        publishEvent(event);
+        publishEvent(event, isSellOrder);
     }
 
     /**
      * Publish event to Kafka
+     * @param event The event to publish
+     * @param isSellOrder Flag indicating if this is for a sell order (true) or buy order (false)
      */
-    private void publishEvent(EventMessage event) {
+    private void publishEvent(EventMessage event, boolean isSellOrder) {
         try {
-            kafkaTemplate.send(brokerEventsTopic, event.getSagaId(), event);
-            log.debug("Published event: {} for saga: {}", event.getType(), event.getSagaId());
+            // Choose the appropriate topic based on order type
+            String topicToUse = isSellOrder ? brokerSellEventsTopic : brokerEventsTopic;
+
+            kafkaTemplate.send(topicToUse, event.getSagaId(), event);
+            log.debug("Published event: {} for saga: {} to topic: {}",
+                    event.getType(), event.getSagaId(), topicToUse);
         } catch (Exception e) {
             log.error("Error publishing event to Kafka", e);
         }

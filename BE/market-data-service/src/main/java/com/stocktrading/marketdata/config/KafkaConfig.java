@@ -3,6 +3,8 @@ package com.stocktrading.marketdata.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.kafkamessagemodels.model.CommandMessage;
+import com.project.kafkamessagemodels.model.EventMessage;
+import com.stocktrading.marketdata.model.StockUpdate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -41,6 +43,14 @@ public class KafkaConfig {
 
     @Value("${kafka.topics.market-price-updates:market.price.updates}")
     private String marketPriceUpdatesTopic;
+
+
+    @Value("${kafka.topics.market-commands.sell:market.commands.order-sell}")
+    private String marketCommandsSellTopic;
+
+    @Value("${kafka.topics.market-events.sell:market.events.order-sell}")
+    private String marketEventsSellTopic;
+
 
     @Bean
     public ConsumerFactory<String, CommandMessage> commandConsumerFactory() {
@@ -114,5 +124,36 @@ public class KafkaConfig {
     @Bean
     public NewTopic marketPriceUpdatesTopic() {
         return new NewTopic(marketPriceUpdatesTopic, 3, (short) 1);
+    }
+
+
+    @Bean
+    public ConsumerFactory<String, EventMessage> eventMessageConsumerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+        props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName());
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.project.kafkamessagemodels.model.EventMessage");
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, true);
+        props.put(JsonDeserializer.REMOVE_TYPE_INFO_HEADERS, false);
+
+        return new DefaultKafkaConsumerFactory<>(props);
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, EventMessage> eventMessageListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, EventMessage> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(eventMessageConsumerFactory());
+        factory.setConcurrency(3);
+        factory.getContainerProperties().setAckMode(
+                org.springframework.kafka.listener.ContainerProperties.AckMode.MANUAL_IMMEDIATE);
+        factory.setCommonErrorHandler(errorHandler());
+
+        return factory;
     }
 }
