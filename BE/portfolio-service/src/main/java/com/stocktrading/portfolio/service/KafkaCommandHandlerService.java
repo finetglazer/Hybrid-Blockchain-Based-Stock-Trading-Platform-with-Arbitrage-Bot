@@ -621,6 +621,105 @@ public class KafkaCommandHandlerService {
                 .build();
     }
 
+
+    /**
+     * Handle PORTFOLIO_UPDATE_POSITIONS command for order sell saga
+     * This permanently removes the shares after a successful sell order
+     */
+    public void handleUpdatePortfolioForSellOrder(CommandMessage command) {
+        log.info("Handling PORTFOLIO_UPDATE_POSITIONS for sell order, saga: {}", command.getSagaId());
+
+        String userId = command.getPayloadValue("userId");
+        String accountId = command.getPayloadValue("accountId");
+        String stockSymbol = command.getPayloadValue("stockSymbol");
+        Integer quantity = command.getPayloadValue("quantity");
+        String orderId = command.getPayloadValue("orderId");
+        String reservationId = command.getPayloadValue("reservationId");
+        Object priceObj = command.getPayloadValue("price");
+        BigDecimal executionPrice = convertToBigDecimal(priceObj);
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("PORTFOLIO_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find portfolio
+            Optional<Portfolio> portfolioOpt = portfolioRepository.findByUserIdAndAccountId(userId, accountId);
+
+            if (portfolioOpt.isEmpty()) {
+                // Portfolio not found - this is an error since we should have a portfolio at this point
+                event.setType("POSITIONS_UPDATE_FAILED");
+                event.setSuccess(false);
+                event.setErrorCode("PORTFOLIO_NOT_FOUND");
+                event.setErrorMessage("Portfolio not found for user: " + userId + ", account: " + accountId);
+
+                kafkaTemplate.send(portfolioOrderSellEventsTopic, command.getSagaId(), event);
+                return;
+            }
+
+            Portfolio portfolio = portfolioOpt.get();
+
+            // In a real implementation, we would verify and clear the reservation first
+            // Since we only mocked the reservation, we skip that step here
+            log.info("Releasing reservation and removing shares: {}", reservationId);
+
+            // Remove the shares from the portfolio
+            boolean removed = portfolio.removePositionQuantity(stockSymbol, -quantity);
+
+            if (!removed) {
+                event.setType("POSITIONS_UPDATE_FAILED");
+                event.setSuccess(false);
+                event.setErrorCode("SHARES_NOT_FOUND");
+                event.setErrorMessage("Could not find sufficient shares to remove for stock: " + stockSymbol);
+
+                kafkaTemplate.send(portfolioOrderSellEventsTopic, command.getSagaId(), event);
+                return;
+            }
+
+            // Update the portfolio with the timestamp
+            portfolio.setUpdatedAt(Instant.now());
+            portfolioRepository.save(portfolio);
+
+            // Calculate realized gain/loss if needed
+            // For this we'd need the original purchase price information
+            // BigDecimal realizedPL = executionPrice.subtract(averageBuyPrice).multiply(new BigDecimal(quantity));
+
+            // Send success response
+            event.setType("POSITIONS_UPDATED");
+            event.setSuccess(true);
+            event.setPayloadValue("portfolioId", portfolio.getId());
+            event.setPayloadValue("userId", userId);
+            event.setPayloadValue("accountId", accountId);
+            event.setPayloadValue("stockSymbol", stockSymbol);
+            event.setPayloadValue("quantity", quantity);
+            event.setPayloadValue("executionPrice", executionPrice);
+            event.setPayloadValue("orderId", orderId);
+            event.setPayloadValue("updatedAt", portfolio.getUpdatedAt().toString());
+
+            log.info("Portfolio positions updated for sell order, user: {}, account: {}, stock: {}, quantity: {}",
+                    userId, accountId, stockSymbol, quantity);
+
+        } catch (Exception e) {
+            log.error("Error updating portfolio positions for sell order", e);
+            event.setType("POSITIONS_UPDATE_FAILED");
+            event.setSuccess(false);
+            event.setErrorCode("UPDATE_ERROR");
+            event.setErrorMessage("Error updating portfolio positions: " + e.getMessage());
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send(portfolioOrderSellEventsTopic, command.getSagaId(), event);
+            log.info("Sent position update response for sell order saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
     /**
      * Helper method to safely convert any numeric type to BigDecimal
      */

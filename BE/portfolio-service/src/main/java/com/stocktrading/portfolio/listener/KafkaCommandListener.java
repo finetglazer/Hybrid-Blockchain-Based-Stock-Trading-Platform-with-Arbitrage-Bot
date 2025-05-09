@@ -70,6 +70,10 @@ public class KafkaCommandListener {
                 case "PORTFOLIO_RESTORE_POSITIONS":
                     commandHandlerService.handleRestorePositions(command);
                     break;
+                // In KafkaCommandListener.java - add to the switch case in consumePortfolioOrderSellCommands method
+                case "PORTFOLIO_UPDATE_POSITIONS":
+                    commandHandlerService.handleUpdatePortfolioForSellOrder(command);
+                    break;
                 default:
                     log.warn("Unknown order sell command type: {}", command.getType());
                     break;
