@@ -58,7 +58,6 @@ public class KafkaCommandListener {
         }
     }
 
-
     @KafkaListener(
             topics = "${kafka.topics.order-commands-sell}",
             containerFactory = "kafkaListenerContainerFactory"
@@ -73,7 +72,8 @@ public class KafkaCommandListener {
                     commandHandlerService.handleCreateSellOrder(command);
                     break;
                 case "ORDER_UPDATE_VALIDATED":
-                    commandHandlerService.handleUpdateOrderValidated(command);
+                    // Use the specific sell order validation handler
+                    commandHandlerService.handleUpdateSellOrderValidated(command);
                     break;
                 case "ORDER_UPDATE_EXECUTED":
                     commandHandlerService.handleUpdateOrderExecuted(command);

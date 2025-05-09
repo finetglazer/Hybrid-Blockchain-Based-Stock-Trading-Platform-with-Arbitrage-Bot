@@ -636,4 +636,113 @@ public class KafkaCommandHandlerService {
             log.error("Error sending sell event", e);
         }
     }
+
+    /**
+     * Handle ORDER_UPDATE_VALIDATED command for sell orders
+     */
+    public void handleUpdateSellOrderValidated(CommandMessage command) {
+        log.info("Handling ORDER_UPDATE_VALIDATED command for sell saga: {}", command.getSagaId());
+
+        String orderId = command.getPayloadValue("orderId");
+        String reservationId = command.getPayloadValue("reservationId");
+        Object priceObj = command.getPayloadValue("price");
+        BigDecimal price = convertToBigDecimal(priceObj);
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ORDER_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        Order orderForFailure = orderRepository.findById(orderId).orElse(null);
+        try {
+            // Find order
+            Optional<Order> orderOpt = orderRepository.findById(orderId);
+            if (orderOpt.isEmpty()) {
+                handleSellOrderValidationFailure(event, "ORDER_NOT_FOUND",
+                        "Order not found with ID: " + orderId, null);
+                return;
+            }
+
+            Order order = orderOpt.get();
+
+            // Verify this is a sell order
+            if (order.getSide() != Order.OrderSide.SELL) {
+                handleSellOrderValidationFailure(event, "INVALID_ORDER_SIDE",
+                        "Order is not a sell order: " + orderId, order);
+                return;
+            }
+
+            // Verify order can be validated (initial state check)
+            if (order.getStatus() != Order.OrderStatus.CREATED) {
+                order.setStatus(Order.OrderStatus.FAILED);
+                orderRepository.save(order);
+                handleSellOrderValidationFailure(event, "INVALID_ORDER_STATE",
+                        "Order is not in CREATED state: " + order.getStatus(), order);
+                return;
+            }
+
+            // Update order
+            order.setStatus(Order.OrderStatus.VALIDATED);
+            order.setReservationId(reservationId);
+            if (price != null) {
+                order.setExecutionPrice(price); // This might be either market price or limit price
+            }
+            order.setUpdatedAt(Instant.now());
+
+            // Save updated order
+            Order updatedOrder = orderRepository.save(order);
+
+            // Set success response
+            event.setType("ORDER_VALIDATED");
+            event.setSuccess(true);
+            event.setPayloadValue("orderId", updatedOrder.getId());
+            event.setPayloadValue("status", updatedOrder.getStatus().name());
+            event.setPayloadValue("reservationId", updatedOrder.getReservationId());
+            event.setPayloadValue("accountId", updatedOrder.getAccountId());
+            event.setPayloadValue("order", updatedOrder);
+            if (updatedOrder.getExecutionPrice() != null) {
+                event.setPayloadValue("executionPrice", updatedOrder.getExecutionPrice());
+            }
+
+        } catch (Exception e) {
+            log.error("Error validating sell order", e);
+            if (orderForFailure != null) {
+                orderForFailure.setStatus(Order.OrderStatus.FAILED);
+                orderRepository.save(orderForFailure);
+            }
+            handleSellOrderValidationFailure(event, "ORDER_VALIDATION_ERROR",
+                    "Error validating sell order: " + e.getMessage(), orderForFailure);
+            return;
+        }
+
+        // Send the response event to sell orders topic
+        try {
+            kafkaTemplate.send(orderEventsSellTopic, command.getSagaId(), event);
+            log.info("Sent ORDER_VALIDATED response for sell saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
+    /**
+     * Helper method to handle sell order validation failures
+     */
+    private void handleSellOrderValidationFailure(EventMessage event, String errorCode, String errorMessage, Order order) {
+        event.setType("ORDER_VALIDATION_FAILED");
+        event.setSuccess(false);
+        event.setPayloadValue("order", order);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        try {
+            kafkaTemplate.send(orderEventsSellTopic, event.getSagaId(), event);
+            log.info("Sent ORDER_VALIDATION_FAILED response for sell saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
 }
