@@ -1866,6 +1866,252 @@ public class KafkaCommandHandlerService {
     }
 
     /**
+     * Handle ACCOUNT_SETTLE_TRANSACTION command for sell orders
+     * This credits funds to the account after a successful stock sale
+     */
+    public void handleSettleTransactionSell(CommandMessage command) {
+        log.info("Handling ACCOUNT_SETTLE_TRANSACTION command for sell saga: {}", command.getSagaId());
+
+        String accountId = command.getPayloadValue("accountId");
+        String orderId = command.getPayloadValue("orderId");
+        String transactionType = command.getPayloadValue("transactionType");
+
+        // Get the amount to credit - expected to be positive for sell orders
+        Object amountObj = command.getPayloadValue("amount");
+        BigDecimal amount = convertToBigDecimal(amountObj);
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find the account
+            Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
+            if (accountOpt.isEmpty()) {
+                handleSettlementFailureSell(event, "ACCOUNT_NOT_FOUND",
+                        "Account not found: " + accountId);
+                return;
+            }
+            TradingAccount account = accountOpt.get();
+
+            // Get balance
+            Balance balance = balanceRepository.findByAccountId(accountId);
+            if (balance == null) {
+                // If no balance exists, create one
+                balance = new Balance();
+                balance.setId(UUID.randomUUID().toString());
+                balance.setAccountId(accountId);
+                balance.setCurrency("USD"); // Default currency
+                balance.setAvailable(BigDecimal.ZERO);
+                balance.setReserved(BigDecimal.ZERO);
+                balance.setTotal(BigDecimal.ZERO);
+            }
+
+            // Store original values (for potential compensation)
+            BigDecimal originalAvailable = balance.getAvailable();
+            BigDecimal originalTotal = balance.getTotal();
+
+            // Update the balance (credit the funds)
+            balance.setAvailable(balance.getAvailable().add(amount));
+            balance.setTotal(balance.getTotal().add(amount));
+            balance.setUpdatedAt(Instant.now());
+
+            // Create a transaction record
+            Transaction transaction = new Transaction();
+            transaction.setId(UUID.randomUUID().toString());
+            transaction.setAccountId(accountId);
+            transaction.setType("ORDER_SELL_PAYMENT");
+            transaction.setStatus("COMPLETED");
+            transaction.setAmount(amount); // Positive amount for credit
+            transaction.setCurrency(balance.getCurrency());
+            transaction.setFee(BigDecimal.ZERO); // Set fee as needed
+            transaction.setDescription("Payment for sell order " + orderId);
+            transaction.setCreatedAt(Instant.now());
+            transaction.setUpdatedAt(Instant.now());
+            transaction.setCompletedAt(Instant.now());
+            transaction.setExternalReferenceId(orderId);
+
+            // Save all updates
+            balanceRepository.save(balance);
+            transactionRepository.save(transaction);
+
+            // Set success response
+            event.setType("TRANSACTION_SETTLED");
+            event.setSuccess(true);
+            event.setPayloadValue("transactionId", transaction.getId());
+            event.setPayloadValue("accountId", accountId);
+            event.setPayloadValue("orderId", orderId);
+            event.setPayloadValue("amount", amount);
+            event.setPayloadValue("newAvailableBalance", balance.getAvailable());
+            event.setPayloadValue("newTotalBalance", balance.getTotal());
+
+            // Save original values for potential compensation
+            event.setPayloadValue("originalAvailableBalance", originalAvailable);
+            event.setPayloadValue("originalTotalBalance", originalTotal);
+            event.setPayloadValue("settlementTime", transaction.getCompletedAt().toString());
+
+            log.info("Sell order funds credited successfully for account: {}, order: {}, amount: {}",
+                    accountId, orderId, amount);
+
+        } catch (Exception e) {
+            log.error("Error settling sell transaction", e);
+            handleSettlementFailureSell(event, "SETTLEMENT_ERROR",
+                    "Error settling sell transaction: " + e.getMessage());
+            return;
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send(orderSellEventsTopic, command.getSagaId(), event);
+            log.info("Sent TRANSACTION_SETTLED response for sell saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
+    /**
+     * Helper method to handle settlement failures for sell orders
+     */
+    private void handleSettlementFailureSell(EventMessage event, String errorCode, String errorMessage) {
+        event.setType("TRANSACTION_SETTLEMENT_FAILED");
+        event.setSuccess(false);
+        event.setErrorCode(errorCode);
+        event.setErrorMessage(errorMessage);
+
+        try {
+            kafkaTemplate.send(orderSellEventsTopic, event.getSagaId(), event);
+            log.info("Sent TRANSACTION_SETTLEMENT_FAILED response for sell saga: {} - {}",
+                    event.getSagaId(), errorMessage);
+        } catch (Exception e) {
+            log.error("Error sending failure event", e);
+        }
+    }
+
+    /**
+     * Handle ACCOUNT_REVERSE_SETTLEMENT command for sell orders (compensation)
+     * This undoes a previous settlement when part of the saga fails
+     */
+    public void handleReverseSettlementSell(CommandMessage command) {
+        log.info("Handling ACCOUNT_REVERSE_SETTLEMENT command for sell saga: {}", command.getSagaId());
+
+        String accountId = command.getPayloadValue("accountId");
+        String orderId = command.getPayloadValue("orderId");
+
+        // Get the amount to reverse (should be the original credited amount)
+        Object amountObj = command.getPayloadValue("amount");
+        BigDecimal amount = convertToBigDecimal(amountObj);
+
+        // Create response event
+        EventMessage event = new EventMessage();
+        event.setMessageId(UUID.randomUUID().toString());
+        event.setSagaId(command.getSagaId());
+        event.setStepId(command.getStepId());
+        event.setSourceService("ACCOUNT_SERVICE");
+        event.setTimestamp(Instant.now());
+
+        try {
+            // Find the account
+            Optional<TradingAccount> accountOpt = tradingAccountRepository.findById(accountId);
+            if (accountOpt.isEmpty()) {
+                // Even in compensation, we try to continue the saga
+                log.warn("Account not found during settlement reversal: {}", accountId);
+                event.setType("SETTLEMENT_REVERSED");
+                event.setSuccess(true); // Return success to continue compensation
+                event.setPayloadValue("accountId", accountId);
+                event.setPayloadValue("status", "ACCOUNT_NOT_FOUND");
+
+                kafkaTemplate.send(orderSellEventsTopic, command.getSagaId(), event);
+                return;
+            }
+
+            TradingAccount account = accountOpt.get();
+
+            // Find relevant balance record
+            Balance balance = balanceRepository.findByAccountId(accountId);
+            if (balance == null) {
+                log.warn("Balance not found during settlement reversal: {}", accountId);
+                event.setType("SETTLEMENT_REVERSED");
+                event.setSuccess(true); // Return success to continue compensation
+                event.setPayloadValue("accountId", accountId);
+                event.setPayloadValue("status", "BALANCE_NOT_FOUND");
+
+                kafkaTemplate.send(orderSellEventsTopic, command.getSagaId(), event);
+                return;
+            }
+
+            // Create transaction record for reversal
+            Transaction reversal = new Transaction();
+            reversal.setId(UUID.randomUUID().toString());
+            reversal.setAccountId(accountId);
+            reversal.setType("ORDER_SELL_PAYMENT_REVERSAL");
+            reversal.setStatus("COMPLETED");
+            reversal.setAmount(amount.negate()); // Negative amount (removing funds)
+            reversal.setCurrency(balance.getCurrency());
+            reversal.setFee(BigDecimal.ZERO);
+            reversal.setDescription("Reversal of payment for sell order " + orderId);
+            reversal.setCreatedAt(Instant.now());
+            reversal.setUpdatedAt(Instant.now());
+            reversal.setCompletedAt(Instant.now());
+            reversal.setExternalReferenceId("REV-" + orderId);
+
+            // Update balance (reversal of credit)
+            BigDecimal newAvailable = balance.getAvailable().subtract(amount);
+
+            // Safeguard against negative balance - unlikely but good practice
+            if (newAvailable.compareTo(BigDecimal.ZERO) < 0) {
+                log.warn("Settlement reversal would cause negative balance for account: {}. Limiting to zero.", accountId);
+                newAvailable = BigDecimal.ZERO;
+            }
+
+            BigDecimal newTotal = balance.getTotal().subtract(amount);
+            if (newTotal.compareTo(BigDecimal.ZERO) < 0) {
+                newTotal = BigDecimal.ZERO;
+            }
+
+            balance.setAvailable(newAvailable);
+            balance.setTotal(newTotal);
+            balance.setUpdatedAt(Instant.now());
+
+            // Save changes
+            balanceRepository.save(balance);
+            transactionRepository.save(reversal);
+
+            // Set success response
+            event.setType("SETTLEMENT_REVERSED");
+            event.setSuccess(true);
+            event.setPayloadValue("reversalTransactionId", reversal.getId());
+            event.setPayloadValue("accountId", accountId);
+            event.setPayloadValue("orderId", orderId);
+            event.setPayloadValue("amount", amount);
+            event.setPayloadValue("newAvailableBalance", balance.getAvailable());
+            event.setPayloadValue("newTotalBalance", balance.getTotal());
+            event.setPayloadValue("reversedAt", reversal.getCompletedAt().toString());
+
+            log.info("Settlement successfully reversed for sell order - account: {}, order: {}", accountId, orderId);
+
+        } catch (Exception e) {
+            log.error("Error reversing sell settlement", e);
+            // Even in case of error, we want the compensation to continue
+            event.setType("SETTLEMENT_REVERSED");
+            event.setSuccess(true); // Return success to continue compensation
+            event.setPayloadValue("error", true);
+            event.setPayloadValue("errorMessage", e.getMessage());
+        }
+
+        // Send the response event
+        try {
+            kafkaTemplate.send(orderSellEventsTopic, command.getSagaId(), event);
+            log.info("Sent SETTLEMENT_REVERSED response for sell saga: {}", command.getSagaId());
+        } catch (Exception e) {
+            log.error("Error sending event", e);
+        }
+    }
+
+    /**
      * Should we simulate a failure? (10% chance)
      */
     private boolean shouldSimulateFailure() {

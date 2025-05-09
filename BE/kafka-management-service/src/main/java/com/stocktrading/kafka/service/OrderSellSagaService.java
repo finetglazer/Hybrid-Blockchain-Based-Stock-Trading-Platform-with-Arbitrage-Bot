@@ -517,7 +517,17 @@ public class OrderSellSagaService {
                     saga.setBrokerOrderId(event.getPayloadValue("brokerOrderId"));
                     saga.setExecutedQuantity(event.getPayloadValue("executedQuantity"));
                     if (saga.getExecutionPrice() == null) {
-                        saga.setExecutionPrice(event.getPayloadValue("executionPrice"));
+                        // Handle type conversion for executionPrice
+                        Object priceObj = event.getPayloadValue("executionPrice");
+                        if (priceObj instanceof BigDecimal) {
+                            saga.setExecutionPrice((BigDecimal) priceObj);
+                        } else if (priceObj instanceof Double) {
+                            saga.setExecutionPrice(BigDecimal.valueOf((Double) priceObj));
+                        } else if (priceObj instanceof Number) {
+                            saga.setExecutionPrice(BigDecimal.valueOf(((Number) priceObj).doubleValue()));
+                        } else if (priceObj instanceof String) {
+                            saga.setExecutionPrice(new BigDecimal((String) priceObj));
+                        }
                     }
                     break;
 

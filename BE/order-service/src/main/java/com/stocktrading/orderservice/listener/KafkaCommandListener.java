@@ -72,19 +72,17 @@ public class KafkaCommandListener {
                     commandHandlerService.handleCreateSellOrder(command);
                     break;
                 case "ORDER_UPDATE_VALIDATED":
-                    // Use the specific sell order validation handler
                     commandHandlerService.handleUpdateSellOrderValidated(command);
                     break;
                 case "ORDER_UPDATE_EXECUTED":
-                    commandHandlerService.handleUpdateOrderExecuted(command);
+                    commandHandlerService.handleUpdateSellOrderExecuted(command);
                     break;
                 case "ORDER_CANCEL":
-                    commandHandlerService.handleCancelOrder(command);
+                    commandHandlerService.handleCancelSellOrder(command);
                     break;
                 case "ORDER_UPDATE_COMPLETED":
-                    commandHandlerService.handleUpdateOrderCompleted(command);
+                    commandHandlerService.handleUpdateSellOrderCompleted(command);
                     break;
-                // Add cases for other commands as they are implemented
                 default:
                     log.warn("Unknown sell command type: {}", command.getType());
                     break;

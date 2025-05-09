@@ -182,7 +182,12 @@ public class KafkaCommandListener {
                 case "ACCOUNT_VERIFY_STATUS":
                     commandHandlerService.handleVerifyAccountStatusSell(command);
                     break;
-                // Add other sell-specific command handlers as needed
+                case "ACCOUNT_SETTLE_TRANSACTION":  // Add this case
+                    commandHandlerService.handleSettleTransactionSell(command);
+                    break;
+                case "ACCOUNT_REVERSE_SETTLEMENT":  // Add this for compensation
+                    commandHandlerService.handleReverseSettlementSell(command);
+                    break;
                 default:
                     log.warn("Unknown account sell command type: {}", command.getType());
                     break;
