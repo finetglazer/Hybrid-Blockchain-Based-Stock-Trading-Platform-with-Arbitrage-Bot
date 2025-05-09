@@ -11,16 +11,6 @@ const FilterForm = ({onSuccess, onCancel}) => {
         createdStartTime: "00:00:00",
         createdEndTime: "23:59:59",
 
-        updatedStartDate: "1970-01-01",
-        updatedEndDate: dayjs().format("YYYY-MM-DD"),
-        updatedStartTime: "00:00:00",
-        updatedEndTime: "23:59:59",
-
-        completedStartDate: "1970-01-01",
-        completedEndDate: dayjs().format("YYYY-MM-DD"),
-        completedStartTime: "00:00:00",
-        completedEndTime: "23:59:59",
-
         amountFrom: 0,
         amountTo: 9999999999.99999,
         types: ["ALL"],
@@ -29,8 +19,6 @@ const FilterForm = ({onSuccess, onCancel}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [createdTimeInputError, setCreatedTimeInputError] = useState("");
-    const [updatedTimeInputError, setUpdatedTimeInputError] = useState("");
-    const [completedTimeInputError, setCompletedTimeInputError] = useState("");
     const [amountInputError, setAmountInputError] = useState("");
 
     const onSubmit = async (e) => {
@@ -39,8 +27,16 @@ const FilterForm = ({onSuccess, onCancel}) => {
         setLoading(true);
         const token = localStorage.getItem("token");
         try {
+            console.log(formData);
+            formData.types.splice(formData.types.findIndex(type => type === "ALL"), 1);
+            formData.statuses.splice(formData.statuses.findIndex(status => status === "ALL"), 1);
             const response = await axios.post("/accounts/transactions/api/v1/get", {
-                // startDate:
+                startDate: formData.createdStartDate,
+                endDate: formData.createdEndDate,
+                startTime: formData.createdStartTime,
+                endTime: formData.createdEndTime,
+                types: formData.types,
+                statuses: formData.statuses,
                 page: 0,
                 size: 9999,
             }, {
@@ -70,16 +66,6 @@ const FilterForm = ({onSuccess, onCancel}) => {
             createdStartTime: "00:00:00",
             createdEndTime: "23:59:59",
 
-            updatedStartDate: "1970-01-01",
-            updatedEndDate: dayjs().format("YYYY-MM-DD"),
-            updatedStartTime: "00:00:00",
-            updatedEndTime: "23:59:59",
-
-            completedStartDate: "1970-01-01",
-            completedEndDate: dayjs().format("YYYY-MM-DD"),
-            completedStartTime: "00:00:00",
-            completedEndTime: "23:59:59",
-
             amountFrom: 0,
             amountTo: 99999999999.999,
             types: ["ALL"],
@@ -99,16 +85,6 @@ const FilterForm = ({onSuccess, onCancel}) => {
         const createdStartTime = dayjs(tempFormData.createdStartTime, "HH:mm:ss");
         const createdEndTime = dayjs(tempFormData.createdEndTime, "HH:mm:ss");
 
-        const updatedStartDate = dayjs(tempFormData.updatedStartDate, "YYYY-MM-DD");
-        const updatedEndDate = dayjs(tempFormData.updatedEndDate, "YYYY-MM-DD");
-        const updatedStartTime = dayjs(tempFormData.updatedStartTime, "HH:mm:ss");
-        const updatedEndTime = dayjs(tempFormData.updatedEndTime, "HH:mm:ss");
-
-        const completedStartDate = dayjs(tempFormData.completedStartDate, "YYYY-MM-DD");
-        const completedEndDate = dayjs(tempFormData.completedEndDate, "YYYY-MM-DD");
-        const completedStartTime = dayjs(tempFormData.completedStartTime, "HH:mm:ss");
-        const completedEndTime = dayjs(tempFormData.completedEndTime, "HH:mm:ss");
-
         const amountFrom = tempFormData.amountFrom;
         const amountTo = tempFormData.amountTo;
 
@@ -120,26 +96,6 @@ const FilterForm = ({onSuccess, onCancel}) => {
         }
         else {
             setCreatedTimeInputError("");
-        }
-
-        if (updatedStartDate.isAfter(updatedEndDate)) {
-            setUpdatedTimeInputError("Start date should be before End date");
-        }
-        else if (updatedStartDate.isSame(updatedEndDate) && updatedStartTime.isAfter(updatedEndTime)) {
-            setUpdatedTimeInputError("Start time should be before End time");
-        }
-        else {
-            setUpdatedTimeInputError("");
-        }
-
-        if (completedStartDate.isAfter(completedEndDate)) {
-            setCompletedTimeInputError("Start date should be before End date");
-        }
-        else if (completedStartDate.isSame(completedEndDate) && completedStartTime.isAfter(completedEndTime)) {
-            setCompletedTimeInputError("Start time should be before End time");
-        }
-        else {
-            setCompletedTimeInputError("");
         }
 
         if (amountFrom < 0) {
@@ -236,86 +192,7 @@ const FilterForm = ({onSuccess, onCancel}) => {
                     <p style={{color: 'orange'}}>{createdTimeInputError}</p>
                 </div>
             )}
-            <InputLabel
-                id="time-range completed-time-range-input"
-                style={{color: '#ffb65e', textAlign: 'left', fontSize: '1.3rem', fontWeight: 'bold', marginBottom: '15px', marginTop: '40px'}}
-            >Completed time</InputLabel>
-            <div className="completed-time-from-input" style={{display: "flex"}}>
-                <p>From date</p>
-                <DatePicker
-                    picker="date"
-                    defaultValue={dayjs('1970-01-01', 'YYYY-MM-DD')}
-                    style={{width: '150px', height: '40px', margin: '5px 0 0 10px', color: 'white', background: 'rgba(59,173,92,0.77)', border: 'none'}}
-                    onChange={(date, dateString) => onChange({completedStartDate: dateString})}
-                />
-                <p style={{marginLeft: '70px'}}>Start at</p>
-                <TimePicker
-                    defaultValue={dayjs('00:00:00', 'HH:mm:ss')}   // Now
-                    style={{width: '150px', height: '40px', margin: '5px 0 0 10px', color: 'white', background: 'rgba(59,173,92,0.77)', border: 'none'}}
-                    onChange={(time, timeString) => onChange({completedStartTime: timeString})}
-                />
-            </div>
-            <div className="completed-time-to-input" style={{display: "flex", marginTop: '20px'}}>
-                <p style={{marginRight: '20px'}}>To date</p>
-                <DatePicker
-                    picker="date"
-                    defaultValue={dayjs()}  // Today
-                    style={{width: '150px', height: '40px', margin: '5px 0 0 10px', color: 'white', background: 'rgba(59,173,92,0.77)', border: 'none'}}
-                    onChange={(date, dateString) => onChange({completedEndDate: dateString})}
-                />
-                <p style={{margin: '15px 5px 0 70px'}}>End at</p>
-                <TimePicker
-                    defaultValue={dayjs()}   // Now
-                    style={{width: '150px', height: '40px', margin: '5px 0 0 10px', color: 'white', background: 'rgba(59,173,92,0.77)', border: 'none'}}
-                    onChange={(time, timeString) => onChange({completedEndTime: timeString})}
-                />
-            </div>
-            {completedTimeInputError && (
-                <div style={{display: "flex", alignItems: 'center'}}>
-                   <img width={20} height={20} style={{marginRight: '7px'}} src="../../../../src/assets/warning.png" alt="warning icon"/>
-                    <p style={{color: 'orange'}}>{completedTimeInputError}</p>
-                </div>
-            )}
-            <InputLabel
-                id="time-range updated-time-range-input"
-                style={{color: '#ffb65e', textAlign: 'left', fontSize: '1.3rem', fontWeight: 'bold', marginBottom: '15px', marginTop: '40px'}}
-            >Updated time</InputLabel>
-            <div className="updated-time-from-input" style={{display: "flex"}}>
-                <p>From date</p>
-                <DatePicker
-                    picker="date"
-                    defaultValue={dayjs('1970-01-01', 'YYYY-MM-DD')}
-                    style={{width: '150px', height: '40px', margin: '5px 0 0 10px', color: 'white', background: 'rgba(59,173,92,0.77)', border: 'none'}}
-                    onChange={(date, dateString) => onChange({updatedStartDate: dateString})}
-                />
-                <p style={{marginLeft: '70px'}}>Start at</p>
-                <TimePicker
-                    defaultValue={dayjs('00:00:00', 'HH:mm:ss')}   // Now
-                    style={{width: '150px', height: '40px', margin: '5px 0 0 10px', color: 'white', background: 'rgba(59,173,92,0.77)', border: 'none'}}
-                    onChange={(time, timeString) => onChange({updatedStartTime: timeString})}
-                />
-            </div>
-            <div className="updated-time-to-input" style={{display: "flex", marginTop: '20px'}}>
-                <p style={{marginRight: '20px'}}>To date</p>
-                <DatePicker
-                    picker="date"
-                    defaultValue={dayjs()}  // Today
-                    style={{width: '150px', height: '40px', margin: '5px 0 0 10px', color: 'white', background: 'rgba(59,173,92,0.77)', border: 'none'}}
-                    onChange={(date, dateString) => onChange({updatedEndDate: dateString})}
-                />
-                <p style={{margin: '15px 5px 0 70px'}}>End at</p>
-                <TimePicker
-                    defaultValue={dayjs()}   // Now
-                    style={{width: '150px', height: '40px', margin: '5px 0 0 10px', color: 'white', background: 'rgba(59,173,92,0.77)', border: 'none'}}
-                    onChange={(time, timeString) => onChange({updatedEndTime: timeString})}
-                />
-            </div>
-            {updatedTimeInputError && (
-                <div style={{display: "flex", alignItems: 'center'}}>
-                   <img width={20} height={20} style={{marginRight: '7px'}} src="../../../../src/assets/warning.png" alt="warning icon"/>
-                    <p style={{color: 'orange'}}>{updatedTimeInputError}</p>
-                </div>
-            )}
+
             <InputLabel
                 id="amount-range-input"
                 style={{color: '#ffb65e', textAlign: 'left', fontSize: '1.3rem', fontWeight: 'bold', marginBottom: '15px', marginTop: '40px'}}
@@ -580,9 +457,9 @@ const FilterForm = ({onSuccess, onCancel}) => {
             {/*</div>*/}
             <div className="form-btns" style={{display: "flex", justifyContent: "flex-end"}}>
                 {loading
-                    ? <button className="submit-verify-payment-method-form" disabled style={{display:"flex", padding: '0 20px' ,background: "gray", cursor: "default"}}>
-                        <p className="spinner" style={{width: "10px", height: "10px", marginRight: "10px"}} />
-                        <p style={{fontSize: "1rem"}}>Filter</p>
+                    ? <button className="submit-verify-payment-method-form" disabled style={{display:"flex", padding: '0 20px', alignItems: 'center', background: "gray", cursor: "default"}}>
+                        <p className="spinner" style={{width: "20px", height: "20px", marginRight: "10px", marginTop: "20px"}} />
+                        <p style={{fontSize: "1rem", marginTop: "10px"}}>Filter</p>
                     </button>
                     : <button className="submit-verify-payment-method-form" onClick={(e) => onSubmit(e)}>Filter</button>
                 }

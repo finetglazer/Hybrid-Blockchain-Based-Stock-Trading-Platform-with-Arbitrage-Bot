@@ -321,7 +321,7 @@ const Enable2FA = () => {
     };
 
     return (
-        <div className="container">
+        <div className="container h-[450px]">
             <h2>Two-Factor Authentication Setup</h2>
 
             {error && <div className="error-text">{error}</div>}

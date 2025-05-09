@@ -258,6 +258,7 @@ const DepositChoosePaymentMethod = () => {
                                         background: "rgba(52,133,86,0.58)",
                                         boxShadow: "none",
                                         cursor: "pointer",
+                                        height: "210px"
                                     }}
                                         className="container"
                                         onClick={() => {window.location.replace(`/${accountId}/deposit/${paymentMethod.id}`)}}

@@ -34,6 +34,8 @@ import OrderViewHistory from "./pages/OrderViewHistory/OrderViewHistory.jsx";
 import Wallet from "./pages/Wallet/Wallet.jsx";
 import OrderDetails from "./pages/OrderDetails/OrderDetails.jsx";
 import Deposit from "./pages/Deposit/Deposit.jsx";
+import AppLayout from "./components/Layout/AppLayout.jsx";
+import ChooseTradingAccount from "./pages/ChooseTradingAccount/ChooseTradingAccount.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -46,7 +48,6 @@ const Layout = () => {
 
   return (
     <>
-      {showNavbar && <NavbarSide />}
       {showNavbar && <HeaderNavbar />}
       <AppContextProvider>
         <Routes>
@@ -120,6 +121,7 @@ const Layout = () => {
           <Route path="/:accountId/portfolio" element={<Portfolio />} />
           <Route path="/market" element={<StockTableWithOrderForm />} />
         </Routes>
+
       </AppContextProvider>
     </>
   );

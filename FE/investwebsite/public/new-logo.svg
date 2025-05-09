@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Background Circle -->
+  <circle cx="60" cy="60" r="55" fill="#0D1B12" />
+  <circle cx="60" cy="60" r="52" fill="#111E15" stroke="#193b05" stroke-width="1.5" />
+  
+  <!-- Stock Chart Elements -->
+  <path d="M30 70 L45 55 L60 65 L75 45 L90 50" stroke="#1ca443" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M30 75 L45 60 L60 70 L75 50 L90 55" stroke="#24c653" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.7" />
+  
+  <!-- Upward Arrow -->
+  <path d="M60 30 L70 40 L65 40 L65 55 L55 55 L55 40 L50 40 Z" fill="#1ca443" />
+  
+  <!-- Trading Indicator Dots -->
+  <circle cx="45" cy="55" r="3" fill="#ffffff" />
+  <circle cx="60" cy="65" r="3" fill="#ffffff" />
+  <circle cx="75" cy="45" r="3" fill="#ffffff" />
+  
+  <!-- Text Element -->
+  <text x="60" y="90" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">TRADE</text>
+</svg>
