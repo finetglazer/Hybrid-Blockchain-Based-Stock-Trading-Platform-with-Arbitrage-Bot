@@ -17,4 +17,9 @@ public class StocksDataController {
     public ResponseEntity<?> getPortfolio(@PathVariable String accountId, Principal principal) {
         return ResponseEntity.ok(portfolioService.getPortfolio(accountId, principal.getName()));
     }
+
+    @GetMapping("/me/general-portfolio")
+    public ResponseEntity<?> getGeneralPortfolio(Principal principal) {
+        return ResponseEntity.ok(portfolioService.getGeneralPortfolio(principal.getName()));
+    }
 }
