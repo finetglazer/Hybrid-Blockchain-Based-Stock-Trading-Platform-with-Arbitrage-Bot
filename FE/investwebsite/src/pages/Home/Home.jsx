@@ -114,23 +114,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Trade Section - BÊN PHẢI */}
-          <div className="trade-section">
-            <h1 style={{ color: "#ffffff" }}>Trade</h1>
-            <div className="trade-options">
-              {[
-                { label: "Buy", icon: "+" },
-                { label: "Sell", icon: "-" },
-                { label: "Swap", icon: "⇄" },
-              ].map((action, idx) => (
-                <div key={idx} className="trade-item">+
-                  <div className="trade-icon cursor-pointer transform hover:scale-110" onClick={() => navigate(action.label === "Buy" ? "/market" : (action.label === "Sell" ? "/portfolio/choose-trading-account" : "/home"))}>{action.icon}</div>
-                  <div className="trade-label">{action.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
           <div className="create-trading-account">
             <Button
               variant="contained"

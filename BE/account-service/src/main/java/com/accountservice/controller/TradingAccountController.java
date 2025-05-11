@@ -27,7 +27,7 @@ public class TradingAccountController {
     public ResponseEntity<?> getAccountDetails(@PathVariable String accountId) {
         return ResponseEntity.ok(tradingAccountService.getAccountDetails(accountId));
     }
-    // get the list of names of all trading account of an user
+    // get the list of names of all trading account of a user
     @GetMapping("/get-names")
     public ResponseEntity<?> getUserAccountNames(Principal principal) {
         return ResponseEntity.ok(tradingAccountService.getUserAccountNames(principal.getName()));

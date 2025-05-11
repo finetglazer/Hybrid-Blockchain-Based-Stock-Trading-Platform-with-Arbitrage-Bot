@@ -44,7 +44,7 @@ const Wallet = () => {
               parseFloat(account.balance.available) +
               parseFloat(account.balance.reserved);
             return (
-              <div key={index} className="wallet-card cursor-pointer" onClick={() => {
+              <div key={index} className="wallet-card cursor-pointer container" onClick={() => {
                 onChooseTradingAccount(account.id)
               }}>
                 {/* PHẦN TRÊN */}
