@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './BuyOrderForm.css';
+import './SellOrderForm.css';
 import axios from 'axios';
+import {getUserIdFromToken} from "../../utils/auth.js";
+import {Alert} from "antd";
 
 /**
  * FilterableDropdown component for searchable dropdowns
@@ -135,40 +137,27 @@ const FilterableDropdown = ({ options, value, onChange, name, id, required, labe
 };
 
 /**
- * Buy Order Form Component
+ * Sell Order Form Component
  * @param {Object} props - Component props
- * @param {Object} props.stockData - Selected stock data
  * @param {Function} props.onSubmit - Function to handle form submission
  * @param {boolean} props.disabled - Whether the form is disabled
  */
-const BuyOrderForm = ({ stockData, onSubmit, disabled = false }) => {
+const SellOrderForm = ({ sellSymbol, setError, setLoading, setOrderCreated, setShowForm, disabled = false }) => {
     // State for accounts fetched from API
     const [accounts, setAccounts] = useState([]);
     const [accountsLoading, setAccountsLoading] = useState(true);
     const [accountsError, setAccountsError] = useState(null);
 
-    // Mock data for symbols
-    const symbols = [
-        "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA",
-        "META", "NVDA", "JPM", "V", "JNJ",
-        "ABBV", "WMT", "PG", "MA", "UNH"
-    ];
-
     // Initial form state - we'll reuse this for reset functionality
     const initialFormData = {
-        account: '',
-        symbol: '',
-        orderType: 'MARKET',
+        userId: getUserIdFromToken(),
+        accountId: '',
+        stockSymbol: sellSymbol,
         quantity: '',
-        timeInForce: 'DAY',
-        price: '',
     };
 
     // States for form fields
     const [formData, setFormData] = useState(initialFormData);
-
-    // State to track required funds calculation
-    const [requiredFunds, setRequiredFunds] = useState(null);
 
     // Add a reset key to trigger resets in child components
     const [resetKey, setResetKey] = useState(0);
@@ -215,29 +204,6 @@ const BuyOrderForm = ({ stockData, onSubmit, disabled = false }) => {
         fetchAccounts();
     }, []);
 
-    // Update symbol when stockData changes
-    useEffect(() => {
-        if (stockData?.symbol) {
-            setFormData(prev => ({ ...prev, symbol: stockData.symbol }));
-        }
-    }, [stockData]);
-
-    // Calculate required funds only for LIMIT orders
-    useEffect(() => {
-        if (formData.orderType === 'LIMIT' && formData.quantity && formData.price) {
-            const quantity = parseInt(formData.quantity, 10);
-            const limitPrice = parseFloat(formData.price);
-
-            if (!isNaN(quantity) && !isNaN(limitPrice)) {
-                setRequiredFunds((limitPrice * quantity).toFixed(2));
-            } else {
-                setRequiredFunds(null);
-            }
-        } else {
-            setRequiredFunds(null);
-        }
-    }, [formData.quantity, formData.price, formData.orderType]);
-
     // Handle form field changes
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -251,29 +217,56 @@ const BuyOrderForm = ({ stockData, onSubmit, disabled = false }) => {
     const handleReset = (e) => {
         e.preventDefault(); // Prevent the default reset behavior
         setFormData(initialFormData); // Reset to initial state
-        setRequiredFunds(null); // Clear required funds display
         setResetKey(prev => prev + 1); // Increment reset key to trigger reset in FilterableDropdown
     };
 
     // Handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (onSubmit && !disabled) {
+        if (!disabled) {
             // Find the selected account object by name
             const selectedAccount = accountOptions.find(acc => acc.name === formData.account);
 
             // Include the account ID in the form data
-            onSubmit({
-                ...formData,
-                accountId: selectedAccount?.id
-            });
+            try {
+                setLoading(true);
+                const token = localStorage.getItem("token");
+                const response = await axios.post("/sagas/api/v1/orders/sell", {
+                    userId: getUserIdFromToken(),
+                    accountId: selectedAccount?.id,
+                    stockSymbol: sellSymbol,
+                    quantity: formData.quantity,
+                }, {
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": "application/json"
+                    }
+                });
+                setLoading(false);
+                if (response.data && response.data.sagaId) {
+                    setError(null);
+                    setOrderCreated(true);
+                    setShowForm(false);
+                } else {
+                    setError(response.errors);
+                    setOrderCreated(false);
+                }
+            }
+            catch (e) {
+                setLoading(false);
+                setError(e.message);
+                setOrderCreated(false);
+            }
         }
     };
 
-    const formTitle = disabled ? "Processing Order..." : "Place Buy Order";
+    const formTitle = disabled ? "Processing Order..." : "Place Sell Order";
 
     return (
-        <div className={`buy-order-form-container ${disabled ? 'disabled' : ''}`}>
+        <div className={`relative buy-order-form-container ${disabled ? 'disabled' : ''}`}>
+            <button className="absolute -top-1.5 -right-1.5" onClick={() => setShowForm(false)}>
+                X
+            </button>
             <h2>{formTitle}</h2>
 
             {accountsError && (
@@ -303,15 +296,15 @@ const BuyOrderForm = ({ stockData, onSubmit, disabled = false }) => {
                 {/* Symbol Field - Single Column */}
                 <div className="form-row single-column">
                     <FilterableDropdown
-                        options={symbols}
-                        value={formData.symbol}
+                        options={[sellSymbol]}
+                        value={sellSymbol}
                         onChange={handleChange}
                         name="symbol"
                         id="symbol"
                         required={true}
                         label="Symbol"
                         resetKey={resetKey}
-                        disabled={disabled}
+                        disabled={true}
                     />
                 </div>
 
@@ -325,11 +318,10 @@ const BuyOrderForm = ({ stockData, onSubmit, disabled = false }) => {
                             value={formData.orderType}
                             onChange={handleChange}
                             required
-                            disabled={disabled}
+                            disabled={true}
                             className={disabled ? 'disabled' : ''}
                         >
                             <option value="MARKET">MARKET</option>
-                            <option value="LIMIT">LIMIT</option>
                         </select>
                     </div>
                 </div>
@@ -360,68 +352,6 @@ const BuyOrderForm = ({ stockData, onSubmit, disabled = false }) => {
                     </div>
                 </div>
 
-                {/* Time in Force Field - Single Column (only for LIMIT orders) */}
-                {formData.orderType === 'LIMIT' && (
-                    <div className="form-row single-column limit-order-fields">
-                        <div className="form-group">
-                            <label htmlFor="timeInForce">Time in Force</label>
-                            <select
-                                id="timeInForce"
-                                name="timeInForce"
-                                value={formData.timeInForce}
-                                onChange={handleChange}
-                                required
-                                className={`time-in-force-select ${disabled ? 'disabled' : ''}`}
-                                disabled={disabled}
-                            >
-                                <option value="DAY">DAY</option>
-                                <option value="GTC">GTC (Good Till Canceled)</option>
-                            </select>
-                        </div>
-                    </div>
-                )}
-
-                {/* Limit Price Field - Single Column (only for LIMIT orders) */}
-                {formData.orderType === 'LIMIT' && (
-                    <div className="form-row single-column limit-order-fields">
-                        <div className="form-group">
-                            <label htmlFor="price">Limit Price</label>
-                            <div className="price-input-container">
-                                <span className="price-symbol">$</span>
-                                <input
-                                    type="number"
-                                    id="price"
-                                    name="price"
-                                    value={formData.price}
-                                    onChange={handleChange}
-                                    step="0.01"
-                                    min="0.01"
-                                    required
-                                    placeholder="Enter price"
-                                    disabled={disabled}
-                                    className={disabled ? 'disabled' : ''}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Only show required funds for LIMIT orders */}
-                {formData.orderType === 'LIMIT' && requiredFunds && (
-                    <div className="required-funds">
-                        <div className="funds-label">Required Funds:</div>
-                        <div className="funds-amount">${requiredFunds}</div>
-                    </div>
-                )}
-
-                {/* Stock price display if stockData is available */}
-                {stockData && stockData.price && (
-                    <div className="current-price-display">
-                        <span className="price-label">Current Market Price:</span>
-                        <span className="price-value">${parseFloat(stockData.price).toFixed(2)}</span>
-                    </div>
-                )}
-
                 <div className="form-actions">
                     <button
                         onClick={handleReset}
@@ -443,4 +373,4 @@ const BuyOrderForm = ({ stockData, onSubmit, disabled = false }) => {
     );
 };
 
-export default BuyOrderForm;
+export default SellOrderForm;

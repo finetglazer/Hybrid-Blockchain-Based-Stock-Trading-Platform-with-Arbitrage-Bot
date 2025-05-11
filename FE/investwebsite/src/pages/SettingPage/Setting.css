@@ -4,7 +4,7 @@
   min-width: 85vw;
   align-items: center;
   overflow-y: scroll;
-  margin: 100px 0 0 15px;
+  margin: 100px 0 0 250px;
   &::-webkit-scrollbar {
     display: none; /* Hides the scrollbar */
   }

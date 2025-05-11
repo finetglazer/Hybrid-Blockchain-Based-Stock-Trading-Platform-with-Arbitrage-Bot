@@ -5,7 +5,7 @@ import BuyOrderForm from './BuyOrderForm';
 import OrderProgressTracker from './OrderProgressTracker';
 import OrderNotificationModal from './OrderNotificationModal';
 import LoadingOverlay from './LoadingOverlay';
-import {submitOrder, getOrderStatus, cancelOrder} from '../../services/orderService';
+import {submitOrder, getOrderStatus, cancelOrder} from '../../services/orderBuyService.js';
 import './StockTableWithOrderForm.css';
 import { getUserIdFromToken } from "../../utils/auth.js";
 

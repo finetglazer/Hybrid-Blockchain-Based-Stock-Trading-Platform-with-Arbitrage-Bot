@@ -36,6 +36,7 @@ import OrderDetails from "./pages/OrderDetails/OrderDetails.jsx";
 import Deposit from "./pages/Deposit/Deposit.jsx";
 import AppLayout from "./components/Layout/AppLayout.jsx";
 import ChooseTradingAccount from "./pages/ChooseTradingAccount/ChooseTradingAccount.jsx";
+import Sidebar from "./components/Sidebar/Sidebar.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -49,6 +50,7 @@ const Layout = () => {
   return (
     <>
       {showNavbar && <HeaderNavbar />}
+      {showNavbar && <Sidebar />}
       <AppContextProvider>
         <Routes>
           <Route path="/" element={<Login />} />
@@ -60,6 +62,18 @@ const Layout = () => {
           <Route
             path="/:accountId/withdraw/choose-payment-method"
             element={<WithdrawChoosePaymentMethod />}
+          />
+          <Route
+              path="/deposit/choose-trading-account"
+              element={<ChooseTradingAccount />}
+          />
+          <Route
+              path="/withdraw/choose-trading-account"
+              element={<ChooseTradingAccount />}
+          />
+          <Route
+              path="/portfolio/choose-trading-account"
+              element={<ChooseTradingAccount />}
           />
           <Route
             path="/:accountId/withdraw/:paymentMethodId"

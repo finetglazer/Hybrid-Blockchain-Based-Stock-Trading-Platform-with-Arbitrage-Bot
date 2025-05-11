@@ -34,7 +34,10 @@
   justify-content: flex-start;
   align-items: center;
   gap: 200px;
-  padding-bottom: 30px;
+  padding-top: 50px;
+  h1 {
+
+  }
 }
 
 /* Wallet Item */
@@ -131,8 +134,9 @@
   position: relative;
   width: 100%;
   min-width: 720px;
-  margin: auto;
+  /*margin: auto;*/
   overflow: hidden;
+  margin-top: 50px;
 }
 
 .wallets-list {
@@ -183,7 +187,8 @@
 .trade-section {
   flex: 1;
   min-width: 300px;
-  margin-left: 150px;
+  margin-left: 250px;
+  margin-top: 150px;
 }
 
 .trade-options {
