@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/orders/api/v1")
+@RequestMapping("orders/api/v1")
 @RequiredArgsConstructor
 public class OrderHistoryController {
     private final OrderHistoryService orderHistoryService;

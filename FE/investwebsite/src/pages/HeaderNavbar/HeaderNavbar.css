@@ -1,129 +1,280 @@
-/* ==== TOPBAR CHUNG ==== */
+/*!* ==== TOPBAR CHUNG ==== *!*/
+/*.topbar {*/
+/*  position: fixed;*/
+/*  top: 20px;*/
+/*  left: 210px;*/
+/*  width: 1170px;*/
+/*  height: 50px;*/
+/*  background: rgba(28, 27, 26, 0.999);*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  padding: 0 20px;*/
+/*  border-radius: 10px;*/
+/*  backdrop-filter: blur(10px);*/
+/*  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15),*/
+/*    inset 0 2px 5px rgba(255, 255, 255, 0.3);*/
+/*  z-index: 100;*/
+/*}*/
+
+/*!* ==== PHẦN THÔNG TIN BÊN PHẢI ==== *!*/
+/*.info {*/
+/*  position: absolute;*/
+/*  right: 30px;*/
+/*  top: 50%;*/
+/*  transform: translateY(-50%);*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  height: 50px;*/
+/*  padding-left: 10px;*/
+/*}*/
+
+/*!* ==== ICON CHUÔNG & ẢNH ==== *!*/
+/*.info img,*/
+/*.notification-icon img {*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*  max-width: 24px; !* Set maximum size *!*/
+/*  max-height: 24px; !* Set maximum size *!*/
+/*  padding: 0; !* Remove padding *!*/
+/*  object-fit: contain; !* Ensure the image maintains its aspect ratio *!*/
+/*  cursor: pointer;*/
+/*  transition: transform 0.2s ease-in-out;*/
+/*}*/
+
+/*.info img:hover,*/
+/*.notification-icon:hover {*/
+/*  transform: scale(1.1);*/
+/*}*/
+
+/*!* ==== AVATAR HÌNH TRÒN ==== *!*/
+/*.avatar {*/
+/*  background-color: #1dab45c5;*/
+/*  border-radius: 50%;*/
+/*  width: 35px;*/
+/*  height: 35px;*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  justify-content: center;*/
+/*  color: white;*/
+/*  font-weight: bold;*/
+/*  font-size: 20px;*/
+/*  margin-top: 12px;*/
+/*}*/
+
+/*!* ==== TÊN NGƯỜI DÙNG ==== *!*/
+/*.user {*/
+/*  margin: 10px;*/
+/*  font-size: 20px;*/
+/*  color: white;*/
+/*}*/
+
+/*!* ==== DROPDOWN CHUÔNG THÔNG BÁO ==== *!*/
+/*.notification-wrapper {*/
+/*  position: relative;*/
+/*  margin-left: 20px;*/
+/*  z-index: 9999;*/
+/*}*/
+
+/*.transaction-dropdown {*/
+/*  position: absolute;*/
+/*  top: 45px;*/
+/*  right: 0;*/
+/*  background-color: white;*/
+/*  border: 1px solid #ccc;*/
+/*  border-radius: 8px;*/
+/*  width: 280px;*/
+/*  max-height: 300px;*/
+/*  overflow-y: auto;*/
+/*  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);*/
+/*  z-index: 9999;*/
+/*  animation: fadeIn 0.2s ease-in-out;*/
+/*}*/
+
+/*.transaction-dropdown ul {*/
+/*  list-style: none;*/
+/*  margin: 0;*/
+/*  padding: 10px;*/
+/*}*/
+
+/*.transaction-dropdown li {*/
+/*  padding: 10px 8px;*/
+/*  border-bottom: 1px solid #eee;*/
+/*}*/
+
+/*.transaction-dropdown li:last-child {*/
+/*  border-bottom: none;*/
+/*}*/
+
+/*.transaction-dropdown p {*/
+/*  margin: 0;*/
+/*  font-weight: 500;*/
+/*  color: #333;*/
+/*}*/
+
+/*.transaction-dropdown small {*/
+/*  font-size: 12px;*/
+/*  color: #888;*/
+/*}*/
+
+/*!* ==== ANIMATION ==== *!*/
+/*@keyframes fadeIn {*/
+/*  from {*/
+/*    opacity: 0;*/
+/*    transform: translateY(-10px);*/
+/*  }*/
+/*  to {*/
+/*    opacity: 1;*/
+/*    transform: translateY(0);*/
+/*  }*/
+/*}*/
+
+
+
+/* General Topbar Styling */
 .topbar {
-  position: fixed;
-  top: 20px;
-  left: 210px;
-  width: 1170px;
-  height: 50px;
-  background: rgba(28, 27, 26, 0.999);
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  background-color: #1a1a1a; /* Dark background for the whole bar */
+  color: #ffffff;
   padding: 0 20px;
-  border-radius: 10px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15),
-    inset 0 2px 5px rgba(255, 255, 255, 0.3);
-  z-index: 100;
+  height: 60px; /* Adjust height as needed */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* ==== PHẦN THÔNG TIN BÊN PHẢI ==== */
-.info {
-  position: absolute;
-  right: 30px;
-  top: 50%;
-  transform: translateY(-50%);
+.pageTitle {
+  font-size: 1.5em; /* Adjust as needed */
+  font-weight: bold;
+  margin: 0;
+}
+
+/* User Actions Area (Yellow part) */
+.user-actions-area {
   display: flex;
   align-items: center;
-  height: 50px;
-  padding-left: 10px;
+  background-color: #ffdd40; /* Bright yellow background */
+  border-radius: 30px; /* Rounded corners for the yellow capsule */
+  padding: 5px 15px; /* Padding inside the yellow area */
+  height: 40px; /* Make it a bit smaller than topbar height */
+  box-sizing: border-box;
+  margin-right: 200px;
 }
 
-/* ==== ICON CHUÔNG & ẢNH ==== */
-.info img,
-.notification-icon img {
-  width: 100%;
-  height: 100%;
-  max-width: 24px; /* Set maximum size */
-  max-height: 24px; /* Set maximum size */
-  padding: 0; /* Remove padding */
-  object-fit: contain; /* Ensure the image maintains its aspect ratio */
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
+.user-profile {
+  display: flex;
+  align-items: center;
+  margin-right: 15px; /* Space between profile and icons */
 }
 
-.info img:hover,
-.notification-icon:hover {
-  transform: scale(1.1);
-}
-
-/* ==== AVATAR HÌNH TRÒN ==== */
 .avatar {
-  background-color: #1dab45c5;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px; /* Size of the avatar circle */
+  height: 30px;
+  border-radius: 50%; /* Make it a circle */
+  background-color: #4CAF50; /* Green background for avatar */
+  color: #ffffff; /* White letter */
+  font-weight: bold;
+  font-size: 1em;
+  margin-right: 8px; /* Space between avatar and username */
+}
+
+.username-text {
+  color: #333333; /* Dark text color for username */
+  font-weight: 500;
+  font-size: 0.9em;
+}
+
+/* Icon Styling */
+.icon-group {
+  display: flex;
+  align-items: center;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: bold;
-  font-size: 20px;
-  margin-top: 12px;
+  margin-left: 5px; /* Space between icons */
 }
 
-/* ==== TÊN NGƯỜI DÙNG ==== */
-.user {
-  margin: 10px;
-  font-size: 20px;
-  color: white;
+.icon-button img {
+  width: 20px; /* Adjust icon size as needed */
+  height: 20px;
+  filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%); /* Makes SVG black if it's originally white, or use black SVGs */
+  /* If your SVGs are already black, you might not need the filter or can adjust it */
 }
 
-/* ==== DROPDOWN CHUÔNG THÔNG BÁO ==== */
-.notification-wrapper {
-  position: relative;
-  margin-left: 20px;
-  z-index: 9999;
+/* Wrappers for positioning dropdowns */
+.notification-wrapper,
+.user-menu-wrapper {
+  position: relative; /* Crucial for dropdown positioning */
 }
 
-.transaction-dropdown {
+/* Dropdown General Styling */
+.dropdown {
   position: absolute;
-  top: 45px;
+  top: 100%; /* Position below the button */
   right: 0;
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  width: 280px;
-  max-height: 300px;
-  overflow-y: auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
-  animation: fadeIn 0.2s ease-in-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 200px; /* Adjust as needed */
+  margin-top: 8px; /* Space between button and dropdown */
 }
 
-.transaction-dropdown ul {
+.dropdown-list {
   list-style: none;
+  padding: 0;
   margin: 0;
-  padding: 10px;
 }
 
-.transaction-dropdown li {
-  padding: 10px 8px;
-  border-bottom: 1px solid #eee;
+.dropdown-list-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  color: #333333; /* Dark text for dropdown items */
+  font-size: 0.9em;
+  border-bottom: 1px solid #eee; /* Separator line */
 }
-
-.transaction-dropdown li:last-child {
+.dropdown-list-item:last-child {
   border-bottom: none;
 }
 
-.transaction-dropdown p {
-  margin: 0;
-  font-weight: 500;
-  color: #333;
+.dropdown-list-item:hover {
+  background-color: #f5f5f5;
 }
 
-.transaction-dropdown small {
-  font-size: 12px;
-  color: #888;
+.dropdown-list-item-empty {
+  padding: 10px 15px;
+  color: #000000;
+  font-style: italic;
+  text-align: center;
 }
 
-/* ==== ANIMATION ==== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.dropdown-list-item-logout {
+  color: #d9534f; /* Red color for logout */
+  font-weight: bold;
+}
+.dropdown-list-item-logout:hover {
+  background-color: #f2dede; /* Lighter red on hover */
+}
+
+
+/* Transaction/Notification specific styling inside dropdown */
+.transaction-dropdown .transaction-content {
+  margin: 0 0 5px 0;
+  font-size: 0.9em;
+}
+.transaction-dropdown .transaction-date {
+  font-size: 0.8em;
+  color: #777;
 }
