@@ -63,20 +63,9 @@ const Home = () => {
           {/* Wallets Section - BÊN TRÁI */}
           <div className="wallets-section">
             <div className="wallets-header">
-              <h1 style={{ color: "#ffffff", marginLeft: "10px" }}>
+              <h1 style={{ color: "#ffffff", marginLeft: "10px", fontWeight: "bold" }}>
                 Trading Accounts
               </h1>
-              <p
-                onClick={() => nativigate("/trading-accounts")}
-                style={{
-                  color: "#ffffff",
-                  fontWeight: "bold",
-                  textDecoration: "none",
-                  right: 0,
-                }}
-              >
-                View all
-              </p>
             </div>
 
             <div className="wallets-scroll-wrapper">
@@ -134,8 +123,8 @@ const Home = () => {
                 { label: "Sell", icon: "-" },
                 { label: "Swap", icon: "⇄" },
               ].map((action, idx) => (
-                <div key={idx} className="trade-item">
-                  <div className="trade-icon">{action.icon}</div>
+                <div key={idx} className="trade-item">+
+                  <div className="trade-icon cursor-pointer transform hover:scale-110" onClick={() => navigate(action.label === "Buy" ? "/market" : (action.label === "Sell" ? "/portfolio/choose-trading-account" : "/home"))}>{action.icon}</div>
                   <div className="trade-label">{action.label}</div>
                 </div>
               ))}

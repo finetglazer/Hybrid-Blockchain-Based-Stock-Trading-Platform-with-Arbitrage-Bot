@@ -187,10 +187,11 @@ public class MarketPricePublisher {
     }
 
     /**
-     * Publish price updates for all tracked stocks every 5 seconds
+     * Publish price updates for all tracked stocks every 15 seconds
      */
     @Scheduled(fixedRate = 15000)
     public void publishPriceUpdates() {
+        log.info("--- publishPriceUpdates START at {} ---", LocalDateTime.now());
         // Check if market is open (simplified for simulation)
 //        LocalDateTime now = LocalDateTime.now();
 //        if (now.getDayOfWeek().getValue() >= 6 || // Weekend

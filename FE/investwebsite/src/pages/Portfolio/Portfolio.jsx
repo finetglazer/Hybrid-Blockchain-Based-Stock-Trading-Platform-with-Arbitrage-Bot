@@ -1,7 +1,7 @@
 import "./Portfolio.css"
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import {Table} from "antd";
+import {Alert, Table} from "antd";
 import {Chart} from "chart.js/auto";
 import 'chartjs-adapter-date-fns';
 import "glider-js/glider.min.css";
@@ -9,10 +9,13 @@ import Glider from "glider-js/glider";
 import axios from "axios";
 import useWebSocket, {ReadyState} from 'react-use-websocket';
 import {Sparklines, SparklinesLine, SparklinesSpots} from 'react-sparklines';
+import SellOrderForm from "./SellOrderForm.jsx";
+import LoadingOverlay from "../StockTable/LoadingOverlay.jsx";
 
 const Portfolio = () => {
     const accountId = useParams().accountId;
-    const SOCKET_URL = 'https://good-musical-joey.ngrok-free.app/market-data/ws/stock-data';
+    // const SOCKET_URL = 'https://good-musical-joey.ngrok-free.app/market-data/ws/stock-data';
+    const SOCKET_URL = 'http://localhost:8080/market-data/ws/stock-data';
     const navigate = useNavigate();
     const comparisonChart = useRef(null);
     const gliderInstanceRef = useRef(null);
@@ -30,6 +33,11 @@ const Portfolio = () => {
     const [tableData, setTableData] = useState([]);
     const [chartDatasets, setChartDatasets] = useState([]);
     const [gliderIndex, setGliderIndex] = useState(3);
+    const [showForm, setShowForm] = useState(false);
+    const [sellSymbol, setSellSymbol] = useState(null);
+    const [error, setError] = useState();
+    const [orderCreated, setOrderCreated] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const onClickBackBtn = () => {
         navigate("/home");
@@ -437,6 +445,18 @@ const Portfolio = () => {
                 </div>
             )
         },
+        {
+            title: 'ACTIONS',
+            width: 70,
+            render: (value, record) => (
+                <button className="px-2 py-2 w-[50px]" onClick={() => {
+                    setShowForm(true);
+                    setSellSymbol(record.symbol);
+                }}>
+                    SELL
+                </button>
+            )
+        },
     ];
 
     const {
@@ -715,13 +735,41 @@ const Portfolio = () => {
     }, [stocksData]);
 
     return (
-        <div className="container portfolio-container">
+        <div className="container portfolio-container relative">
             <>
+                {showForm && (
+                    <>
+                        <div className="absolute bottom-20 left-[40%] z-[1000] blur-none">
+                            <SellOrderForm sellSymbol={sellSymbol}
+                                           setShowForm={setShowForm}
+                                           setError={setError}
+                                           setOrderCreated={setOrderCreated}
+                                           setLoading={setLoading}
+                            />
+                            <LoadingOverlay
+                                visible={loading}
+                                message="Preparing your order..."
+                            />
+                        </div>
+                    </>
+                )}
+                {error &&
+                    error.errors.map(e =>
+                        <Alert showIcon type={error} message={e}/>
+                    )
+                }
+                {!error && orderCreated && (
+                    <>
+                        <Alert showIcon type="success" message={
+                            <p>Order created! Please visit <a href="/order-history">Order history</a> to check your order status</p>
+                        }/>
+                    </>
+                )}
                 <div className="title" onClick={onClickBackBtn}>
                     <button><img src="../../../../src/assets/left-arrow.png" alt="back icon"/></button>
                     <p>Portfolio</p>
                 </div>
-                <div className="body">
+                <div className={`body ${showForm ? "blur-lg" : ""}`}>
                     <div className="portfolio-info">
                         <div className="prop">
                             <img src="../../../src/assets/user.png" alt="user icon" />

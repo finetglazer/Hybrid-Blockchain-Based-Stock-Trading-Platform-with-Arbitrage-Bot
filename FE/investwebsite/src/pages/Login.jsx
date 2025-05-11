@@ -27,7 +27,6 @@ const Login = () => {
       if (response.data.status === 1) {
         localStorage.setItem("username", usernameOrEmail);
         console.log(usernameOrEmail);
-        alert(response.data.msg);
         navigate("/home");
         return; // Dừng hàm, không điều hướng
       }
