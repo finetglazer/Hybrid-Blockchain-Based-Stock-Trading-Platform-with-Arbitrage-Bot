@@ -45,12 +45,16 @@ const Layout = () => {
     "/trading-accounts",
     "/support",
     "/setting",
+    "/market",
+    "/portfolio",
+    "/transaction-history",
+    "/payment-methods",
   ].includes(location.pathname);
 
   return (
     <>
       {showNavbar && <HeaderNavbar />}
-      {showNavbar && <Sidebar />}
+      <Sidebar />
       <AppContextProvider>
         <Routes>
           <Route path="/" element={<Login />} />
