@@ -1,116 +1,102 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
+const isDocker = process.env.DOCKER_ENV === 'true';
+// Define what apiTarget should be if NOT in Docker
+const localApiTarget = 'http://localhost:8080'; // Assuming your API gateway runs on 8080 locally when not in Docker
+const apiTarget = isDocker ? 'http://api-gateway:8080' : localApiTarget;
+
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: "127.0.0.1",
+    host: "0.0.0.0",  // Correct: Listen on all interfaces
     port: 5173,
+    strictPort: true,
     proxy: {
       "/api": {
-        // target: "https://good-musical-joey.ngrok-free.app",
-        target: 'http://localhost:8080',
+        target: apiTarget,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
-        logLevel: "debug",
+        logLevel: 'debug',
       },
       '/users': {
-        // target: 'https://good-musical-joey.ngrok-free.app',
-        target: 'http://localhost:8080',
+        target: apiTarget,
         changeOrigin: true,
         logLevel: 'debug',
-        configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
+        configure: (proxy) => {
           proxy.on('proxyReq', (proxyReq) => {
-            // Set the header Ngrok uses to skip the interstitial page
-            proxyReq.setHeader('ngrok-skip-browser-warning', 'true'); // Value can be anything, 'true' is clear
-            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header');
+            proxyReq.setHeader('ngrok-skip-browser-warning', 'true');
+            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header for /users');
           });
         }
       },
       '/accounts': {
-        // target: 'https://good-musical-joey.ngrok-free.app',
-        target: 'http://localhost:8080',
-
+        target: apiTarget,
         changeOrigin: true,
         logLevel: 'debug',
-        configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
+        configure: (proxy) => {
           proxy.on('proxyReq', (proxyReq) => {
-            // Set the header Ngrok uses to skip the interstitial page
-            proxyReq.setHeader('ngrok-skip-browser-warning', 'true'); // Value can be anything, 'true' is clear
-            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header');
+            proxyReq.setHeader('ngrok-skip-browser-warning', 'true');
+            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header for /accounts');
           });
         }
       },
-      '/market-data': {
-        // target: 'https://good-musical-joey.ngrok-free.app',
-        target: 'http://localhost:8080',
+      '/market-data': { // HTTP endpoint
+        target: apiTarget,
         changeOrigin: true,
         logLevel: 'debug',
-        configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
+        configure: (proxy) => {
           proxy.on('proxyReq', (proxyReq) => {
-            // Set the header Ngrok uses to skip the interstitial page
-            proxyReq.setHeader('ngrok-skip-browser-warning', 'true'); // Value can be anything, 'true' is clear
-            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header');
+            proxyReq.setHeader('ngrok-skip-browser-warning', 'true');
+            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header for /market-data');
           });
         }
       },
       '/sagas': {
-        // target: 'https://good-musical-joey.ngrok-free.app',
-        target: 'http://localhost:8080',
+        target: apiTarget,
         changeOrigin: true,
         logLevel: 'debug',
-        configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
-          proxy.on('proxyReq', (proxyReq) => {
-            // Set the header Ngrok uses to skip the interstitial page
-            proxyReq.setHeader('ngrok-skip-browser-warning', 'true'); // Value can be anything, 'true' is clear
-            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header');
-          });
-        }
-      },
-      '/orders': {
-        // target: 'https://good-musical-joey.ngrok-free.app',
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        logLevel: 'debug',
-        configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
-          proxy.on('proxyReq', (proxyReq) => {
-            // Set the header Ngrok uses to skip the interstitial page
-            proxyReq.setHeader('ngrok-skip-browser-warning', 'true'); // Value can be anything, 'true' is clear
-            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header');
-          });
-        }
-      },
-      '/ws/market-data': {
-        // target: 'https://good-musical-joey.ngrok-free.app',
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        ws: true,
-        logLevel: 'debug',
-        configure: (proxy) => {    // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
-          proxy.on('proxyReq', (proxyReq) => {
-            // Set the header Ngrok uses to skip the interstitial page
-            proxyReq.setHeader('ngrok-skip-browser-warning', 'true'); // Value can be anything, 'true' is clear
-            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header');
-          });
-        }
-      },
-      '/ws/orders': {
-        // target: 'https://good-musical-joey.ngrok-free.app',
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        ws: true,
-        logLevel: "debug",
         configure: (proxy) => {
-          // Prevent from ERR_NGROK_6024 - NGROK INTERSTITIAL PAGE
-          proxy.on("proxyReq", (proxyReq) => {
-            // Set the header Ngrok uses to skip the interstitial page
-            proxyReq.setHeader("ngrok-skip-browser-warning", "true"); // Value can be anything, 'true' is clear
-            console.log(
-              "[vite:proxy:configure] Added ngrok-skip-browser-warning header"
-            );
+          proxy.on('proxyReq', (proxyReq) => {
+            proxyReq.setHeader('ngrok-skip-browser-warning', 'true');
+            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header for /sagas');
           });
-        },
+        }
+      },
+      '/orders': { // HTTP endpoint
+        target: apiTarget,
+        changeOrigin: true,
+        logLevel: 'debug',
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            proxyReq.setHeader('ngrok-skip-browser-warning', 'true');
+            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header for /orders');
+          });
+        }
+      },
+      '/ws/market-data': { // WebSocket endpoint
+        target: apiTarget,      // Use the dynamic apiTarget
+        changeOrigin: true,
+        ws: true,               // Crucial for WebSocket proxying
+        logLevel: 'debug',
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            proxyReq.setHeader('ngrok-skip-browser-warning', 'true');
+            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header for /ws/market-data');
+          });
+        }
+      },
+      '/ws/orders': { // WebSocket endpoint
+        target: apiTarget,      // Use the dynamic apiTarget
+        changeOrigin: true,
+        ws: true,               // Crucial for WebSocket proxying
+        logLevel: 'debug',
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            proxyReq.setHeader('ngrok-skip-browser-warning', 'true');
+            console.log('[vite:proxy:configure] Added ngrok-skip-browser-warning header for /ws/orders');
+          });
+        }
       },
     },
   },
