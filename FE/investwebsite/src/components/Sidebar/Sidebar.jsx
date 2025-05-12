@@ -93,7 +93,7 @@ const Sidebar = () => {
 
                 <div
                     className={`menu-item ${activeItem === 'portfolio' ? 'active' : ''}`}
-                    onClick={() => navigateTo("/portfolio/choose-trading-account", "portfolio")}
+                    onClick={() => navigateTo("/portfolio", "portfolio")}
                     title="Portfolio"
                 >
                     <div className="menu-icon">

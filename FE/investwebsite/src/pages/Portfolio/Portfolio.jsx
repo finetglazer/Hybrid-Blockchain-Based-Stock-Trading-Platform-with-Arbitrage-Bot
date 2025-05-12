@@ -13,7 +13,6 @@ import SellOrderForm from "./SellOrderForm.jsx";
 import LoadingOverlay from "../StockTable/LoadingOverlay.jsx";
 
 const Portfolio = () => {
-    const accountId = useParams().accountId;
     // const SOCKET_URL = 'https://good-musical-joey.ngrok-free.app/market-data/ws/stock-data';
     const SOCKET_URL = 'http://localhost:8080/market-data/ws/stock-data';
     const navigate = useNavigate();
@@ -276,12 +275,12 @@ const Portfolio = () => {
                     }}>
                         {record.dayGainValue[0] === "-" && (
                             <img src="../../../src/assets/downward.png"
-                              alt="trend icon"
-                              style={{
-                                  width: 20,
-                                  height: 20,
-                                  textAlign: "center"
-                              }}
+                                 alt="trend icon"
+                                 style={{
+                                     width: 20,
+                                     height: 20,
+                                     textAlign: "center"
+                                 }}
                             />
                         )}
                         {record.dayGainValue[0] !== "-" && (
@@ -355,7 +354,6 @@ const Portfolio = () => {
                     fontWeight: "bold",
                     display: "flex",
                     alignItems: "center",
-                    padding: 5,
                     justifyContent: "space-between"
                 }}>
                     <p style={{marginTop: 12}}>{record.dayGainValue}</p>
@@ -368,13 +366,14 @@ const Portfolio = () => {
                                 display: "flex",
                                 borderRadius: 10,
                                 padding: 5,
+                                // padding: "15px auto 5px",
                             }}
                         >
                             <img
                                 src="../../../src/assets/arrow-down.png"
                                 alt="direction icon"
                                 width={20}
-                                height={10}
+                                height={20}
                             />
                             <p style={{color: "#ff2343", marginLeft: 3, marginTop: -2}}>{record.dayGainPercentage}%</p>
                         </div>
@@ -447,9 +446,9 @@ const Portfolio = () => {
         },
         {
             title: 'ACTIONS',
-            width: 70,
+            width: 120,
             render: (value, record) => (
-                <button className="px-2 py-2 w-[50px]" onClick={() => {
+                <button className="px-2 py-2 w-[100px]" onClick={() => {
                     setShowForm(true);
                     setSellSymbol(record.symbol);
                 }}>
@@ -510,7 +509,7 @@ const Portfolio = () => {
         const token = localStorage.getItem("token");
         const fetchPortfolio = async () => {
             try {
-                const response = await axios.get(`/market-data/api/v1/me/${accountId}/portfolio`, {
+                const response = await axios.get(`/market-data/api/v1/me/general-portfolio`, {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json"
@@ -528,8 +527,8 @@ const Portfolio = () => {
             }
         }
 
-        fetchPortfolio().then(() => {});
-    }, [accountId]);
+        fetchPortfolio().then(() => {})
+    }, []);
 
     useEffect(() => {
         if (!portfolio) return;
@@ -739,7 +738,7 @@ const Portfolio = () => {
             <>
                 {showForm && (
                     <>
-                        <div className="absolute bottom-20 left-[40%] z-[1000] blur-none">
+                        <div className="absolute top-[170vh] left-[40%] z-[1000] blur-none">
                             <SellOrderForm sellSymbol={sellSymbol}
                                            setShowForm={setShowForm}
                                            setError={setError}
@@ -772,21 +771,17 @@ const Portfolio = () => {
                 <div className={`body ${showForm ? "blur-lg" : ""}`}>
                     <div className="portfolio-info">
                         <div className="prop">
-                            <img src="../../../src/assets/user.png" alt="user icon" />
+                            <img src="../../../src/assets/user.png" alt="user icon"/>
                             <p>User ID: {(portfolio ?? {userId: ""}).userId}</p>
-                        </div>
-                        <div className="prop">
-                            <img src="../../../src/assets/stocks.png" alt="account icon" />
-                            <p>Account ID: {(portfolio ?? {accountId: ""}).accountId}</p>
                         </div>
                         <div className="value-info">
                             <p className="portfolio-name">{(portfolio ?? {name: ""}).name}</p>
                             <div className="total-value-info">
                                 <p className={"total-value"}>${convert(totalValue.toFixed(2))}</p>
                                 {totalValue - initialTotalValue < 0 && (
-                                    <div className="gain-percentage-wrapper">
-                                        <img src="../../../src/assets/arrow-down.png" alt="direction icon" style={{width: 15, height: 15, marginRight: 3}}/>
-                                        <p className="gain-percentage">{convert(((totalValue - initialTotalValue) * 100 / initialTotalValue).toFixed(2))}%</p>
+                                    <div className="gain-percentage-wrapper items-center">
+                                        <img src="../../../src/assets/arrow-down.png" alt="direction icon" style={{width: 15, height: 15, marginRight: 3, marginTop: 10}}/>
+                                        <p className="gain-percentage mb-7">{convert(((totalValue - initialTotalValue) * 100 / initialTotalValue).toFixed(2))}%</p>
                                     </div>
                                 )}
                                 {totalValue - initialTotalValue >= 0 && (
@@ -799,13 +794,13 @@ const Portfolio = () => {
                                 <p className="gain-value" style={{color: totalValue - initialTotalValue >= 0 ? "#88ec9f" : "#ff0044"}}>{convert((totalValue - initialTotalValue).toFixed(2))}$</p>
                             </div>
                             <p className="date">{(new Date()).toLocaleString('en-US', {
-                                    month: 'short',
-                                    day: '2-digit',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    second: '2-digit',
-                                    hour12: true
-                                })
+                                month: 'short',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                                hour12: true
+                            })
                             }
                             </p>
                         </div>
@@ -959,7 +954,7 @@ const Portfolio = () => {
                                         <p className="category-name">MOST GAIN</p>
                                         {Object.keys(sortedSymbolChanges).length &&
                                             <div className="value-wrapper"
-                                              style={{backgroundColor: sortedSymbolChanges[Object.keys(sortedSymbolChanges)[Object.keys(sortedSymbolChanges).length - 1]].valueChange < 0 ? "#670202" : "#054d05"}}>
+                                                 style={{backgroundColor: sortedSymbolChanges[Object.keys(sortedSymbolChanges)[Object.keys(sortedSymbolChanges).length - 1]].valueChange < 0 ? "#670202" : "#054d05"}}>
                                                 <p className="symbol-info" style={{
                                                     marginTop: -10,
                                                     fontWeight: 700,
@@ -967,10 +962,10 @@ const Portfolio = () => {
                                                 }}>{sortedSymbolChanges[Object.keys(sortedSymbolChanges)[Object.keys(symbolChanges).length - 1]].symbol}</p>
                                                 <p className="value"
                                                    style={{color: sortedSymbolChanges[Object.keys(sortedSymbolChanges)[Object.keys(sortedSymbolChanges).length - 1]].valueChange < 0 ? "#ff2343" : "#88ec9f"}}>{convert(sortedSymbolChanges[Object.keys(sortedSymbolChanges)[Object.keys(sortedSymbolChanges).length - 1]].valueChange.toFixed(2))}$</p>
-                                                <div className="percentage">
+                                                <div className="percentage items-center">
                                                     {sortedSymbolChanges[Object.keys(sortedSymbolChanges)[Object.keys(sortedSymbolChanges).length - 1]].valueChange < 0 && (
                                                         <>
-                                                            <img src="../../../src/assets/arrow-down.png" alt="direction icon"/>
+                                                            <img src="../../../src/assets/arrow-down.png" alt="direction icon" className="mt-4"/>
                                                             <p style={{color: "#ff2343"}}>{convert(sortedSymbolChanges[Object.keys(sortedSymbolChanges)[Object.keys(sortedSymbolChanges).length - 1]].percentageChange.toFixed(2))}%</p>
                                                         </>
                                                     )}
@@ -988,8 +983,8 @@ const Portfolio = () => {
                                     <div className="category-wrapper">
                                         <p className="category-name">LEAST GAIN</p>
                                         {Object.keys(sortedSymbolChanges).length &&
-                                            <div className="value-wrapper"
-                                              style={{backgroundColor: sortedSymbolChanges[Object.keys(sortedSymbolChanges)[0]].valueChange < 0 ? "#670202" : "#054d05"}}>
+                                            <div className="value-wrapper items-center"
+                                                 style={{backgroundColor: sortedSymbolChanges[Object.keys(sortedSymbolChanges)[0]].valueChange < 0 ? "#670202" : "#054d05"}}>
                                                 <p className="symbol-info" style={{
                                                     marginTop: -10,
                                                     fontWeight: 700,
@@ -1000,7 +995,7 @@ const Portfolio = () => {
                                                 <div className="percentage">
                                                     {sortedSymbolChanges[Object.keys(sortedSymbolChanges)[0]].valueChange < 0 && (
                                                         <>
-                                                            <img src="../../../src/assets/arrow-down.png" alt="direction icon"/>
+                                                            <img src="../../../src/assets/arrow-down.png" alt="direction icon" style={{marginTop: 15}}/>
                                                             <p style={{color: "#ff2343"}}>{convert(sortedSymbolChanges[Object.keys(sortedSymbolChanges)[0]].percentageChange.toFixed(2))}%</p>
                                                         </>
                                                     )}
@@ -1022,19 +1017,19 @@ const Portfolio = () => {
                                     {comparisonDataList.slice(gliderIndex - 3, Math.min(gliderIndex, comparisonDataList.length)).map(symbol => (
                                         <div className="comparison-object-wrapper"
                                              onClick={() => {
-                                                comparisonChart.current.data.datasets[comparisonChart.current.data.datasets.findIndex(dataset => dataset.label === symbol)].hidden = false;
-                                                comparisonChart.current.update('none');
-                                                setComparisonData([...comparisonData, symbol]);
-                                                setComparisonDataList((() => {
-                                                    const updatedComparisonDataList = comparisonDataList;
-                                                    updatedComparisonDataList.splice(comparisonDataList.findIndex(symbolData => symbolData === symbol), 1)
-                                                    return updatedComparisonDataList;
-                                                })());
+                                                 comparisonChart.current.data.datasets[comparisonChart.current.data.datasets.findIndex(dataset => dataset.label === symbol)].hidden = false;
+                                                 comparisonChart.current.update('none');
+                                                 setComparisonData([...comparisonData, symbol]);
+                                                 setComparisonDataList((() => {
+                                                     const updatedComparisonDataList = comparisonDataList;
+                                                     updatedComparisonDataList.splice(comparisonDataList.findIndex(symbolData => symbolData === symbol), 1)
+                                                     return updatedComparisonDataList;
+                                                 })());
                                              }}
-                                            >
+                                        >
                                             <p className="company">{(() => {
-                                               const company = (stocksData[symbol] ?? {company: "..."}).company;
-                                               return company.length >= 15 ? company.substring(0, 15) + "..." : company;
+                                                const company = (stocksData[symbol] ?? {company: "..."}).company;
+                                                return company.length >= 15 ? company.substring(0, 15) + "..." : company;
                                             })()}</p>
                                             <p className="price" style={{fontWeight: 600, fontSize: "1.2rem"}}>${(stocksData[symbol] ?? {price: "0.00"}).price}</p>
                                             <div className="symbol-and-value-wrapper" style={{display: "flex", marginTop: -10, justifyContent: "space-between"}}>

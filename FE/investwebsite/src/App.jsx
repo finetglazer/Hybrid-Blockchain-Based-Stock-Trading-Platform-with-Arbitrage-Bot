@@ -48,13 +48,14 @@ const Layout = () => {
     "/market",
     "/portfolio",
     "/transaction-history",
+    "/order-history",
     "/payment-methods",
   ].includes(location.pathname);
 
   return (
     <>
-      {showNavbar && <HeaderNavbar />}
-      <Sidebar />
+      {location.pathname === "/home" && <HeaderNavbar />}
+      {showNavbar && location.pathname !== "" && <Sidebar/>}
       <AppContextProvider>
         <Routes>
           <Route path="/" element={<Login />} />
@@ -76,10 +77,6 @@ const Layout = () => {
               element={<ChooseTradingAccount />}
           />
           <Route
-              path="/portfolio/choose-trading-account"
-              element={<ChooseTradingAccount />}
-          />
-          <Route
             path="/:accountId/withdraw/:paymentMethodId"
             element={<Withdraw />}
           />
@@ -92,6 +89,7 @@ const Layout = () => {
             element={<Deposit />}
           />
           <Route path="/trading-accounts" element={<Wallet />} />
+          <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/support" element={<Support />} />
           <Route path="/setting" element={<Setting />} />
           <Route
