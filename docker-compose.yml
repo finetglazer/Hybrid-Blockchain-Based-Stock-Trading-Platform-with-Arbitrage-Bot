@@ -9,7 +9,7 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.2
     hostname: zookeeper
-    container_name: zookeeper
+#    container_name: zookeeper
     networks:
       - backend-network
     environment:
@@ -23,7 +23,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.3.2
     hostname: kafka
-    container_name: kafka
+#    container_name: kafka
     networks:
       - backend-network
     depends_on:
@@ -47,7 +47,7 @@ services:
   kafka-setup:
     image: confluentinc/cp-kafka:7.3.2
     hostname: kafka-setup
-    container_name: kafka-setup
+#    container_name: kafka-setup
     networks:
       - backend-network
     depends_on:
@@ -92,6 +92,20 @@ services:
               kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic broker.events.order-buy --partitions 1 --replication-factor 1 && \
               kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.commands.order-buy --partitions 1 --replication-factor 1 && \
               kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.events.order-buy --partitions 1 --replication-factor 1 && \
+              # Order-sell Saga Topics
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic user.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic user.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic order.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic order.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic market.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic market.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic broker.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic broker.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.events.order-sell --partitions 1 --replication-factor 1 && \
+
               # Market Data Topic
               kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic market.price.data --partitions 1 --replication-factor 1 && \
               echo 'All topics created successfully!' || echo 'Failed to create some topics.'
@@ -117,7 +131,7 @@ services:
     build:
       context: ./FE/investwebsite
       dockerfile: Dockerfile
-    container_name: frontend
+#    container_name: frontend
     networks:
       - backend-network
     ports:
@@ -135,7 +149,7 @@ services:
     build:
       context: ./BE/API-gateway
       dockerfile: Dockerfile
-    container_name: api-gateway
+#    container_name: api-gateway
     networks:
       - backend-network
     ports:
@@ -158,7 +172,7 @@ services:
     build:
       context: ./BE/user-service
       dockerfile: Dockerfile
-    container_name: user-service
+#    container_name: user-service
     networks:
       - backend-network
     expose:
@@ -178,7 +192,7 @@ services:
     build:
       context: ./BE/account-service
       dockerfile: Dockerfile
-    container_name: account-service
+#    container_name: account-service
     networks:
       - backend-network
     expose:
@@ -198,7 +212,7 @@ services:
     build:
       context: ./BE/market-data-service
       dockerfile: Dockerfile
-    container_name: market-data-service
+#    container_name: market-data-service
     networks:
       - backend-network
     expose:
@@ -218,7 +232,7 @@ services:
     build:
       context: ./BE/mock-brokerage-service
       dockerfile: Dockerfile
-    container_name: mock-brokerage-service
+#    container_name: mock-brokerage-service
     networks:
       - backend-network
     expose:
@@ -238,7 +252,7 @@ services:
     build:
       context: ./BE/order-service
       dockerfile: Dockerfile
-    container_name: order-service
+#    container_name: order-service
     networks:
       - backend-network
     expose:
@@ -258,7 +272,28 @@ services:
     build:
       context: ./BE/portfolio-service
       dockerfile: Dockerfile
-    container_name: portfolio-service
+#    container_name: portfolio-service
+    networks:
+      - backend-network
+    expose:
+      - "8091"
+    #    depends_on:
+    #      kafka-setup:
+    #        condition: service_completed_successfully
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATA_MONGODB_URI: "mongodb+srv://admin:hw445Rl1pEAXqhti@cluster-1.rylgk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-1"
+
+
+  # Portfolio Service
+  mock-payment-service:
+    build:
+      context: ./BE/mock-payment-service
+      dockerfile: Dockerfile
+#    container_name: mock-payment-service
     networks:
       - backend-network
     expose:
@@ -276,9 +311,9 @@ services:
   # Saga Orchestrator Service
   saga-orchestrator-service:
     build:
-      context: ./BE/saga-orchestrator-service
+      context: ./BE/kafka-management-service
       dockerfile: Dockerfile
-    container_name: saga-orchestrator-service
+#    container_name: saga-orchestrator-service
     networks:
       - backend-network
     expose:

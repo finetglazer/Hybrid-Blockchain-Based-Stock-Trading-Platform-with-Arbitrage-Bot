@@ -34,7 +34,7 @@ services:
   kafka-setup:
     image: confluentinc/cp-kafka:7.3.2 # Use the same image to get kafka-topics.sh
     hostname: kafka-setup
-    container_name: kafka-setup
+    container_name: kafka-setup2
     depends_on:
       kafka: # Depends on the kafka service itself (not just ZK)
         condition: service_started # Basic check, script will poll for readiness
