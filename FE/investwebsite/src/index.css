@@ -5,7 +5,7 @@
 body {
   display: grid;
   place-items: center;
-  height: 10px;
+  min-height: 100vh;
   margin-top: 150px;
   align-self: center;
   background: radial-gradient(circle at center, #222 10%, #000 90%);
