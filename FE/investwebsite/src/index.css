@@ -5,9 +5,8 @@
 body {
   display: grid;
   place-items: center;
-  /*height: 100vh;*/
-  height: 0;
-  margin-top: 0;
+  min-height: 100vh;
+  margin-top: 150px;
   align-self: center;
   background-image: url("https://i.pinimg.com/originals/e4/47/c5/e447c5bdd414dce7b88d3bd7536c9f47.gif"); /* Ảnh nền galaxy */
   background-size: cover;
