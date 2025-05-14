@@ -33,6 +33,12 @@ public class KafkaCommandHandlerService {
     @Value("${kafka.topics.user-events.order-buy}")
     private String userOrderEventsTopic;
 
+    @Value("${kafka.topics.user-events.order-buy}")
+    private String userEventsBuyTopic;
+
+    @Value("${kafka.topics.user-events.order-sell}")
+    private String userEventsSellTopic;
+
     /**
      * Handle USER_VERIFY_IDENTITY command by reusing existing UserService verification logic
      */
@@ -84,11 +90,29 @@ public class KafkaCommandHandlerService {
     }
 
     /**
-     * Handle USER_VERIFY_TRADING_PERMISSIONS command
+     * Handle USER_VERIFY_TRADING_PERMISSIONS command for BUY orders
      */
-    public void handleVerifyTradingPermissionCommand(CommandMessage command) {
-        log.info("Handling USER_VERIFY_TRADING_PERMISSIONS command for saga: {}", command.getSagaId());
+    public void handleVerifyTradingPermissionBuyCommand(CommandMessage command) {
+        log.info("Handling USER_VERIFY_TRADING_PERMISSIONS for BUY order saga: {}", command.getSagaId());
 
+        // Common verification logic
+        verifyTradingPermission(command, userEventsBuyTopic);
+    }
+
+    /**
+     * Handle USER_VERIFY_TRADING_PERMISSIONS command for SELL orders
+     */
+    public void handleVerifyTradingPermissionSellCommand(CommandMessage command) {
+        log.info("Handling USER_VERIFY_TRADING_PERMISSIONS for SELL order saga: {}", command.getSagaId());
+
+        // Common verification logic
+        verifyTradingPermission(command, userEventsSellTopic);
+    }
+
+    /**
+     * Common method for verifying trading permissions
+     */
+    private void verifyTradingPermission(CommandMessage command, String responseTopic) {
         String userId = command.getPayloadValue("userId");
         String orderType = command.getPayloadValue("orderType");
 
@@ -106,7 +130,8 @@ public class KafkaCommandHandlerService {
             Optional<User> userOpt = userRepository.findById(userId);
 
             if (userOpt.isEmpty()) {
-                handleTradingPermissionFailure(event, "USER_NOT_FOUND", "User not found with ID: " + userId);
+                handleTradingPermissionFailure(event, "USER_NOT_FOUND", "User not found with ID: " + userId,
+                        responseTopic);
                 return;
             }
 
@@ -115,7 +140,7 @@ public class KafkaCommandHandlerService {
             // Check if user account is active
             if (user.getStatus() != User.UserStatus.ACTIVE) {
                 handleTradingPermissionFailure(event, "USER_NOT_ACTIVE",
-                        "User account is not active: " + user.getStatus());
+                        "User account is not active: " + user.getStatus(), responseTopic);
                 return;
             }
 
@@ -127,7 +152,8 @@ public class KafkaCommandHandlerService {
 
             if (!hasPermission) {
                 handleTradingPermissionFailure(event, "INSUFFICIENT_TRADING_PERMISSION",
-                        "User does not have the required permission: " + requiredPermission);
+                        "User does not have the required permission: " + requiredPermission,
+                        responseTopic);
                 return;
             }
 
@@ -141,13 +167,13 @@ public class KafkaCommandHandlerService {
         } catch (Exception e) {
             log.error("Error verifying trading permissions", e);
             handleTradingPermissionFailure(event, "VERIFICATION_ERROR",
-                    "Error verifying trading permissions: " + e.getMessage());
+                    "Error verifying trading permissions: " + e.getMessage(), responseTopic);
             return;
         }
 
         // Send the response event
         try {
-            kafkaTemplate.send(userOrderEventsTopic, command.getSagaId(), event);
+            kafkaTemplate.send(responseTopic, command.getSagaId(), event);
             log.info("Sent USER_TRADING_PERMISSIONS_VERIFIED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event: {}", e.getMessage(), e);
@@ -157,7 +183,8 @@ public class KafkaCommandHandlerService {
     /**
      * Helper method to handle trading permission verification failures
      */
-    private void handleTradingPermissionFailure(EventMessage event, String errorCode, String errorMessage) {
+    private void handleTradingPermissionFailure(EventMessage event, String errorCode, String errorMessage,
+                                                String topic) {
         event.setType("USER_TRADING_PERMISSIONS_INVALID");
         event.setSuccess(false);
         event.setErrorCode(errorCode);
@@ -165,9 +192,9 @@ public class KafkaCommandHandlerService {
         event.setPayloadValue("permissionVerified", false);
 
         try {
-            kafkaTemplate.send(userOrderEventsTopic, event.getSagaId(), event);
-            log.info("Sent USER_TRADING_PERMISSIONS_INVALID response for saga: {} - {}",
-                    event.getSagaId(), errorMessage);
+            kafkaTemplate.send(topic, event.getSagaId(), event);
+            log.info("Sent USER_TRADING_PERMISSIONS_INVALID response to {} for saga: {}",
+                    topic, event.getSagaId());
         } catch (Exception e) {
             log.error("Error sending failure event: {}", e.getMessage(), e);
         }

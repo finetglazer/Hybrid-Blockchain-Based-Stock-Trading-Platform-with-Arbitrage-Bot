@@ -1,0 +1,463 @@
+.buy-order-form-container {
+    font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #0f0f0f;
+    color: white;
+    border-radius: 8px;
+    padding: 25px;
+    max-width: 500px; /* Reduced from 800px for single column */
+    min-width: 320px;
+    margin: 30px auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(50, 50, 50, 0.8);
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+/* Styles for the disabled container */
+.buy-order-form-container.disabled {
+    opacity: 0.8;
+    position: relative;
+}
+
+.buy-order-form-container.disabled::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.buy-order-form-container h2 {
+    color: white;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: left;
+    border-bottom: 1px solid rgba(80, 80, 80, 0.5);
+    padding-bottom: 12px;
+}
+
+.form-row {
+    display: flex;
+    margin-bottom: 20px;
+    flex-direction: column; /* Changed from row to column */
+    width: 100%;
+}
+
+/* Single column layout - each element takes full width */
+.single-column .form-group {
+    width: 100%;
+    flex: 1 1 100%;
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5px; /* Add space between form groups */
+}
+
+.form-group label {
+    font-size: 14px;
+    color: #ccc;
+    margin-bottom: 6px;
+    font-weight: 500;
+    text-align: left;
+}
+
+.form-group select,
+.form-group input {
+    padding: 12px;
+    border-radius: 6px;
+    background-color: rgba(40, 40, 40, 0.9);
+    border: 1px solid rgba(80, 80, 80, 0.8);
+    color: white;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+    outline: none;
+    border-color: #1ca443c5;
+    box-shadow: 0 0 0 2px rgba(28, 164, 67, 0.25);
+}
+
+/* Disabled state for inputs and selects */
+.form-group select.disabled,
+.form-group input.disabled,
+.custom-dropdown.disabled .dropdown-input {
+    background-color: rgba(30, 30, 30, 0.7);
+    color: #888;
+    cursor: not-allowed;
+    border-color: rgba(60, 60, 60, 0.5);
+}
+
+/* Custom Dropdown Styles */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-input {
+    width: 100%;
+    padding-right: 30px;
+    cursor: pointer;
+}
+
+.custom-dropdown.disabled .dropdown-input {
+    cursor: not-allowed;
+}
+
+.dropdown-toggle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.dropdown-toggle:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.dropdown-arrow {
+    color: #ccc;
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-arrow.open {
+    transform: rotate(180deg);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 5px;
+    max-height: 300px; /* Shows approximately 10 items */
+    overflow-y: auto;
+    background-color: rgba(40, 40, 40, 0.95);
+    border: 1px solid rgba(80, 80, 80, 0.8);
+    border-radius: 6px;
+    z-index: 1000;
+    padding: 0;
+    list-style: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    scrollbar-width: thin;
+    scrollbar-color: #1ca443c5 #333;
+}
+
+.dropdown-options::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dropdown-options::-webkit-scrollbar-track {
+    background: #333;
+}
+
+.dropdown-options::-webkit-scrollbar-thumb {
+    background-color: #1ca443c5;
+    border-radius: 10px;
+    border: 2px solid #333;
+}
+
+.dropdown-option {
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-option:hover {
+    background-color: rgba(28, 164, 67, 0.2);
+}
+
+.dropdown-option.selected {
+    background-color: rgba(28, 164, 67, 0.3);
+    font-weight: 500;
+}
+
+.dropdown-option.no-results {
+    color: #999;
+    font-style: italic;
+    cursor: default;
+}
+
+/* Scrollable select dropdowns */
+.scrollable-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23fff' d='M0 0l4 4 4-4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 25px;
+}
+
+/* Style for dropdowns when opened */
+select.scrollable-select option {
+    padding: 8px 12px;
+    background-color: #222;
+}
+
+/* Special style for Time in Force select with green border */
+.time-in-force-select {
+    border: 1px solid #1ca443c5;
+}
+
+.time-in-force-select.disabled {
+    border-color: rgba(28, 164, 67, 0.3);
+}
+
+.price-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.price-symbol {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    z-index: 1;
+}
+
+.price-input-container input {
+    padding-left: 26px;
+}
+
+/* Current price display */
+.current-price-display {
+    text-align: right;
+    color: #999;
+    font-size: 14px;
+    margin-top: -15px;
+    margin-bottom: 15px;
+    padding-right: 5px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.price-label {
+    color: #888;
+}
+
+.price-value {
+    color: white;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.input-error {
+    color: #ff4d4d;
+    font-size: 12px;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.required-funds {
+    display: flex;
+    margin: 20px 0;
+    padding: 15px 20px;
+    background-color: rgba(28, 164, 67, 0.15);
+    border-radius: 4px;
+    border-left: 4px solid #1ca443c5;
+}
+
+.funds-label {
+    font-weight: 600;
+    color: #ccc;
+    margin-right: 10px;
+}
+
+.funds-amount {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1ca443c5;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.reset-button, .submit-button {
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    color: white;
+    min-width: 120px;
+}
+
+.reset-button {
+    background-color: rgba(100, 100, 100, 0.3);
+    border: 1px solid rgba(100, 100, 100, 0.5);
+}
+
+.reset-button:hover:not(:disabled) {
+    background-color: rgba(120, 120, 120, 0.4);
+}
+
+.reset-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.submit-button {
+    background-color: #1ca443c5;
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-button:disabled {
+    background-color: rgba(28, 164, 67, 0.4);
+    cursor: not-allowed;
+}
+
+.submit-button:hover:not(:disabled) {
+    background-color: #24c653;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.limit-order-fields {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Add these to your existing SellOrderForm.css file */
+
+/* Loading state for dropdown */
+.custom-dropdown.loading .dropdown-input {
+    background-color: rgba(60, 60, 60, 0.9);
+    color: #aaa;
+    cursor: wait;
+}
+
+.custom-dropdown.loading .dropdown-toggle {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+/* Error message styling */
+.api-error-message {
+    background-color: rgba(220, 53, 69, 0.15);
+    color: #ff6b6b;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    border-left: 4px solid #dc3545;
+    font-size: 14px;
+}
+
+.api-error-message p {
+    margin: 5px 0;
+}
+
+.api-error-message p:last-child {
+    color: #aaa;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* Disabled form */
+.buy-order-form-container.disabled {
+    opacity: 0.8;
+}
+
+.buy-order-form-container.disabled::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+}
+
+/* Loading spinner for submit button */
+.submit-button:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+}
+
+.submit-button.loading {
+    position: relative;
+    color: transparent;
+}
+
+.submit-button.loading::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-top: -10px;
+    margin-left: -10px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    border-color: #fff transparent #fff transparent;
+    animation: submit-spinner 1.2s linear infinite;
+}
+
+@keyframes submit-spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive adjustments for mobile - still maintaining single column */
+@media (max-width: 600px) {
+    .buy-order-form-container {
+        padding: 15px;
+        margin: 20px 10px;
+    }
+}
+

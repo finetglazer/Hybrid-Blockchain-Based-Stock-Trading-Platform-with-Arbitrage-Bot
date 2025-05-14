@@ -5,7 +5,7 @@ import BuyOrderForm from './BuyOrderForm';
 import OrderProgressTracker from './OrderProgressTracker';
 import OrderNotificationModal from './OrderNotificationModal';
 import LoadingOverlay from './LoadingOverlay';
-import {submitOrder, getOrderStatus, cancelOrder} from '../../services/orderService';
+import {submitOrder, getOrderStatus, cancelOrder} from '../../services/orderBuyService.js';
 import './StockTableWithOrderForm.css';
 import { getUserIdFromToken } from "../../utils/auth.js";
 
@@ -19,6 +19,7 @@ const StockTableWithOrderForm = () => {
     const notifiedSagaIdsRef = useRef(new Set());
     // State for selected stock
     const [selectedStock, setSelectedStock] = useState(null);
+    const [selectedAccountId, setSelectedAccountId] = useState(null);
 
     // State for order processing
     const [activeOrderId, setActiveOrderId] = useState(null);
@@ -67,6 +68,8 @@ const StockTableWithOrderForm = () => {
 
             // Set submitting state to true to show loading indicator
             setIsOrderSubmitting(true);
+
+            setSelectedAccountId(formData.accountId);
 
             // Rest of your submission code remains the same...
             const orderData = {
@@ -124,7 +127,7 @@ const StockTableWithOrderForm = () => {
     // Handle "View Portfolio" button click
     const handleViewPortfolio = () => {
         // Navigate to portfolio page
-        navigate('/portfolio');
+        navigate(`/${selectedAccountId}/portfolio`);
     };
 
     const handleCloseNotification = () => {

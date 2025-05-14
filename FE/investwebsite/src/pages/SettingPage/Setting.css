@@ -1,19 +1,14 @@
-body {
-  overflow-y: auto;
-  z-index: -1;
-}
-
 .setting-container {
   position: relative;
-  width: 84.5vw;
-  min-height: 75vh;
+  min-height: 85vh;
+  min-width: 85vw;
   align-items: center;
   overflow-y: scroll;
-  margin: 130px 0 0 188px;
+  margin: 100px 0 0 250px;
   &::-webkit-scrollbar {
     display: none; /* Hides the scrollbar */
   }
-  z-index: -1;
+  z-index: 100;
 }
 
 .setting-container:hover {
@@ -22,7 +17,7 @@ body {
 }
 
 .title {
-  margin: -50px auto 0;
+  margin: 10px auto 0;
 }
 
 .title .name {

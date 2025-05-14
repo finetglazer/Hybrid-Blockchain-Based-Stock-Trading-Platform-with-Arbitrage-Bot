@@ -34,7 +34,7 @@ services:
   kafka-setup:
     image: confluentinc/cp-kafka:7.3.2 # Use the same image to get kafka-topics.sh
     hostname: kafka-setup
-    container_name: kafka-setup
+    container_name: kafka-setup2
     depends_on:
       kafka: # Depends on the kafka service itself (not just ZK)
         condition: service_started # Basic check, script will poll for readiness
@@ -75,6 +75,19 @@ services:
               kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic broker.events.order-buy --partitions 1 --replication-factor 1 && \
               kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.commands.order-buy --partitions 1 --replication-factor 1 && \
               kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.events.order-buy --partitions 1 --replication-factor 1 && \
+              # Order-Sell Saga Topics
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic user.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic user.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic order.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic order.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic market.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic market.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic broker.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic broker.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.events.order-sell --partitions 1 --replication-factor 1 && \
               # Market Data Topic
               kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic market.price.data --partitions 1 --replication-factor 1 && \
               echo 'All topics created successfully!' || echo 'Failed to create some topics.'

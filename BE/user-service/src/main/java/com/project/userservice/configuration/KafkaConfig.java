@@ -89,6 +89,21 @@ public class KafkaConfig {
     }
 
     @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, CommandMessage> orderSellCommandsListenerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, CommandMessage> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(commandConsumerFactory("user-order-sell-group"));
+        factory.setConcurrency(3);
+        factory.getContainerProperties().setAckMode(
+                org.springframework.kafka.listener.ContainerProperties.AckMode.MANUAL_IMMEDIATE);
+
+        // Configure error handler
+        factory.setCommonErrorHandler(errorHandler());
+
+        return factory;
+    }
+
+    @Bean
     public DefaultErrorHandler errorHandler() {
         DefaultErrorHandler handler = new DefaultErrorHandler(
                 (record, exception) -> {

@@ -1,16 +1,18 @@
-/* ==== TOPBAR CHUNG ==== */
 .topbar {
   position: fixed;
   top: 20px;
   left: 210px;
   right: 0;
   height: 50px;
-  background: rgba(28, 27, 26, 0.999);
+  background: rgba(28, 27, 26, 0.999); /* Màu nền mờ */
   display: flex;
   align-items: center;
   padding: 0 20px;
+  backdrop-filter: blur(10px); /* Hiệu ứng làm mờ nền */
+  /* border: 2px solid rgba(255, 255, 255, 0.4);  */
+  /* Viền mờ phía dưới */
   border-radius: 10px;
-  backdrop-filter: blur(10px);
+  /* Đổ bóng 3D */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15),
     inset 0 2px 5px rgba(255, 255, 255, 0.3);
   z-index: 100;
@@ -19,115 +21,125 @@
   align-items: center;
 }
 
-/* ==== PHẦN THÔNG TIN BÊN PHẢI ==== */
 .info {
-  position: relative;
-  gap: 10px;
+  position: absolute;
   right: 30px;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%); /* Căn giữa theo chiều dọc */
   display: flex;
   align-items: center;
-  height: 50px;
+  /* Màu nền */
+  border-radius: 50px;
   padding-left: 10px;
+  height: 50px;
+
+  /* Hiệu ứng nổi (Neumorphism) */
+  /* box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2),
+      -4px -4px 10px rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease-in-out; */
 }
 
-/* ==== ICON CHUÔNG & ẢNH ==== */
-.info img,
-.notification-icon img {
-  width: 100%;
-  height: 100%;
-  max-width: 24px; /* Set maximum size */
-  max-height: 24px; /* Set maximum size */
-  padding: 0; /* Remove padding */
-  object-fit: contain; /* Ensure the image maintains its aspect ratio */
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
+.info img {
+  width: 20px; /* Đặt kích thước */
+  height: 20px;
+  padding: 10px;
+  cursor: pointer; /* Biến thành tay khi hover */
+  transition: transform 0.2s ease-in-out; /* Hiệu ứng */
 }
 
-.info img:hover,
-.notification-icon:hover {
-  transform: scale(1.1);
+.info img:hover {
+  transform: scale(1.1); /* Phóng to nhẹ khi hover */
 }
 
-/* ==== AVATAR HÌNH TRÒN ==== */
 .avatar {
   background-color: #1dab45c5;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  display: flex;
+  border-radius: 50%; /* Để hình tròn */
+  width: 35px; /* Đặt kích thước cố định */
+  height: 35px; /* Phải bằng width */
+  display: flex; /* Để căn giữa nội dung nếu có */
   align-items: center;
   justify-content: center;
-  color: white;
+  color: white; /* Nếu có chữ bên trong */
   font-weight: bold;
   font-size: 20px;
-  margin-top: 12px;
 }
 
-/* ==== TÊN NGƯỜI DÙNG ==== */
 .user {
   margin: 10px;
   font-size: 20px;
-  color: white;
 }
-
-/* ==== DROPDOWN CHUÔNG THÔNG BÁO ==== */
-.notification-wrapper {
-  position: relative;
-  margin-left: 20px;
-  z-index: 9999;
-}
-
-.transaction-dropdown {
+.dropdown-menu {
   position: absolute;
-  top: 45px;
-  right: 0;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  width: 280px;
-  max-height: 300px;
-  overflow-y: auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
-  animation: fadeIn 0.2s ease-in-out;
-}
-
-.transaction-dropdown ul {
+  top: 40px;
+  right: 10px;
+  background: #1ca443c5;
   list-style: none;
-  margin: 0;
+  padding: 10px 0;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  width: 120px;
+}
+
+.dropdown-menu li {
   padding: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
 }
 
-.transaction-dropdown li {
-  padding: 10px 8px;
-  border-bottom: 1px solid #eee;
+.dropdown-menu li:hover {
+  background: rgba(0, 0, 0, 0.1);
 }
 
-.transaction-dropdown li:last-child {
-  border-bottom: none;
+.dropdown-button {
+  margin-left: 20px;
 }
 
-.transaction-dropdown p {
-  margin: 0;
-  font-weight: 500;
-  color: #333;
+/* Định dạng cho biểu tượng chuông */
+.notification-icon {
+  position: relative;
+  cursor: pointer;
+  margin-left: 20px;
 }
 
-.transaction-dropdown small {
-  font-size: 12px;
-  color: #888;
+/* Định dạng cho cửa sổ lịch sử giao dịch */
+.transaction-history {
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
-/* ==== ANIMATION ==== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.transaction-history h3 {
+  margin-top: 0;
+  color: black;
+}
+
+.transaction-history ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.transaction-history li {
+  margin-bottom: 10px;
+}
+
+.transaction-history button {
+  margin-top: 10px;
+  background-color: #1ca443c5;
+  color: whitesmoke;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.transaction-history button:hover {
+  background-color: #45a049;
 }

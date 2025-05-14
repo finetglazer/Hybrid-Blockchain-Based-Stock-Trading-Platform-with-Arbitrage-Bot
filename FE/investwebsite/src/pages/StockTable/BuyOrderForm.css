@@ -1,4 +1,4 @@
-/* BuyOrderForm.css */
+/* SellOrderForm.css */
 .buy-order-form-container {
     font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     background-color: #0f0f0f;
@@ -368,7 +368,7 @@ select.scrollable-select option {
     }
 }
 
-/* Add these to your existing BuyOrderForm.css file */
+/* Add these to your existing SellOrderForm.css file */
 
 /* Loading state for dropdown */
 .custom-dropdown.loading .dropdown-input {

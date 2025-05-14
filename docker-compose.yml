@@ -1,0 +1,333 @@
+version: '3.8'
+
+networks:
+  backend-network:
+    driver: bridge
+
+services:
+  # Kafka Infrastructure
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.2
+    hostname: zookeeper
+#    container_name: zookeeper
+    networks:
+      - backend-network
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.2
+    hostname: kafka
+#    container_name: kafka
+    networks:
+      - backend-network
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+
+  kafka-setup:
+    image: confluentinc/cp-kafka:7.3.2
+    hostname: kafka-setup
+#    container_name: kafka-setup
+    networks:
+      - backend-network
+    depends_on:
+      - kafka  # Simple dependency, removed the condition which might be causing issues
+    command: >
+      bash -c "
+              echo 'Waiting for Kafka to be ready...'
+              # Use Confluent utility to wait for Kafka broker
+              cub kafka-ready -b kafka:29092 1 60 && \
+              echo 'Kafka is ready!' || \
+              (echo 'Timed out waiting for Kafka!' && exit 1)
+
+              # Additional sleep to ensure Kafka is stable
+              sleep 5
+
+              echo 'Creating topics...'
+              # Common Topics
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic user.commands.common --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.commands.common --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic user.events.common --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.events.common --partitions 1 --replication-factor 1 && \
+              # Deposit Saga Topics
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.commands.deposit --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic payment.commands.deposit --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.events.deposit --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic payment.events.deposit --partitions 1 --replication-factor 1 && \
+              # Withdrawal Saga Topics
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.commands.withdrawal --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic payment.commands.withdrawal --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.events.withdrawal --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic payment.events.withdrawal --partitions 1 --replication-factor 1 && \
+              # Order-Buy Saga Topics
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic user.commands.order-buy --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic user.events.order-buy --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.commands.order-buy --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.events.order-buy --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic order.commands.order-buy --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic order.events.order-buy --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic market.commands.order-buy --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic market.events.order-buy --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic broker.commands.order-buy --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic broker.events.order-buy --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.commands.order-buy --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.events.order-buy --partitions 1 --replication-factor 1 && \
+              # Order-sell Saga Topics
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic user.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic user.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic account.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic order.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic order.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic market.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic market.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic broker.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic broker.events.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.commands.order-sell --partitions 1 --replication-factor 1 && \
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic portfolio.events.order-sell --partitions 1 --replication-factor 1 && \
+
+              # Market Data Topic
+              kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic market.price.data --partitions 1 --replication-factor 1 && \
+              echo 'All topics created successfully!' || echo 'Failed to create some topics.'
+            "
+  
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    networks:
+      - backend-network
+    depends_on:
+      - kafka
+    ports:
+      - "9090:9090"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      SERVER_PORT: 9090
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./FE/investwebsite
+      dockerfile: Dockerfile
+#    container_name: frontend
+    networks:
+      - backend-network
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api-gateway
+    environment:
+      - DOCKER_ENV=true
+    volumes:
+      - ./FE/investwebsite:/app
+      - /app/node_modules  # Prevent overwriting node_modules
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./BE/API-gateway
+      dockerfile: Dockerfile
+#    container_name: api-gateway
+    networks:
+      - backend-network
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka
+      - user-service
+      - account-service
+      - market-data-service
+      - mock-brokerage-service
+      - order-service
+      - portfolio-service
+      - saga-orchestrator-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATA_MONGODB_URI: "mongodb://admin:hw445Rl1pEAXqhti@cluster-1-shard-00-00.rylgk.mongodb.net:27017,cluster-1-shard-00-01.rylgk.mongodb.net:27017,cluster-1-shard-00-02.rylgk.mongodb.net:27017/user-database?replicaSet=atlas-vamz5w-shard-0&authSource=admin&retryWrites=true&w=majority&ssl=false"
+
+  # User Service
+  user-service:
+    build:
+      context: ./BE/user-service
+      dockerfile: Dockerfile
+#    container_name: user-service
+    networks:
+      - backend-network
+    expose:
+      - "8081"
+    #    depends_on:
+    #      kafka-setup: # Add this dependency
+    #        condition: service_completed_successfully  # Make sure kafka-setup completes
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      SPRING_DATA_MONGODB_URI: "mongodb+srv://admin:hw445Rl1pEAXqhti@cluster-1.rylgk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-1"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+
+  # Account Service
+  account-service:
+    build:
+      context: ./BE/account-service
+      dockerfile: Dockerfile
+#    container_name: account-service
+    networks:
+      - backend-network
+    expose:
+      - "8083"
+    #    depends_on:
+    #      kafka-setup:  # Add this dependency
+    #        condition: service_completed_successfully  # Make sure kafka-setup completes
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATA_MONGODB_URI: "mongodb+srv://admin:hw445Rl1pEAXqhti@cluster-1.rylgk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-1"
+
+  # Market Data Service
+  market-data-service:
+    build:
+      context: ./BE/market-data-service
+      dockerfile: Dockerfile
+#    container_name: market-data-service
+    networks:
+      - backend-network
+    expose:
+      - "8088"
+    #    depends_on:
+    #      kafka-setup:
+    #        condition: service_completed_successfully
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATA_MONGODB_URI: "mongodb+srv://admin:hw445Rl1pEAXqhti@cluster-1.rylgk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-1"
+
+  # Mock Brokerage Service
+  mock-brokerage-service:
+    build:
+      context: ./BE/mock-brokerage-service
+      dockerfile: Dockerfile
+#    container_name: mock-brokerage-service
+    networks:
+      - backend-network
+    expose:
+      - "8090"
+    #    depends_on:
+    #      kafka-setup:
+    #        condition: service_completed_successfully
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATA_MONGODB_URI: "mongodb+srv://admin:hw445Rl1pEAXqhti@cluster-1.rylgk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-1"
+
+  # Order Service
+  order-service:
+    build:
+      context: ./BE/order-service
+      dockerfile: Dockerfile
+#    container_name: order-service
+    networks:
+      - backend-network
+    expose:
+      - "8087"
+    #    depends_on:
+    #      kafka-setup:
+    #        condition: service_completed_successfully
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATA_MONGODB_URI: "mongodb+srv://admin:hw445Rl1pEAXqhti@cluster-1.rylgk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-1"
+
+  # Portfolio Service
+  portfolio-service:
+    build:
+      context: ./BE/portfolio-service
+      dockerfile: Dockerfile
+#    container_name: portfolio-service
+    networks:
+      - backend-network
+    expose:
+      - "8091"
+    #    depends_on:
+    #      kafka-setup:
+    #        condition: service_completed_successfully
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATA_MONGODB_URI: "mongodb+srv://admin:hw445Rl1pEAXqhti@cluster-1.rylgk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-1"
+
+
+  # Portfolio Service
+  mock-payment-service:
+    build:
+      context: ./BE/mock-payment-service
+      dockerfile: Dockerfile
+#    container_name: mock-payment-service
+    networks:
+      - backend-network
+    expose:
+      - "8091"
+    #    depends_on:
+    #      kafka-setup:
+    #        condition: service_completed_successfully
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATA_MONGODB_URI: "mongodb+srv://admin:hw445Rl1pEAXqhti@cluster-1.rylgk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-1"
+
+  # Saga Orchestrator Service
+  saga-orchestrator-service:
+    build:
+      context: ./BE/kafka-management-service
+      dockerfile: Dockerfile
+#    container_name: saga-orchestrator-service
+    networks:
+      - backend-network
+    expose:
+      - "8085"
+    #    depends_on:
+    #      kafka-setup:
+    #        condition: service_completed_successfully
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATA_MONGODB_URI: "mongodb+srv://admin:hw445Rl1pEAXqhti@cluster-1.rylgk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-1"
+
+volumes:
+  zookeeper-data:
+  kafka-data:

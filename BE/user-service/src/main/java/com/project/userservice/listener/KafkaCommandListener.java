@@ -50,7 +50,7 @@ public class KafkaCommandListener {
             log.info("Processing order command: {} for saga: {}", command.getType(), command.getSagaId());
 
             if ("USER_VERIFY_TRADING_PERMISSIONS".equals(command.getType())) {
-                commandHandlerService.handleVerifyTradingPermissionCommand(command);
+                commandHandlerService.handleVerifyTradingPermissionBuyCommand(command);
             } else {
                 log.warn("Unknown order command type: {}", command.getType());
             }
@@ -61,5 +61,28 @@ public class KafkaCommandListener {
             throw new RuntimeException("Command processing failed", e);
         }
     }
+
+    @KafkaListener(
+            id = "userOrderSellCommandsListener",
+            topics = "${kafka.topics.user-commands.order-sell}",
+            containerFactory = "orderSellCommandsListenerFactory"
+    )
+    public void consumeOrderSellCommands(@Payload CommandMessage command, Acknowledgment ack) {
+        try {
+            log.info("Processing order sell command: {} for saga: {}", command.getType(), command.getSagaId());
+
+            if ("USER_VERIFY_TRADING_PERMISSIONS".equals(command.getType())) {
+                commandHandlerService.handleVerifyTradingPermissionSellCommand(command);
+            } else {
+                log.warn("Unknown order sell command type: {}", command.getType());
+            }
+
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("Error processing order sell command: {}", e.getMessage(), e);
+            throw new RuntimeException("Command processing failed", e);
+        }
+    }
+
 }
 

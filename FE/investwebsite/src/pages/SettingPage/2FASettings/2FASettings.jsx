@@ -12,6 +12,7 @@ const TwoFactorAuthenticationSettings = () => {
     const [twoFaEnabled, setTwoFaEnabled] = useState(undefined);
     const [phone2FaEnabled, setPhone2FaEnabled] = useState(undefined);
     const [wantToEnable2Fa, setWantToEnable2Fa] = useState(undefined);
+    const [tradingPermissions, setTradingPermissions] = useState([]);
     const [error, setError] = useState("");
 
     const onClickBackBtn = () => {
@@ -62,7 +63,29 @@ const TwoFactorAuthenticationSettings = () => {
             }
         }
 
+        const getTradingPermissions = async () => {
+            try {
+                const response = await axios.get("/users/api/v1/me/trading-permissions", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+                if (response.data && response.data.status === 1) {
+                    setTradingPermissions(response.data.data.permissions);
+                    setError("");
+                }
+                else {
+                    setError(response.data.msg);
+                }
+            }
+            catch (e) {
+                setError(e.message);
+            }
+        }
+
         get2FaInfo().then(() => {});
+        getTradingPermissions().then(() => {});
     }, []);
 
     useEffect(() => {
@@ -98,8 +121,21 @@ const TwoFactorAuthenticationSettings = () => {
                         <p>Choose your appropriate second-step authentication option, or you can opt for multiple authentication options</p>
                         <div className="options-wrapper">
                             <Option imageSrc="../../../../src/assets/email.png" name="Email" loading={false} enabled={true}></Option>
-                            <Option imageSrc="../../../../src/assets/call.png" name="Phone number" loading={phone2FaEnabled === undefined} enabled={true}></Option>
+                            <Option imageSrc="../../../../src/assets/call.png" name="Phone number" loading={phone2FaEnabled === undefined} enabled={phone2FaEnabled}></Option>
                             <Option imageSrc="../../../../src/assets/qr.png" name="Authenticator" loading={false} enabled={false} />
+                            <div className="two-fa-option">
+                                <div className="option-icon"><img src="../../../../src/assets/permission.png" alt="Security category icon" /></div>
+                                <div className="name"><span>Trading permissions</span></div>
+                                <div className="description-wrapper">
+                                    {tradingPermissions.length === 0 && <div className="spinner two-fa-option-spinner" />}
+                                    {tradingPermissions.length !== 0 && (
+                                        <p className="permissions">
+                                            {tradingPermissions.map((permission) => permission).join(', ')}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                            <p style={{fontSize: "0.8rem", fontWeight: 400, fontStyle: "italic"}}>(*) Account with 2-Factor Authentication can have permission to trade</p>
                         </div>
                     </div>
                 </div>

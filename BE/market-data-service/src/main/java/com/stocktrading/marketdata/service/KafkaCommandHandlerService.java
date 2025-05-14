@@ -1,4 +1,3 @@
-// Basic MarketDataService implementation for the order buy flow
 package com.stocktrading.marketdata.service;
 
 import com.project.kafkamessagemodels.model.CommandMessage;
@@ -19,12 +18,8 @@ import java.util.*;
 public class KafkaCommandHandlerService {
 
     private final MarketPricePublisher marketPricePublisher;
-
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final Random random = new Random();
-
-    @Value("${kafka.topics.market-events}")
-    private String marketEventsTopic;
 
     private final List<String> trackedSymbols = Arrays.asList(
             "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA", "JPM", "V", "JNJ",
@@ -34,7 +29,7 @@ public class KafkaCommandHandlerService {
     /**
      * Handle MARKET_VALIDATE_STOCK command
      */
-    public void handleValidateStock(CommandMessage command) {
+    public void handleValidateStock(CommandMessage command, String responseTopic) {
         log.info("Handling MARKET_VALIDATE_STOCK command for saga: {}", command.getSagaId());
 
         String stockSymbol = command.getPayloadValue("stockSymbol");
@@ -61,19 +56,19 @@ public class KafkaCommandHandlerService {
             } else {
                 // Stock doesn't exist
                 handleValidationFailure(event, "STOCK_NOT_FOUND",
-                        "Stock symbol not found: " + stockSymbol);
+                        "Stock symbol not found: " + stockSymbol, responseTopic);
                 return;
             }
         } catch (Exception e) {
             log.error("Error validating stock", e);
             handleValidationFailure(event, "VALIDATION_ERROR",
-                    "Error validating stock: " + e.getMessage());
+                    "Error validating stock: " + e.getMessage(), responseTopic);
             return;
         }
 
         // Send the response event
         try {
-            kafkaTemplate.send(marketEventsTopic, command.getSagaId(), event);
+            kafkaTemplate.send(responseTopic, command.getSagaId(), event);
             log.info("Sent STOCK_VALIDATED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
@@ -83,7 +78,7 @@ public class KafkaCommandHandlerService {
     /**
      * Handle MARKET_GET_PRICE command
      */
-    public void handleGetPrice(CommandMessage command) {
+    public void handleGetPrice(CommandMessage command, String responseTopic) {
         log.info("Handling MARKET_GET_PRICE command for saga: {}", command.getSagaId());
 
         String stockSymbol = command.getPayloadValue("stockSymbol");
@@ -113,19 +108,19 @@ public class KafkaCommandHandlerService {
             } else {
                 // Failed to get price
                 handlePriceFailure(event, "PRICE_RETRIEVAL_ERROR",
-                        "Failed to retrieve price for: " + stockSymbol);
+                        "Failed to retrieve price for: " + stockSymbol, responseTopic);
                 return;
             }
         } catch (Exception e) {
             log.error("Error getting stock price", e);
             handlePriceFailure(event, "PRICE_RETRIEVAL_ERROR",
-                    "Error getting stock price: " + e.getMessage());
+                    "Error getting stock price: " + e.getMessage(), responseTopic);
             return;
         }
 
         // Send the response event
         try {
-            kafkaTemplate.send(marketEventsTopic, command.getSagaId(), event);
+            kafkaTemplate.send(responseTopic, command.getSagaId(), event);
             log.info("Sent PRICE_PROVIDED response for saga: {}", command.getSagaId());
         } catch (Exception e) {
             log.error("Error sending event", e);
@@ -135,14 +130,14 @@ public class KafkaCommandHandlerService {
     /**
      * Helper method for stock validation failures
      */
-    private void handleValidationFailure(EventMessage event, String errorCode, String errorMessage) {
+    private void handleValidationFailure(EventMessage event, String errorCode, String errorMessage, String responseTopic) {
         event.setType("STOCK_VALIDATION_FAILED");
         event.setSuccess(false);
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);
 
         try {
-            kafkaTemplate.send(marketEventsTopic, event.getSagaId(), event);
+            kafkaTemplate.send(responseTopic, event.getSagaId(), event);
             log.info("Sent STOCK_VALIDATION_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {
@@ -153,14 +148,14 @@ public class KafkaCommandHandlerService {
     /**
      * Helper method for price retrieval failures
      */
-    private void handlePriceFailure(EventMessage event, String errorCode, String errorMessage) {
+    private void handlePriceFailure(EventMessage event, String errorCode, String errorMessage, String responseTopic) {
         event.setType("PRICE_RETRIEVAL_FAILED");
         event.setSuccess(false);
         event.setErrorCode(errorCode);
         event.setErrorMessage(errorMessage);
 
         try {
-            kafkaTemplate.send(marketEventsTopic, event.getSagaId(), event);
+            kafkaTemplate.send(responseTopic, event.getSagaId(), event);
             log.info("Sent PRICE_RETRIEVAL_FAILED response for saga: {} - {}",
                     event.getSagaId(), errorMessage);
         } catch (Exception e) {

@@ -15,7 +15,7 @@ const Home = () => {
   const [tradingAccount, setTradingAccount] = useState([]);
   const [open, setOpen] = useState(false);
   const walletListRef = useRef(null);
-  const nativigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleAccountCreated = () => {
     setOpen(false);
@@ -30,7 +30,6 @@ const Home = () => {
       });
 
       const accounts = res.data.data.items;
-      console.log(accounts);
       setTradingAccount(accounts);
     } catch (error) {
       console.error(error);
@@ -64,20 +63,9 @@ const Home = () => {
           {/* Wallets Section - BÊN TRÁI */}
           <div className="wallets-section">
             <div className="wallets-header">
-              <h1 style={{ color: "#ffffff", marginLeft: "10px" }}>
+              <h1 style={{ color: "#ffffff", marginLeft: "10px", fontWeight: "bold" }}>
                 Trading Accounts
               </h1>
-              <p
-                onClick={() => nativigate("/trading-accounts")}
-                style={{
-                  color: "#ffffff",
-                  fontWeight: "bold",
-                  textDecoration: "none",
-                  right: 0,
-                }}
-              >
-                View all
-              </p>
             </div>
 
             <div className="wallets-scroll-wrapper">
@@ -109,8 +97,8 @@ const Home = () => {
                         </div>
                       </div>
                       <div className="wallet-actions">
-                        <button className="wallet-btn">Deposit</button>
-                        <button className="wallet-btn">Withdraw</button>
+                        <button className="wallet-btn" onClick={() => navigate(`/${account.id}/deposit/choose-payment-method`)}>Deposit</button>
+                        <button className="wallet-btn" onClick={() => navigate(`/${account.id}/withdraw/choose-payment-method`)}>Withdraw</button>
                       </div>
                     </div>
                   ))}
@@ -123,23 +111,6 @@ const Home = () => {
                   →
                 </button>
               )}
-            </div>
-          </div>
-
-          {/* Trade Section - BÊN PHẢI */}
-          <div className="trade-section">
-            <h1 style={{ color: "#ffffff" }}>Trade</h1>
-            <div className="trade-options">
-              {[
-                { label: "Buy", icon: "+" },
-                { label: "Sell", icon: "-" },
-                { label: "Swap", icon: "⇄" },
-              ].map((action, idx) => (
-                <div key={idx} className="trade-item">
-                  <div className="trade-icon">{action.icon}</div>
-                  <div className="trade-label">{action.label}</div>
-                </div>
-              ))}
             </div>
           </div>
 

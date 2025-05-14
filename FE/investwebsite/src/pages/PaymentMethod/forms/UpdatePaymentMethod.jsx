@@ -68,25 +68,7 @@ const UpdatePaymentMethod = ({onSuccess, onCancel, item}) => {
                 : null
             }
             <InputLabel id="select-status-label" style={{textAlign: "left", color: "white"}}>Select status</InputLabel>
-            <Select
-                id="select-status-label"
-                defaultValue="ACTIVE"
-                value={formData.status}
-                fullWidth
-                style={{color: "white"}}
-                onChange={(e) => onChange({status: e.target.value})}
-                variant="outlined"
-            >
-                <MenuItem value="ACTIVE">
-                    ACTIVE
-                </MenuItem>
-                <MenuItem value="INACTIVE">
-                    INACTIVE
-                </MenuItem>
-                <MenuItem value="VERIFICATION_PENDING">
-                    VERIFICATION PENDING
-                </MenuItem>
-            </Select>
+
             <TextField
                 label="Nickname"
                 variant="outlined"
@@ -109,7 +91,7 @@ const UpdatePaymentMethod = ({onSuccess, onCancel, item}) => {
                 control={
                     <Checkbox
                         checked={formData.setAsDefault}
-                        style={{marginLeft: "-80%"}}
+                        style={{marginLeft: "-50%"}}
                         onChange={(e) => onChange({setAsDefault: e.target.checked})} />
                 }
                 label="Set as default"

@@ -1,0 +1,124 @@
+.main-background {
+  height: 100vh;
+  width: 100vw;
+  margin-top: -80px;
+  margin-left: -140px;
+}
+
+/* Hiển thị dạng grid, 3 cột */
+.wallets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 35px;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+/* Thẻ wallet to và hiện đại hơn */
+.wallet-card {
+  background-color: #ffffff20;
+  padding: 24px;
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Hover effect */
+.wallet-card:hover {
+  transform: translateY(-4px);
+}
+
+/* PHẦN CHÍNH TRÊN: Icon + Tên + Tổng số tiền */
+.wallet-main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Dòng chứa currency và tổng */
+.wallet-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 6px;
+}
+
+/* Tên ví */
+.wallet-name {
+  font-size: 25px;
+  font-weight: bold;
+  color: white;
+  margin-left: 10px;
+}
+
+/* Icon */
+.wallet-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.color-1 {
+  background-color: #ff6b6b;
+}
+.color-2 {
+  background-color: #4ecdc4;
+}
+.color-3 {
+  background-color: #ffd93d;
+}
+.color-4 {
+  background-color: #1a535c;
+}
+.color-5 {
+  background-color: #ff9f1c;
+}
+.color-6 {
+  background-color: #6a4c93;
+}
+
+/* Container cho icon + tên */
+.wallet-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Nhãn và số liệu */
+.wallet-label {
+  font-size: 15px;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.wallet-balance {
+  font-size: 18px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.wallet-currency {
+  font-size: 14px;
+  color: #aaa;
+  font-weight: 500;
+}
+
+/* PHẦN DƯỚI: Available / Reserved */
+.wallet-details {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wallet-detail-row {
+  display: flex;
+  justify-content: space-between;
+}

@@ -36,6 +36,8 @@ kafka:
   topics:
     order-commands: order.commands.order-buy
     order-events: order.events.order-buy
+    order-commands-sell: order.commands.order-sell
+    order-events-sell: order.events.order-sell
     broker-commands: broker.commands
     broker-events: broker.events.order-buy
 

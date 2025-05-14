@@ -34,6 +34,9 @@ import OrderViewHistory from "./pages/OrderViewHistory/OrderViewHistory.jsx";
 import Wallet from "./pages/Wallet/Wallet.jsx";
 import OrderDetails from "./pages/OrderDetails/OrderDetails.jsx";
 import Deposit from "./pages/Deposit/Deposit.jsx";
+import AppLayout from "./components/Layout/AppLayout.jsx";
+import ChooseTradingAccount from "./pages/ChooseTradingAccount/ChooseTradingAccount.jsx";
+import Sidebar from "./components/Sidebar/Sidebar.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -42,12 +45,17 @@ const Layout = () => {
     "/trading-accounts",
     "/support",
     "/setting",
+    "/market",
+    "/portfolio",
+    "/transaction-history",
+    "/order-history",
+    "/payment-methods",
   ].includes(location.pathname);
 
   return (
     <>
-      {showNavbar && <NavbarSide />}
-      {showNavbar && <HeaderNavbar />}
+      {location.pathname === "/home" && <HeaderNavbar />}
+      {showNavbar && location.pathname !== "" && <Sidebar/>}
       <AppContextProvider>
         <Routes>
           <Route path="/" element={<Login />} />
@@ -59,6 +67,14 @@ const Layout = () => {
           <Route
             path="/:accountId/withdraw/choose-payment-method"
             element={<WithdrawChoosePaymentMethod />}
+          />
+          <Route
+              path="/deposit/choose-trading-account"
+              element={<ChooseTradingAccount />}
+          />
+          <Route
+              path="/withdraw/choose-trading-account"
+              element={<ChooseTradingAccount />}
           />
           <Route
             path="/:accountId/withdraw/:paymentMethodId"
@@ -73,6 +89,7 @@ const Layout = () => {
             element={<Deposit />}
           />
           <Route path="/trading-accounts" element={<Wallet />} />
+          <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/support" element={<Support />} />
           <Route path="/setting" element={<Setting />} />
           <Route
@@ -120,6 +137,7 @@ const Layout = () => {
           <Route path="/:accountId/portfolio" element={<Portfolio />} />
           <Route path="/market" element={<StockTableWithOrderForm />} />
         </Routes>
+
       </AppContextProvider>
     </>
   );

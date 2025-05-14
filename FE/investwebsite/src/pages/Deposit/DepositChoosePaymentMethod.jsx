@@ -231,14 +231,14 @@ const DepositChoosePaymentMethod = () => {
                     {!fetchPaymentMethodError && !fetchPaymentMethodError &&
                         <>
                             <div style={{marginTop: 40, textAlign: "right"}}>
-                                <button style={{background: "#56f5ff", fontSize: "1.1rem", display: "flex", height: 40}} onClick={onClickAddNewPaymentMethodBtn}>
+                                <button style={{background: "#1043a4", fontSize: "1.1rem", display: "flex", height: 40}} onClick={onClickAddNewPaymentMethodBtn}>
                                     <img src="../../../src/assets/add.png" width={15} height={10} alt="add icon"/>
                                     <p style={{marginLeft: 10, marginTop: -5}}>Add new payment method</p>
                                 </button>
                             </div>
                             <div style={{
                                 display: "grid",
-                                gridTemplateColumns: `repeat(${Math.ceil(paymentMethods.length / 2)}, 45%)`,
+                                gridTemplateColumns: `repeat(2, 50%)`,
                                 marginTop: 10,
                             }}>
                                 {!displayedPaymentMethods.length &&
@@ -248,7 +248,7 @@ const DepositChoosePaymentMethod = () => {
                                         marginTop: "45%",
                                         marginLeft: "80%",
                                     }}>
-                                        <img src="../../assets/empty.png" width={60} height={60} alt="not found icon"/>
+                                        <img src="../../../src/assets/empty.png" width={60} height={60} alt="not found icon"/>
                                         <p style={{fontSize: "2.2rem", marginTop: 10, marginLeft: 20}}>Empty</p>
                                     </div>
                                 }
@@ -258,6 +258,7 @@ const DepositChoosePaymentMethod = () => {
                                         background: "rgba(52,133,86,0.58)",
                                         boxShadow: "none",
                                         cursor: "pointer",
+                                        height: "210px"
                                     }}
                                         className="container"
                                         onClick={() => {window.location.replace(`/${accountId}/deposit/${paymentMethod.id}`)}}

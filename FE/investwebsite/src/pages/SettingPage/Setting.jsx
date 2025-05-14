@@ -70,7 +70,7 @@ const Setting = () => {
 
 const SecurityCategory = (props) => {
   return (
-      <div className="security-category-container" onClick={props.onClick}>
+      <div className="security-category-container cursor-pointer" onClick={props.onClick}>
           <div className="icon"><img src={props.imageSrc} alt="Security category icon" /></div>
           <span className="name">{props.name}</span>
           <span className="description">{props.description}</span>
